@@ -1,10 +1,15 @@
 const express = require('express')
 const app = express();
+const userRoutes = require('./routes/userRoutes');
+const morgan = require('morgan');
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-});
+// 1) Middlewares
+app.use(express.json());
+app.use(morgan('dev'));
+app.use('/api/v1/users', userRoutes);
 
-app.listen(5000, () => {
-  console.log('Example app listening on port 5000!')
+// 2) start server
+const port = 5000;
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}!`)
 });
