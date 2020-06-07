@@ -2,13 +2,13 @@
   "name": "comic-site",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
-    "server": "nodemon app.js",
+    "start": "node server.js",
+    "server": "nodemon server.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "debug": "ndb server"
+    "debug": "ndb server.js"
   },
   "author": "",
   "license": "ISC",
