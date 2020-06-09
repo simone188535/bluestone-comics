@@ -6,8 +6,8 @@ const sendErrorDev = (err, res) => {
     stack: err.stack,
   });
 };
+
 const sendErrorProd = (err, res) => {
-  // Operational, trusted error: send message to client
   res.status(err.statusCode).json({
     status: err.status,
     message: err.message,
