@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 // This enables ENV Variables
-dotenv.config({path: './config.env'});
+dotenv.config({ path: './config.env' });
 
 const app = require('./app');
 
