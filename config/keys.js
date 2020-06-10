@@ -1,8 +1,6 @@
-const devKeys = require('./dev');
-const prodKeys = require('./prod');
-
+/* eslint-disable global-require */
 if (process.env.NODE_ENV === 'production') {
-  module.exports = prodKeys;
-} else if (process.env.NODE_ENV === 'development') {
-  module.exports = devKeys;
+  module.exports = require('./prod');
+} else {
+  module.exports = require('./dev');
 }
