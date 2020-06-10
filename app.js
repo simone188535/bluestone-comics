@@ -15,7 +15,7 @@ app.use(express.json());
 
 //2) Routes
 app.get('/', (req, res) => {
-  res.status.json({
+  res.status(200).json({
     working: 'yep',
   });
 });
