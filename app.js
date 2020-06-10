@@ -14,8 +14,10 @@ console.log(process.env.NODE_ENV);
 app.use(express.json());
 
 //2) Routes
-app.use('/', () => {
-  console.log('testing default route');
+app.get('/', (req, res) => {
+  res.status.json({
+    working: 'yep',
+  });
 });
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/read', () => {
