@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/userRoutes');
-const userController = require('./controllers/userController');
+// const userController = require('./controllers/userController');
 
 const app = express();
 
@@ -20,16 +20,16 @@ app.get('/', (req, res) => {
     working: 'yep',
   });
 });
-app.route('/api/v1/users').get(userController.getAllUsers);
+// app.route('/api/v1/users').get(userController.getAllUsers);
 
-app.route('/api/v1/users/signup').post(userController.signup);
+// app.route('/api/v1/users/signup').post(userController.signup);
 
-app.route('/api/v1/users/login').post(userController.login);
+// app.route('/api/v1/users/login').post(userController.login);
 
 // .route('/api/v1/users/:id')
 // .get()
 
-// app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/users', userRoutes);
 // app.use('/api/v1/read', () => {
 //   console.log('testing');
 // });

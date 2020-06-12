@@ -1,10 +1,12 @@
 const express = require('express');
 const catchAsync = require('../utils/catchAsync');
 
+const User = require('../models/userModel');
+
 exports.getAllUsers = catchAsync((req, res) => {
   res.status(200).json({
     status: 'success',
-    data: 'get all users route',
+    data: 'get all users route'
   });
 });
 
@@ -15,16 +17,21 @@ exports.getAllUsers = catchAsync((req, res) => {
 //   });
 // });
 
-exports.signup = catchAsync((req, res) => {
+exports.signup = catchAsync(async (req, res) => {
+  const test = await new User({
+    name: 'Simone'
+  });
+
+  console.log(test);
   res.status(200).json({
     status: 'success',
-    data: 'Sign up route created',
+    data: 'Sign up route created'
   });
 });
 
 exports.login = catchAsync((req, res) => {
   res.status(200).json({
     status: 'success',
-    data: 'login route created',
+    data: 'login route created'
   });
 });
