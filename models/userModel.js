@@ -1,14 +1,31 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, 'Please tell us your name!']
+    required: [true, 'Please tell us your first name!']
+  },
+  lastName: {
+    type: String,
+    required: [true, 'Please tell us your last name!']
+  },
+  username: {
+    type: String,
+    unique: true,
+    required: [true, 'Please tell us your username!']
   },
   email: {
     type: String,
     required: [true, 'Please Provide an Email!'],
-    lowercase: true
+    lowercase: true,
+    validate: {
+      validator: function (val) {
+        return validator.isEmail(val);
+      },
+      message: 'This is not a valid email!'
+    }
   },
   roles: {
     type: String,
@@ -28,9 +45,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: function (val) {
-        return this.password !== val;
+        if (this.password !== val) {
+          return false;
+        }
       },
-      message: 'Passwords do not match. Try again'
+      message: 'Passwords do not match. Try again!'
     },
     required: [true, 'Please Confirm Password!']
   },
@@ -43,6 +62,18 @@ const userSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: true
+  }
+});
+
+userSchema.pre('save', async function save(next) {
+  if (!this.isModified('password')) return next();
+  try {
+    this.password = await bcrypt.hash(this.password, 12);
+    // this stops passwordConfirm from being saved to the db.
+    this.passwordConfirm = undefined;
+    return next();
+  } catch (err) {
+    return next(err);
   }
 });
 

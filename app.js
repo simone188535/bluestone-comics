@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/userRoutes');
@@ -13,6 +14,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 // console.log(process.env.NODE_ENV);
 app.use(express.json());
+app.use(bodyParser.json());
 
 //2) Routes
 app.get('/', (req, res) => {

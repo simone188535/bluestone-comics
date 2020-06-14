@@ -1,4 +1,4 @@
-const express = require('express');
+// const express = require('express');
 const catchAsync = require('../utils/catchAsync');
 
 const User = require('../models/userModel');
@@ -17,12 +17,29 @@ exports.getAllUsers = catchAsync((req, res) => {
 //   });
 // });
 
-exports.signup = catchAsync(async (req, res) => {
-  const test = await new User({
-    name: 'Simone'
+exports.signup = catchAsync(async (req, res, next) => {
+  const {
+    firstName,
+    lastName,
+    username,
+    email,
+    photo,
+    password,
+    passwordConfirm
+  } = req.body;
+  const user = await new User({
+    firstName,
+    lastName,
+    username,
+    email,
+    photo,
+    password,
+    passwordConfirm
   });
+  // user.passwordConfirm = undefined;
+  await user.save();
+  //   console.log(user);
 
-  console.log(test);
   res.status(200).json({
     status: 'success',
     data: 'Sign up route created'
