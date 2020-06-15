@@ -27,7 +27,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm
   } = req.body;
-  const user = await new User({
+  const newUser = User.create({
     firstName,
     lastName,
     username,
@@ -37,12 +37,14 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm
   });
   // user.passwordConfirm = undefined;
-  await user.save();
+  //   await user.save();
   //   console.log(user);
 
   res.status(200).json({
     status: 'success',
-    data: 'Sign up route created'
+    data: {
+      user: newUser
+    }
   });
 });
 
