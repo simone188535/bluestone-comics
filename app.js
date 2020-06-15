@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 //2) Routes
 app.get('/', (req, res) => {
   res.status(200).json({
-    working: 'yep',
+    working: 'yep'
   });
 });
 // app.route('/api/v1/users').get(userController.getAllUsers);

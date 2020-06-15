@@ -27,7 +27,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm
   } = req.body;
-  const newUser = User.create({
+  const newUser = await User.create({
     firstName,
     lastName,
     username,
@@ -38,7 +38,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
   // user.passwordConfirm = undefined;
   //   await user.save();
-  //   console.log(user);
+  // console.log(newUser);
 
   res.status(200).json({
     status: 'success',
@@ -49,6 +49,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync((req, res) => {
+  const { email, password } = req.body;
   res.status(200).json({
     status: 'success',
     data: 'login route created'

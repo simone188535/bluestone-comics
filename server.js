@@ -8,6 +8,7 @@ mongoose
   .connect(keys.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true
   })
   .then(() => console.log('DB connection successful!'));
 
