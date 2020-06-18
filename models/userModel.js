@@ -40,7 +40,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please Provide an Password!'],
-    minlength: 6
+    minlength: 6,
+    select: false
   },
   passwordConfirm: {
     type: String,
@@ -53,6 +54,10 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords do not match. Try again!'
     },
     required: [true, 'Please Confirm Password!']
+  },
+  passwordChangedAt: {
+    type: Date,
+    default: Date.now
   },
   passwordResetToken: String,
   passwordResetTokenExpires: String,
@@ -77,6 +82,27 @@ userSchema.pre('save', async function save(next) {
     return next(err);
   }
 });
+
+// Checks if users password is correct
+userSchema.methods.passwordCompare = async function (
+  providedPassword,
+  currentPassword
+) {
+  return await bcrypt.compare(providedPassword, currentPassword);
+};
+
+// Checks if the logged in user changed their password after jwt token was issued
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+  // False means Not changed
+  return false;
+};
 
 const Users = mongoose.model('Users', userSchema);
 

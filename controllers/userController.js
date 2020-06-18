@@ -1,12 +1,14 @@
 // const express = require('express');
 const catchAsync = require('../utils/catchAsync');
-
+const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 
-exports.getAllUsers = catchAsync((req, res) => {
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.find();
+
   res.status(200).json({
     status: 'success',
-    data: 'get all users route'
+    data: users
   });
 });
 
@@ -16,42 +18,3 @@ exports.getAllUsers = catchAsync((req, res) => {
 //     data: 'Working user route',
 //   });
 // });
-
-exports.signup = catchAsync(async (req, res, next) => {
-  const {
-    firstName,
-    lastName,
-    username,
-    email,
-    photo,
-    password,
-    passwordConfirm
-  } = req.body;
-  const newUser = await User.create({
-    firstName,
-    lastName,
-    username,
-    email,
-    photo,
-    password,
-    passwordConfirm
-  });
-  // user.passwordConfirm = undefined;
-  //   await user.save();
-  // console.log(newUser);
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      user: newUser
-    }
-  });
-});
-
-exports.login = catchAsync((req, res) => {
-  const { email, password } = req.body;
-  res.status(200).json({
-    status: 'success',
-    data: 'login route created'
-  });
-});
