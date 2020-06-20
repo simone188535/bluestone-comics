@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
@@ -28,7 +29,7 @@ const userSchema = new mongoose.Schema({
       message: 'This is not a valid email!'
     }
   },
-  roles: {
+  role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
@@ -104,6 +105,18 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000; // Expires in 10 minutes
+
+  return resetToken;
+};
 const Users = mongoose.model('Users', userSchema);
 
 module.exports = Users;
