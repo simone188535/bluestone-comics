@@ -1,25 +1,33 @@
 const nodemailer = require('nodemailer');
+const sgTransport = require('nodemailer-sendgrid-transport');
 const keys = require('../config/keys');
+const AppError = require('./appError');
 
-const sendEmail = (options) => {
-  // 1) Create a transporter
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+const sendEmail = async (options) => {
+  // 1) Create a transporterOptions
+  const transporterOptions = {
     auth: {
-      user: keys.EMAIL,
-      pass: keys.EMAIL_PASSWORD
+      api_key: keys.SENDGRID_API_KEY
     }
-    // Activate in gmail "less secure app" option
-  });
+  };
+  const client = nodemailer.createTransport(sgTransport(transporterOptions));
 
   // 2) Define the email options
   const mailOptions = {
-    to: keys.EMAIL,
     from: keys.EMAIL,
-    subject: 'Sending with SendGrid is Fun',
-    text: 'and easy to do anywhere, even with Node.js',
-    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    to: options.email,
+    subject: options.subject,
+    text: options.text,
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>'
   };
 
   // 3) Actually send the email
+  try {
+    await client.sendMail(mailOptions);
+    console.log('WORKING!!!!!');
+  } catch (err) {
+    new AppError('Email could not be sent', 503);
+  }
 };
+
+module.exports = sendEmail;
