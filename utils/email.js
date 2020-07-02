@@ -12,8 +12,15 @@ const sendEmail = async (options) => {
     to: 'simone.anthony1@yahoo.com',
     subject: options.subject,
     text: options.text,
-    html: '<strong>and easy to do anywhere, even with Node.js</strong>'
+    html: options.message
   };
+
+  // try {
+  //   await sgMail.send(msg);
+  //   console.log('email sent');
+  // } catch (err) {
+  //   new AppError('Email could not be sent', 503);
+  // }
   sgMail.send(msg).then(
     () => {
       console.log('email sent');

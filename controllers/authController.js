@@ -139,7 +139,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     'host'
   )}/api/v1/users/reset-password/${resetToken}`;
 
-  const message = `Forgot your password? Password Reset: ${resetURL}. If not, please ignore this message.`;
+  const message = `Forgot your password? Password Reset: <a href="${resetURL}">${resetURL}</a>. If not, please ignore this message.`;
 
   try {
     await sendEmail({
