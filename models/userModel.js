@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema({
     default: true
   }
 });
-
+// Encrypts password before saving it
 userSchema.pre('save', async function save(next) {
   if (!this.isModified('password')) return next();
   try {
@@ -82,6 +82,13 @@ userSchema.pre('save', async function save(next) {
   } catch (err) {
     return next(err);
   }
+});
+// Alters passwordChangedAt when password is updated
+userSchema.pre('save', async function save(next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
 });
 
 // Checks if users password is correct

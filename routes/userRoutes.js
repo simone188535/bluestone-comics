@@ -9,7 +9,14 @@ const authController = require('../controllers/authController');
 router.route('/').get(authController.protect, userController.getAllUsers);
 router.route('/signup').post(authController.signup);
 router.route('/login').post(authController.login);
-router.route('/forgot-password').post(authController.forgotPassword);
-router.route('/reset-password/:token').patch(authController.resetPassword);
+router
+  .route('/forgot-password')
+  .post(authController.protect, authController.forgotPassword);
+router
+  .route('/reset-password/:token')
+  .patch(authController.protect, authController.resetPassword);
+router
+  .route('/update-password')
+  .patch(authController.protect, authController.updatePassword);
 
 module.exports = router;
