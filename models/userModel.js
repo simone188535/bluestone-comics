@@ -91,6 +91,10 @@ userSchema.pre('save', async function save(next) {
   next();
 });
 
+userSchema.pre(/^find/, function save(next) {
+  this.where('active').ne(false);
+  next();
+});
 // Checks if users password is correct
 userSchema.methods.passwordCompare = async function (
   providedPassword,

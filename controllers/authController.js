@@ -14,6 +14,14 @@ const signToken = (user) => {
   });
 };
 
+const createSendToken = (user, status, res) => {
+  const token = signToken(user);
+  res.status(status).json({
+    status: 'success',
+    token
+  });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   const {
     firstName,
@@ -66,12 +74,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!passedPasswordVerification) {
     return next(new AppError('Password is incorrect', 406));
   }
-  const token = signToken(existingUser);
-
-  res.status(200).json({
-    status: 'success',
-    token
-  });
+  createSendToken(existingUser, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -186,14 +189,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetTokenExpires = undefined;
   await user.save();
 
-  // 3) Update changedPasswordAt property for the user
   // 4) Log the user in, send JWT
-
-  const token = signToken(user);
-  res.status(200).json({
-    status: 'success',
-    token
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -218,10 +215,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // 4) Log user in send jwt
-  const token = signToken(user);
-
-  res.status(200).json({
-    status: 'success',
-    token
-  });
+  createSendToken(user, 200, res);
 });

@@ -18,5 +18,11 @@ router
 router
   .route('/update-password')
   .patch(authController.protect, authController.updatePassword);
+router
+  .route('/update-me')
+  .patch(authController.protect, userController.updateMe);
+router
+  .route('/delete-me')
+  .delete(authController.protect, userController.deleteMe);
 
 module.exports = router;
