@@ -1,7 +1,8 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import MainNav from './MainNav';
+import Footer from './Footer';
 
-const Header = () => <h2>Header</h2>;
 const Dashboard = () => <h2>Dashboard</h2>;
 const SurveyNew = () => <h2>SurveyNew</h2>;
 const Landing = () => <h2>Landing</h2>;
@@ -10,10 +11,13 @@ const App = () => {
         <div>
             <BrowserRouter>
                 <div>
-                    <Header />
-                   <Route path="/" component={Landing}/>
-                   <Route path="/survey" component={Dashboard}/>
-                   <Route path="/survey/new" component={SurveyNew}/>
+                    <MainNav />
+                    <Switch>
+                        <Route path="/survey" component={Dashboard} />
+                        <Route path="/survey/new" component={SurveyNew} />
+                        <Route path="/" component={Landing} />
+                    </Switch>
+                    <Footer />
                 </div>
             </BrowserRouter>
         </div>
