@@ -16,6 +16,12 @@ const signToken = (user) => {
 
 const createSendToken = (user, status, res) => {
   const token = signToken(user);
+
+  res.cookie('jwt', token, {
+    // expires in 7 days
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    httpOnly: true
+  });
   res.status(status).json({
     status: 'success',
     token
@@ -44,6 +50,8 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const token = signToken(User);
 
+  // hides password in json response
+  newUser.password = undefined;
   res.status(200).json({
     status: 'success',
     token,
