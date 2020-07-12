@@ -22,9 +22,16 @@ const createSendToken = (user, status, res) => {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     httpOnly: true
   });
+
+  // hides password in json response
+  user.password = undefined;
+
   res.status(status).json({
     status: 'success',
-    token
+    token,
+    data: {
+      user
+    }
   });
 };
 
@@ -48,17 +55,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm
   });
 
-  const token = signToken(User);
-
-  // hides password in json response
-  newUser.password = undefined;
-  res.status(200).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser
-    }
-  });
+  createSendToken(newUser, 200, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -82,6 +79,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!passedPasswordVerification) {
     return next(new AppError('Password is incorrect', 406));
   }
+
   createSendToken(existingUser, 200, res);
 });
 

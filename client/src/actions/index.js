@@ -7,7 +7,7 @@ export const login = (email, password) => async ( dispatch ) => {
         email,
         password
     })
-
+    console.log(res);
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 // export const Signup = () => {
