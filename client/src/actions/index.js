@@ -8,7 +8,7 @@ export const login = (email, password) => async ( dispatch ) => {
         password
     })
     console.log(res);
-  dispatch({ type: FETCH_USER, payload: res.data });
+  dispatch({ type: FETCH_USER, payload: res.data.data.user });
 };
 // export const Signup = () => {
 //     axios
