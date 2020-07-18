@@ -1,6 +1,11 @@
+// import cookies from "js-cookies";
 
 // This function checks for a cookie in the browser 
-function checkLoginToken() {
-const jwtToken = document.cookie;
-console.log(jwtToken);
+export const userServices = {
+    checkLoginToken
+}
+
+export function checkLoginToken() {
+
+// console.log('!!!!!!!!!!', cookies.getItem("jwtToken"));
 }
