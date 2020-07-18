@@ -18,7 +18,7 @@ const signToken = (user) => {
 const createSendToken = (user, status, res) => {
   const token = signToken(user);
 
-  res.cookie('jwt', token, {
+  res.cookie('jwtToken', token, {
     // expires in 7 days
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     httpOnly: true
