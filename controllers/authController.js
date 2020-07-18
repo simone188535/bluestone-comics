@@ -10,6 +10,7 @@ const keys = require('../config/keys.js');
 
 const signToken = (user) => {
   return jwt.sign({ id: user._id }, keys.JWT_SECRET, {
+    // expires in 7 days
     expiresIn: '7d'
   });
 };

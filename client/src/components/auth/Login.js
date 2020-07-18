@@ -7,7 +7,7 @@ const Login = () => {
     const dispatch = useDispatch();
     return(
     <div>
-        <h2 onClick={() => dispatch(login('simone.anthony1@yahoo.com', 'testing1234'))}>Login</h2>
+        <h2 onClick={() => dispatch(login('simone.anthony@yahoo.com', 'testing1234'))}>Login</h2>
         <LoginForm />
     </div>
     );
