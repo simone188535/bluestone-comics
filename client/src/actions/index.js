@@ -8,7 +8,10 @@ export const login = (email, password) => async (dispatch) => {
       email,
       password
     })
-    console.log(res);
+    // console.log('login data', res);
+
+    localStorage.setItem('jwtToken', res.data.token);
+
     dispatch({ type: FETCH_USER, payload: res.data.data.user });
   } catch (err) {
     console.log('!!!!!!!!!!error', err);

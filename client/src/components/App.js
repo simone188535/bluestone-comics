@@ -1,26 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import MainNav from './MainNav';
+import MainNav from './nav/MainNav';
 import SignUp from './auth/SignUp';
 import Login from './auth/Login';
-import Footer from './Footer';
-import { userServices }  from '../services/user.services';
+import Footer from './nav/Footer';
+import { AuthenticationServices } from '../services/Authentication.services';
 
-// import Cookies from 'universal-cookie';
-
-// const cookies = new Cookies();
-
-// const jwtToken = cookies.get('jwtToken');
-// console.log('!!!!!!!!!!', jwtToken);
-
-// userServices.checkLoginToken();
-
+if (localStorage.getItem('jwtToken')) {
+    const currentUser = AuthenticationServices.ReAuthUser();
+}
 
 const Dashboard = () => <h2>Dashboard</h2>;
 const SurveyNew = () => <h2>SurveyNew</h2>;
 const Landing = () => {
-    userServices.checkLoginToken();
-return(<h2>Landing</h2>);
+    return (<h2>Landing</h2>);
 }
 const App = () => {
     return (
@@ -31,8 +24,8 @@ const App = () => {
                     <Switch>
                         <Route path="/survey" component={Dashboard} />
                         <Route path="/survey/new" component={SurveyNew} />
-                        <Route path="/sign-up" component={SignUp}/>
-                        <Route path="/login" component={Login}/>
+                        <Route path="/sign-up" component={SignUp} />
+                        <Route path="/login" component={Login} />
                         <Route path="/" component={Landing} />
                     </Switch>
                     <Footer />
