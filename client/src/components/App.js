@@ -8,14 +8,13 @@ import Footer from './nav/Footer';
 import { authActions } from '../actions';
 import { AuthenticationServices } from '../services/Authentication.services';
 
+// This reauths user if a jwtToken is preset in local storage. Skips login process for a 7 days
 const jwtToken = localStorage.getItem('jwtToken');
 if (jwtToken) {
-    AuthenticationServices.ReAuthUser(jwtToken).then((currentUser) => {
-        console.log('!!!!current User', currentUser);
+    (async () => {
+        const currentUser = await AuthenticationServices.ReAuthUser(jwtToken);
         store.dispatch(authActions.fetchUser(currentUser));
-    });
-
-
+    })();
 }
 
 const Dashboard = () => <h2>Dashboard</h2>;
