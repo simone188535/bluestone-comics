@@ -29,6 +29,24 @@ const MainNav = () => {
             <Nav.Item>
                 <Nav.Link href="/">Home</Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+                <Nav.Link href="/upload">Upload</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link href="/about">About</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link href="/comic-list">Comic List</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link href="/contest">Contests</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link href="/articles">Articles</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+                <Nav.Link href="/news">News</Nav.Link>
+            </Nav.Item>
             {authNavItems(currentUser)}
         </Nav>
     );
