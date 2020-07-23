@@ -55,8 +55,8 @@ function LoginForm() {
             onBlur={formik.handleBlur}
             value={formik.values.lastName}
           />
-          {formik.touched.lastName && formik.errors.lastName ? (
-            <div>{formik.errors.lastName}</div>
+          {formik.touched.password && formik.errors.password ? (
+            <div>{formik.errors.password}</div>
           ) : null}
           <button type="submit">Submit</button>
         </form>
