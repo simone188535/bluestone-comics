@@ -1,65 +1,36 @@
 import React from 'react';
-import { useFormik, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
-const onSubmit = values => {
-    console.log('Form data', values)
+const onSubmit = (values, { setSubmitting }) => {
+    console.log(values);
+    setSubmitting(false);
 }
 
-const validate = values => {
-    const errors = {};
-
-    if (!values.email) {
-      errors.email = 'Required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
-    }
-
-    if (!values.password) {
-        errors.password = 'Required';
-      } 
-  
-    return errors;
-  };
-  
-
 function LoginForm() {
-    const formik = useFormik({
-        initialValues: {
-          email: '',
-          password: ''
-        },
-        validate,
-        onSubmit
-      });
 
-      return (
-        <form onSubmit={formik.handleSubmit}>
-          <label htmlFor="email">Email Address</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
-          />
-          {formik.touched.email && formik.errors.email ? (
-            <div>{formik.errors.email}</div>
-          ) : null}
-        <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.lastName}
-          />
-          {formik.touched.password && formik.errors.password ? (
-            <div>{formik.errors.password}</div>
-          ) : null}
-          <button type="submit">Submit</button>
-        </form>
-      );
+    return (
+        <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={Yup.object({
+                email: Yup.string()
+                    .email('Invalid email address')
+                    .required('Required'),
+                password: Yup.string()
+                    .required('Required'),
+            })}
+            onSubmit={onSubmit}
+        >
+            <Form>
+                <label htmlFor="email">Email Address</label>
+                <Field name="email" type="email" />
+                <ErrorMessage name="email" />
+                <label htmlFor="password">Password</label>
+                <Field name="password" type="password" />
+                <ErrorMessage name="password" />
+                <button type="submit">Submit</button>
+            </Form>
+        </Formik>
+    );
 }
 export default LoginForm;
