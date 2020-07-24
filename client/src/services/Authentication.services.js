@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const AuthenticationServices = {
-    ReAuthUser
+    ReAuthUser,
+    login
 }
 
 // This function helps ReAuth a user if the jwtToken is in the browser 
@@ -13,7 +14,20 @@ async function ReAuthUser(jwtToken) {
         };
         // send request to get-me (with bearer token) and return it
         const res = await axios.get('/api/v1/users/get-me', config);
-        // console.log('!!!!!!', res);
+        return res;
+    }
+    catch(err) {
+        return err;
+    }
+}
+
+async function login(email, password) {
+    try {
+        // send request to login
+        const res = await axios.post('/api/v1/users/login', {
+            email,
+            password
+          });
         return res;
     }
     catch(err) {
