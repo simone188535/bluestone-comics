@@ -1,52 +1,53 @@
 import React from 'react';
 import { useSelector } from "react-redux";
-import Nav from 'react-bootstrap/Nav';
+import { Nav, NavItem, NavLink } from 'reactstrap';
 
 const authNavItems = (currentUser) => {
 
     const authNavValues = currentUser ?
         <>
-            <Nav.Item>
-                <Nav.Link href="/logout">Logout</Nav.Link>
-            </Nav.Item>
+            <NavItem>
+                <NavLink href="/logout">Logout</NavLink>
+            </NavItem>
 
         </>
         :
         <>
-            <Nav.Item>
-                <Nav.Link href="/sign-up">Sign Up</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link href="/login">Login</Nav.Link>
-            </Nav.Item>
+            <NavItem>
+                <NavLink href="/sign-up">Sign Up</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="/login">Login</NavLink>
+            </NavItem>
         </>;
     return authNavValues;
 }
 const MainNav = () => {
     const currentUser = useSelector(state => state.auth);
+    
     return (
-        <Nav className="justify-content-end" activeKey="/home">
-            <Nav.Item>
-                <Nav.Link href="/">Home</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link href="/upload">Upload</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link href="/about">About</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link href="/comic-list">Comic List</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link href="/contest">Contests</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link href="/articles">Articles</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-                <Nav.Link href="/news">News</Nav.Link>
-            </Nav.Item>
+        <Nav className="justify-content-end" href="/home">
+            <NavItem>
+                <NavLink href="/">Home</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="/upload">Upload</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="/about">About</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="/comic-list">Comic List</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="/contest">Contests</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="/articles">Articles</NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink href="/news">News</NavLink>
+            </NavItem>
             {authNavItems(currentUser)}
         </Nav>
     );
