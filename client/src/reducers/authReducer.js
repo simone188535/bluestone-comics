@@ -1,6 +1,9 @@
 import { FETCH_USER } from '../actions/types';
 
-export default function(state = null, action) {
+export default function(state = {
+    isFetching: false,
+    isAuthenticated: null
+  }, action) {
     switch (action.type) {
         case FETCH_USER: 
         return action.payload || false;
