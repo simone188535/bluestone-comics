@@ -24,7 +24,7 @@ const authNavItems = (currentUser) => {
 }
 const MainNav = () => {
     const currentUser = useSelector(state => state.auth);
-
+    console.log('!!!currentUser: ',currentUser);
     return (
         <div className="justify-content-end" href="/home">
             <div>

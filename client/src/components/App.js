@@ -12,8 +12,12 @@ import { AuthenticationServices } from '../services/Authentication.services';
 const jwtToken = localStorage.getItem('jwtToken');
 if (jwtToken) {
     (async () => {
+        store.dispatch(authActions.loginRequest());
         const currentUser = await AuthenticationServices.ReAuthUser(jwtToken);
-        store.dispatch(authActions.fetchUser(currentUser));
+        if( currentUser ){
+            return store.dispatch(authActions.loginSuccess(currentUser.data.data.user));
+        }
+        // return store.dispatch(authActions.loginFailure(currentUser));
     })();
 }
 

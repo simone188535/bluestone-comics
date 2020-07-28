@@ -1,4 +1,4 @@
-import { FETCH_USER, LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from '../actions/types';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from '../actions/types';
 
 const initialState = {
     isFetching: false,
@@ -6,8 +6,6 @@ const initialState = {
   }
 export default function(state = initialState, action) {
     switch (action.type) {
-        case FETCH_USER: 
-        return action.payload || false;
         case LOGIN_REQUEST: 
             return Object.assign({}, state, {
                 isFetching: true,
