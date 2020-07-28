@@ -1,55 +1,55 @@
 import React from 'react';
 import { useSelector } from "react-redux";
-import { Nav, NavItem, NavLink } from 'reactstrap';
+// import { Nav, NavItem, NavLink } from 'reactstrap';
 
 const authNavItems = (currentUser) => {
 
     const authNavValues = currentUser ?
         <>
-            <NavItem>
-                <NavLink href="/logout">Logout</NavLink>
-            </NavItem>
+            <div>
+                <a href="/logout">Logout</a>
+            </div>
 
         </>
         :
         <>
-            <NavItem>
-                <NavLink href="/sign-up">Sign Up</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink href="/login">Login</NavLink>
-            </NavItem>
+            <div>
+                <a href="/sign-up">Sign Up</a>
+            </div>
+            <div>
+                <a href="/login">Login</a>
+            </div>
         </>;
     return authNavValues;
 }
 const MainNav = () => {
     const currentUser = useSelector(state => state.auth);
-    
+
     return (
-        <Nav className="justify-content-end" href="/home">
-            <NavItem>
-                <NavLink href="/">Home</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink href="/upload">Upload</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink href="/about">About</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink href="/comic-list">Comic List</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink href="/contest">Contests</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink href="/articles">Articles</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink href="/news">News</NavLink>
-            </NavItem>
+        <div className="justify-content-end" href="/home">
+            <div>
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a href="/upload">Upload</a>
+            </div>
+            <div>
+                <a href="/about">About</a>
+            </div>
+            <div>
+                <a href="/comic-list">Comic List</a>
+            </div>
+            <div>
+                <a href="/contest">Contests</a>
+            </div>
+            <div>
+                <a href="/articles">Articles</a>
+            </div>
+            <div>
+                <a href="/news">News</a>
+            </div>
             {authNavItems(currentUser)}
-        </Nav>
+        </div>
     );
 }
 export default MainNav;

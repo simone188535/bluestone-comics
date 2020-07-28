@@ -10,14 +10,14 @@ const login = (email, password) => async (dispatch) => {
     const res = await axios.post('/api/v1/users/login', {
       email,
       password
-    })
-    // console.log('login data', res);
+    });
 
     localStorage.setItem('jwtToken', res.data.token);
 
     dispatch({ type: FETCH_USER, payload: res.data.data.user });
   } catch (err) {
     console.log('!!!!!!!!!!error', err);
+    //send redux error
   }
 };
  const Signup = () => {
