@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from './types';
+import { AuthenticationServices } from '../services/Authentication.services';
 
 const loginRequest = () => {
   return { type: LOGIN_REQUEST }
@@ -18,23 +19,18 @@ const login = (email, password) => async (dispatch) => {
     
     dispatch({ type: LOGIN_REQUEST });
     
-    const res = await axios.post('/api/v1/users/login', {
-      email,
-      password
-    });
+    const res = await AuthenticationServices.login(email, password);
 
     localStorage.setItem('jwtToken', res.data.token);
 
     dispatch({ type: LOGIN_SUCCESS, user: res.data.data.user });
   } catch (err) {
-    console.log('!!!!!!!!!!error', err);
-    //send redux error
-    dispatch({ type: LOGIN_FAILURE, error: '!!!THIS IS AN ERROR MESSAGE!!!' });
+      dispatch({ type: LOGIN_FAILURE, error: err.response.data });
   }
 };
  const Signup = () => {
     return false
-    };
+  };
 
 export const authActions = {
     loginRequest,
