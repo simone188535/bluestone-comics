@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from './types';
 import { AuthenticationServices } from '../services/Authentication.services';
 
@@ -32,10 +32,15 @@ const login = (email, password) => async (dispatch) => {
     return false
   };
 
+  const logout = () => (dispatch) => {
+    dispatch({ type: LOGOUT_SUCCESS });
+    AuthenticationServices.logout();
+  }
 export const authActions = {
     loginRequest,
     loginSuccess,
     loginFailure,
     login,
+    logout,
     Signup
 }

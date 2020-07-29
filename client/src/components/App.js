@@ -17,7 +17,6 @@ if (jwtToken) {
         if( currentUser ){
             return store.dispatch(authActions.loginSuccess(currentUser.data.data.user));
         }
-        // return store.dispatch(authActions.loginFailure(currentUser));
     })();
 }
 

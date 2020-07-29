@@ -1,18 +1,19 @@
 import React from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { AuthenticationServices } from '../../../services/Authentication.services';
+import { authActions } from "../../../actions";
 
-const onSubmit = async (values, { setSubmitting }) => {
-    console.log(values);
-    const res = await AuthenticationServices.login(values.email, values.password);
-    console.log('!!!!!!!!!!!',res);
-    // dispatch action
-    setSubmitting(false);
-}
+
 
 function LoginForm() {
+    const dispatch = useDispatch();
 
+    const onSubmit = async (values, { setSubmitting }) => {
+        dispatch(authActions.login(values.email, values.password));
+        setSubmitting(false);
+    }
+    
     return (
             <Formik
                 initialValues={{ email: '', password: '' }}
