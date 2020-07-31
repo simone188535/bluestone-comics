@@ -3,54 +3,57 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
 
 const authNavItems = ( dispatch, isAuthenticated) => {
-
+    
     const authNavValues = isAuthenticated ?
         <>
-            <div onClick={() => dispatch(authActions.logout())}>
-                <a href="/logout">Logout</a>
-            </div>
+            <li className="nav-item" onClick={() => dispatch(authActions.logout())}>
+                <a className="nav-link" href="/logout">Logout</a>
+            </li>
 
         </>
         :
         <>
-            <div>
-                <a href="/sign-up">Sign Up</a>
-            </div>
-            <div>
-                <a href="/login">Login</a>
-            </div>
+            <li className="nav-item">
+                <a className="nav-link" href="/sign-up">Sign Up</a>
+            </li>
+            <li className="nav-item">
+                <a className="nav-link" href="/login">Login</a>
+            </li>
         </>;
     return authNavValues;
 }
+
 const MainNav = () => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-    //console.log('!!!isAuthenticated: ',isAuthenticated);
+   
     return (
-        <div className="justify-content-end" href="/home">
-            <div>
-                <a href="/">Home</a>
-            </div>
-            <div>
-                <a href="/upload">Upload</a>
-            </div>
-            <div>
-                <a href="/about">About</a>
-            </div>
-            <div>
-                <a href="/comic-list">Comic List</a>
-            </div>
-            <div>
-                <a href="/contest">Contests</a>
-            </div>
-            <div>
-                <a href="/articles">Articles</a>
-            </div>
-            <div>
-                <a href="/news">News</a>
-            </div>
-            {authNavItems(dispatch, isAuthenticated)}
-        </div>
+        <nav className="navbar navbar-expand-sm bg-light navbar-light">
+            <ul className="navbar-nav">
+                <li className="nav-item">
+                    <a className="nav-link" href="/">Home</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="/upload">Upload</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="/about">About</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="/comic-list">Comic List</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="/contest">Contests</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="/articles">Articles</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="/news">News</a>
+                </li>
+                {authNavItems(dispatch, isAuthenticated)}
+            </ul>
+        </nav>
     );
 }
 export default MainNav;
