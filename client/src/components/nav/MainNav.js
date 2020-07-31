@@ -1,12 +1,12 @@
 import React from 'react';
-import { useSelector } from "react-redux";
-// import { Nav, NavItem, NavLink } from 'reactstrap';
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../actions";
 
-const authNavItems = (currentUser) => {
+const authNavItems = ( dispatch, isAuthenticated) => {
 
-    const authNavValues = currentUser ?
+    const authNavValues = isAuthenticated ?
         <>
-            <div>
+            <div onClick={() => dispatch(authActions.logout())}>
                 <a href="/logout">Logout</a>
             </div>
 
@@ -23,8 +23,9 @@ const authNavItems = (currentUser) => {
     return authNavValues;
 }
 const MainNav = () => {
-    const currentUser = useSelector(state => state.auth);
-    console.log('!!!currentUser: ',currentUser);
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    //console.log('!!!isAuthenticated: ',isAuthenticated);
     return (
         <div className="justify-content-end" href="/home">
             <div>
@@ -48,7 +49,7 @@ const MainNav = () => {
             <div>
                 <a href="/news">News</a>
             </div>
-            {authNavItems(currentUser)}
+            {authNavItems(dispatch, isAuthenticated)}
         </div>
     );
 }
