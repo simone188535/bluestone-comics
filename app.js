@@ -6,6 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -47,24 +48,17 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 //2) Routes
-app.get('/', (req, res) => {
-  res.status(200).json({
-    working: 'yep'
-  });
-});
-
-// .route('/api/v1/users/:id')
-// .get()
+// serve the static files from React app
+app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 app.use('/api/v1/users', userRoutes);
-// app.use('/api/v1/read', () => {
-//   console.log('testing');
-// });
-// app.use('/api/v1/search', () => {
-//   console.log('testing 2');
-// });
 
 // If route is not defined or not found.
+// in charge of sending the main index.html file back to the client if it didn't receive a request it recognized otherwise
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
+
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
