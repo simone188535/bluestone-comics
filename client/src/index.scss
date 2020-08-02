@@ -1,9 +1,18 @@
-* {
-    // color: blueviolet !important;
     // https://hugogiraudel.com/2015/06/18/styling-react-components-in-sass/
     // https://sass-guidelin.es/#the-7-1-pattern
     // https://blog.prototypr.io/how-i-organize-sass-projects-e2d7760df86f
     // https://itnext.io/structuring-your-sass-projects-c8d41fa55ed4#:~:text=Simple%20Structure&text=Base%3A%20contained%20within%20this%20file,buttons%2C%20navbars%2C%20cards%20etc.
     // https://stackoverflow.com/questions/51807409/global-scss-variables-in-react-create-app
     // https://stackoverflow.com/questions/39317586/react-global-styles
-}
+
+// variables
+@import '../src/styles/abstracts/variables';
+
+// typography and fonts
+@import '../src/styles/base/typography';
+
+// global components
+@import '../src/styles/components/global/Header';
+@import '../src/styles/components/global/Footer';
+@import '../src/styles/components/global/Buttons';
+@import '../src/styles/components/global/Forms';
