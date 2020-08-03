@@ -12,8 +12,7 @@ function LoginForm() {
     
 
     const onSubmit = async (values, { setSubmitting }) => {
-        const res = dispatch(authActions.login(values.email, values.password));
-        console.log('ooijoijo', res);
+        dispatch(authActions.login(values.email, values.password));
         setSubmitting(false);
     }
     

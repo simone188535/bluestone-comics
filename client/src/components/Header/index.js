@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
 import './header.scss';
@@ -8,17 +9,17 @@ const authNavItems = ( dispatch, isAuthenticated) => {
     const authNavValues = isAuthenticated ?
         <>
             <li className="nav-item" onClick={() => dispatch(authActions.logout())}>
-                <a className="nav-link" href="/logout">Logout</a>
+                <Link className="nav-link" to="/logout">Logout</Link>
             </li>
 
         </>
         :
         <>
             <li className="nav-item">
-                <a className="nav-link" href="/sign-up">Sign Up</a>
+                <Link className="nav-link" to="/sign-up">Sign Up</Link>
             </li>
             <li className="nav-item">
-                <a className="nav-link" href="/login">Login</a>
+                <Link className="nav-link" to="/login">Login</Link>
             </li>
         </>;
     return authNavValues;
@@ -32,25 +33,25 @@ const Header = () => {
         <nav className="navbar navbar-expand-sm bg-light navbar-light bsc-header">
             <ul className="navbar-nav">
                 <li className="nav-item">
-                    <a className="nav-link" href="/">Home</a>
+                    <Link className="nav-link" to="/">Home</Link>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/upload">Upload</a>
+                    <Link className="nav-link" to="/upload">Upload</Link>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/about">About</a>
+                    <Link className="nav-link" to="/about">About</Link>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/comic-list">Comic List</a>
+                    <Link className="nav-link" to="/comic-list">Comic List</Link>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/contest">Contests</a>
+                    <Link className="nav-link" to="/contest">Contests</Link>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/articles">Articles</a>
+                    <Link className="nav-link" to="/articles">Articles</Link>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/news">News</a>
+                    <Link className="nav-link" to="/news">News</Link>
                 </li>
                 {authNavItems(dispatch, isAuthenticated)}
             </ul>
