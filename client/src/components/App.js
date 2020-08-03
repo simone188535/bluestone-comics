@@ -24,6 +24,7 @@ if (jwtToken) {
     (async () => {
         store.dispatch(authActions.loginRequest());
         const currentUser = await AuthenticationServices.ReAuthUser(jwtToken);
+        console.log('current', currentUser);
         if( currentUser.status === 200 ){
             return store.dispatch(authActions.loginSuccess(currentUser.data.data.user));
         }
