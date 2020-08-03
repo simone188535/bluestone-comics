@@ -1,10 +1,20 @@
 import React from 'react';
 import store from '../store';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Header from './nav/Header';
-import SignUp from './auth/SignUp';
-import Login from './auth/Login';
-import Footer from './nav/Footer';
+
+import Header from './Header';
+import Footer from './Footer';
+import Home from './Home';
+import SignUp from './SignUp';
+import Login from './Login';
+import About from './About';
+import Articles from './Articles';
+import ComicList from './ComicList';
+import Contest from './Contest';
+import News from './News';
+import Upload from './Upload';
+
+
 import { authActions } from '../actions';
 import { AuthenticationServices } from '../services/Authentication.services';
 
@@ -20,23 +30,22 @@ if (jwtToken) {
     })();
 }
 
-const Dashboard = () => <h2>Dashboard</h2>;
-const SurveyNew = () => <h2>SurveyNew</h2>;
-const Landing = () => {
-    return (<h2>Landing</h2>);
-}
 const App = () => {
     return (
         <div>
             <BrowserRouter>
-                <div>
+                <div className="bsc">
                     <Header />
                     <Switch>
-                        <Route path="/survey" component={Dashboard} />
-                        <Route path="/survey/new" component={SurveyNew} />
+                        <Route path="/about" component={About} />
+                        <Route path="/articles" component={Articles} />
+                        <Route path="/contest" component={Contest} />
+                        <Route path="/comic-list" component={ComicList} />
+                        <Route path="/news" component={News} />
+                        <Route path="/upload" component={Upload} />
                         <Route path="/sign-up" component={SignUp} />
                         <Route path="/login" component={Login} />
-                        <Route path="/" component={Landing} />
+                        <Route path="/" component={Home} />
                     </Switch>
                     <Footer />
                 </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
+import './header.scss';
 
 const authNavItems = ( dispatch, isAuthenticated) => {
     
