@@ -23,12 +23,12 @@ const authNavItems = ( dispatch, isAuthenticated) => {
     return authNavValues;
 }
 
-const MainNav = () => {
+const Header = () => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
    
     return (
-        <nav className="navbar navbar-expand-sm bg-light navbar-light">
+        <nav className="navbar navbar-expand-sm bg-light navbar-light bsc-header">
             <ul className="navbar-nav">
                 <li className="nav-item">
                     <a className="nav-link" href="/">Home</a>
@@ -56,4 +56,4 @@ const MainNav = () => {
         </nav>
     );
 }
-export default MainNav;
+export default Header;

@@ -1,7 +1,7 @@
 import React from 'react';
 import store from '../store';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import MainNav from './nav/MainNav';
+import Header from './nav/Header';
 import SignUp from './auth/SignUp';
 import Login from './auth/Login';
 import Footer from './nav/Footer';
@@ -30,7 +30,7 @@ const App = () => {
         <div>
             <BrowserRouter>
                 <div>
-                    <MainNav />
+                    <Header />
                     <Switch>
                         <Route path="/survey" component={Dashboard} />
                         <Route path="/survey/new" component={SurveyNew} />
