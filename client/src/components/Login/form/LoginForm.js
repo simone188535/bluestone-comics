@@ -8,13 +8,17 @@ import { authActions } from "../../../actions";
 
 function LoginForm() {
     const dispatch = useDispatch();
+    const hasAuthenticateError = useSelector(state => state.auth.errorMessage);
+    
 
     const onSubmit = async (values, { setSubmitting }) => {
-        dispatch(authActions.login(values.email, values.password));
+        const res = dispatch(authActions.login(values.email, values.password));
+        console.log('ooijoijo', res);
         setSubmitting(false);
     }
     
     return (
+            <div>
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={Yup.object({
@@ -36,6 +40,10 @@ function LoginForm() {
                     <button type="submit">Submit</button>
                 </Form>
             </Formik>
+            <span className="error-text">
+                {hasAuthenticateError && hasAuthenticateError.message}
+            </span>
+            </div>
     );
 }
 export default LoginForm;

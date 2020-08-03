@@ -78,7 +78,7 @@ exports.login = catchAsync(async (req, res, next) => {
   );
 
   if (!passedPasswordVerification) {
-    return next(new AppError('Password is incorrect', 406));
+    return next(new AppError('Password is incorrect.', 406));
   }
 
   createSendToken(existingUser, 200, res);
@@ -214,7 +214,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   );
 
   if (!passedPasswordVerification) {
-    return next(new AppError('Password is incorrect', 406));
+    return next(new AppError('Password is incorrect.', 406));
   }
   // 3) If so, update password
   user.password = password;
