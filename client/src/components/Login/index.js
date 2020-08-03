@@ -8,6 +8,8 @@ const Login = () => {
         <div className="container-fluid login-page">
             <div className="row">
                 <h2>Login</h2>
+            </div>
+            <div className="row">
                 <LoginForm />
             </div>
         </div>

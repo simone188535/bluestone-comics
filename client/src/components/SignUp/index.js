@@ -7,6 +7,8 @@ const SignUp = () => {
         <div className="container-fluid sign-up-page">
             <div className="row">
                 <h2>SignUp</h2>
+            </div>
+            <div className="row">
                 <SignUpForm />
             </div>
         </div>
