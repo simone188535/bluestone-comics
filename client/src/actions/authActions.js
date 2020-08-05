@@ -23,9 +23,9 @@ const login = (email, password) => async (dispatch) => {
 
     localStorage.setItem('jwtToken', res.data.token);
 
-    dispatch({ type: LOGIN_SUCCESS, user: res.data.data.user });
+    loginSuccess(res.data.data.user);
   } catch (err) {
-      dispatch({ type: LOGIN_FAILURE, error: err.response.data });
+    loginFailure(err.response.data.message);
   }
 };
  const Signup = () => {
