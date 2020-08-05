@@ -23,6 +23,7 @@ const jwtToken = localStorage.getItem('jwtToken');
 if (jwtToken) {
     (async () => {
         store.dispatch(authActions.loginRequest());
+        // try catch?
         const currentUser = await AuthenticationServices.ReAuthUser(jwtToken);
         console.log('current', currentUser);
         if( currentUser.status === 200 ){

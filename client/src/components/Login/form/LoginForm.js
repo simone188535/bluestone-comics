@@ -8,12 +8,24 @@ import { authActions } from "../../../actions";
 
 function LoginForm() {
     const dispatch = useDispatch();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const hasAuthenticateError = useSelector(state => state.auth.errorMessage);
     
 
     const onSubmit = async (values, { setSubmitting }) => {
         dispatch(authActions.login(values.email, values.password));
         setSubmitting(false);
+        // if isAuthenticated redirect
+    }
+
+    const isAuthMessage = () => {
+        // if error message, return it
+        if ( hasAuthenticateError ) {
+            return hasAuthenticateError.message;
+        }
+        if ( isAuthenticated ) {
+            return 'Login successful!';
+        }
     }
     
     return (
@@ -40,8 +52,9 @@ function LoginForm() {
                 </Form>
             </Formik>
             <span className="error-text">
-                {hasAuthenticateError && hasAuthenticateError.message}
+                {isAuthMessage()}
             </span>
+
             </div>
     );
 }
