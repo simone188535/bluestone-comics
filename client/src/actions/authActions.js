@@ -17,15 +17,15 @@ const loginFailure = ( error ) => {
 const login = (email, password) => async (dispatch) => {
   try {
     
-    dispatch({ type: LOGIN_REQUEST });
+    dispatch(loginRequest());
     
     const res = await AuthenticationServices.login(email, password);
 
     localStorage.setItem('jwtToken', res.data.token);
 
-    loginSuccess(res.data.data.user);
+    dispatch(loginSuccess(res.data.data.user));
   } catch (err) {
-    loginFailure(err.response.data.message);
+    dispatch(loginFailure(err.response.data.message));
   }
 };
  const Signup = () => {
