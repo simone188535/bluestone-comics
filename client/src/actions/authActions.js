@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from './types';
 import { AuthenticationServices } from '../services/Authentication.services';
 

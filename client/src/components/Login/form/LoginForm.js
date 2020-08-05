@@ -9,8 +9,7 @@ import { authActions } from "../../../actions";
 function LoginForm() {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-    const hasAuthenticateError = useSelector(state => state.auth.errorMessage);
-    
+    const authenticationErrorMessage = useSelector(state => state.auth.errorMessage);
 
     const onSubmit = async (values, { setSubmitting }) => {
         dispatch(authActions.login(values.email, values.password));
@@ -19,12 +18,12 @@ function LoginForm() {
     }
 
     const isAuthMessage = () => {
-        // if error message, return it
-        if ( hasAuthenticateError ) {
-            return hasAuthenticateError.message;
-        }
-        if ( isAuthenticated ) {
-            return 'Login successful!';
+        if ( authenticationErrorMessage ) {
+            return <span className="error-message">{authenticationErrorMessage} </span>;
+        } else if ( isAuthenticated ) {
+            return <span className="success-message"> Login successful!</span>;       
+        } else {
+            return '';
         }
     }
     
@@ -51,9 +50,8 @@ function LoginForm() {
                     <button type="submit">Submit</button>
                 </Form>
             </Formik>
-            <span className="error-text">
-                {isAuthMessage()}
-            </span>
+            
+            {isAuthMessage()}
 
             </div>
     );
