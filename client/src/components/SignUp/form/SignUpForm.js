@@ -15,6 +15,7 @@ function SignUpForm() {
     }
     
     return (
+        <div>
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={Yup.object({
@@ -36,6 +37,7 @@ function SignUpForm() {
                     <button type="submit">Submit</button>
                 </Form>
             </Formik>
+        </div>
     );
 }
 export default SignUpForm;
