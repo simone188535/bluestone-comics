@@ -18,40 +18,42 @@ function LoginForm() {
     }
 
     const isAuthMessage = () => {
-        if ( authenticationErrorMessage ) {
+        if (authenticationErrorMessage) {
             return <span className="error-message">{authenticationErrorMessage} </span>;
-        } else if ( isAuthenticated ) {
-            return <span className="success-message"> Login successful!</span>;       
+        } else if (isAuthenticated) {
+            return <span className="success-message"> Login successful!</span>;
         } else {
             return '';
         }
     }
-    
+
     return (
-            <div>
-                <Formik
-                    initialValues={{ email: '', password: '' }}
-                    validationSchema={Yup.object({
-                        email: Yup.string()
-                            .email('Invalid email address')
-                            .required('Required'),
-                        password: Yup.string()
-                            .required('Required'),
-                    })}
-                    onSubmit={onSubmit}
-                >
-                    <Form>
-                        <label htmlFor="email">Email Address</label>
-                        <Field name="email" type="email" />
-                        <ErrorMessage name="email" />
-                        <label htmlFor="password">Password</label>
-                        <Field name="password" type="password" />
-                        <ErrorMessage name="password" />
-                        <button type="submit">Submit</button>
-                    </Form>
-                </Formik>
-                {isAuthMessage()}
-            </div>
+        <div className="bsc-form login-form">
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                validationSchema={Yup.object({
+                    email: Yup.string()
+                        .email('Invalid email address')
+                        .required('Required'),
+                    password: Yup.string()
+                        .required('Required'),
+                })}
+                onSubmit={onSubmit}
+            >
+                <Form>
+                    <div className="form-group">
+                        <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on"/>
+                        <ErrorMessage className="error-message" component="div" name="email" />
+                    </div>
+                    <div className="form-group">
+                        <Field className="form-input form-item" name="password" type="password" placeholder="Password" autoComplete="on"/>
+                        <ErrorMessage className="error-message" component="div" name="password" />
+                    </div>
+                    <button type="submit" className="form-submit form-item">Submit</button>
+                </Form>
+            </Formik>
+            <div className="my-4 text-center">{isAuthMessage()}</div>
+        </div>
     );
 }
 export default LoginForm;

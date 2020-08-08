@@ -15,7 +15,7 @@ function SignUpForm() {
     }
 
     return (
-        <div className="bsc-form sign-up-form">
+        <div className="col-md-6 bsc-form sign-up-form">
             <Formik
                 initialValues={{ firstName: '', lastName: '', username: '', email: '', password: '', passwordConfirm: '' }}
                 validationSchema={Yup.object({
@@ -37,6 +37,7 @@ function SignUpForm() {
                 onSubmit={onSubmit}
             >
                 <Form>
+                    <div className="form-header-text">Please, <strong>Sign in</strong> to continue</div>
                     <div className="form-group">
                         <Field className="form-input form-item" name="firstName" type="text" placeholder="First Name" autoComplete="on"/>
                         <ErrorMessage className="error-message" component="div" name="firstName" />

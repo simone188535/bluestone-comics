@@ -9,7 +9,7 @@ const Login = () => {
             <div className="row">
                 <h2>Login</h2>
             </div>
-            <div className="row">
+            <div className="row justify-content-center h-100">
                 <LoginForm />
             </div>
         </div>
