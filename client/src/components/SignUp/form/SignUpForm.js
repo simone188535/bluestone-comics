@@ -8,10 +8,22 @@ import { authActions } from "../../../actions";
 
 function SignUpForm() {
     const dispatch = useDispatch();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const authenticationErrorMessage = useSelector(state => state.auth.errorMessage);
 
     const onSubmit = async (values, { setSubmitting }) => {
-        dispatch(authActions.login(values.email, values.password));
+        dispatch(authActions.signUp(values.firstName, values.lastName, values.username, values.email, values.password ,values.passwordConfirm));
         setSubmitting(false);
+    }
+
+    const isAuthMessage = () => {
+        if (authenticationErrorMessage) {
+            return <span className="error-message">{authenticationErrorMessage} </span>;
+        } else if (isAuthenticated) {
+            return <span className="success-message"> Sign up successful!</span>;
+        } else {
+            return '';
+        }
     }
 
     return (
@@ -65,6 +77,7 @@ function SignUpForm() {
                     <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>
             </Formik>
+            <div className="my-4 text-center">{isAuthMessage()}</div>
         </div>
     );
 }

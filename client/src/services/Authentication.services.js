@@ -3,7 +3,8 @@ import axios from "axios";
 export const AuthenticationServices = {
     ReAuthUser,
     login,
-    logout
+    logout,
+    signUp
 }
 
 // This function helps ReAuth a user if the jwtToken is in the browser 
@@ -27,6 +28,18 @@ function login(email, password) {
     return axios.post('/api/v1/users/login', {
         email,
         password 
+    });
+}
+
+function signUp(firstName, lastName, username, email, password, passwordConfirm) {
+    // send request to sign up
+    return axios.post('/api/v1/users/signup', {
+        firstName,
+        lastName,
+        email,
+        username,
+        password,
+        passwordConfirm 
     });
 }
 
