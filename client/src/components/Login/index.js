@@ -5,10 +5,7 @@ import './login.scss';
 const Login = () => {
 
     return (
-        <div className="container-fluid login-page">
-            <div className="row">
-                <h2>Login</h2>
-            </div>
+        <div className="container login-page">
             <div className="row justify-content-center h-100">
                 <LoginForm />
             </div>

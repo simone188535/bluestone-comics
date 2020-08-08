@@ -28,20 +28,21 @@ function LoginForm() {
     }
 
     return (
-        <div className="bsc-form login-form">
+        <div className="col-md-6 bsc-form login-form">
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={Yup.object({
                     email: Yup.string()
                         .email('Invalid email address')
-                        .required('Required'),
+                        .required('Email required!'),
                     password: Yup.string()
-                        .required('Required'),
+                        .required('Password required!'),
                 })}
                 onSubmit={onSubmit}
             >
                 <Form>
                     <div className="form-group">
+                    <div className="form-header-text">Please, <strong>Login</strong> to continue</div>
                         <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on"/>
                         <ErrorMessage className="error-message" component="div" name="email" />
                     </div>

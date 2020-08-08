@@ -20,19 +20,19 @@ function SignUpForm() {
                 initialValues={{ firstName: '', lastName: '', username: '', email: '', password: '', passwordConfirm: '' }}
                 validationSchema={Yup.object({
                     firstName: Yup.string()
-                        .required('First Name Required'),
+                        .required('First name required!'),
                     lastName: Yup.string()
-                        .required('Last Name Required'),
+                        .required('Last name required!'),
                     username: Yup.string()
-                        .required('Username Required'),
+                        .required('User name required!'),
                     email: Yup.string()
-                        .email('Invalid email address')
-                        .required('Email Required'),
+                        .email('Invalid email address!')
+                        .required('Email required!'),
                     password: Yup.string()
-                        .required('Password Required'),
+                        .required('Password required!'),
                     passwordConfirm: Yup.string()
-                        .oneOf([Yup.ref('password'), null], 'Passwords must match')
-                        .required('Password Confirm Required')
+                        .oneOf([Yup.ref('password'), null], 'Passwords must match!')
+                        .required('Password confirm required!')
                 })}
                 onSubmit={onSubmit}
             >
