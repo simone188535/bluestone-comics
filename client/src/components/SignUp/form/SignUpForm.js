@@ -39,27 +39,27 @@ function SignUpForm() {
                 <Form>
                     <div className="form-group">
                         <Field className="form-input form-item" name="firstName" type="text" placeholder="First Name" autoComplete="on"/>
-                        <ErrorMessage component="div" name="firstName" />
+                        <ErrorMessage className="error-message" component="div" name="firstName" />
                     </div>
                     <div className="form-group">
                         <Field className="form-input form-item" name="lastName" type="text" placeholder="Last Name" autoComplete="on"/>
-                        <ErrorMessage component="div" name="lastName" />
+                        <ErrorMessage className="error-message" component="div" name="lastName" />
                     </div>
                     <div className="form-group">
                         <Field className="form-input form-item" name="username" type="text" placeholder="Username" autoComplete="on"/>
-                        <ErrorMessage component="div" name="username" />
+                        <ErrorMessage className="error-message" component="div" name="username" />
                     </div>
                     <div className="form-group">
                         <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on"/>
-                        <ErrorMessage component="div" name="email" />
+                        <ErrorMessage className="error-message" component="div" name="email" />
                     </div>
                     <div className="form-group">
                         <Field className="form-input form-item" name="password" type="password" placeholder="Password" autoComplete="on"/>
-                        <ErrorMessage component="div" name="password" />
+                        <ErrorMessage className="error-message" component="div" name="password" />
                     </div>
                     <div className="form-group">
                         <Field className="form-input form-item" name="passwordConfirm" type="password" placeholder="Password Confirm" autoComplete="on"/>
-                        <ErrorMessage component="div" name="passwordConfirm" />
+                        <ErrorMessage className="error-message" component="div" name="passwordConfirm" />
                     </div>
                     <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>

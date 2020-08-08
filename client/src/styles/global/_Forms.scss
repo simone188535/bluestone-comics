@@ -16,5 +16,8 @@
         background-color: $teal-green;
         color: $pure-white;
         border: none;
+        &:hover {
+            background-color: $dark-teal-green;
+        }
     }
 }
