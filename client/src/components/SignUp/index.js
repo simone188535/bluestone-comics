@@ -6,9 +6,9 @@ const SignUp = () => {
     return (
         <div className="container-fluid sign-up-page">
             <div className="row">
-                <h2>SignUp</h2>
+                <div>Sign in to continue</div>
             </div>
-            <div className="row">
+            <div className="row justify-content-center h-100">
                 <SignUpForm />
             </div>
         </div>

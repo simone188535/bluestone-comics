@@ -15,61 +15,53 @@ function SignUpForm() {
     }
 
     return (
-        <div>
+        <div className="bsc-form sign-up-form">
             <Formik
                 initialValues={{ firstName: '', lastName: '', username: '', email: '', password: '', passwordConfirm: '' }}
                 validationSchema={Yup.object({
                     firstName: Yup.string()
-                        .max(15, 'Must be 15 characters or less')
-                        .required('Required'),
+                        .required('First Name Required'),
                     lastName: Yup.string()
-                        .max(20, 'Must be 20 characters or less')
-                        .required('Required'),
+                        .required('Last Name Required'),
                     username: Yup.string()
-                        .max(20, 'Must be 20 characters or less')
-                        .required('Required'),
+                        .required('Username Required'),
                     email: Yup.string()
                         .email('Invalid email address')
-                        .required('Required'),
+                        .required('Email Required'),
                     password: Yup.string()
-                        .required('Required'),
+                        .required('Password Required'),
                     passwordConfirm: Yup.string()
-                        .required('Required'),
+                        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+                        .required('Password Confirm Required')
                 })}
                 onSubmit={onSubmit}
             >
                 <Form>
                     <div className="form-group">
-                        <label htmlFor="firstName">First Name: </label>
-                        <Field name="firstName" type="text" />
-                        <ErrorMessage name="firstName" />
+                        <Field className="form-input form-item" name="firstName" type="text" placeholder="First Name" autoComplete="on"/>
+                        <ErrorMessage component="div" name="firstName" />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="lastName">Last Name: </label>
-                        <Field name="lastName" type="text" />
-                        <ErrorMessage name="lastName" />
+                        <Field className="form-input form-item" name="lastName" type="text" placeholder="Last Name" autoComplete="on"/>
+                        <ErrorMessage component="div" name="lastName" />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="username">Username: </label>
-                        <Field name="username" type="text" />
-                        <ErrorMessage name="username" />
+                        <Field className="form-input form-item" name="username" type="text" placeholder="Username" autoComplete="on"/>
+                        <ErrorMessage component="div" name="username" />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="email">Email Address: </label>
-                        <Field name="email" type="email" />
-                        <ErrorMessage name="email" />
+                        <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on"/>
+                        <ErrorMessage component="div" name="email" />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <Field name="password" type="password" />
-                        <ErrorMessage name="password" />
+                        <Field className="form-input form-item" name="password" type="password" placeholder="Password" autoComplete="on"/>
+                        <ErrorMessage component="div" name="password" />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="passwordConfirm">Password Confirm</label>
-                        <Field name="passwordConfirm" type="password" />
-                        <ErrorMessage name="passwordConfirm" />
+                        <Field className="form-input form-item" name="passwordConfirm" type="password" placeholder="Password Confirm" autoComplete="on"/>
+                        <ErrorMessage component="div" name="passwordConfirm" />
                     </div>
-                    <button type="submit">Submit</button>
+                    <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>
             </Formik>
         </div>
