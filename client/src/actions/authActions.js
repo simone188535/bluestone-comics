@@ -1,5 +1,6 @@
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from './types';
 import { AuthenticationServices } from '../services/Authentication.services';
+import { errorActions } from './errorActions';
 
 const loginRequest = () => {
   return { type: LOGIN_REQUEST }
@@ -24,7 +25,9 @@ const login = (email, password) => async (dispatch) => {
 
     dispatch(loginSuccess(res.data.data.user));
   } catch (err) {
-    dispatch(loginFailure(err.response.data.message));
+    dispatch(loginFailure());
+    dispatch(errorActions.setError(err.response.data.message));
+  
   }
 };
 const signUp = (firstName, lastName, username, email, password, passwordConfirm) => async (dispatch) => {
@@ -38,7 +41,8 @@ const signUp = (firstName, lastName, username, email, password, passwordConfirm)
 
     dispatch(loginSuccess(res.data.data.user));
   } catch (err) {
-    dispatch(loginFailure(err.response.data.message));
+    dispatch(loginFailure());
+    dispatch(errorActions.setError(err.response.data.message));
   }
 };
 

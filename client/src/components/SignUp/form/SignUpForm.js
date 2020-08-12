@@ -9,7 +9,7 @@ import { authActions } from "../../../actions";
 function SignUpForm() {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-    const authenticationErrorMessage = useSelector(state => state.auth.errorMessage);
+    const errorMessage = useSelector(state => state.error.errorMessage);
 
     const onSubmit = async (values, { setSubmitting }) => {
         dispatch(authActions.signUp(values.firstName, values.lastName, values.username, values.email, values.password ,values.passwordConfirm));
@@ -17,8 +17,8 @@ function SignUpForm() {
     }
 
     const isAuthMessage = () => {
-        if (authenticationErrorMessage) {
-            return <span className="error-message">{authenticationErrorMessage} </span>;
+        if (errorMessage) {
+            return <span className="error-message">{errorMessage} </span>;
         } else if (isAuthenticated) {
             return <span className="success-message"> Sign up successful!</span>;
         } else {
