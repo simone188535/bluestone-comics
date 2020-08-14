@@ -9,6 +9,7 @@ import { authActions } from "../../../actions";
 function LoginForm() {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const hasError = useSelector(state => state.error.hasError);
     const errorMessage = useSelector(state => state.error.errorMessage);
 
     const onSubmit = async (values, { setSubmitting }) => {
@@ -18,7 +19,7 @@ function LoginForm() {
     }
 
     const isAuthMessage = () => {
-        if (errorMessage) {
+        if (hasError) {
             return <span className="error-message">{errorMessage} </span>;
         } else if (isAuthenticated) {
             return <span className="success-message"> Login successful!</span>;

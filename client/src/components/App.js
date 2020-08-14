@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import store from '../store';
 import { authActions } from '../actions';
 import { AuthenticationServices } from '../services/Authentication.services';
@@ -13,7 +13,6 @@ const jwtToken = localStorage.getItem('jwtToken');
 if (jwtToken) {
     (async () => {
         store.dispatch(authActions.loginRequest());
-        // try catch?
         const currentUser = await AuthenticationServices.ReAuthUser(jwtToken);
         console.log('current', currentUser);
         if (currentUser.status === 200) {
