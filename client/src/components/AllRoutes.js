@@ -1,5 +1,6 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Switch, Route, useLocation } from 'react-router-dom';
+import { useSelector } from "react-redux";
 
 import Home from './Home';
 import SignUp from './SignUp';
@@ -11,8 +12,25 @@ import Contest from './Contest';
 import News from './News';
 import Upload from './Upload';
 
-const AllRoutes = () => {
+import store from '../store';
 
+import { errorActions } from '../actions';
+
+const AllRoutes = () => {
+    const hasError = useSelector(state => state.error.hasError);
+    let location = useLocation();
+    // This watches for a route change in location
+    useEffect(
+        () => {
+            // this works the same a componentDidUnmount
+            return () => {
+                // clears global error handler on route change if it exists
+                if (hasError) {
+                    store.dispatch(errorActions.removeError());
+               }
+            }
+        }, [location]
+    )
     return (
         <Switch>
             <Route path="/about" component={About} />

@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { authActions } from "../../../actions";
+import { authActions, errorActions } from "../../../actions";
 
 
 
 function SignUpForm() {
     const dispatch = useDispatch();
+    const [enableMessage, setEnableMessage] = useState(false);
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const hasError = useSelector(state => state.error.hasError);
     const errorMessage = useSelector(state => state.error.errorMessage);
 
     const onSubmit = async (values, { setSubmitting }) => {
         dispatch(authActions.signUp(values.firstName, values.lastName, values.username, values.email, values.password ,values.passwordConfirm));
+        setEnableMessage(true);
         setSubmitting(false);
     }
 
@@ -21,11 +23,15 @@ function SignUpForm() {
         if (hasError) {
             return <span className="error-message">{errorMessage} </span>;
         } else if (isAuthenticated) {
-            return <span className="success-message"> Sign up successful!</span>;
+            return <span className="success-message"> Login successful!</span>;
         } else {
             return '';
         }
     }
+
+    useEffect(() => {
+        dispatch(errorActions.removeError());
+    }, []);
 
     return (
         <div className="col-md-6 bsc-form sign-up-form">
@@ -78,7 +84,7 @@ function SignUpForm() {
                     <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>
             </Formik>
-            <div className="my-4 text-center">{isAuthMessage()}</div>
+            <div className="my-4 text-center">{enableMessage && isAuthMessage()}</div>
         </div>
     );
 }
