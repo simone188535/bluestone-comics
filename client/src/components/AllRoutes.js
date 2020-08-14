@@ -22,12 +22,8 @@ const AllRoutes = () => {
     // This watches for a route change in location
     useEffect(
         () => {
-            // this works the same a componentDidUnmount
-            return () => {
-                // clears global error handler on route change if it exists
-                if (hasError) {
-                    store.dispatch(errorActions.removeError());
-               }
+            if (hasError) {
+                store.dispatch(errorActions.removeError());
             }
         }, [location]
     )

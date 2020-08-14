@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { authActions, errorActions } from "../../../actions";
+import { authActions } from "../../../actions";
 
 
 
@@ -30,8 +30,8 @@ function SignUpForm() {
     }
 
     useEffect(() => {
-        dispatch(errorActions.removeError());
-    }, []);
+    // if isAuthenticated redirect
+    }, [isAuthenticated]);
 
     return (
         <div className="col-md-6 bsc-form sign-up-form">
