@@ -8,16 +8,25 @@ const bookSchema = new mongoose.Schema({
   title: {
     type: String,
     minlength: 3,
-    maxlength: 50
+    maxlength: 50,
+    required: [true, 'Please Provide an Title!']
   },
   coverPhoto: {
-    type: String
+    type: String,
+    default: 'default.jpg'
   },
   DateCreated: {
     type: Date,
     default: Date.now
   },
-  Genre: [{ type: String, minlength: 1, maxlength: 5 }]
+  Genres: [
+    {
+      type: String,
+      minlength: 1,
+      maxlength: 5,
+      required: [true, 'Please Provide an Genre!']
+    }
+  ]
 });
 const Books = mongoose.model('Books', bookSchema);
 
