@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const issueAssetsSchema = require('./issueAssetsModel');
 
 const issueSchema = new mongoose.Schema({
   publisher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  bookId: {
+  book: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Book'
   },
@@ -29,7 +30,8 @@ const issueSchema = new mongoose.Schema({
   dateCreated: {
     type: Date,
     default: Date.now
-  }
+  },
+  assets: [issueAssetsSchema]
 });
 const Issues = mongoose.model('Issues', issueSchema);
 
