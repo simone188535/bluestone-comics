@@ -7,6 +7,7 @@ const publishController = require('../controllers/publishController');
 
 // This middleware runs before all the routes beneath get the chance to. This checks if user is present for all routes before continuing.
 router.use(authController.protect);
+// router.use(authController.restrictTo('creator'));
 
 router.route('/').post(publishController.createBook);
 router
