@@ -49,13 +49,6 @@ exports.createBook = catchAsync(async (req, res, next) => {
   });
 });
 
-// exports.getBook = catchAsync(async (req, res, next) => {
-//   // Find book and all issues
-//   res.status(200).json({
-//     status: 'success'
-//   });
-// });
-
 exports.deleteBook = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success'
@@ -80,13 +73,6 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
     status: 'success'
   });
 });
-
-// exports.getIssue = catchAsync(async (req, res, next) => {
-//   // Find issue of a book
-//   res.status(200).json({
-//     status: 'success'
-//   });
-// });
 
 exports.updateIssue = catchAsync(async (req, res, next) => {
   // edit any issue of a book
