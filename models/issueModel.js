@@ -31,7 +31,7 @@ const issueSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  assets: [issueAssetsSchema]
+  issueAssets: [issueAssetsSchema]
 });
 const Issues = mongoose.model('Issues', issueSchema);
 

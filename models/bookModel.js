@@ -17,7 +17,7 @@ const bookSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    maxLength: 150,
+    maxLength: 100,
     required: [true, 'Please Provide an Description!']
   },
   totalIssues: {
