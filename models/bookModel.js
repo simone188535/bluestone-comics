@@ -20,7 +20,11 @@ const bookSchema = new mongoose.Schema({
     maxLength: 150,
     required: [true, 'Please Provide an Description!']
   },
-  DateCreated: {
+  totalIssues: {
+    type: Number,
+    default: 1
+  },
+  dateCreated: {
     type: Date,
     default: Date.now
   },

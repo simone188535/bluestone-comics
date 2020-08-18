@@ -25,3 +25,16 @@ exports.createBook = catchAsync(async (req, res, next) => {
     book: newBook
   });
 });
+
+exports.createIssue = catchAsync(async (req, res, next) => {
+  // This will need to increment totalIssues in books Model
+  res.status(200).json({
+    status: 'success'
+  });
+});
+exports.deleteIssue = catchAsync(async (req, res, next) => {
+  // This will need to decrement totalIssues in books Model
+  res.status(200).json({
+    status: 'success'
+  });
+});

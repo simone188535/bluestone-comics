@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema({
   },
   passwordResetToken: String,
   passwordResetTokenExpires: String,
-  DateCreated: {
+  dateCreated: {
     type: Date,
     default: Date.now
   },

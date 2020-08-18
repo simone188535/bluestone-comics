@@ -18,9 +18,15 @@ const issueSchema = new mongoose.Schema({
     type: String,
     default: 'default.jpg'
   },
-  IssueNumber: Number,
-  totalPages: Number,
-  DateCreated: {
+  issueNumber: {
+    type: Number,
+    default: 1
+  },
+  totalPages: {
+    type: Number,
+    default: 1
+  },
+  dateCreated: {
     type: Date,
     default: Date.now
   }
