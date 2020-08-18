@@ -12,8 +12,8 @@ router.use(authController.protect);
 router.route('/').post(publishController.createBook);
 router
   .route('/:title-slug/book/:bookId')
-  .patch(publishController.updateBook)
   .post(publishController.createIssue)
+  .patch(publishController.updateBook)
   .delete(publishController.deleteBook);
 router
   .route('/:title-slug/book/:bookId/Issue/:issueNumber')
