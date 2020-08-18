@@ -49,6 +49,25 @@ exports.createBook = catchAsync(async (req, res, next) => {
   });
 });
 
+// exports.getBook = catchAsync(async (req, res, next) => {
+//   // Find book and all issues
+//   res.status(200).json({
+//     status: 'success'
+//   });
+// });
+
+exports.deleteBook = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
+exports.updateBook = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
 exports.createIssue = catchAsync(async (req, res, next) => {
   // This will need to increment totalIssues in books Model
   res.status(200).json({
@@ -56,7 +75,21 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   });
 });
 exports.deleteIssue = catchAsync(async (req, res, next) => {
-  // This will need to decrement totalIssues in books Model
+  // Only allow the deletion of the most recent issue
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
+// exports.getIssue = catchAsync(async (req, res, next) => {
+//   // Find issue of a book
+//   res.status(200).json({
+//     status: 'success'
+//   });
+// });
+
+exports.updateIssue = catchAsync(async (req, res, next) => {
+  // edit any issue of a book
   res.status(200).json({
     status: 'success'
   });
