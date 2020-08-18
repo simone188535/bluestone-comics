@@ -5,15 +5,18 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const publishController = require('../controllers/publishController');
 
-router.route('/').post(authController.protect, publishController.createBook);
+// This middleware runs before all the routes beneath get the chance to. This checks if user is present for all routes before continuing.
+router.use(authController.protect);
+
+router.route('/').post(publishController.createBook);
 router
   .route('/:title-slug/book/:bookId')
-  .patch(authController.protect, publishController.updateBook)
-  .post(authController.protect, publishController.createIssue)
-  .delete(authController.protect, publishController.deleteBook);
+  .patch(publishController.updateBook)
+  .post(publishController.createIssue)
+  .delete(publishController.deleteBook);
 router
   .route('/:title-slug/book/:bookId/Issue/:issueNumber')
-  .put(authController.protect, publishController.updateIssue)
-  .delete(authController.protect, publishController.deleteIssue);
+  .put(publishController.updateIssue)
+  .delete(publishController.deleteIssue);
 
 module.exports = router;

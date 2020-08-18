@@ -1,4 +1,3 @@
-// const express = require('express');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
@@ -34,6 +33,9 @@ exports.createBook = catchAsync(async (req, res, next) => {
     coverPhoto: issueCoverPhoto,
     issueAssets
   });
+
+  // Change user role to creator !!!!!!!!!!!!!
+
   // const populated = await User.findOne({ _id: req.user.id }).populate(
   //   'publisher'
   // );
