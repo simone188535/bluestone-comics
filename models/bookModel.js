@@ -11,6 +11,11 @@ const bookSchema = new mongoose.Schema({
     maxlength: 50,
     required: [true, 'Please Provide an Title!']
   },
+  slug: {
+    type: String,
+    maxlength: 100,
+    required: [true, 'Please Provide a Slug URL!']
+  },
   coverPhoto: {
     type: String,
     default: 'default.jpg'
@@ -24,14 +29,24 @@ const bookSchema = new mongoose.Schema({
     type: Number,
     default: 1
   },
+  genres: {
+    type: [String]
+  },
+  status: {
+    type: String,
+    enum: ['Ongoing', 'Completed', 'Hiatus'],
+    default: 'Ongoing'
+  },
+  removed: {
+    type: Boolean,
+    default: false
+  },
   dateCreated: {
     type: Date,
     default: Date.now
-  },
-  genres: {
-    type: [String]
   }
 });
+
 const Books = mongoose.model('Books', bookSchema);
 
 module.exports = Books;

@@ -62,13 +62,13 @@ const userSchema = new mongoose.Schema({
   },
   passwordResetToken: String,
   passwordResetTokenExpires: String,
-  dateCreated: {
-    type: Date,
-    default: Date.now
-  },
   active: {
     type: Boolean,
     default: true
+  },
+  dateCreated: {
+    type: Date,
+    default: Date.now
   }
 });
 // Encrypts password before saving it

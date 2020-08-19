@@ -10,6 +10,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
   // console.log(req.user);
   const {
     bookTitle,
+    slug,
     bookCoverPhoto,
     bookDescription,
     genres,
@@ -21,6 +22,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
   const newBook = await Book.create({
     publisher: req.user.id,
     title: bookTitle,
+    slug,
     coverPhoto: bookCoverPhoto,
     description: bookDescription,
     genres
