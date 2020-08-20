@@ -11,12 +11,12 @@ router.use(authController.protect);
 
 router.route('/').post(publishController.createBook);
 router
-  .route('/:title-slug/book/:bookId')
+  .route('/:urlSlug/book/:bookId')
   .post(publishController.createIssue)
   .patch(publishController.updateBook)
   .delete(publishController.deleteBook);
 router
-  .route('/:title-slug/book/:bookId/Issue/:issueNumber')
+  .route('/:urlSlug/book/:bookId/Issue/:issueNumber')
   .put(publishController.updateIssue)
   .delete(publishController.deleteIssue);
 

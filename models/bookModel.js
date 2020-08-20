@@ -11,7 +11,7 @@ const bookSchema = new mongoose.Schema({
     maxlength: 50,
     required: [true, 'Please Provide an Title!']
   },
-  slug: {
+  urlSlug: {
     type: String,
     maxlength: 100,
     required: [true, 'Please Provide a Slug URL!']
@@ -46,6 +46,14 @@ const bookSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+bookSchema.methods.adjustTotalIssue = function (adjustType) {
+  if (adjustType === 'increment') {
+    this.totalIssues += 1;
+  } else if (adjustType === 'decrement') {
+    this.totalIssues -= 1;
+  }
+};
 
 const Books = mongoose.model('Books', bookSchema);
 

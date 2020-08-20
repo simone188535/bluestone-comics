@@ -12,8 +12,7 @@ const issueSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    maxlength: 20,
-    required: [true, 'Please Provide an Title!']
+    maxlength: 100
   },
   coverPhoto: {
     type: String,
@@ -33,6 +32,7 @@ const issueSchema = new mongoose.Schema({
   },
   issueAssets: [issueAssetsSchema]
 });
+
 const Issues = mongoose.model('Issues', issueSchema);
 
 module.exports = Issues;
