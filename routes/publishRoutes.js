@@ -16,7 +16,7 @@ router
   .patch(publishController.updateBook)
   .delete(publishController.deleteBook);
 router
-  .route('/:urlSlug/book/:bookId/Issue/:issueNumber')
+  .route('/:urlSlug/book/:bookId/issue/:issueNumber')
   .put(publishController.updateIssue)
   .delete(publishController.deleteIssue);
 

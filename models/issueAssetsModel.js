@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 
 const issueAssetsSchema = new mongoose.Schema({
-  publisher: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  issue: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Issue'
-  },
+  // publisher: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'User'
+  // },
+  // issue: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Issue'
+  // },
   photoURL: {
     type: String,
     default: 'default.jpg'

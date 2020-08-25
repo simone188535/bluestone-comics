@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const User = require('../models/userModel');
+// const User = require('../models/userModel');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 
@@ -46,7 +46,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
   //   'publisher'
   // );
   // console.log('!!!!!!!', populated);
-  res.status(200).json({
+  res.status(201).json({
     status: 'success',
     book: newBook,
     issue: newIssue
@@ -68,10 +68,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 // This creates a new issue and increments the total number of issues in a book
 exports.createIssue = catchAsync(async (req, res, next) => {
   const { issueTitle, issueCoverPhoto, issueAssets } = req.body;
-  const {
-    // urlSlug,
-    bookId
-  } = req.params;
+  const { bookId } = req.params;
 
   /* 
   The reason findOneAndUpdate was not used for incrementing here is because the 
@@ -81,7 +78,6 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   const existingBookByCurrentUser = await Book.findOne({
     _id: bookId,
     publisher: req.user.id
-    // urlSlug
   });
   if (!existingBookByCurrentUser) {
     next(
@@ -93,9 +89,9 @@ exports.createIssue = catchAsync(async (req, res, next) => {
 
   // calculates the total pages of assets provided
   let totalPages = 0;
-  for (let i = 0; i < issueAssets.length; i += 1) {
+  issueAssets.forEach(() => {
     totalPages += 1;
-  }
+  });
 
   const newIssue = await Issue.create({
     publisher: req.user.id,
@@ -108,34 +104,56 @@ exports.createIssue = catchAsync(async (req, res, next) => {
     totalPages
   });
 
-  res.status(200).json({
+  res.status(201).json({
     status: 'success',
     book: existingBookByCurrentUser,
     newIssue
   });
 });
 
-// This deletes an existing issue and deccrements the total number of issues in a book
+// This deletes an existing issue and decrements the total number of issues in a book
 exports.deleteIssue = catchAsync(async (req, res, next) => {
-  const { urlSlug, bookId } = req.params;
-  // If all issues are deleted remove book
+  // const { urlSlug, bookId } = req.params;
+  const { bookId, issueNumber } = req.params;
+
   /* 
   The reason findOneAndUpdate was not used for decrementing here is because the 
   same functionality in the adjustTotalIssue instance method may need to be
   used elsewhere it makes since to define it where it can be reused (within the Model)
   */
+  // Find existing book
   const existingBookByCurrentUser = await Book.findOne({
     _id: bookId,
-    publisher: req.user.id,
-    urlSlug
+    publisher: req.user.id
   });
   if (!existingBookByCurrentUser) {
-    next(new AppError(`Existing book not found. Cannot create new issue`, 401));
+    next(
+      new AppError(
+        `Existing book cannot be found. Issue cannot be deleted.`,
+        401
+      )
+    );
   }
+  // find existing issue and delete it
+  const existingIssueByCurrentUser = await Issue.findOneAndDelete({
+    publisher: req.user.id,
+    book: bookId,
+    issueNumber
+  });
+
+  if (!existingIssueByCurrentUser) {
+    next(new AppError(`Existing issue cannot be found.`, 401));
+  }
+
   existingBookByCurrentUser.adjustTotalIssue('decrement');
   await existingBookByCurrentUser.save();
-  // Only allow the deletion of the most recent issue
-  res.status(200).json({
+
+  // If all issues are deleted remove book
+  if (existingBookByCurrentUser.totalIssues === 0) {
+    await Book.deleteOne(existingBookByCurrentUser);
+  }
+
+  res.status(204).json({
     status: 'success'
   });
 });
