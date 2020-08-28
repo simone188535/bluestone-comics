@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const issueAssetsSchema = require('./issueAssetsModel');
+const workCreditsSchema = require('./workCreditsModel');
 
 const issueSchema = new mongoose.Schema({
   publisher: {
@@ -30,7 +31,8 @@ const issueSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  issueAssets: [issueAssetsSchema]
+  issueAssets: [issueAssetsSchema],
+  workCredits: [workCreditsSchema]
 });
 
 const Issues = mongoose.model('Issues', issueSchema);

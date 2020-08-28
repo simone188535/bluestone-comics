@@ -67,7 +67,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 
 // This creates a new issue and increments the total number of issues in a book
 exports.createIssue = catchAsync(async (req, res, next) => {
-  const { issueTitle, issueCoverPhoto, issueAssets } = req.body;
+  const { issueTitle, issueCoverPhoto, issueAssets, workCredits } = req.body;
   const { bookId } = req.params;
 
   /* 
@@ -101,7 +101,8 @@ exports.createIssue = catchAsync(async (req, res, next) => {
     issueAssets,
     // This makes totalIssues (from Book Model) and the current issueNumber(from Issue Model) consistent
     issueNumber: existingBookByCurrentUser.totalIssues,
-    totalPages
+    totalPages,
+    workCredits
   });
 
   res.status(201).json({
