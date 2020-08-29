@@ -16,7 +16,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
     genres,
     issueTitle,
     issueCoverPhoto,
-    issueAssets
+    issueAssets,
+    workCredits
   } = req.body;
 
   const newBook = await Book.create({
@@ -25,7 +26,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
     urlSlug,
     coverPhoto: bookCoverPhoto,
     description: bookDescription,
-    genres
+    genres,
+    workCredits
   });
 
   const newIssue = await Issue.create({
@@ -33,7 +35,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
     book: newBook.id,
     title: issueTitle,
     coverPhoto: issueCoverPhoto,
-    issueAssets
+    issueAssets,
+    workCredits
   });
 
   // Change user role to creator !!!!!!!!!!!!!

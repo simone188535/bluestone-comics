@@ -16,7 +16,8 @@ const workCreditsSchema = new mongoose.Schema({
         'Inker',
         'Letterer',
         'Penciller',
-        'Colorist'
+        'Colorist',
+        'Cover Artist'
       ],
       required: true
     }
