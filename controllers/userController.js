@@ -1,18 +1,9 @@
 // const express = require('express');
 const catchAsync = require('../utils/catchAsync');
+const filterObj = require('../utils/filterObj');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 
-// This filters the values of the req.body object and only allows the allowed fields to be altered
-const filterObj = (object, ...allowedFields) => {
-  const filteredObject = Object.keys(object)
-    .filter((key) => allowedFields.includes(key))
-    .reduce((obj, key) => {
-      obj[key] = object[key];
-      return obj;
-    }, {});
-  return filteredObject;
-};
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 

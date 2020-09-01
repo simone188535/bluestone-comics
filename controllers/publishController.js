@@ -1,5 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const filterObj = require('../utils/filterObj');
 // const User = require('../models/userModel');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
@@ -57,8 +58,30 @@ exports.createBook = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteBook = catchAsync(async (req, res, next) => {
-  res.status(200).json({
-    status: 'success'
+  const { bookId } = req.params;
+
+  const existingBookByCurrentUser = await Book.findOne({
+    _id: bookId,
+    publisher: req.user.id
+  });
+  if (!existingBookByCurrentUser) {
+    next(new AppError(`Existing book cannot be found.`, 401));
+  }
+  // delete existing Issues of Book by user
+  await Issue.deleteMany({
+    publisher: req.user.id,
+    book: bookId
+  });
+
+  // delete the book
+  await Book.deleteOne({
+    _id: bookId,
+    publisher: req.user.id
+  });
+
+  res.status(204).json({
+    status: 'success',
+    data: null
   });
 });
 
@@ -163,8 +186,30 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
 });
 
 exports.updateIssue = catchAsync(async (req, res, next) => {
+  const { bookId, issueNumber } = req.params;
+
+  // Filtered out unwanted fields
+  const filterBody = filterObj(
+    req.body,
+    'coverPhoto',
+    'title',
+    'issueAssets',
+    'workCredits'
+  );
+  // console.log('!!!!!!!!', filterBody);
   // edit any issue of a book
+  const updatedIssue = await Issue.findOneAndUpdate(
+    {
+      publisher: req.user.id,
+      book: bookId,
+      issueNumber
+    },
+    filterBody,
+    { new: true, runValidators: true, useFindAndModify: false }
+  );
+
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    updatedIssue
   });
 });
