@@ -5,6 +5,19 @@ const filterObj = require('../utils/filterObj');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 
+// Get book
+exports.getBook = catchAsync(async (req, res, next) => {
+  const { bookId } = req.params;
+  const bookByUser = await Book.findOne({
+    _id: bookId,
+    publisher: req.user.id
+  });
+  res.status(200).json({
+    status: 'success',
+    book: bookByUser
+  });
+});
+
 // This creates both the book and the first Issue
 exports.createBook = catchAsync(async (req, res, next) => {
   // const users = await User.find();
@@ -114,6 +127,13 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     updatedBook
   });
 });
+
+// Get Issue
+// exports.getIssue = catchAsync(async (req, res, next) => {
+//   res.status(200).json({
+//     status: 'success'
+//   });
+// });
 
 // This creates a new issue and increments the total number of issues in a book
 exports.createIssue = catchAsync(async (req, res, next) => {
