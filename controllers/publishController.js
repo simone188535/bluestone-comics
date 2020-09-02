@@ -86,8 +86,29 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 });
 
 exports.updateBook = catchAsync(async (req, res, next) => {
+  const { bookId } = req.params;
+
+  // Filtered out unwanted fields
+  const filterBody = filterObj(
+    req.body,
+    'coverPhoto',
+    'title',
+    'genres',
+    'description'
+  );
+  // console.log('!!!!!!!!', filterBody);
+  // edit any issue of a book
+  const updatedBook = await Book.findOneAndUpdate(
+    {
+      _id: bookId,
+      publisher: req.user.id
+    },
+    filterBody,
+    { new: true, runValidators: true, useFindAndModify: false }
+  );
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    updatedBook
   });
 });
 

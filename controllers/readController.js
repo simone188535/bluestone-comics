@@ -24,3 +24,17 @@ exports.getIssue = catchAsync(async (req, res, next) => {
     status: 'success'
   });
 });
+
+exports.getIssues = catchAsync(async (req, res, next) => {
+  // Find issues of a book
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
+exports.getWorkCredits = catchAsync(async (req, res, next) => {
+  // Find issue of a book
+  res.status(200).json({
+    status: 'success'
+  });
+});
