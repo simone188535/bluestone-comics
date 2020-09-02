@@ -94,9 +94,12 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     'coverPhoto',
     'title',
     'genres',
-    'description'
+    'description',
+    'urlSlug',
+    'status',
+    'removed'
   );
-  // console.log('!!!!!!!!', filterBody);
+
   // edit any issue of a book
   const updatedBook = await Book.findOneAndUpdate(
     {
