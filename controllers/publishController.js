@@ -5,16 +5,18 @@ const filterObj = require('../utils/filterObj');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 
-// Get book
-exports.getBook = catchAsync(async (req, res, next) => {
-  const { bookId } = req.params;
-  const bookByUser = await Book.findOne({
-    _id: bookId,
-    publisher: req.user.id
-  });
+// THESE ARE FOR A USER WHO CREATES BOOKS
+exports.getBookAndIssues = catchAsync(async (req, res, next) => {
+  // const { bookId } = req.params;
+  // const bookByUser = await Book.findOne({
+  //   _id: bookId,
+  //   publisher: req.user.id
+  // });
+
+  // Get book and issues.
   res.status(200).json({
-    status: 'success',
-    book: bookByUser
+    status: 'success'
+    // book: bookByUser
   });
 });
 

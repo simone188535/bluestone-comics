@@ -30,7 +30,7 @@ const Header = () => {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
    
     return (
-        <nav className="navbar navbar-expand-sm bg-light navbar-light bsc-header">
+        <nav className="navbar navbar-expand-sm  bsc-header">
             <ul className="navbar-nav">
                 <li className="nav-item">
                     <Link className="nav-link" to="/">Home</Link>

@@ -12,7 +12,7 @@ router.use(authController.protect);
 router.route('/').post(publishController.createBook);
 router
   .route('/:urlSlug/book/:bookId')
-  .get(publishController.getBook)
+  .get(publishController.getBookAndIssues)
   .post(publishController.createIssue)
   .patch(publishController.updateBook)
   .delete(publishController.deleteBook);
