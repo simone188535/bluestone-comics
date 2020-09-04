@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// const User = require('./userModel');
 
 const bookSchema = new mongoose.Schema({
   publisher: {
@@ -54,6 +55,13 @@ bookSchema.methods.adjustTotalIssue = function (adjustType) {
     this.totalIssues -= 1;
   }
 };
+
+// bookSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'publisher'
+//   });
+//   next();
+// });
 
 const Books = mongoose.model('Books', bookSchema);
 

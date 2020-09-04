@@ -1,22 +1,22 @@
-const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
-const filterObj = require('../utils/filterObj');
 // const User = require('../models/userModel');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
+const filterObj = require('../utils/filterObj');
 
-// THESE ARE FOR A USER WHO CREATES BOOKS
+// THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS
 exports.getBookAndIssues = catchAsync(async (req, res, next) => {
-  // const { bookId } = req.params;
-  // const bookByUser = await Book.findOne({
-  //   _id: bookId,
-  //   publisher: req.user.id
-  // });
+  const { bookId } = req.params;
+  const bookByUser = await Book.findOne({
+    _id: bookId,
+    publisher: req.user.id
+  }).populate('publisher');
 
   // Get book and issues.
   res.status(200).json({
-    status: 'success'
-    // book: bookByUser
+    status: 'success',
+    book: bookByUser
   });
 });
 

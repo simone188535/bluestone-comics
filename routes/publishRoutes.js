@@ -18,7 +18,7 @@ router
   .delete(publishController.deleteBook);
 router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber')
-  .get(publishController.getIssue)
+  // .get(publishController.getIssue)
   .patch(publishController.updateIssue)
   .delete(publishController.deleteIssue);
 
