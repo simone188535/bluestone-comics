@@ -56,13 +56,13 @@ bookSchema.methods.adjustTotalIssue = function (adjustType) {
   }
 };
 
-// bookSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'publisher'
-//   });
-//   next();
-// });
+bookSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'publisher'
+  });
+  next();
+});
 
-const Books = mongoose.model('Books', bookSchema);
+const Books = mongoose.model('Book', bookSchema);
 
 module.exports = Books;

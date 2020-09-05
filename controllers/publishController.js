@@ -1,11 +1,11 @@
-// const User = require('../models/userModel');
+const User = require('../models/userModel');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const filterObj = require('../utils/filterObj');
 
-// THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS
+// THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS AND ARTICLES
 exports.getBookAndIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const bookByUser = await Book.findOne({
@@ -55,6 +55,11 @@ exports.createBook = catchAsync(async (req, res, next) => {
     workCredits
   });
 
+  // console.log('!!!USER!!!!', req.user);
+  req.user.role = 'creator';
+  const user = await req.user.save({ validateBeforeSave: false });
+
+  req.user = user;
   // Change user role to creator !!!!!!!!!!!!!
 
   // const populated = await User.findOne({ _id: req.user.id }).populate(

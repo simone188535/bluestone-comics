@@ -35,6 +35,6 @@ const issueSchema = new mongoose.Schema({
   workCredits: [workCreditsSchema]
 });
 
-const Issues = mongoose.model('Issues', issueSchema);
+const Issues = mongoose.model('Issue', issueSchema);
 
 module.exports = Issues;
