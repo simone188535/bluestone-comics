@@ -35,6 +35,16 @@ const issueSchema = new mongoose.Schema({
   workCredits: [workCreditsSchema]
 });
 
+issueSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'publisher'
+  });
+  this.populate({
+    path: 'book'
+  });
+  next();
+});
+
 const Issues = mongoose.model('Issue', issueSchema);
 
 module.exports = Issues;

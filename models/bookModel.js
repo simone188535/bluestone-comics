@@ -48,6 +48,13 @@ const bookSchema = new mongoose.Schema({
   }
 });
 
+bookSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'publisher'
+  });
+  next();
+});
+
 bookSchema.methods.adjustTotalIssue = function (adjustType) {
   if (adjustType === 'increment') {
     this.totalIssues += 1;
@@ -56,12 +63,7 @@ bookSchema.methods.adjustTotalIssue = function (adjustType) {
   }
 };
 
-bookSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'publisher'
-  });
-  next();
-});
+
 
 const Books = mongoose.model('Book', bookSchema);
 
