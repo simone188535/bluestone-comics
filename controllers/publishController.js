@@ -1,4 +1,4 @@
-const User = require('../models/userModel');
+// const User = require('../models/userModel');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 const catchAsync = require('../utils/catchAsync');
@@ -55,12 +55,11 @@ exports.createBook = catchAsync(async (req, res, next) => {
     workCredits
   });
 
-  // console.log('!!!USER!!!!', req.user);
+  // Change user role to creator
   req.user.role = 'creator';
   const user = await req.user.save({ validateBeforeSave: false });
 
   req.user = user;
-  // Change user role to creator !!!!!!!!!!!!!
 
   // const populated = await User.findOne({ _id: req.user.id }).populate(
   //   'publisher'
