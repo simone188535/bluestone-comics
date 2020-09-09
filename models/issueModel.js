@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const issueAssetsSchema = require('./issueAssetsModel');
+// const issueAssetsSchema = require('./issueAssetsModel');
 const workCreditsSchema = require('./workCreditsModel');
 
 const issueSchema = new mongoose.Schema({
@@ -31,7 +31,12 @@ const issueSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  issueAssets: [issueAssetsSchema],
+  // issueAssets: [issueAssetsSchema],
+  issueAssets: {
+    type: [String],
+    // This is required and must have at least one
+    validate: (v) => Array.isArray(v) && v.length > 0
+  },
   workCredits: [workCreditsSchema]
 });
 
