@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
 import './header.scss';
@@ -58,7 +60,12 @@ const Header = () => {
                     <Link to="/news">News</Link>
                 </li>
                 {authNavItems(dispatch, isAuthenticated)}
-                <li></li>
+                <li>
+                <FontAwesomeIcon
+                icon={faBars}
+                size="2x"
+                />
+                </li>
             </ul>
         </nav>
     );
