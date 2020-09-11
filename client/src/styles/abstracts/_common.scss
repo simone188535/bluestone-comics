@@ -4,6 +4,7 @@
    margin: 0; 
 }
 body {
+    font-family: $Roboto, $base-font;
     background-color: $bg-color;
 }
 .success-message {
