@@ -6,12 +6,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
 import './header.scss';
 
+const toggleMenu = () => {
+    const menu = document.querySelector('.nav-menu');
+
+    if (menu.classList.contains('active')) {
+        menu.classList.remove('active');
+    }
+    else {
+        menu.classList.add('active');
+    }
+}
+const toggleSubMenuItem = (e) => {
+    const subMenuItem = e.currentTarget.querySelector('.submenu');
+    if (subMenuItem.classList.contains('submenu-active')) {
+        subMenuItem.classList.remove('submenu-active');
+    }
+    else {
+        subMenuItem.classList.add('submenu-active');
+    }
+}
 const authNavItems = (dispatch, isAuthenticated) => {
 
     const authNavValues = isAuthenticated ?
         <>
-            <li className="item has-submenu">
-                <Link tabindex="0">Profile</Link>
+            <li className="item has-submenu" onClick={(e) => toggleSubMenuItem(e)}>
+                <Link tabIndex="0" to="#">Profile</Link>
                 <ul className="submenu">
                     <li className="subitem">
                         <Link to="/upload">Upload</Link>
@@ -24,10 +43,10 @@ const authNavItems = (dispatch, isAuthenticated) => {
         </>
         :
         <>
-            <li className="item">
+            <li className="item button">
                 <Link to="/sign-up">Sign Up</Link>
             </li>
-            <li className="item">
+            <li className="item button">
                 <Link to="/login">Login</Link>
             </li>
         </>;
@@ -60,11 +79,11 @@ const Header = () => {
                     <Link to="/news">News</Link>
                 </li>
                 {authNavItems(dispatch, isAuthenticated)}
-                <li>
-                <FontAwesomeIcon
-                icon={faBars}
-                size="2x"
-                />
+                <li className="toggle" onClick={() => toggleMenu()}>
+                    <FontAwesomeIcon
+                        icon={faBars}
+                        size="2x"
+                    />
                 </li>
             </ul>
         </nav>
