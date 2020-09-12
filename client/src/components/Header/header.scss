@@ -49,9 +49,9 @@
         /* submenu styles */
         .submenu {
             display: none;
-        }
-        .submenu-active {
-            display: block;
+            &.active {
+                display: block;
+            }
         }
     }
 }

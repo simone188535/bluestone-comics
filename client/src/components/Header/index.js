@@ -6,30 +6,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
 import './header.scss';
 
-const toggleMenu = () => {
-    const menu = document.querySelector('.nav-menu');
+const toggleMenu = (e, toggleFocus) => {
+    let toggleItem;
+    
+    if (toggleFocus === 'mainNav') {
+        toggleItem = document.querySelector('.nav-menu');
+    } else if (toggleFocus === 'navSubItem') {
+        toggleItem = e.currentTarget.querySelector('.submenu');
+    }
 
-    if (menu.classList.contains('active')) {
-        menu.classList.remove('active');
+    if (toggleItem.classList.contains('active')) {
+        toggleItem.classList.remove('active');
     }
     else {
-        menu.classList.add('active');
-    }
-}
-const toggleSubMenuItem = (e) => {
-    const subMenuItem = e.currentTarget.querySelector('.submenu');
-    if (subMenuItem.classList.contains('submenu-active')) {
-        subMenuItem.classList.remove('submenu-active');
-    }
-    else {
-        subMenuItem.classList.add('submenu-active');
+        toggleItem.classList.add('active');
     }
 }
 const authNavItems = (dispatch, isAuthenticated) => {
 
     const authNavValues = isAuthenticated ?
         <>
-            <li className="item has-submenu" onClick={(e) => toggleSubMenuItem(e)}>
+            <li className="item has-submenu" onClick={(e) => toggleMenu(e, 'navSubItem')}>
                 <Link tabIndex="0" to="#">Profile</Link>
                 <ul className="submenu">
                     <li className="subitem">
@@ -78,8 +75,10 @@ const Header = () => {
                 <li className="item">
                     <Link to="/news">News</Link>
                 </li>
+                <>
                 {authNavItems(dispatch, isAuthenticated)}
-                <li className="toggle" onClick={() => toggleMenu()}>
+                </>
+                <li className="toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
                     <FontAwesomeIcon
                         icon={faBars}
                         size="2x"
