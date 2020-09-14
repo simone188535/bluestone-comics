@@ -52,7 +52,7 @@ const authNavItems = (dispatch, isAuthenticated) => {
 
 const Header = () => {
     const dispatch = useDispatch();
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const isAuthenticated = useSelector(state => state.auth.user);
 
     return (
         <nav className="global-nav">
@@ -78,7 +78,7 @@ const Header = () => {
                 <>
                 {authNavItems(dispatch, isAuthenticated)}
                 </>
-                <li className="toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
+                <li className="mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
                     <FontAwesomeIcon
                         icon={faBars}
                         size="2x"
