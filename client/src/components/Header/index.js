@@ -26,7 +26,10 @@ const authNavItems = (dispatch, isAuthenticated) => {
 
     const authNavValues = isAuthenticated ?
         <>
-            <li className="item has-submenu" onClick={(e) => toggleMenu(e, 'navSubItem')}>
+            <li className="item has-submenu" 
+             onMouseEnter={(e) => toggleMenu(e, 'navSubItem')}
+             onMouseLeave={(e) => toggleMenu(e, 'navSubItem')}
+            >
                 <Link tabIndex="0" to="#">Profile</Link>
                 <ul className="submenu">
                     <li className="subitem">
