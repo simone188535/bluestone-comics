@@ -11,10 +11,6 @@
         }
     }
 
-    .logo {
-        font-size: 20px;
-    }
-
     .item {
         padding: 10px;
     }
@@ -25,16 +21,26 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        // height: 20vh;
+        min-height: 15vh;
         border-bottom: 1px solid $light-grey;
-        padding: 0px 10px;
+        padding: 10px;
+        
+        // &.active {
+        //     padding: 10px;
+        // }
 
-        li a {
-            display: block;
-            color: $off-black;
-            
-            &:hover {
-                color: $dark-teal-green;
+        li {
+            &.logo > a{
+                font-size: 20px;
+                font-weight: $semibold;
+            }
+            a {
+                // display: block;
+                color: $off-black;
+
+                &:hover {
+                    color: $dark-teal-green;
+                }
             }
         }
 
@@ -60,9 +66,11 @@
         /* submenu styles */
         .submenu {
             display: none;
+
             .subitem {
-                margin: 10px 0; 
+                margin: 10px 0;
             }
+
             &.active {
                 display: block;
             }
@@ -74,6 +82,14 @@
     .global-nav {
         .nav-menu {
             justify-content: space-around;
+
+            li a {
+                    color: $gray-black;
+                    font-weight: $light;
+                }
+            
+
+
             .mobile-toggle {
                 order: 3;
                 display: none;
@@ -88,8 +104,18 @@
                 width: auto;
                 display: block;
             }
-            .submenu {
-                position: absolute;
+
+            li.has-submenu {
+                position: relative;
+
+                .submenu {
+                    position: absolute;
+                    background: $pure-white;
+                    width: 10em;
+                    right: 5px;
+                    top: 39px;
+                    border: 1px solid $light-grey;
+                }
             }
         }
     }
