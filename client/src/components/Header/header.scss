@@ -21,21 +21,16 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        min-height: 15vh;
+        min-height: 3em;
         border-bottom: 1px solid $light-grey;
         padding: 10px;
         
-        // &.active {
-        //     padding: 10px;
-        // }
-
         li {
             &.logo > a{
                 font-size: 20px;
                 font-weight: $semibold;
             }
             a {
-                // display: block;
                 color: $off-black;
 
                 &:hover {
@@ -57,6 +52,9 @@
             width: 100%;
             text-align: center;
             display: none;
+        }
+        .item.search {
+            order: 4;
         }
 
         &.active .item {
@@ -113,7 +111,7 @@
                     background: $pure-white;
                     width: 10em;
                     right: 5px;
-                    top: 39px;
+                    top: 53px;
                     border: 1px solid $light-grey;
                 }
             }

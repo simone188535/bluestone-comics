@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
 import './header.scss';
 
 const toggleMenu = (e, toggleFocus) => {
     let toggleItem;
-    
+
     if (toggleFocus === 'mainNav') {
         toggleItem = document.querySelector('.nav-menu');
     } else if (toggleFocus === 'navSubItem') {
@@ -26,9 +26,9 @@ const authNavItems = (dispatch, isAuthenticated) => {
 
     const authNavValues = isAuthenticated ?
         <>
-            <li className="item has-submenu" 
-             onMouseEnter={(e) => toggleMenu(e, 'navSubItem')}
-             onMouseLeave={(e) => toggleMenu(e, 'navSubItem')}
+            <li className="item has-submenu"
+                onMouseEnter={(e) => toggleMenu(e, 'navSubItem')}
+                onMouseLeave={(e) => toggleMenu(e, 'navSubItem')}
             >
                 <Link tabIndex="0" to="#">Profile</Link>
                 <ul className="submenu">
@@ -79,13 +79,21 @@ const Header = () => {
                     <Link to="/news">News</Link>
                 </li>
                 <>
-                {authNavItems(dispatch, isAuthenticated)}
+                    {authNavItems(dispatch, isAuthenticated)}
                 </>
                 <li className="mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
                     <FontAwesomeIcon
                         icon={faBars}
                         size="2x"
                     />
+                </li>
+                <li className="item search" onClick={() => console.log('hello')}>
+                    <Link to="#">
+                        <FontAwesomeIcon
+                            icon={faSearch}
+                            size="1x"
+                        />
+                    </Link>
                 </li>
             </ul>
         </nav>
