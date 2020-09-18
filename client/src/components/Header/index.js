@@ -58,6 +58,7 @@ const Header = () => {
     const isAuthenticated = useSelector(state => state.auth.user);
 
     return (
+        <>
         <nav className="global-nav">
             <ul className="nav-menu">
                 <li className="logo">
@@ -87,7 +88,7 @@ const Header = () => {
                         size="2x"
                     />
                 </li>
-                <li className="item search" onClick={() => console.log('hello')}>
+                <li className="search" onClick={() => console.log('hello')}>
                     <Link to="#">
                         <FontAwesomeIcon
                             icon={faSearch}
@@ -97,6 +98,8 @@ const Header = () => {
                 </li>
             </ul>
         </nav>
+        <div></div>
+        </>
     );
 }
 export default Header;

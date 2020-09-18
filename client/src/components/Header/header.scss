@@ -11,6 +11,9 @@
         }
     }
 
+    .logo {
+        width: 80%;
+    }
     .item {
         padding: 10px;
     }
@@ -42,21 +45,21 @@
         }
 
         .mobile-toggle {
-            order: 1;
-        }
-
-        .item.button {
             order: 2;
         }
 
-        .item {
+        .item.button {
             order: 3;
+        }
+
+        .item {
+            order: 4;
             width: 100%;
             text-align: center;
             display: none;
         }
-        .item.search {
-            order: 4;
+        .search {
+            order: 1;
         }
 
         &.active .item {
@@ -89,7 +92,9 @@
                     font-weight: $light;
                 }
             
-
+            .logo {
+                width: auto;
+            }
 
             .mobile-toggle {
                 order: 3;
@@ -104,6 +109,10 @@
                 order: 1;
                 width: auto;
                 display: block;
+            }
+            
+            .search {
+                order: 4;
             }
 
             li.has-submenu {
