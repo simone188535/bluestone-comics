@@ -14,6 +14,7 @@
     .logo {
         width: 80%;
     }
+
     .item {
         padding: 10px;
     }
@@ -26,18 +27,22 @@
         align-items: center;
         border-bottom: 1px solid $light-grey;
         padding: 0px 10px;
-        
+
         li {
             &:not(.logo) {
                 padding: 20px 0px;
             }
-            &.logo > a{
+            // flex: auto;
+
+            &.logo>a {
                 font-size: 20px;
                 font-weight: $semibold;
             }
+
             a {
                 color: $off-black;
-                
+                outline: transparent;
+
                 &:hover {
                     color: $dark-teal-green;
                 }
@@ -58,8 +63,13 @@
             text-align: center;
             display: none;
         }
+
         .search {
             order: 1;
+
+            &.active a {
+                color: $dark-teal-green;
+            }
         }
 
         &.active .item {
@@ -81,6 +91,49 @@
     }
 }
 
+.searchbar-container {
+    padding: 20px 0px;
+    form {
+        display: flex;
+        justify-content: center;
+
+        input[type="search"].nav-searchbar {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding-left: 25px;
+            outline: transparent;
+            height: 50px;
+            width: 80%;
+            font-size: 1em;
+            border-radius: 25px 0px 0px 25px; 
+            border: 1px solid $light-grey;
+            border-right: 0px;
+            display: block;
+            // margin: 20px auto;
+            // border-radius: ;
+            &::placeholder{
+                font-weight: $light;
+                font-family: $Roboto, $base-font;
+            }
+
+        }
+
+        button.searchbar-submit {  
+            height: 50px;
+            width: 100px;
+            border-radius: 0px 25px 25px 0px; 
+            border: none;
+            border-left: 0px;
+            background: $dark-teal-green;
+            color: $pure-white;
+            // position: relative;
+            // right: 51px;
+            // top: 1px;
+        }
+    }
+}
+
 @media only screen and (min-width: $medium) {
     .global-nav {
         .nav-menu {
@@ -88,10 +141,10 @@
             padding: 0px;
 
             li a {
-                    color: $gray-black;
-                    font-weight: $light;
-                }
-            
+                color: $gray-black;
+                font-weight: $light;
+            }
+
             .logo {
                 width: auto;
             }
@@ -110,7 +163,7 @@
                 width: auto;
                 display: block;
             }
-            
+
             .search {
                 order: 4;
             }
@@ -126,6 +179,14 @@
                     top: 59px;
                     border: 1px solid $light-grey;
                 }
+            }
+        }
+    }
+
+    .searchbar-container {
+        form {
+            input[type="search"].nav-searchbar {
+                width: 50%;
             }
         }
     }

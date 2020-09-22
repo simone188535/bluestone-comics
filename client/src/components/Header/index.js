@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,8 @@ const toggleMenu = (e, toggleFocus) => {
         toggleItem = document.querySelector('.nav-menu');
     } else if (toggleFocus === 'navSubItem') {
         toggleItem = e.currentTarget.querySelector('.submenu');
+    } else if (toggleFocus === 'searchIcon') {
+        toggleItem = document.querySelector('.search');
     }
 
     if (toggleItem.classList.contains('active')) {
@@ -32,6 +34,9 @@ const authNavItems = (dispatch, isAuthenticated) => {
             >
                 <Link tabIndex="0" to="#">Profile</Link>
                 <ul className="submenu">
+                    <li className="subitem">
+                        <Link to="/profile">Profile</Link>
+                    </li>
                     <li className="subitem">
                         <Link to="/upload">Upload</Link>
                     </li>
@@ -56,49 +61,60 @@ const authNavItems = (dispatch, isAuthenticated) => {
 const Header = () => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.user);
+    const [searchToggle, setSearchToggle] = useState(false);
 
     return (
         <>
-        <nav className="global-nav">
-            <ul className="nav-menu">
-                <li className="logo">
-                    <Link to="/">Bluestone Comics</Link>
-                </li>
-                <li className="item">
-                    <Link to="/about">About</Link>
-                </li>
-                <li className="item">
-                    <Link to="/comic-list">Comic List</Link>
-                </li>
-                <li className="item">
-                    <Link to="/contest">Contests</Link>
-                </li>
-                <li className="item">
-                    <Link to="/articles">Articles</Link>
-                </li>
-                <li className="item">
-                    <Link to="/news">News</Link>
-                </li>
-                <>
-                    {authNavItems(dispatch, isAuthenticated)}
-                </>
-                <li className="mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
-                    <FontAwesomeIcon
-                        icon={faBars}
-                        size="2x"
-                    />
-                </li>
-                <li className="search" onClick={() => console.log('hello')}>
-                    <Link to="#">
+            <nav className="global-nav">
+                <ul className="nav-menu">
+                    <li className="logo">
+                        <Link to="/">Bluestone Comics</Link>
+                    </li>
+                    <li className="item">
+                        <Link to="/about">About</Link>
+                    </li>
+                    <li className="item">
+                        <Link to="/comic-list">Comic List</Link>
+                    </li>
+                    <li className="item">
+                        <Link to="/contest">Contests</Link>
+                    </li>
+                    <li className="item">
+                        <Link to="/articles">Articles</Link>
+                    </li>
+                    <li className="item">
+                        <Link to="/news">News</Link>
+                    </li>
+                    <>
+                        {authNavItems(dispatch, isAuthenticated)}
+                    </>
+                    <li className="mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
+                        <FontAwesomeIcon
+                            icon={faBars}
+                            size="2x"
+                        />
+                    </li>
+                    <li className="search" onClick={(e) => toggleMenu(e, 'searchIcon')}>
+                        <Link to="#">
+                            <FontAwesomeIcon
+                                icon={faSearch}
+                                size="lg"
+                            />
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
+            <div className="searchbar-container">
+                <form id="searchform" method="get" action="#">
+                    <input type="search" name="nav-searchbar" className="nav-searchbar" placeholder="Search..." autoComplete="off" />
+                    <button type="submit" className="searchbar-submit">
                         <FontAwesomeIcon
                             icon={faSearch}
-                            size="1x"
+                            size="md"
                         />
-                    </Link>
-                </li>
-            </ul>
-        </nav>
-        <div></div>
+                    </button>
+                </form>
+            </div>
         </>
     );
 }
