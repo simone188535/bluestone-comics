@@ -90,6 +90,7 @@
 
     .search {
         order: 2;
+        margin-left: auto;
 
         &.active a {
             color: $dark-teal-green;
@@ -167,7 +168,7 @@
 
         .nav-menu {
             order: 2;
-            justify-content: space-around;
+            // justify-content: space-around;
             padding: 0px;
             width: auto;
 
@@ -217,6 +218,7 @@
         }
         .search {
             order: 4;
+            margin-left: unset;
         }
     }
 
