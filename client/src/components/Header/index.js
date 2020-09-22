@@ -64,47 +64,46 @@ const Header = () => {
     const [searchToggle, setSearchToggle] = useState(false);
 
     return (
-        <>
-            <nav className="global-nav">
-                <ul className="nav-menu">
-                    <li className="logo">
-                        <Link to="/">Bluestone Comics</Link>
-                    </li>
-                    <li className="item">
-                        <Link to="/about">About</Link>
-                    </li>
-                    <li className="item">
-                        <Link to="/comic-list">Comic List</Link>
-                    </li>
-                    <li className="item">
-                        <Link to="/contest">Contests</Link>
-                    </li>
-                    <li className="item">
-                        <Link to="/articles">Articles</Link>
-                    </li>
-                    <li className="item">
-                        <Link to="/news">News</Link>
-                    </li>
-                    <>
-                        {authNavItems(dispatch, isAuthenticated)}
-                    </>
-                    <li className="mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
-                        <FontAwesomeIcon
-                            icon={faBars}
-                            size="2x"
-                        />
-                    </li>
-                    <li className="search" onClick={(e) => toggleMenu(e, 'searchIcon')}>
-                        <Link to="#">
-                            <FontAwesomeIcon
-                                icon={faSearch}
-                                size="lg"
-                            />
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
-            <div className="searchbar-container">
+        <nav className="global-nav">
+            <div className="logo">
+                <Link to="/">Bluestone Comics</Link>
+            </div>
+            <ul className="nav-menu">
+                <li className="item">
+                    <Link to="/about">About</Link>
+                </li>
+                <li className="item">
+                    <Link to="/comic-list">Comic List</Link>
+                </li>
+                <li className="item">
+                    <Link to="/contest">Contests</Link>
+                </li>
+                <li className="item">
+                    <Link to="/articles">Articles</Link>
+                </li>
+                <li className="item">
+                    <Link to="/news">News</Link>
+                </li>
+                <>
+                    {authNavItems(dispatch, isAuthenticated)}
+                </>
+            </ul>
+            <div className="mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
+                <FontAwesomeIcon
+                    icon={faBars}
+                    size="2x"
+                />
+            </div>
+            <div className="search" onClick={(e) => toggleMenu(e, 'searchIcon')}>
+                <Link to="#">
+                    <FontAwesomeIcon
+                        icon={faSearch}
+                        size="lg"
+                    />
+                </Link>
+            </div>
+
+            {/* <div className="searchbar-container">
                 <form id="searchform" method="get" action="#">
                     <input type="search" name="nav-searchbar" className="nav-searchbar" placeholder="Search..." autoComplete="off" />
                     <button type="submit" className="searchbar-submit">
@@ -114,8 +113,8 @@ const Header = () => {
                         />
                     </button>
                 </form>
-            </div>
-        </>
+            </div> */}
+        </nav>
     );
 }
 export default Header;
