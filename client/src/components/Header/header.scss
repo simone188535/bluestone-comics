@@ -36,7 +36,7 @@
 
 
     .item {
-        padding: 10px;
+        padding: 20px;
     }
 
     /* Mobile Menu */
@@ -47,7 +47,7 @@
         align-items: center;
         order: 4;
         width: 100%;
-        // margin-right: auto;
+        margin-left: auto;
         // border-bottom: 1px solid $light-grey;
         padding: 0px 10px;
 
@@ -82,6 +82,7 @@
     }
     .mobile-toggle {
         order: 3;
+        // padding: 20px;
     }
 
     // .item.button {
@@ -91,6 +92,7 @@
     .search {
         order: 2;
         margin-left: auto;
+        padding: 20px;
 
         &.active a {
             color: $dark-teal-green;
