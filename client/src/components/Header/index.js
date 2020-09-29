@@ -28,7 +28,7 @@ const authNavItems = (dispatch, isAuthenticated) => {
 
     const authNavValues = isAuthenticated ?
         <>
-            <li className="nav-link-item has-submenu"
+            <li className="nav-menu-item has-submenu"
                 onMouseEnter={(e) => toggleMenu(e, 'navSubItem')}
                 onMouseLeave={(e) => toggleMenu(e, 'navSubItem')}
             >
@@ -48,10 +48,10 @@ const authNavItems = (dispatch, isAuthenticated) => {
         </>
         :
         <>
-            <li className="nav-link-item button">
+            <li className="nav-menu-item button">
                 <Link to="/sign-up">Sign Up</Link>
             </li>
-            <li className="nav-link-item button">
+            <li className="nav-menu-item button">
                 <Link to="/login">Login</Link>
             </li>
         </>;
@@ -65,36 +65,36 @@ const Header = () => {
 
     return (
         <nav className="global-nav">
-            <div className="logo">
+            <div className="global-nav-item logo">
                 <Link to="/">Bluestone Comics</Link>
             </div>
-            <ul className="nav-menu">
-                <li className="nav-link-item">
+            <ul className="global-nav-item nav-menu">
+                <li className="nav-menu-item">
                     <Link to="/about">About</Link>
                 </li>
-                <li className="nav-link-item">
+                <li className="nav-menu-item">
                     <Link to="/comic-list">Comic List</Link>
                 </li>
-                <li className="nav-link-item">
+                <li className="nav-menu-item">
                     <Link to="/contest">Contests</Link>
                 </li>
-                <li className="nav-link-item">
+                <li className="nav-menu-item">
                     <Link to="/articles">Articles</Link>
                 </li>
-                <li className="nav-link-item">
+                <li className="nav-menu-item">
                     <Link to="/news">News</Link>
                 </li>
                 <>
                     {authNavItems(dispatch, isAuthenticated)}
                 </>
             </ul>
-            <div className="mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
+            <div className="global-nav-item mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>
                 <FontAwesomeIcon
                     icon={faBars}
                     size="2x"
                 />
             </div>
-            <div className="search" onClick={(e) => toggleMenu(e, 'searchIcon')}>
+            <div className="global-nav-item search" onClick={(e) => toggleMenu(e, 'searchIcon')}>
                 <Link to="#">
                     <FontAwesomeIcon
                         icon={faSearch}
