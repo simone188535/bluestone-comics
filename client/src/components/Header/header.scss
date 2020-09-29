@@ -35,7 +35,7 @@
     }
 
 
-    .item {
+    .nav-link-item {
         padding: 20px;
     }
 
@@ -65,14 +65,14 @@
         //         color: $dark-teal-green;
         //     }
         // }
-        .item {
+        .nav-link-item {
             // order: 4;
             width: 100%;
             text-align: center;
             display: none;
         }
     
-        &.active .item {
+        &.active .nav-link-item {
             display: block;
         }
     
@@ -85,7 +85,7 @@
         // padding: 20px;
     }
 
-    // .item.button {
+    // .nav-link-item.button {
     //     order: 3;
     // }
 
@@ -99,7 +99,7 @@
         }
     }
 
-    // &.active .item {
+    // &.active .nav-link-item {
     //     display: block;
     // }
 
@@ -187,11 +187,11 @@
             //     display: none;
             // }
 
-            // .item.button {
+            // .nav-link-item.button {
             //     order: 2;
             // }
 
-            .item {
+            .nav-link-item {
                 // order: 2;
                 width: auto;
                 display: block;

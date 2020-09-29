@@ -28,7 +28,7 @@ const authNavItems = (dispatch, isAuthenticated) => {
 
     const authNavValues = isAuthenticated ?
         <>
-            <li className="item has-submenu"
+            <li className="nav-link-item has-submenu"
                 onMouseEnter={(e) => toggleMenu(e, 'navSubItem')}
                 onMouseLeave={(e) => toggleMenu(e, 'navSubItem')}
             >
@@ -48,10 +48,10 @@ const authNavItems = (dispatch, isAuthenticated) => {
         </>
         :
         <>
-            <li className="item button">
+            <li className="nav-link-item button">
                 <Link to="/sign-up">Sign Up</Link>
             </li>
-            <li className="item button">
+            <li className="nav-link-item button">
                 <Link to="/login">Login</Link>
             </li>
         </>;
@@ -69,19 +69,19 @@ const Header = () => {
                 <Link to="/">Bluestone Comics</Link>
             </div>
             <ul className="nav-menu">
-                <li className="item">
+                <li className="nav-link-item">
                     <Link to="/about">About</Link>
                 </li>
-                <li className="item">
+                <li className="nav-link-item">
                     <Link to="/comic-list">Comic List</Link>
                 </li>
-                <li className="item">
+                <li className="nav-link-item">
                     <Link to="/contest">Contests</Link>
                 </li>
-                <li className="item">
+                <li className="nav-link-item">
                     <Link to="/articles">Articles</Link>
                 </li>
-                <li className="item">
+                <li className="nav-link-item">
                     <Link to="/news">News</Link>
                 </li>
                 <>
