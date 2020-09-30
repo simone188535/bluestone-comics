@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
 import './header.scss';
 
+/* 
+    The purpose of this function is to add the active class to an element for styling purposes.
+    If the active class is already added the it removes it (toggle effect). 
+*/
 const toggleMenu = (e, toggleFocus) => {
     let toggleItem;
 
@@ -24,6 +28,9 @@ const toggleMenu = (e, toggleFocus) => {
         toggleItem.classList.add('active');
     }
 }
+
+
+// These are nav items the render conditionally depending on whether the user is login or not
 const authNavItems = (dispatch, isAuthenticated) => {
 
     const authNavValues = isAuthenticated ?
@@ -58,10 +65,34 @@ const authNavItems = (dispatch, isAuthenticated) => {
     return authNavValues;
 }
 
+
 const Header = () => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.user);
     const [searchToggle, setSearchToggle] = useState(false);
+
+    const searchButtonClicked = (e) => {
+        toggleMenu(e, 'searchIcon');
+        setSearchToggle(!searchToggle);
+    }
+
+    const searchIconToggle = () => {
+        const toggleIcon = searchToggle ? 
+        <>
+        <FontAwesomeIcon
+            icon={faTimes}
+            size="lg"
+        />
+        </> : <>
+        <FontAwesomeIcon
+            icon={faSearch}
+            size="lg"
+        />
+        </>
+
+        return toggleIcon;
+    }
+
 
     return (
         <nav className="global-nav">
@@ -94,14 +125,11 @@ const Header = () => {
                     size="2x"
                 />
             </div>
-            <div className="global-nav-item search" onClick={(e) => toggleMenu(e, 'searchIcon')}>
-                <Link to="#">
-                    <FontAwesomeIcon
-                        icon={faSearch}
-                        size="lg"
-                    />
-                </Link>
-            </div>
+            <button className="global-nav-item search" onClick={(e) => searchButtonClicked(e)}>
+                {/* <Link to="#"> */}
+                    {searchIconToggle()}
+                {/* </Link> */}
+            </button>
 
             {/* <div className="searchbar-container">
                 <form id="searchform" method="get" action="#">
