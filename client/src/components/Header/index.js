@@ -77,22 +77,34 @@ const Header = () => {
     }
 
     const searchIconToggle = () => {
-        const toggleIcon = searchToggle ? 
-        <>
-        <FontAwesomeIcon
-            icon={faTimes}
-            size="lg"
-        />
-        </> : <>
-        <FontAwesomeIcon
-            icon={faSearch}
-            size="lg"
-        />
-        </>
+        const toggleIcon = searchToggle ?
+            <>
+                <FontAwesomeIcon
+                    icon={faTimes}
+                    size="lg"
+                />
+            </> : <>
+                <FontAwesomeIcon
+                    icon={faSearch}
+                    size="lg"
+                />
+            </>
 
         return toggleIcon;
     }
 
+    const showSearchBar = () => {
+        const searchBar = searchToggle ?
+            <>
+                <div className="searchbar-container">
+                    <form id="searchform" method="get" action="#">
+                        <input type="search" name="nav-searchbar" className="nav-searchbar" placeholder="What are you look for?" autoComplete="off" />
+                    </form>
+                </div>
+            </> : null;
+
+        return searchBar;
+    }
 
     return (
         <nav className="global-nav">
@@ -128,18 +140,7 @@ const Header = () => {
             <button className="global-nav-item search" onClick={(e) => searchButtonClicked(e)}>
                 {searchIconToggle()}
             </button>
-
-            <div className="searchbar-container">
-                <form id="searchform" method="get" action="#">
-                    <input type="search" name="nav-searchbar" className="nav-searchbar" placeholder="Search..." autoComplete="off" />
-                    {/* <button type="submit" className="searchbar-submit">
-                        <FontAwesomeIcon
-                            icon={faSearch}
-                            size="md"
-                        />
-                    </button> */}
-                </form>
-            </div>
+            {showSearchBar()}
         </nav>
     );
 }
