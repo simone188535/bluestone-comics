@@ -96,7 +96,7 @@ const Header = () => {
     const showSearchBar = () => {
         const searchBar = searchToggle ?
             <>
-                <div className="searchbar-container">
+                <div className="global-nav-item searchbar-container">
                     <form id="searchform" method="get" action="#">
                         <input type="search" name="nav-searchbar" className="nav-searchbar" placeholder="What are you look for?" autoComplete="off" />
                     </form>
