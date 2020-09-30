@@ -126,9 +126,7 @@ const Header = () => {
                 />
             </div>
             <button className="global-nav-item search" onClick={(e) => searchButtonClicked(e)}>
-                {/* <Link to="#"> */}
-                    {searchIconToggle()}
-                {/* </Link> */}
+                {searchIconToggle()}
             </button>
 
             {/* <div className="searchbar-container">

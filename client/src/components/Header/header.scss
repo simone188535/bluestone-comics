@@ -68,11 +68,11 @@
     }
 
     .logo {
-        order: 1;
+        order: 2;
     }
 
     .mobile-toggle {
-        order: 3;
+        order: 1;
         // padding: 0 10px;
         display: flex;
         align-items: center;
@@ -81,8 +81,8 @@
     }
 
     .search {
-        order: 2;
-        margin-left: auto;
+        order: 3;
+        // margin-left: auto;
         // padding: 0 10px;
         flex-basis: 60px;
         border: none;
