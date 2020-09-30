@@ -47,7 +47,7 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        order: 4;
+        order: 5;
         width: 100%;
         margin-left: auto;
         padding: 0px 10px;
@@ -90,6 +90,7 @@
 
         &.active {
             color: $error-red;
+            background-color: $light-blue-grey;
         }
     }
 
@@ -109,7 +110,8 @@
 
 .searchbar-container {
     padding: 20px 0px;
-
+    order: 4;
+    flex-basis: 100%;
     form {
         display: flex;
         justify-content: center;
@@ -204,6 +206,7 @@
     }
 
     .searchbar-container {
+        order: 5;
         form {
             input[type="search"].nav-searchbar {
                 width: 50%;

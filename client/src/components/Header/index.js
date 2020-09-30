@@ -129,17 +129,17 @@ const Header = () => {
                 {searchIconToggle()}
             </button>
 
-            {/* <div className="searchbar-container">
+            <div className="searchbar-container">
                 <form id="searchform" method="get" action="#">
                     <input type="search" name="nav-searchbar" className="nav-searchbar" placeholder="Search..." autoComplete="off" />
-                    <button type="submit" className="searchbar-submit">
+                    {/* <button type="submit" className="searchbar-submit">
                         <FontAwesomeIcon
                             icon={faSearch}
                             size="md"
                         />
-                    </button>
+                    </button> */}
                 </form>
-            </div> */}
+            </div>
         </nav>
     );
 }
