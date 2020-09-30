@@ -111,13 +111,9 @@
 
 .searchbar-container {
     position: absolute;
-    // order: 4;
     width: calc(100% - 60px);
-    // background-color: rgba(219, 224, 223, .8);
 
     form {
-        // display: flex;
-        // justify-content: center;
         height: 100%;
 
         input[type="search"].nav-searchbar {
@@ -130,11 +126,7 @@
             width: 100%;
             font-size: 1em;
             border: none;
-            background-color: $light-grey-rbg;
-            // border-radius: 25px 0px 0px 25px;
-            // border: 1px solid $light-grey;
-            // border-right: 0px;
-            // display: block;
+            background-color: $white-light-grey;
 
             &::placeholder {
                 font-weight: $light;
@@ -143,15 +135,6 @@
 
         }
 
-        button.searchbar-submit {
-            height: 50px;
-            width: 100px;
-            border-radius: 0px 25px 25px 0px;
-            border: none;
-            border-left: 0px;
-            background: $dark-teal-green;
-            color: $pure-white;
-        }
     }
 }
 
@@ -163,7 +146,6 @@
 
         .nav-menu {
             order: 2;
-            // justify-content: space-around;
             padding: 0px;
             width: auto;
             height: 60px;
@@ -188,7 +170,7 @@
                     background: $pure-white;
                     width: 10em;
                     right: 5px;
-                    top: 59px;
+                    top: 60px;
                     border: 1px solid $light-grey;
                 }
             }
@@ -212,11 +194,10 @@
     }
 
     .searchbar-container {
-        // order: 5;
 
         form {
             input[type="search"].nav-searchbar {
-                font-size: 1.5em;
+                font-size: 1.2em;
             }
         }
     }
