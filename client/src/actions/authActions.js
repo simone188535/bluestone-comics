@@ -1,6 +1,6 @@
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from './types';
-import { AuthenticationServices } from '../services/Authentication.services';
-import { errorActions } from './errorActions';
+import { AuthenticationServices } from '../services';
+import { errorActions } from './index';
 
 const loginRequest = () => {
   return { type: LOGIN_REQUEST }

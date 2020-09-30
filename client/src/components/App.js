@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import store from '../store';
 import { authActions } from '../actions';
-import { AuthenticationServices } from '../services/Authentication.services';
+import { AuthenticationServices } from '../services';
 
 import Header from './Header';
 import Footer from './Footer';

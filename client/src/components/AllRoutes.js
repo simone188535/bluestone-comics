@@ -14,7 +14,7 @@ import Upload from './Upload';
 
 import store from '../store';
 
-import { errorActions } from '../actions';
+import { errorActions } from '../actions/index';
 
 const AllRoutes = () => {
     const hasError = useSelector(state => state.error.hasError);
