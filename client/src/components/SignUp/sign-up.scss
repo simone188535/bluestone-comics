@@ -2,11 +2,10 @@
 
 .sign-up-page {
     .sign-up-form-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: block;
 
         .sign-up-form {
+            margin: 0 auto;
 
             input,
             button {
@@ -14,5 +13,8 @@
             }
 
         }
+    }
+    .final-message {
+        text-align: center;
     }
 }

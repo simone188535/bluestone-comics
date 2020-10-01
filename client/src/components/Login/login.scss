@@ -1,5 +1,20 @@
 @import '../../index.scss';
 
 .login-page {
-    
+    .login-page-form-container {
+        display: block;
+
+        .login-page-form {
+            margin: 0 auto;
+
+            input,
+            button {
+                width: 100%;
+            }
+
+        }
+    }
+    .final-message {
+        text-align: center;
+    }
 }

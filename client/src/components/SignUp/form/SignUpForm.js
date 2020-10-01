@@ -79,7 +79,7 @@ function SignUpForm() {
                     <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>
             </Formik>
-            <div className="my-4 text-center">{enableMessage && isAuthMessage()}</div>
+            <div className="final-message">{enableMessage && isAuthMessage()}</div>
         </div>
     );
 }

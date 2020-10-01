@@ -37,7 +37,7 @@ function LoginForm() {
     }, [isAuthenticated]);
 
     return (
-        <div className="col-md-6 bsc-form login-form">
+        <div className="login-page-form-container">
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={Yup.object({
@@ -49,20 +49,18 @@ function LoginForm() {
                 })}
                 onSubmit={onSubmit}
             >
-                <Form>
-                    <div className="form-group">
-                        <div className="form-header-text">Please, <strong>Login</strong> to continue</div>
+                <Form className="bsc-form login-page-form">
+                    <div className="form-header-text">Please, <strong>Login</strong> to continue</div>
+                    <div>
                         <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on" />
-                        <ErrorMessage className="error-text-color" component="div" name="email" />
-                    </div>
-                    <div className="form-group">
+                        <ErrorMessage className="error-message error-text-color" component="div" name="email" />
                         <Field className="form-input form-item" name="password" type="password" placeholder="Password" autoComplete="on" />
-                        <ErrorMessage className="error-text-color" component="div" name="password" />
+                        <ErrorMessage className="error-message error-text-color" component="div" name="password" />
                     </div>
                     <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>
             </Formik>
-            <div className="my-4 text-center">{enableMessage && authMessage()}</div>
+            <div className="final-message">{enableMessage && authMessage()}</div>
         </div>
     );
 }
