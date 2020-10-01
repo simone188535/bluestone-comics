@@ -21,9 +21,9 @@ function SignUpForm() {
 
     const isAuthMessage = () => {
         if (hasError) {
-            return <span className="error-message">{errorMessage} </span>;
+            return <span className="error-text-color">{errorMessage} </span>;
         } else if (isAuthenticated) {
-            return <span className="success-message"> Login successful!</span>;
+            return <span className="success-text-color"> Login successful!</span>;
         } else {
             return '';
         }
@@ -34,7 +34,7 @@ function SignUpForm() {
     }, [isAuthenticated]);
 
     return (
-        <div className="bsc-form sign-up-form-container">
+        <div className="sign-up-form-container">
             <Formik
                 initialValues={{ firstName: '', lastName: '', username: '', email: '', password: '', passwordConfirm: '' }}
                 validationSchema={Yup.object({
@@ -43,7 +43,7 @@ function SignUpForm() {
                     lastName: Yup.string()
                         .required('Last name required!'),
                     username: Yup.string()
-                        .required('User name required!'),
+                        .required('Username required!'),
                     email: Yup.string()
                         .email('Invalid email address!')
                         .required('Email required!'),
@@ -55,26 +55,26 @@ function SignUpForm() {
                 })}
                 onSubmit={onSubmit}
             >
-                <Form>
-                    <div className="form-header-text">Please, <strong>Sign in</strong> to continue</div>
+                <Form className="bsc-form sign-up-form">
+                    <div className="form-header-text">Please, <strong>Sign Up</strong> to continue</div>
                     <div>
                         <Field className="form-input form-item" name="firstName" type="text" placeholder="First Name" autoComplete="on"/>
-                        <ErrorMessage className="error-message" component="div" name="firstName" />
+                        <ErrorMessage className="error-message error-text-color" component="div" name="firstName" />
 
                         <Field className="form-input form-item" name="lastName" type="text" placeholder="Last Name" autoComplete="on"/>
-                        <ErrorMessage className="error-message" component="div" name="lastName" />
+                        <ErrorMessage className="error-message error-text-color" component="div" name="lastName" />
 
                         <Field className="form-input form-item" name="username" type="text" placeholder="Username" autoComplete="on"/>
-                        <ErrorMessage className="error-message" component="div" name="username" />
+                        <ErrorMessage className="error-message error-text-color" component="div" name="username" />
 
                         <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on"/>
-                        <ErrorMessage className="error-message" component="div" name="email" />
+                        <ErrorMessage className="error-message error-text-color" component="div" name="email" />
 
                         <Field className="form-input form-item" name="password" type="password" placeholder="Password" autoComplete="on"/>
-                        <ErrorMessage className="error-message" component="div" name="password" />
+                        <ErrorMessage className="error-message error-text-color" component="div" name="password" />
 
                         <Field className="form-input form-item" name="passwordConfirm" type="password" placeholder="Password Confirm" autoComplete="on"/>
-                        <ErrorMessage className="error-message" component="div" name="passwordConfirm" />
+                        <ErrorMessage className="error-message error-text-color" component="div" name="passwordConfirm" />
                     </div>
                     <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>

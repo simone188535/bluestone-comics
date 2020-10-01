@@ -16,9 +16,9 @@ function LoginForm() {
 
     const authMessage = () => {
         if (hasError) {
-            return <span className="error-message">{errorMessage} </span>;
+            return <span className="error-text-color">{errorMessage} </span>;
         } else if (isAuthenticated) {
-            return <span className="success-message"> Login successful!</span>;
+            return <span className="success-text-color"> Login successful!</span>;
         } else {
             return '';
         }
@@ -53,11 +53,11 @@ function LoginForm() {
                     <div className="form-group">
                         <div className="form-header-text">Please, <strong>Login</strong> to continue</div>
                         <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on" />
-                        <ErrorMessage className="error-message" component="div" name="email" />
+                        <ErrorMessage className="error-text-color" component="div" name="email" />
                     </div>
                     <div className="form-group">
                         <Field className="form-input form-item" name="password" type="password" placeholder="Password" autoComplete="on" />
-                        <ErrorMessage className="error-message" component="div" name="password" />
+                        <ErrorMessage className="error-text-color" component="div" name="password" />
                     </div>
                     <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>

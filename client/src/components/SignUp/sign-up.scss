@@ -5,5 +5,14 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
+
+        .sign-up-form {
+
+            input,
+            button {
+                width: 100%;
+            }
+
+        }
     }
 }
