@@ -34,7 +34,7 @@ function SignUpForm() {
     }, [isAuthenticated]);
 
     return (
-        <div className="col-md-6 bsc-form sign-up-form">
+        <div className="bsc-form sign-up-form-container">
             <Formik
                 initialValues={{ firstName: '', lastName: '', username: '', email: '', password: '', passwordConfirm: '' }}
                 validationSchema={Yup.object({
@@ -57,27 +57,22 @@ function SignUpForm() {
             >
                 <Form>
                     <div className="form-header-text">Please, <strong>Sign in</strong> to continue</div>
-                    <div className="form-group">
+                    <div>
                         <Field className="form-input form-item" name="firstName" type="text" placeholder="First Name" autoComplete="on"/>
                         <ErrorMessage className="error-message" component="div" name="firstName" />
-                    </div>
-                    <div className="form-group">
+
                         <Field className="form-input form-item" name="lastName" type="text" placeholder="Last Name" autoComplete="on"/>
                         <ErrorMessage className="error-message" component="div" name="lastName" />
-                    </div>
-                    <div className="form-group">
+
                         <Field className="form-input form-item" name="username" type="text" placeholder="Username" autoComplete="on"/>
                         <ErrorMessage className="error-message" component="div" name="username" />
-                    </div>
-                    <div className="form-group">
+
                         <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on"/>
                         <ErrorMessage className="error-message" component="div" name="email" />
-                    </div>
-                    <div className="form-group">
+
                         <Field className="form-input form-item" name="password" type="password" placeholder="Password" autoComplete="on"/>
                         <ErrorMessage className="error-message" component="div" name="password" />
-                    </div>
-                    <div className="form-group">
+
                         <Field className="form-input form-item" name="passwordConfirm" type="password" placeholder="Password Confirm" autoComplete="on"/>
                         <ErrorMessage className="error-message" component="div" name="passwordConfirm" />
                     </div>

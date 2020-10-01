@@ -6,10 +6,8 @@ import './sign-up.scss';
 const SignUp = () => {
 
     return (
-        <div className="container sign-up-page">
-            <div className="row justify-content-center h-100">
+        <div className="sign-up-page">
                 <SignUpForm />
-            </div>
         </div>
     );
 }
