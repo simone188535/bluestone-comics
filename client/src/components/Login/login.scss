@@ -2,7 +2,10 @@
 
 .login-page {
     .login-page-form-container {
-        display: block;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        flex-direction: column;
 
         .login-page-form {
             margin: 0 auto;
