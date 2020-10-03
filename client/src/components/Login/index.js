@@ -6,9 +6,7 @@ const Login = () => {
 
     return (
         <div className="container login-page">
-            <div className="row justify-content-center h-100">
-                <LoginForm />
-            </div>
+            <LoginForm />
         </div>
     );
 }
