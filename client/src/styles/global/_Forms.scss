@@ -11,10 +11,16 @@ form.bsc-form {
         padding: 0;
         margin: 0;
         padding-left: 10px;
+        font-size: .9em;
+
+        &::placeholder {
+            font-weight: $light;
+            font-family: $Roboto, $base-font;
+        }
     }
 
     .form-item {
-        height: 45px;
+        height: 50px;
         margin-bottom: 15px;
     }
 
@@ -28,12 +34,12 @@ form.bsc-form {
     }
 
     .form-submit {
-        background-color: $teal-green;
+        background-color: $violet-blue;
         color: $pure-white;
         border: none;
 
         &:hover {
-            background-color: $dark-teal-green;
+            background-color: $dark-violet-blue;
         }
     }
 }

@@ -12,47 +12,68 @@ const Upload = () => {
 
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
-        console.log(values);
+        let data = new FormData();
+        data.append('bookCoverPhoto', values.bookCoverPhoto);
+        data.append('issueCoverPhoto', values.issueCoverPhoto);
+        console.log('triggered', values);
         setEnableMessage(true);
         setSubmitting(false);
     }
-    // still needs bookCoverPhoto, genres, issueCoverPhoto, workCredits
+
+    const singleFileInputStyleBinding = () => {
+
+    }
     return (
         <div className="upload-page">
             <div className="upload-form-container">
-            <Formik
-                initialValues={{ bookTitle: '', bookDescription: '', urlSlug: '', issueTitle: ''}}
-                validationSchema={Yup.object({
-                    bookTitle: Yup.string()
-                        .required('Book Title required!'),
-                    bookDescription: Yup.string()
-                        .required('Book Description required!'),
-                    urlSlug: Yup.string()
-                        .required('URL Slug required!'),
-                    issueTitle: Yup.string()
-                        .required('issueTitle required!')
-                })}
-                onSubmit={onSubmit}
-            >
-                <Form className="bsc-form sign-up-form">
-                    <div className="form-header-text">Please, <strong>Sign Up</strong> to continue</div>
-                    <div>
-                        <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
-                        <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
+                <Formik
+                    // initialValues={{ bookTitle: '', bookCoverPhoto: '', bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: '', issueAssets: '', workCredits:'' }}
+                    // validationSchema={Yup.object({
+                    //     bookTitle: Yup.string()
+                    //         .required('Book Title required!'),
+                    //     bookDescription: Yup.string()
+                    //         .required('Book Description required!'),
+                    //     urlSlug: Yup.string()
+                    //         .required('URL Slug required!'),
+                    //     issueTitle: Yup.string()
+                    //         .required('issueTitle required!')
+                    // })}
+                    // onSubmit={onSubmit}
+                    initialValues={{ bookCoverPhoto: '', issueCoverPhoto: '' }}
+                    onSubmit={(values) => {
+                        let data = new FormData();
+                        data.append('bookCoverPhoto', values.bookCoverPhoto);
+                        data.append('issueCoverPhoto', values.issueCoverPhoto);
+                        console.log('triggered', values);
+                    }}
+                >
+                    {({ setFieldValue }) => (
+                        <Form className="bsc-form sign-up-form">
+                            <div className="form-header-text">Please, <strong>Sign Up</strong> to continue</div>
+                            <div>
+                                {/* <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
+                                <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" /> */}
 
-                        <Field className="form-input form-item" name="bookDescription" type="text" placeholder="Book Description" autoComplete="on" />
-                        <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
+                                <input id="file" className="single-upload-field" name="bookCoverPhoto" type="file" onChange={(event) => {
+                                    setFieldValue("bookCoverPhoto", event.currentTarget.files[0]);
+                                }} />
+                                {/* <Field className="form-input form-item" name="bookDescription" type="text" placeholder="Book Description" autoComplete="on" />
+                                <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
-                        <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />
-                        <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
+                                <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />
+                                <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
 
-                        <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
-                        <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" />
+                                <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
+                                <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" /> */}
 
-                    </div>
-                    <button type="submit" className="form-submit form-item">Submit</button>
-                </Form>
-            </Formik>
+                                <input id="file" className="single-upload-field" name="issueCoverPhoto" type="file" onChange={(event) => {
+                                    setFieldValue("issueCoverPhoto", event.currentTarget.files[0]);
+                                }} />
+                            </div>
+                            <button type="submit" className="form-submit form-item">Submit</button>
+                        </Form>
+                    )}
+                </Formik>
             </div>
         </div>
     );
