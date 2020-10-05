@@ -1,4 +1,3 @@
-
 form.bsc-form {
     width: 80%;
 
@@ -28,7 +27,42 @@ form.bsc-form {
         border: 1px solid $light-grey;
         display: block;
     }
-    
+
+    .single-file-upload-container {
+        position: relative;
+        display: flex;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+
+        .single-upload-field {
+            opacity: 0;
+            height: 50px;
+            padding: 0;
+            flex: 0 0 100%;
+            // margin-bottom: 15px;
+        }
+
+        label.single-upload-field-trigger {
+            background: $violet-blue;
+            color: $pure-white;
+            font-weight: $light;
+            // margin-bottom: 15px;
+            text-align: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 15.5px 0px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .single-upload-file-name {
+            align-self: center;
+            flex: 0 0 100%;
+            text-align: center;
+        }
+    }
+
     .error-message {
         margin-bottom: 15px;
     }
@@ -47,5 +81,25 @@ form.bsc-form {
 @media only screen and (min-width: $medium) {
     form.bsc-form {
         width: 50%;
+
+        .single-file-upload-container {
+            
+            .single-upload-field {
+                margin-bottom: 0;
+                flex: 0 0 30%;
+                min-width: 30%;
+            }
+
+            label.single-upload-field-trigger {
+                width: 30%;
+            }
+
+            .single-upload-file-name {
+                flex: 0 0 65%;
+                min-width: 65%;
+                padding-left: 5%;
+                text-align: left;
+            }
+        }
     }
 }
