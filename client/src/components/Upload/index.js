@@ -1,15 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { authActions } from "../../actions";
+import ReactDOM from "react-dom";
+// import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
 const Upload = () => {
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
+    let textInput = createRef();
 
+    const singleUpoadFileFieldValue = () => {
+        // activate closest input field
+        // const targetRef = textInput;
+        // const targetRef = ReactDOM.findDOMNode(this);
+        // console.log('target refffff', targetRef);
+        // const inputVal = document.getElementById('bookCoverPhoto');
+        // console.log(targetedElement,' uhiu', inputVal);
+
+        return 'single file test'
+    }
+
+    // useEffect(()=> {
+    //     singleUpoadFileFieldValue()
+    // },[singleUpoadFileFieldValue])
+    
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
         let data = new FormData();
@@ -20,9 +38,6 @@ const Upload = () => {
         setSubmitting(false);
     }
 
-    const singleFileFieldBinding = () => {
-        // activate closest input field
-    }
     return (
         <div className="upload-page">
             <div className="upload-form-container">
@@ -55,13 +70,17 @@ const Upload = () => {
                                 {/* <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" /> */}
 
-                                <div className="single-file-upload-container">
-                                    <input id="bookCoverPhoto" className="single-upload-field" name="bookCoverPhoto" type="file" onClick={(event) => {console.log(event.currentTarget.files[0])}} onChange={(event) => {
+
+                                <div className="file-input-single-upload-container">
+                                    <input ref={textInput} id="bookCoverPhoto" className="file-input-single-upload-field" name="bookCoverPhoto" type="file" onClick={(event) => { console.log(event.currentTarget.files[0]) }} onChange={(event) => {
                                         setFieldValue("bookCoverPhoto", event.currentTarget.files[0]);
                                     }} />
-                                    <label tabIndex="0" htmlFor="bookCoverPhoto" className="single-upload-field-trigger" onClick={singleFileFieldBinding()}>Select Book Cover Photo</label>
-                                    <div className="single-upload-file-name ">Test</div>
+                                    <label tabIndex="0" htmlFor="bookCoverPhoto" className="file-input-single-upload-trigger">Select Book Cover Photo</label>
+                                    <div className="file-input-single-upload-name">{singleUpoadFileFieldValue()}</div>
                                 </div>
+                                {/* <FileInputSingleUpload> */}
+
+
                                 {/* <Field className="form-input form-item" name="bookDescription" type="text" placeholder="Book Description" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
