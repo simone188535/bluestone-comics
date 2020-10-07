@@ -41,19 +41,23 @@ const Upload = () => {
             <div className="upload-form-container">
                 <Formik
                     // initialValues={{ bookTitle: '', bookCoverPhoto: '', bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: '', issueAssets: '', workCredits:'' }}
-                    // validationSchema={Yup.object({
-                    //     bookTitle: Yup.string()
-                    //         .required('Book Title required!'),
-                    //     bookDescription: Yup.string()
-                    //         .required('Book Description required!'),
-                    //     urlSlug: Yup.string()
-                    //         .required('URL Slug required!'),
-                    //     issueTitle: Yup.string()
-                    //         .required('issueTitle required!')
-                    // })}
+                    validationSchema={Yup.object().shape({
+                        bookTitle: Yup.string()
+                            .required('Book Title required!'),
+                        bookCoverPhoto: Yup.mixed()
+                        .required("A Book Cover Photo is required!"),
+                        bookDescription: Yup.string()
+                            .required('Book Description required!'),
+                        urlSlug: Yup.string()
+                            .required('URL Slug required!'),
+                        issueTitle: Yup.string()
+                            .required('Issue Title required!'),
+                        issueCoverPhoto: Yup.mixed()
+                            .required("A Issue Cover Photo is required!"),
+                    })}
                     // onSubmit={onSubmit}
                     // initialValues={{ bookCoverPhoto: '', issueCoverPhoto: '' }}
-                    initialValues={{ bookCoverPhoto: '' }}
+                    initialValues={{ bookTitle: '', bookCoverPhoto: '', bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: '' }}
                     onSubmit={(values) => {
                         let data = new FormData();
                         data.append('bookCoverPhoto', values.bookCoverPhoto);
@@ -65,32 +69,23 @@ const Upload = () => {
                         <Form className="bsc-form upload-form">
                             <div className="form-header-text">Please, <strong>Sign Up</strong> to continue</div>
                             <div>
-                                {/* <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" /> */}
+                                <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
+                                <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
 
-{/* 
-                                <div className="file-input-single-upload-container">
-                                    <input id="bookCoverPhoto" className="file-input-single-upload-field" name="bookCoverPhoto" type="file" onClick={(event) => { console.log(event.currentTarget.files[0]) }} onChange={(event) => {
-                                        setFieldValue("bookCoverPhoto", event.currentTarget.files[0]);
-                                    }} />
-                                    <label tabIndex="0" htmlFor="bookCoverPhoto" className="file-input-single-upload-trigger">Select Book Cover Photo</label>
-                                    <div className="file-input-single-upload-name">{singleUpoadFileFieldValue()}</div>
-                                </div> */}
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo"/>
+                                <ErrorMessage className="error-message error-text-color" component="div" name="bookCoverPhoto" />
 
-
-                                {/* <Field className="form-input form-item" name="bookDescription" type="text" placeholder="Book Description" autoComplete="on" />
+                                <Field className="form-input form-item" name="bookDescription" type="text" placeholder="Book Description" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
                                 <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
 
                                 <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" /> */}
+                                <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" />
 
-                                {/* <input id="file" className="single-upload-field" name="issueCoverPhoto" type="file" onChange={(event) => {
-                                    setFieldValue("issueCoverPhoto", event.currentTarget.files[0]);
-                                }} /> */}
+                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Book Cover Photo"/>
+                                <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
                         </Form>
