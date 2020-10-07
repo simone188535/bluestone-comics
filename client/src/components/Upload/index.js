@@ -3,15 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { authActions } from "../../actions";
-import ReactDOM from "react-dom";
-// import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
+import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
 const Upload = () => {
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
-    let textInput = createRef();
 
     const singleUpoadFileFieldValue = () => {
         // activate closest input field
@@ -70,15 +68,15 @@ const Upload = () => {
                                 {/* <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" /> */}
 
-
+{/* 
                                 <div className="file-input-single-upload-container">
-                                    <input ref={textInput} id="bookCoverPhoto" className="file-input-single-upload-field" name="bookCoverPhoto" type="file" onClick={(event) => { console.log(event.currentTarget.files[0]) }} onChange={(event) => {
+                                    <input id="bookCoverPhoto" className="file-input-single-upload-field" name="bookCoverPhoto" type="file" onClick={(event) => { console.log(event.currentTarget.files[0]) }} onChange={(event) => {
                                         setFieldValue("bookCoverPhoto", event.currentTarget.files[0]);
                                     }} />
                                     <label tabIndex="0" htmlFor="bookCoverPhoto" className="file-input-single-upload-trigger">Select Book Cover Photo</label>
                                     <div className="file-input-single-upload-name">{singleUpoadFileFieldValue()}</div>
-                                </div>
-                                {/* <FileInputSingleUpload> */}
+                                </div> */}
+                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo"/>
 
 
                                 {/* <Field className="form-input form-item" name="bookDescription" type="text" placeholder="Book Description" autoComplete="on" />
