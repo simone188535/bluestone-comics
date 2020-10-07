@@ -11,7 +11,7 @@ const FileInputSingleUpload = ({setFieldValue, identifier, triggerText}) => {
     
     const fileInputOnChange = (event) => {
         const uploadedFile = event.currentTarget.files[0];
-        setFieldValue({identifier}, uploadedFile);
+        setFieldValue(identifier, uploadedFile);
 
         let uploadedFileName = (uploadedFile) ? uploadedFile.name : 'No file selected';
         setFileInputValue(uploadedFileName);

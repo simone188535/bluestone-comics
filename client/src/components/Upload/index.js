@@ -45,7 +45,7 @@ const Upload = () => {
                         bookTitle: Yup.string()
                             .required('Book Title required!'),
                         bookCoverPhoto: Yup.mixed()
-                        .required("A Book Cover Photo is required!"),
+                        .required("You need to provide a file"),
                         bookDescription: Yup.string()
                             .required('Book Description required!'),
                         urlSlug: Yup.string()
