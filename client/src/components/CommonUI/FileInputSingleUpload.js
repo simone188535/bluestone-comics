@@ -5,8 +5,8 @@ import React, { createRef, useState } from 'react';
     to assign values for validation. Search here for more details: https://stackoverflow.com/questions/56149756/reactjs-how-to-handle-image-file-upload-with-formik
 */
 
-const FileInputSingleUpload = ({setFieldValue, identifier, triggerText}) => {
-    let fileInput = createRef();
+const FileInputSingleUpload = ({setFieldValue, identifier, triggerText, className}) => {
+    const providedClassNames = className ? className : '';
     const [fileInputValue, setFileInputValue] = useState('No file selected');
     
     const fileInputOnChange = (event) => {
@@ -18,8 +18,8 @@ const FileInputSingleUpload = ({setFieldValue, identifier, triggerText}) => {
     }
 
     return (
-        <div className="file-input-single-upload-container">
-            <input ref={fileInput} id={identifier} className="file-input-single-upload-field" name={identifier} type="file" onChange={fileInputOnChange} />
+        <div className={`file-input-single-upload-container ${providedClassNames}`}>
+            <input id={identifier} className="file-input-single-upload-field" name={identifier} type="file" onChange={fileInputOnChange} />
             <label tabIndex="0" htmlFor={identifier} className="file-input-single-upload-trigger">{triggerText}</label>
             <div className="file-input-single-upload-name">{fileInputValue}</div>
         </div>

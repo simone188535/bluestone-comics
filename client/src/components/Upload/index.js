@@ -1,9 +1,10 @@
 import React, { useEffect, useState, createRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import { authActions } from "../../actions";
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
+import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload.js';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
@@ -26,12 +27,13 @@ const Upload = () => {
         <div className="upload-page">
             <div className="upload-form-container">
                 <Formik
+                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, issueAssets: null }}
                     // initialValues={{ bookTitle: '', bookCoverPhoto: '', bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: '', issueAssets: '', workCredits:'' }}
                     validationSchema={Yup.object().shape({
                         bookTitle: Yup.string()
                             .required('Book Title required!'),
                         bookCoverPhoto: Yup.mixed()
-                        .required("You need to provide a file"),
+                            .required('You need to provide a file'),
                         bookDescription: Yup.string()
                             .required('Book Description required!'),
                         urlSlug: Yup.string()
@@ -39,11 +41,10 @@ const Upload = () => {
                         issueTitle: Yup.string()
                             .required('Issue Title required!'),
                         issueCoverPhoto: Yup.mixed()
-                            .required("A Issue Cover Photo is required!"),
+                            .required('A Issue Cover Photo is required!'),
                     })}
                     // onSubmit={onSubmit}
                     // initialValues={{ bookCoverPhoto: '', issueCoverPhoto: '' }}
-                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, issueAssets: null }}
                     onSubmit={(values) => {
                         let data = new FormData();
                         data.append('bookCoverPhoto', values.bookCoverPhoto);
@@ -73,7 +74,7 @@ const Upload = () => {
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
 
-                                {/* <input type="file" name="issueAssets[]" multiple /> */}
+                                <FileInputMultipleUpload className="form-input form-item"/>
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
                         </Form>
