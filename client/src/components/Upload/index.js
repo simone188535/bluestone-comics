@@ -11,21 +11,7 @@ const Upload = () => {
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
 
-    const singleUpoadFileFieldValue = () => {
-        // activate closest input field
-        // const targetRef = textInput;
-        // const targetRef = ReactDOM.findDOMNode(this);
-        // console.log('target refffff', targetRef);
-        // const inputVal = document.getElementById('bookCoverPhoto');
-        // console.log(targetedElement,' uhiu', inputVal);
 
-        return 'single file test'
-    }
-
-    // useEffect(()=> {
-    //     singleUpoadFileFieldValue()
-    // },[singleUpoadFileFieldValue])
-    
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
         let data = new FormData();
@@ -57,7 +43,7 @@ const Upload = () => {
                     })}
                     // onSubmit={onSubmit}
                     // initialValues={{ bookCoverPhoto: '', issueCoverPhoto: '' }}
-                    initialValues={{ bookTitle: '', bookCoverPhoto: '', bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: '' }}
+                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, issueAssets: null }}
                     onSubmit={(values) => {
                         let data = new FormData();
                         data.append('bookCoverPhoto', values.bookCoverPhoto);
@@ -84,8 +70,10 @@ const Upload = () => {
                                 <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" />
 
-                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Book Cover Photo"/>
+                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
+
+                                {/* <input type="file" name="issueAssets[]" multiple /> */}
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
                         </Form>
