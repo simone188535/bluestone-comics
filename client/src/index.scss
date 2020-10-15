@@ -1,9 +1,12 @@
-    // https://hugogiraudel.com/2015/06/18/styling-react-components-in-sass/
-    // https://sass-guidelin.es/#the-7-1-pattern
-    // https://blog.prototypr.io/how-i-organize-sass-projects-e2d7760df86f
-    // https://itnext.io/structuring-your-sass-projects-c8d41fa55ed4#:~:text=Simple%20Structure&text=Base%3A%20contained%20within%20this%20file,buttons%2C%20navbars%2C%20cards%20etc.
-    // https://stackoverflow.com/questions/51807409/global-scss-variables-in-react-create-app
-    // https://stackoverflow.com/questions/39317586/react-global-styles
+// These are article that helped me design the global stylng system
+// https://hugogiraudel.com/2015/06/18/styling-react-components-in-sass/
+// https://sass-guidelin.es/#the-7-1-pattern
+// https://blog.prototypr.io/how-i-organize-sass-projects-e2d7760df86f
+// https://itnext.io/structuring-your-sass-projects-c8d41fa55ed4#:~:text=Simple%20Structure&text=Base%3A%20contained%20within%20this%20file,buttons%2C%20navbars%2C%20cards%20etc.
+// https://stackoverflow.com/questions/51807409/global-scss-variables-in-react-create-app
+// https://stackoverflow.com/questions/39317586/react-global-styles
+// https://stackoverflow.com/questions/39675459/webpack-imports-the-same-styles-multiple-times
+// https://stackoverflow.com/questions/38941153/same-css-is-injected-into-html-over-and-over-again
 
 // variables
 @import '../src/styles/abstracts/variables';
@@ -18,14 +21,3 @@
 @import '../src/styles/global/Buttons';
 @import '../src/styles/global/Forms';
 
-// app components
-// @import './components/Header/header.scss';
-// @import './components/Footer/footer.scss';
-// @import './components/Articles/articles.scss';
-// @import './components/ComicList/comic-list.scss';
-// @import './components/Contest/contest.scss';
-// @import './components/Home/home.scss';
-// @import './components/Login/login.scss';
-// @import './components/News/news.scss';
-// @import './components/SignUp/sign-up.scss';
-// @import './components/Upload/upload.scss';
