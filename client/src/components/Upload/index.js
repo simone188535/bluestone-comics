@@ -27,7 +27,7 @@ const Upload = () => {
         <div className="upload-page">
             <div className="upload-form-container">
                 <Formik
-                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, issueAssets: null }}
+                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, issueAssets: [] }}
                     // initialValues={{ bookTitle: '', bookCoverPhoto: '', bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: '', issueAssets: '', workCredits:'' }}
                     validationSchema={Yup.object().shape({
                         bookTitle: Yup.string()
@@ -74,7 +74,8 @@ const Upload = () => {
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
 
-                                <FileInputMultipleUpload className="form-input form-item"/>
+                                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" className="form-input form-item"/>
+                                <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
                         </Form>
