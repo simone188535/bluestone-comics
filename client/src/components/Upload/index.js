@@ -54,7 +54,7 @@ const Upload = () => {
                 >
                     {({ setFieldValue }) => (
                         <Form className="bsc-form upload-form">
-                            <div className="form-header-text">Please, <strong>Sign Up</strong> to continue</div>
+                            <div className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </div>
                             <div>
                                 <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
@@ -62,7 +62,7 @@ const Upload = () => {
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookCoverPhoto" />
 
-                                <Field className="form-input form-item" name="bookDescription" type="text" placeholder="Book Description" autoComplete="on" />
+                                <Field className="form-input form-item" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
                                 <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />

@@ -7,38 +7,31 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
     // const onDrop = useCallback(acceptedFiles => {
     //     // Do something with the files
     // }, [])
-
+    console.log('RENDERING');
     const {
         getRootProps,
         getInputProps,
         isDragActive,
-        isDragAccept,
-        isDragReject,
         acceptedFiles,
         fileRejections
     } = useDropzone({ accept: 'image/*' })
 
-    const acceptedFileItems = acceptedFiles.map(file => {
-        console.log('acceptedFileItems', file);
+    const acceptedFileItems = acceptedFiles.map(file => (
+        <li key={file.path}>
+            {file.path} - {file.size} bytes
+        </li>
+    ));
 
-        return (
-            <li key={file.path}>
-                {file.path} - {file.size} bytes
-            </li>
-        );
-    });
-
-    const fileRejectionItems = fileRejections.map(({ file, errors }) => {
-        return (
-            <li key={file.path}>
-                {file.path} - {file.size} bytes
-                <ul>
-                    {errors.map(e => <li key={e.code}>{e.message}</li>)}
-                </ul>
-
-            </li>
-        )
-    });
+    const fileRejectionItems = fileRejections.map(({ file, errors }) => (
+        <li key={file.path}>
+            {file.path} - {file.size} bytes
+            <ul>
+                {errors.map(e => (
+                    <li key={e.code}>{e.message}</li>
+                ))}
+            </ul>
+        </li>
+    ));
 
     const onReorder = () => {
         /*
@@ -58,19 +51,15 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
         <>
             <div {...getRootProps()} className={`file-input-multiple-upload-container ${providedClassNames}`}>
                 <input {...getInputProps()} />
-                {
-                    isDragActive ?
-                        <p>Drop the files here ...</p> :
-                        <p>Drag 'n' drop some files here, or click to select files</p>
-                }
+
+                <p>Drop the files here ...</p>
+
             </div>
             <div className="preview-container">
-                <ul>
-                    acceptedFileItems: {acceptedFileItems}
-                </ul>
-                <ul>
-                    fileRejectionItems: {fileRejectionItems}
-                </ul>
+                <h4>Accepted files</h4>
+                <ul>{acceptedFileItems}</ul>
+                <h4>Rejected files</h4>
+                <ul>{fileRejectionItems}</ul>
             </div>
         </>
     )
