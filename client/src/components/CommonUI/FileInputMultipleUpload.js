@@ -1,20 +1,27 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
 const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
     const [files, setFiles] = useState([]);
     const providedClassNames = className ? className : '';
-    // const onDrop = useCallback(acceptedFiles => {
-    //     // Do something with the files
-    // }, [])
-    console.log('RENDERING');
+    
+    const onDrop = useCallback(acceptedFiles => {
+        acceptedFiles.map(acceptedFile => {
+            setFiles(prevState => [acceptedFile, ...prevState]);
+        })
+        // Do something with the files
+    }, [])
+    
+    useEffect(() => {
+        console.log('current hook files', files);
+      }, [files])
+
     const {
         getRootProps,
         getInputProps,
-        isDragActive,
         acceptedFiles,
         fileRejections
-    } = useDropzone({ accept: 'image/*' })
+    } = useDropzone({ accept: 'image/*', onDrop })
 
     const acceptedFileItems = acceptedFiles.map(file => (
         <li key={file.path}>
