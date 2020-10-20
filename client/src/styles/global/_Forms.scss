@@ -80,6 +80,20 @@ form.bsc-form {
         transition: border .24s ease-in-out;
     }
 
+    .file-input-multiple-upload-preview-container {
+
+        ul.thumb-nails {
+            list-style-type: none;
+            li {
+                // display: inline-flex;
+                padding: 10px;
+            }
+            img {
+                width: 250px;
+            }
+        }
+    }
+
     .error-message {
         margin-bottom: 15px;
     }
