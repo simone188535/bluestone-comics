@@ -74,17 +74,18 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
         setFiles(items);
 
     }
-    const removalOnClick = (currentElementIndex) => {
+    const removalOnClick = (e, currentElementIndex) => {
         /* 
             This allows for deleteing images withing the preview section. 
             When the user selects an image to remove. setFieldValue needs to be reset.
         */
-
-        // removes selected element from files hook
-        files.splice(currentElementIndex, 1);
-        setFiles(files);
-
-
+        
+        // removes selected element from files hook and sets updated file to the hook
+        
+        const items = Array.from(files);
+        items.splice(currentElementIndex, 1);
+        setFiles(items);
+        e.stopPropagation();
     }
 
 
@@ -122,7 +123,7 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
 
                                                     <button
                                                         className="thumb-nail-remove-icon"
-                                                        onClick={() => removalOnClick(index)}
+                                                        onClick={(e) => removalOnClick(e, index)}
                                                     >
                                                         <FontAwesomeIcon
                                                             icon={faTimes}
