@@ -9,6 +9,10 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
     const providedClassNames = className ? className : '';
 
     const onDrop = useCallback(acceptedFiles => {
+        /* 
+            the drag and drop functionality is modeled after this article: 
+            https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
+       */
         // setFiles(acceptedFiles.map(file => Object.assign(file, {
         //     preview: URL.createObjectURL(file)
         // })));
@@ -34,11 +38,11 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
         fileRejections
     } = useDropzone({ accept: 'image/*', onDrop })
 
-    const acceptedFileItems = acceptedFiles.map(file => (
-        <li key={file.path}>
-            {file.path} - {file.size} bytes
-        </li>
-    ));
+    // const acceptedFileItems = acceptedFiles.map(file => (
+    //     <li key={file.path}>
+    //         {file.path} - {file.size} bytes
+    //     </li>
+    // ));
 
     const fileRejectionItems = fileRejections.map(({ file, errors }) => (
         <li key={file.path}>
@@ -70,11 +74,17 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
         setFiles(items);
 
     }
-    const removalOnClick = () => {
+    const removalOnClick = (currentElementIndex) => {
         /* 
             This allows for deleteing images withing the preview section. 
             When the user selects an image to remove. setFieldValue needs to be reset.
         */
+
+        // removes selected element from files hook
+        files.splice(currentElementIndex, 1);
+        setFiles(files);
+
+
     }
 
 
@@ -89,34 +99,45 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
             <div className="file-input-multiple-upload-preview-container">
                 {/* <h4>Accepted files</h4>
                 <ul>{acceptedFileItems}</ul> */}
-                <h4>Rejected files</h4>
-                <ul>{fileRejectionItems}</ul>
-                <h4>Preview files</h4>
+
+                {   // if there are any rejected files, show them
+                    fileRejectionItems.length > 0 &&
+                    (<>
+                        <h4>Rejected files</h4>
+                        <ul>{fileRejectionItems}</ul>
+                    </>)
+                }
+
+                <h4>Preview Issue Assets</h4>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="thumb-nails">
                         {(provided) => (
                             <ul className="thumb-nails" {...provided.droppableProps} ref={provided.innerRef}>
-                                {files.map((uploadedFile, index) => (
+                                {
                                     // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order
-                                    <Draggable key={uploadedFile.name} draggableId={uploadedFile.name} index={index}>
-                                        {(provided) => (
-                                            <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                    files.map((uploadedFile, index) => (
+                                        <Draggable key={uploadedFile.name} draggableId={uploadedFile.name} index={index}>
+                                            {(provided) => (
+                                                <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
 
-                                                <button className="thumb-nail-remove-icon">
-                                                    <FontAwesomeIcon
-                                                        icon={faTimes}
-                                                        size="sm"
+                                                    <button
+                                                        className="thumb-nail-remove-icon"
+                                                        onClick={() => removalOnClick(index)}
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={faTimes}
+                                                            size="sm"
+                                                        />
+                                                    </button>
+                                                    <span>{index}</span>
+                                                    <img className="thumb-nail-img"
+                                                        src={uploadedFile.preview}
                                                     />
-                                                </button>
 
-                                                <img className="thumb-nail-img"
-                                                    src={uploadedFile.preview}
-                                                />
-
-                                            </li>
-                                        )}
-                                    </Draggable>
-                                ))}
+                                                </li>
+                                            )}
+                                        </Draggable>
+                                    ))}
                                 {provided.placeholder}
                             </ul>
                         )}
