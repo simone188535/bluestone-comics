@@ -18,6 +18,7 @@ const Upload = () => {
         let data = new FormData();
         data.append('bookCoverPhoto', values.bookCoverPhoto);
         data.append('issueCoverPhoto', values.issueCoverPhoto);
+        data.append('issueAssets', values.issueAssets);
         console.log('triggered', values);
         setEnableMessage(true);
         setSubmitting(false);
@@ -51,6 +52,7 @@ const Upload = () => {
                         let data = new FormData();
                         data.append('bookCoverPhoto', values.bookCoverPhoto);
                         data.append('issueCoverPhoto', values.issueCoverPhoto);
+                        data.append('issueAssets', values.issueAssets);
                         console.log('triggered', values);
                     }}
                 >
