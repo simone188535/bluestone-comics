@@ -65,12 +65,12 @@ form.bsc-form {
             background: $violet-blue;
             color: $pure-white;
             font-weight: $light;
-            // margin-bottom: 15px;
+            margin-bottom: 15px;
             text-align: center;
             position: relative;
             left: 0;
             top: 0;
-            padding: 15.5px 0px;
+            padding: 15.5px 5%;
             display: inline-block;
             flex-basis: 100%;
         }
@@ -163,11 +163,12 @@ form.bsc-form {
 
             label.file-input-single-upload-trigger {
                 flex-basis: 30%;
+                margin-bottom: 0;
             }
 
             .file-input-single-upload-name {
-                flex: 0 0 65%;
-                min-width: 65%;
+                flex: 0 0 55%;
+                min-width: 55%;
                 padding-left: 5%;
                 text-align: left;
             }
