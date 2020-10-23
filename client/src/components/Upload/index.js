@@ -78,7 +78,7 @@ const Upload = () => {
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
 
-                                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" className="form-input form-item"/>
+                                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" className="form-input form-item"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
