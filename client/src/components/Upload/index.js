@@ -42,6 +42,8 @@ const Upload = () => {
                             .required('Issue Title required!'),
                         issueCoverPhoto: Yup.mixed()
                             .required('A Issue Cover Photo is required!'),
+                        issueAssets: Yup.array()
+                            .required('A Issue Assets are required!'),
                     })}
                     // onSubmit={onSubmit}
                     // initialValues={{ bookCoverPhoto: '', issueCoverPhoto: '' }}
@@ -62,7 +64,7 @@ const Upload = () => {
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookCoverPhoto" />
 
-                                <Field className="form-input form-item" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
+                                <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
                                 <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />

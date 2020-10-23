@@ -22,34 +22,26 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
             });
             setFiles(prevState => [acceptedFile, ...prevState]);
         })
-        // Do something with the files
+
     }, [])
 
     useEffect(() => {
-        console.log('current hook files', files);
-        // Make sure to revoke the data uris to avoid memory leaks
-        // files.forEach(file => URL.revokeObjectURL(file.preview));
+        // This sets the formik form value to the files hook in the parent component
+        setFieldValue(identifier, files);
     }, [files])
 
     const {
         getRootProps,
         getInputProps,
-        acceptedFiles,
         fileRejections
     } = useDropzone({ accept: 'image/*', onDrop })
-
-    // const acceptedFileItems = acceptedFiles.map(file => (
-    //     <li key={file.path}>
-    //         {file.path} - {file.size} bytes
-    //     </li>
-    // ));
 
     const fileRejectionItems = fileRejections.map(({ file, errors }) => (
         <li key={file.path}>
             {file.path} - {file.size} bytes
             <ul>
                 {errors.map(e => (
-                    <li key={e.code}>{e.message}</li>
+                    <li key={e.code} className="error-text-color">{e.message}</li>
                 ))}
             </ul>
         </li>
@@ -64,7 +56,7 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
         this article: https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
         */
 
-        // Preventing errors from dragging out of bounds
+        // Preventing errors from dragging a list item out of bounds of draggable
         if (!result.destination) return;
 
         const items = Array.from(files);
@@ -72,18 +64,19 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
         items.splice(result.destination.index, 0, reorderedItem);
 
         setFiles(items);
-
     }
     const removalOnClick = (e, currentElementIndex) => {
         /* 
             This allows for deleteing images withing the preview section. 
             When the user selects an image to remove. setFieldValue needs to be reset.
         */
-        
+
         // removes selected element from files hook and sets updated file to the hook
-        
+
         const items = Array.from(files);
+
         items.splice(currentElementIndex, 1);
+
         setFiles(items);
         e.stopPropagation();
     }
@@ -98,52 +91,56 @@ const FileInputMultipleUpload = ({ setFieldValue, identifier, className }) => {
 
             </div>
             <div className="file-input-multiple-upload-preview-container">
-                {/* <h4>Accepted files</h4>
-                <ul>{acceptedFileItems}</ul> */}
 
                 {   // if there are any rejected files, show them
                     fileRejectionItems.length > 0 &&
                     (<>
-                        <h4>Rejected files</h4>
+                        <h4>Rejected files:</h4>
                         <ul>{fileRejectionItems}</ul>
                     </>)
                 }
+                
+                {
+                // if there are any files uploaded, show them
+                files.length > 0 && (
+                    <>
+                        <h4>Preview Issue Assets: </h4>
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="thumb-nails">
+                                {(provided) => (
+                                    <ul className="thumb-nails" {...provided.droppableProps} ref={provided.innerRef}>
+                                        {
+                                            // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order
+                                            files.map((uploadedFile, index) => (
+                                                <Draggable key={uploadedFile.name} draggableId={uploadedFile.name} index={index}>
+                                                    {(provided) => (
+                                                        <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
 
-                <h4>Preview Issue Assets</h4>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="thumb-nails">
-                        {(provided) => (
-                            <ul className="thumb-nails" {...provided.droppableProps} ref={provided.innerRef}>
-                                {
-                                    // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order
-                                    files.map((uploadedFile, index) => (
-                                        <Draggable key={uploadedFile.name} draggableId={uploadedFile.name} index={index}>
-                                            {(provided) => (
-                                                <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                                            <button
+                                                                className="thumb-nail-remove-icon"
+                                                                onClick={(e) => removalOnClick(e, index)}
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    icon={faTimes}
+                                                                    size="sm"
+                                                                />
+                                                            </button>
+                                                            <p className="thumb-nail-caption">Page {index+1}</p>
+                                                            <img className="thumb-nail-img"
+                                                                src={uploadedFile.preview}
+                                                            />
 
-                                                    <button
-                                                        className="thumb-nail-remove-icon"
-                                                        onClick={(e) => removalOnClick(e, index)}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faTimes}
-                                                            size="sm"
-                                                        />
-                                                    </button>
-                                                    <span>{index}</span>
-                                                    <img className="thumb-nail-img"
-                                                        src={uploadedFile.preview}
-                                                    />
-
-                                                </li>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                {provided.placeholder}
-                            </ul>
-                        )}
-                    </Droppable>
-                </DragDropContext>
+                                                        </li>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                        {provided.placeholder}
+                                    </ul>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                    </>
+                )}
             </div>
         </>
     )
