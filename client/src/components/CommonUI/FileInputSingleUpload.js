@@ -11,16 +11,13 @@ const FileInputSingleUpload = ({ setFieldValue, identifier, triggerText, classNa
 
     const fileInputOnChange = (event) => {
         const uploadedFile = event.currentTarget.files[0];
-        console.log('uploaded file: ', uploadedFile);
-        // let uploadedFileName = (uploadedFile) ? uploadedFile.name : '';
+
+        // if no file is uploaded do not update the state
+        if (!uploadedFile) return false;
+
         setFile(uploadedFile);
         setFieldValue(identifier, uploadedFile);
     }
-
-    // useEffect(() => {
-    //     // This sets the formik form value to the files hook in the parent component
-    //     setFieldValue(identifier, file);
-    // }, [file])
 
     return (
         <div className={`file-input-single-upload-container ${providedClassNames}`}>
