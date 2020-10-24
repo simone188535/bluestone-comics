@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { authActions } from "../../actions";
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
 import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload.js';
+import Checkboxes from '../CommonUI/Checkboxes.js';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
@@ -28,7 +29,7 @@ const Upload = () => {
         <div className="upload-page">
             <div className="upload-form-container">
                 <Formik
-                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, issueAssets: [] }}
+                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, genres: [], issueAssets: [] }}
                     // initialValues={{ bookTitle: '', bookCoverPhoto: '', bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: '', issueAssets: '', workCredits:'' }}
                     validationSchema={Yup.object().shape({
                         bookTitle: Yup.string()
@@ -77,6 +78,8 @@ const Upload = () => {
 
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
+                                
+                                <Checkboxes checkboxValues={['action', 'adventure', 'romance']}/>
 
                                 <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" className="form-input form-item"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
