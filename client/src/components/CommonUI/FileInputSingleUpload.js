@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 /*
     This component is designed to be used with formik. Out of the box, formik does not support file inputs. so `setFieldValue` is needed
