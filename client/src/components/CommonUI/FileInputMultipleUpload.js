@@ -14,7 +14,7 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
             https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
        */
 
-        acceptedFiles.map(acceptedFile => {
+        acceptedFiles.forEach(acceptedFile => {
             Object.assign(acceptedFile, {
                 preview: URL.createObjectURL(acceptedFile)
             });
