@@ -27,7 +27,7 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
     useEffect(() => {
         // This sets the formik form value to the files hook in the parent component when the files hook is updated
         setFieldValue(identifier, files);
-    }, [files])
+    }, [files, identifier, setFieldValue])
 
     const {
         getRootProps,
@@ -124,7 +124,8 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
                                                                     />
                                                                 </button>
                                                                 <p className="thumb-nail-caption">Page {index + 1}</p>
-                                                                <img className="thumb-nail-img"
+                                                                <img className="thumb-nail-img" 
+                                                                    alt={uploadedFile.name}
                                                                     src={uploadedFile.preview}
                                                                 />
 
