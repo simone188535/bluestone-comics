@@ -10,7 +10,7 @@
         .upload-form {
             margin: 0 auto;
 
-            input:not(.single-upload-field),
+            input[type=text],
             button{
                 width: 100%;
             }
