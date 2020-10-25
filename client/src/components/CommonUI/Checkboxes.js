@@ -8,7 +8,9 @@ const Checkboxes = ({ identifier, checkboxValues }) => {
             checkboxValues.map((checkboxValue, index) => (
                 <label key={index}>
                     <Field type="checkbox" name={identifier} value={checkboxValue} />
-                    {checkboxValue}
+                    <span>
+                        {checkboxValue}
+                    </span>
                 </label>
             ))
         );

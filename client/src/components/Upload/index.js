@@ -79,7 +79,7 @@ const Upload = () => {
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
                                 
-                                <Checkboxes identifier="genres" checkboxValues={['action', 'adventure', 'romance']}/>
+                                <Checkboxes identifier="genres" checkboxValues={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']}/>
 
                                 <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" className="form-input form-item"/>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
