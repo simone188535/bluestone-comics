@@ -7,6 +7,15 @@ export const PublishServices = {
 
 function createBook(bookTitle, bookCoverPhoto, bookDescription, urlSlug, genres, issueTitle, issueCoverPhoto, issueAssets, workCredits) {
     // send request to create a book which will contain the first issue
+    const jwtToken = localStorage.getItem('jwtToken');
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            'Content-Type': 'multipart/form-data'
+        }
+    };
+
     return axios.post('/api/v1/publish', {
         bookTitle,
         bookCoverPhoto,
@@ -17,7 +26,7 @@ function createBook(bookTitle, bookCoverPhoto, bookDescription, urlSlug, genres,
         issueCoverPhoto,
         issueAssets,
         workCredits
-    });
+    }, config);
 }
 
 // function signUp(firstName, lastName, username, email, password, passwordConfirm) {

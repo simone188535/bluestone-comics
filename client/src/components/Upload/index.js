@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from "yup";
 import { authActions } from "../../actions";
+import { PublishServices } from '../../services';
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
 import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload.js';
 import Checkboxes from '../CommonUI/Checkboxes.js';
@@ -13,14 +14,25 @@ const Upload = () => {
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
 
-
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
         let data = new FormData();
         data.append('bookCoverPhoto', values.bookCoverPhoto);
+        // console.log('triggered form data', data.get('bookCoverPhoto'));
         data.append('issueCoverPhoto', values.issueCoverPhoto);
-        data.append('issueAssets', values.issueAssets);
+        // console.log('triggered form data', data.get('issueCoverPhoto'));
+        // data.append('issueAssets[]', JSON.stringify(values.issueAssets));
+        values.issueAssets.forEach((formValue) => data.append('issueAssets[]', formValue));
+        // console.log('triggered form data', data.getAll('issueAssets[]'));
         console.log('triggered', values);
+        const {bookTitle, bookDescription, urlSlug, genres, issueTitle, workCredits} = values;
+        
+        try {
+            const res = await PublishServices.createBook(bookTitle, data.get('bookCoverPhoto'), bookDescription, urlSlug, genres, issueTitle, data.get('issueCoverPhoto'), data.getAll('issueAssets[]'), workCredits);
+            console.log('success', res);
+        } catch (err) {
+            console.log('failed', err.response.data.message);
+        }
         setEnableMessage(true);
         setSubmitting(false);
     }
@@ -47,15 +59,15 @@ const Upload = () => {
                         issueAssets: Yup.array()
                             .required('A Issue Assets are required!'),
                     })}
-                    // onSubmit={onSubmit}
+                    onSubmit={onSubmit}
                     // initialValues={{ bookCoverPhoto: '', issueCoverPhoto: '' }}
-                    onSubmit={(values) => {
-                        let data = new FormData();
-                        data.append('bookCoverPhoto', values.bookCoverPhoto);
-                        data.append('issueCoverPhoto', values.issueCoverPhoto);
-                        data.append('issueAssets', values.issueAssets);
-                        console.log('triggered', values);
-                    }}
+                    // onSubmit={(values) => {
+                    //     let data = new FormData();
+                    //     data.append('bookCoverPhoto', values.bookCoverPhoto);
+                    //     data.append('issueCoverPhoto', values.issueCoverPhoto);
+                    //     data.append('issueAssets', values.issueAssets);
+                    //     console.log('triggered', values);
+                    // }}
                 >
                     {({ setFieldValue }) => (
                         <Form className="bsc-form upload-form">

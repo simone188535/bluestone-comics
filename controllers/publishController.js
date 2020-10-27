@@ -23,7 +23,7 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
 // This creates both the book and the first Issue
 exports.createBook = catchAsync(async (req, res, next) => {
   // const users = await User.find();
-  // console.log(req.user);
+  console.log(req.body);
   const {
     bookTitle,
     urlSlug,
@@ -61,14 +61,6 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   req.user = user;
 
-  // const populated = await User.findOne({ _id: req.user.id }).populate(
-  //   'publisher'
-  // );
-  // console.log('!!!!!!!', populated);
-  // const populated = await User.findOne({ _id: req.user.id }).populate(
-  //   'publisher'
-  // );
-  // console.log('!!!!!!!', populated);
   res.status(201).json({
     status: 'success',
     book: newBook,

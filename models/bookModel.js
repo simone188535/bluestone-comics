@@ -63,8 +63,6 @@ bookSchema.methods.adjustTotalIssue = function (adjustType) {
   }
 };
 
-
-
 const Books = mongoose.model('Book', bookSchema);
 
 module.exports = Books;
