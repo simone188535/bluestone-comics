@@ -26,7 +26,7 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
 exports.createBook = catchAsync(async (req, res, next) => {
   // const users = await User.find();
   console.log('body', req.body);
-  console.log('files', req.file);
+  // console.log('files', req.file);
   console.log('files', req.files);
   // const {
   //   bookTitle,
