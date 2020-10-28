@@ -70,7 +70,7 @@ const Upload = () => {
                     // }}
                 >
                     {({ setFieldValue }) => (
-                        <Form className="bsc-form upload-form" enctype="multipart/form-data" method="post">
+                        <Form className="bsc-form upload-form" encType="multipart/form-data" method="post">
                             <div className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </div>
                             <div>
                                 <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />

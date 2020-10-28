@@ -11,8 +11,7 @@ function createBook(bookTitle, bookCoverPhoto, bookDescription, urlSlug, genres,
 
     const config = {
         headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            'Content-Type': 'multipart/form-data'
+            Authorization: `Bearer ${jwtToken}`
         }
     };
 

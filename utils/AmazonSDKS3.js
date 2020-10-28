@@ -1,4 +1,5 @@
-const fs = require('fs');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 const keys = require('../config/keys.js');
 // come here for more details concerning how this works: https://stackabuse.com/uploading-files-to-aws-s3-with-node-js/
@@ -11,22 +12,16 @@ const s3 = new AWS.S3({
   secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
-module.exports.uploadFile = (fileName) => {
-  // Read content from the file
-  const fileContent = fs.readFileSync(fileName);
-
-  // Setting up S3 upload parameters
-  const params = {
-    Bucket: BUCKET_NAME,
-    Key: 'cat.jpg', // File name you want to save as in S3
-    Body: fileContent
-  };
-
-  // Uploading files to the bucket
-  s3.upload(params, function (err, data) {
-    if (err) {
-      throw err;
+exports.uploadS3 = multer({
+  storage: multerS3({
+    s3: s3,
+    acl: 'public-read',
+    bucket: BUCKET_NAME,
+    metadata: (req, file, cb) => {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: (req, file, cb) => {
+      cb(null, `${Date.now().toString()}-${file.originalname}`);
     }
-    console.log(`File uploaded successfully. ${data.Location}`);
-  });
-};
+  })
+});

@@ -1,4 +1,6 @@
 // const User = require('../models/userModel');
+// const multer = require('multer');
+// const uploadS3 = require('../utils/AmazonSDKS3');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 const catchAsync = require('../utils/catchAsync');
@@ -23,7 +25,7 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
 // This creates both the book and the first Issue
 exports.createBook = catchAsync(async (req, res, next) => {
   // const users = await User.find();
-  console.log(req.body);
+
   const {
     bookTitle,
     urlSlug,

@@ -2,6 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
+// const AmazonSDKS3 = require('../utils/AmazonSDKS3');
+const multer = require('multer');
+
+const upload = multer({ dest: 'uploads/' });
+
 const authController = require('../controllers/authController');
 const publishController = require('../controllers/publishController');
 
@@ -9,7 +14,7 @@ const publishController = require('../controllers/publishController');
 router.use(authController.protect);
 // router.use(authController.restrictTo('creator'));
 
-router.route('/').post(publishController.createBook);
+router.route('/').post(upload.any(), publishController.createBook);
 router
   .route('/:urlSlug/book/:bookId')
   .get(publishController.getBookAndIssues)
