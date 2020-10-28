@@ -16,19 +16,33 @@ const Upload = () => {
 
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
-        let data = new FormData();
-        data.append('bookCoverPhoto', values.bookCoverPhoto);
-        // console.log('triggered form data', data.get('bookCoverPhoto'));
-        data.append('issueCoverPhoto', values.issueCoverPhoto);
-        // console.log('triggered form data', data.get('issueCoverPhoto'));
-        // data.append('issueAssets[]', JSON.stringify(values.issueAssets));
-        values.issueAssets.forEach((formValue) => data.append('issueAssets[]', formValue));
-        // console.log('triggered form data', data.getAll('issueAssets[]'));
+       
+        /*
+        these FormData appends must be done because we are using the uploaded file data in the backend using multer. 
+        in the createBook axios request, we cannot destructure the data (in the param) AND pass in the form data (in the param) 
+        seperately because node/multer will not populate req.files. 
+        check here for more info: https://laracasts.com/index.php/discuss/channels/vue/axios-post-multipart-formdata-object-attribute?page=1
+        */
+
+        let formData = new FormData();
+        
+        formData.append('bookTitle', values.bookTitle);
+        formData.append('bookCoverPhoto', values.bookCoverPhoto);
+        formData.append('bookDescription', values.bookDescription);
+        formData.append('urlSlug', values.urlSlug);
+        formData.append('genres', values.genres);
+        formData.append('issueTitle', values.issueTitle);
+        formData.append('issueCoverPhoto', values.issueCoverPhoto);
+        
+        // push all issueAssets to formData
+        values.issueAssets.forEach((formValue) => formData.append('issueAssets[]', formValue));
+        
+        formData.append('workCredits', values.workCredits);
+
         console.log('triggered', values);
-        const {bookTitle, bookDescription, urlSlug, genres, issueTitle, workCredits} = values;
         
         try {
-            const res = await PublishServices.createBook(bookTitle, data.get('bookCoverPhoto'), bookDescription, urlSlug, genres, issueTitle, data.get('issueCoverPhoto'), data.getAll('issueAssets[]'), workCredits);
+            const res = await PublishServices.createBook(formData);
             console.log('success', res);
         } catch (err) {
             console.log('failed', err.response.data.message);
@@ -42,7 +56,6 @@ const Upload = () => {
             <div className="upload-form-container">
                 <Formik
                     initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, genres: [], issueAssets: [] }}
-                    // initialValues={{ bookTitle: '', bookCoverPhoto: '', bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: '', issueAssets: '', workCredits:'' }}
                     validationSchema={Yup.object().shape({
                         bookTitle: Yup.string()
                             .required('Book Title required!'),
@@ -60,14 +73,6 @@ const Upload = () => {
                             .required('A Issue Assets are required!'),
                     })}
                     onSubmit={onSubmit}
-                    // initialValues={{ bookCoverPhoto: '', issueCoverPhoto: '' }}
-                    // onSubmit={(values) => {
-                    //     let data = new FormData();
-                    //     data.append('bookCoverPhoto', values.bookCoverPhoto);
-                    //     data.append('issueCoverPhoto', values.issueCoverPhoto);
-                    //     data.append('issueAssets', values.issueAssets);
-                    //     console.log('triggered', values);
-                    // }}
                 >
                     {({ setFieldValue }) => (
                         <Form className="bsc-form upload-form" encType="multipart/form-data" method="post">
