@@ -28,47 +28,47 @@ exports.createBook = catchAsync(async (req, res, next) => {
   console.log('body', req.body);
   // console.log('files', req.file);
   console.log('files', req.files);
-  // const {
-  //   bookTitle,
-  //   urlSlug,
-  //   bookCoverPhoto,
-  //   bookDescription,
-  //   genres,
-  //   issueTitle,
-  //   issueCoverPhoto,
-  //   issueAssets,
-  //   workCredits
-  // } = req.body;
+  const {
+    bookTitle,
+    urlSlug,
+    bookCoverPhoto,
+    bookDescription,
+    genres,
+    issueTitle,
+    issueCoverPhoto,
+    issueAssets,
+    workCredits
+  } = req.body;
 
-  // const newBook = await Book.create({
-  //   publisher: req.user.id,
-  //   title: bookTitle,
-  //   urlSlug,
-  //   coverPhoto: bookCoverPhoto,
-  //   description: bookDescription,
-  //   genres,
-  //   workCredits
-  // });
+  const newBook = await Book.create({
+    publisher: req.user.id,
+    title: bookTitle,
+    urlSlug,
+    coverPhoto: bookCoverPhoto,
+    description: bookDescription,
+    genres,
+    workCredits
+  });
 
-  // const newIssue = await Issue.create({
-  //   publisher: req.user.id,
-  //   book: newBook.id,
-  //   title: issueTitle,
-  //   coverPhoto: issueCoverPhoto,
-  //   issueAssets,
-  //   workCredits
-  // });
+  const newIssue = await Issue.create({
+    publisher: req.user.id,
+    book: newBook.id,
+    title: issueTitle,
+    coverPhoto: issueCoverPhoto,
+    issueAssets,
+    workCredits
+  });
 
   // Change user role to creator
-  // req.user.role = 'creator';
-  // const user = await req.user.save({ validateBeforeSave: false });
+  req.user.role = 'creator';
+  const user = await req.user.save({ validateBeforeSave: false });
 
-  // req.user = user;
+  req.user = user;
 
   res.status(201).json({
     status: 'success',
-    // book: newBook,
-    // issue: newIssue
+    book: newBook,
+    issue: newIssue
   });
 });
 
