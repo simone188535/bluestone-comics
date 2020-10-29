@@ -119,13 +119,13 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // GRANT ACCESS TO PROTECTED ROUTE
-  req.user = freshUser;
+  res.locals.user = freshUser;
   next();
 });
 
 exports.restrictTo = (...role) => {
   return (req, res, next) => {
-    if (!role.includes(req.user.role)) {
+    if (!role.includes(res.locals.user.role)) {
       return next(
         new AppError('You do not have permission to perform this action', 403)
       );
@@ -203,7 +203,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password, passwordConfirm } = req.body;
   // 1) Get user from collection
-  const user = await User.findById(req.user.id).select('+password');
+  const user = await User.findById(res.locals.user.id).select('+password');
   if (!user) {
     new AppError('User cannot be found. Login or Sign up', 401);
   }

@@ -12,7 +12,7 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const bookByUser = await Book.findOne({
     _id: bookId,
-    publisher: req.user.id
+    publisher: res.locals.user.id
   }).populate('publisher');
 
   // Get book and issues.
@@ -40,7 +40,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
   } = req.body;
 
   const newBook = await Book.create({
-    publisher: req.user.id,
+    publisher: res.locals.user.id,
     title: bookTitle,
     urlSlug,
     coverPhoto: bookCoverPhoto,
@@ -50,7 +50,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
   });
 
   const newIssue = await Issue.create({
-    publisher: req.user.id,
+    publisher: res.locals.user.id,
     book: newBook.id,
     title: issueTitle,
     coverPhoto: issueCoverPhoto,
@@ -60,10 +60,10 @@ exports.createBook = catchAsync(async (req, res, next) => {
   });
 
   // Change user role to creator
-  req.user.role = 'creator';
-  const user = await req.user.save({ validateBeforeSave: false });
+  res.locals.user.role = 'creator';
+  const user = await res.locals.user.save({ validateBeforeSave: false });
 
-  req.user = user;
+  res.locals.user = user;
 
   res.status(201).json({
     status: 'success',
@@ -77,21 +77,21 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 
   const existingBookByCurrentUser = await Book.findOne({
     _id: bookId,
-    publisher: req.user.id
+    publisher: res.locals.user.id
   });
   if (!existingBookByCurrentUser) {
     next(new AppError(`Existing book cannot be found.`, 401));
   }
   // delete existing Issues of Book by user
   await Issue.deleteMany({
-    publisher: req.user.id,
+    publisher: res.locals.user.id,
     book: bookId
   });
 
   // delete the book
   await Book.deleteOne({
     _id: bookId,
-    publisher: req.user.id
+    publisher: res.locals.user.id
   });
 
   res.status(204).json({
@@ -119,7 +119,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
   const updatedBook = await Book.findOneAndUpdate(
     {
       _id: bookId,
-      publisher: req.user.id
+      publisher: res.locals.user.id
     },
     filterBody,
     { new: true, runValidators: true, useFindAndModify: false }
@@ -149,7 +149,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   */
   const existingBookByCurrentUser = await Book.findOne({
     _id: bookId,
-    publisher: req.user.id
+    publisher: res.locals.user.id
   });
   if (!existingBookByCurrentUser) {
     next(
@@ -166,7 +166,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   });
 
   const newIssue = await Issue.create({
-    publisher: req.user.id,
+    publisher: res.locals.user.id,
     book: existingBookByCurrentUser.id,
     title: issueTitle,
     coverPhoto: issueCoverPhoto,
@@ -197,7 +197,7 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
   // Find existing book
   const existingBookByCurrentUser = await Book.findOne({
     _id: bookId,
-    publisher: req.user.id
+    publisher: res.locals.user.id
   });
   if (!existingBookByCurrentUser) {
     next(
@@ -209,7 +209,7 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
   }
   // find existing issue and delete it
   const existingIssueByCurrentUser = await Issue.findOneAndDelete({
-    publisher: req.user.id,
+    publisher: res.locals.user.id,
     book: bookId,
     issueNumber
   });
@@ -246,7 +246,7 @@ exports.updateIssue = catchAsync(async (req, res, next) => {
   // edit any issue of a book
   const updatedIssue = await Issue.findOneAndUpdate(
     {
-      publisher: req.user.id,
+      publisher: res.locals.user.id,
       book: bookId,
       issueNumber
     },

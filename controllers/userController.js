@@ -31,7 +31,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'email',
     'username'
   );
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filterBody, {
+  const updatedUser = await User.findByIdAndUpdate(res.locals.user.id, filterBody, {
     new: true,
     runValidators: true
   });
@@ -47,7 +47,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 exports.deleteMe = catchAsync(async (req, res, next) => {
   // User is never really deleted. Just deactivated as a safety precaution
   await User.findByIdAndUpdate(
-    req.user.id,
+    res.locals.user.id,
     { $set: { active: false } },
     { new: true }
   );
@@ -61,7 +61,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      user: req.user
+      user: res.locals.user
     }
   });
 });
