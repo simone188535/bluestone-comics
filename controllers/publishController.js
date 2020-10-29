@@ -55,7 +55,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
     title: issueTitle,
     coverPhoto: issueCoverPhoto,
     //issueAssets,
-    issueAssets
+    issueAssets: ['jjjjj']
     // workCredits
   });
 
