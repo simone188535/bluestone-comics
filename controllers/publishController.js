@@ -26,7 +26,6 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
 exports.createBook = catchAsync(async (req, res, next) => {
   // const users = await User.find();
   console.log('body', req.body);
-  // console.log('files', req.file);
   console.log('files', req.files);
   const {
     bookTitle,
@@ -36,8 +35,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
     genres,
     issueTitle,
     issueCoverPhoto,
-    issueAssets,
-    workCredits
+    issueAssets
+    // workCredits
   } = req.body;
 
   const newBook = await Book.create({
@@ -46,8 +45,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
     urlSlug,
     coverPhoto: bookCoverPhoto,
     description: bookDescription,
-    genres,
-    workCredits
+    genres
+    // workCredits
   });
 
   const newIssue = await Issue.create({
@@ -55,8 +54,9 @@ exports.createBook = catchAsync(async (req, res, next) => {
     book: newBook.id,
     title: issueTitle,
     coverPhoto: issueCoverPhoto,
-    issueAssets,
-    workCredits
+    //issueAssets,
+    issueAssets
+    // workCredits
   });
 
   // Change user role to creator

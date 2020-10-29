@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 // const issueAssetsSchema = require('./issueAssetsModel');
-const workCreditsSchema = require('./workCreditsModel');
+// const workCreditsSchema = require('./workCreditsModel');
 
 const issueSchema = new mongoose.Schema({
   publisher: {
@@ -37,7 +37,7 @@ const issueSchema = new mongoose.Schema({
     // This is required and must have at least one
     validate: (v) => Array.isArray(v) && v.length > 0
   },
-  workCredits: [workCreditsSchema]
+  // workCredits: [workCreditsSchema]
 });
 
 issueSchema.pre(/^find/, function (next) {

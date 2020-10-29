@@ -36,8 +36,11 @@ const Upload = () => {
         
         // push all issueAssets to formData
         values.issueAssets.forEach((formValue) => formData.append('issueAssets[]', formValue));
-        
-        formData.append('workCredits', values.workCredits);
+        // formData.append('workCredits', values.genres);
+        // formData.append('workCredits', [
+        //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
+        //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
+        // ]);
 
         console.log('triggered', values);
         
