@@ -16,7 +16,8 @@ exports.uploadS3 = multer({
   storage: multerS3({
     s3: s3,
     acl: 'public-read',
-    bucket: BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    bucket: `${BUCKET_NAME}/testing`,
     metadata: (req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },
