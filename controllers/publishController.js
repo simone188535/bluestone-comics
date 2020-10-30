@@ -60,11 +60,11 @@ exports.createBook = catchAsync(async (req, res, next) => {
   });
 
   // upload files to aws
-  AmazonSDKS3.uploadS3.fields([
-    { name: 'bookCoverPhoto', maxCount: 1 },
-    { name: 'issueCoverPhoto', maxCount: 1 },
-    { name: 'issueAssets[]' }
-  ]);
+  // AmazonSDKS3.uploadS3.fields([
+  //   { name: 'bookCoverPhoto', maxCount: 1 },
+  //   { name: 'issueCoverPhoto', maxCount: 1 },
+  //   { name: 'issueAssets[]' }
+  // ]);
   // save these to models .......
   console.log('files', req.files);
 

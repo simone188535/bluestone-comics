@@ -1,6 +1,7 @@
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
+const short = require('short-uuid');
 const keys = require('../config/keys.js');
 // come here for more details concerning how this works: https://stackabuse.com/uploading-files-to-aws-s3-with-node-js/
 const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = keys;
@@ -12,17 +13,24 @@ const s3 = new AWS.S3({
   secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 // https://stackoverflow.com/questions/48015968/node-js-unique-folder-for-each-upload-with-multer-and-shortid
-exports.uploadS3 = multer({
-  storage: multerS3({
-    s3: s3,
-    acl: 'public-read',
-    contentType: multerS3.AUTO_CONTENT_TYPE,
-    bucket: `${BUCKET_NAME}/testing`,
-    metadata: (req, file, cb) => {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: (req, file, cb) => {
-      cb(null, `${Date.now().toString()}-${file.originalname}`);
-    }
-  })
-});
+// Where the idea to write this function came from concerning unique Bucket Name: https://stackoverflow.com/a/61029813/6195136
+exports.uploadS3 = (uploadIdentifier = '') => {
+  // use the parameter or generate random string
+  const uniqueBucketRef = uploadIdentifier || short.generate();
+
+  // res.locals.bucketRef = uniqueBucketRef;
+  return multer({
+    storage: multerS3({
+      s3: s3,
+      acl: 'public-read',
+      contentType: multerS3.AUTO_CONTENT_TYPE,
+      bucket: `${BUCKET_NAME}/${uniqueBucketRef}`,
+      metadata: (req, file, cb) => {
+        cb(null, { fieldName: file.fieldname });
+      },
+      key: (req, file, cb) => {
+        cb(null, `${Date.now().toString()}-${short.generate()}`);
+      }
+    })
+  });
+};
