@@ -1,6 +1,6 @@
 // const User = require('../models/userModel');
 // const multer = require('multer');
-// const uploadS3 = require('../utils/AmazonSDKS3');
+const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 const catchAsync = require('../utils/catchAsync');
@@ -26,7 +26,7 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
 exports.createBook = catchAsync(async (req, res, next) => {
   // const users = await User.find();
   console.log('body', req.body);
-  console.log('files', req.files);
+
   const {
     bookTitle,
     urlSlug,
@@ -58,6 +58,15 @@ exports.createBook = catchAsync(async (req, res, next) => {
     issueAssets: ['jjjjj']
     // workCredits
   });
+
+  // upload files to aws
+  AmazonSDKS3.uploadS3.fields([
+    { name: 'bookCoverPhoto', maxCount: 1 },
+    { name: 'issueCoverPhoto', maxCount: 1 },
+    { name: 'issueAssets[]' }
+  ]);
+  // save these to models .......
+  console.log('files', req.files);
 
   // Change user role to creator
   res.locals.user.role = 'creator';
