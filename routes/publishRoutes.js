@@ -20,7 +20,7 @@ router
     AmazonSDKS3.uploadS3().fields([
       { name: 'bookCoverPhoto', maxCount: 1 },
       { name: 'issueCoverPhoto', maxCount: 1 },
-      { name: 'issueAssets[]' }
+      { name: 'issueAssets' }
     ]),
     publishController.createBook
   );

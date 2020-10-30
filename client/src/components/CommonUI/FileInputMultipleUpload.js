@@ -83,7 +83,7 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
     return (
         <>
             <div {...getRootProps()} className={`file-input-multiple-upload-container ${providedClassNames}`}>
-                <input {...getInputProps()} name={`${identifier}[]`}/>
+                <input {...getInputProps()} name={identifier}/>
 
                 <p dangerouslySetInnerHTML={{ __html: dropzoneInnerText }}/>
 

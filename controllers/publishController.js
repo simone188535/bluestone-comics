@@ -25,7 +25,7 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
 // This creates both the book and the first Issue
 exports.createBook = catchAsync(async (req, res, next) => {
   // const users = await User.find();
-  console.log('body', req.body);
+  // console.log('body', req.body);
 
   const {
     bookTitle,
@@ -39,7 +39,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
     // workCredits
   } = req.body;
 
-  const newBook = await Book.create({
+  const newBook = new Book({
     publisher: res.locals.user.id,
     title: bookTitle,
     urlSlug,
@@ -49,7 +49,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
     // workCredits
   });
 
-  const newIssue = await Issue.create({
+  const newIssue = new Issue({
     publisher: res.locals.user.id,
     book: newBook.id,
     title: issueTitle,
@@ -66,13 +66,20 @@ exports.createBook = catchAsync(async (req, res, next) => {
   //   { name: 'issueAssets[]' }
   // ]);
   // save these to models .......
-  console.log('files', req.files);
+  console.log('bookCoverPhoto:', req.files.bookCoverPhoto);
+  console.log('issueCoverPhoto:', req.files.issueCoverPhoto);
+  console.log('issueAssets:', req.files.issueAssets);
 
   // Change user role to creator
   res.locals.user.role = 'creator';
   const user = await res.locals.user.save({ validateBeforeSave: false });
 
   res.locals.user = user;
+
+  // console.log('newBook', newBook);
+  // console.log('newIssue', newIssue);
+  await newBook.save();
+  await newIssue.save();
 
   res.status(201).json({
     status: 'success',
