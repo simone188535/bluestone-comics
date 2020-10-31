@@ -27,6 +27,10 @@ const issueSchema = new mongoose.Schema({
     type: Number,
     default: 1
   },
+  imagePrefixReference: {
+    type: String,
+    required: true
+  },
   dateCreated: {
     type: Date,
     default: Date.now

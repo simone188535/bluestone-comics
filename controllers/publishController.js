@@ -55,20 +55,28 @@ exports.createBook = catchAsync(async (req, res, next) => {
     title: issueTitle,
     coverPhoto: issueCoverPhoto,
     //issueAssets,
-    issueAssets: ['jjjjj']
+    issueAssets
     // workCredits
   });
 
-  // upload files to aws
-  // AmazonSDKS3.uploadS3.fields([
-  //   { name: 'bookCoverPhoto', maxCount: 1 },
-  //   { name: 'issueCoverPhoto', maxCount: 1 },
-  //   { name: 'issueAssets[]' }
-  // ]);
+  // grab AWS file prefix and save it to each model (each of these files should share the same one)
+  const AWSPrefixArray = req.files.bookCoverPhoto[0].key.split('/');
+
+  newBook.imagePrefixReference = AWSPrefixArray[0];
+  newIssue.imagePrefixReference = AWSPrefixArray[1];
+
   // save these to models .......
-  console.log('bookCoverPhoto:', req.files.bookCoverPhoto);
-  console.log('issueCoverPhoto:', req.files.issueCoverPhoto);
-  console.log('issueAssets:', req.files.issueAssets);
+  // console.log('bookCoverPhoto:', req.files.bookCoverPhoto);
+  // console.log('issueCoverPhoto:', req.files.issueCoverPhoto);
+  // console.log('issueAssets:', req.files.issueAssets);
+
+  // add AWS images to models
+  newBook.coverPhoto = req.files.bookCoverPhoto[0].location;
+  newIssue.coverPhoto = req.files.issueCoverPhoto[0].location;
+
+  newIssue.issueAssets = req.files.issueAssets.map(
+    (issueAsset) => issueAsset.location
+  );
 
   // Change user role to creator
   res.locals.user.role = 'creator';
@@ -76,10 +84,10 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   res.locals.user = user;
 
-  // console.log('newBook', newBook);
-  // console.log('newIssue', newIssue);
-  await newBook.save();
-  await newIssue.save();
+  console.log('newBook', newBook);
+  console.log('newIssue', newIssue);
+  // await newBook.save();
+  // await newIssue.save();
 
   res.status(201).json({
     status: 'success',

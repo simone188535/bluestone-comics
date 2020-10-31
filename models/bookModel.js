@@ -42,6 +42,10 @@ const bookSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  imagePrefixReference: {
+    type: String,
+    required: true
+  },
   dateCreated: {
     type: Date,
     default: Date.now
