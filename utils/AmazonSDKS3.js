@@ -17,7 +17,7 @@ const s3 = new AWS.S3({
 // Where the idea to write this function came from concerning unique Bucket Name: https://stackoverflow.com/a/61029813/6195136
 exports.uploadS3 = (bookIdentifier = '', issueIdentifier = '') => {
   // use the parameter or generate random string. This prefix is used for grouping and can help with deleting a group of images
-  const randomString = () => uuid.v4().replace('-', '');
+  const randomString = () => uuid.v4().replace(/-/g, '');
   const bookPrefix = bookIdentifier || randomString();
   const issuePrefix = issueIdentifier || randomString();
 
