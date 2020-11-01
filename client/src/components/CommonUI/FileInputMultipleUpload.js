@@ -14,13 +14,17 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
             https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
        */
 
-        acceptedFiles.forEach(acceptedFile => {
-            Object.assign(acceptedFile, {
-                preview: URL.createObjectURL(acceptedFile)
-            });
-            // this prevents the new files from overriding/erasing the old ones. Instead, new files are concatinated to the old ones
-            setFiles(prevState => [acceptedFile, ...prevState]);
-        })
+        acceptedFiles.forEach((acceptedFile) => {
+          // rename inserted files (to avoid duplicate keys in list item): https://github.com/react-dropzone/react-dropzone/issues/583#issuecomment-496458314
+        const renamedAcceptedFile = new File([acceptedFile], `${new Date()}_${acceptedFile.name}`, { type: acceptedFile.type });
+        
+        Object.assign(renamedAcceptedFile, {
+            preview: URL.createObjectURL(renamedAcceptedFile)
+        });
+
+        // this prevents the new files from overriding/erasing the old ones. Instead, new files are concatinated to the old ones in the hook
+        setFiles(prevState => [renamedAcceptedFile, ...prevState]);
+      });
 
     }, [])
 
