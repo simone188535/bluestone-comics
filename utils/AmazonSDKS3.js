@@ -1,7 +1,6 @@
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
-const short = require('short-uuid');
 const uuid = require('uuid');
 const keys = require('../config/keys.js');
 // come here for more details concerning how this works: https://stackabuse.com/uploading-files-to-aws-s3-with-node-js/
