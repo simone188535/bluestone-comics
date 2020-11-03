@@ -6,6 +6,21 @@ const workCreditsSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  // book: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Book',
+  //   required: true
+  // },
+  // issue: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Issue',
+  //   required: true
+  // },
+  // issueNumber: {
+  //   type: Number,
+  //   default: 1,
+  //   required: true
+  // },
   credits: [
     {
       type: String,

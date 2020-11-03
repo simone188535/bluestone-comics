@@ -3,11 +3,12 @@
 const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
+const WorkCredits = require('../models/workCreditsModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const filterObj = require('../utils/filterObj');
 
-// THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS AND ARTICLES
+// THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
 exports.getBookAndIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const bookByUser = await Book.findOne({
@@ -54,10 +55,15 @@ exports.createBook = catchAsync(async (req, res, next) => {
     book: newBook.id,
     title: issueTitle,
     coverPhoto: issueCoverPhoto,
+    totalPages: req.files.issueAssets.length,
     //issueAssets,
     issueAssets
     // workCredits
   });
+
+  // const newIssue = new Issue({
+
+  // )};
 
   // grab AWS file prefix and save it to each model (each of these files should share the same one)
   const AWSPrefixArray = req.files.bookCoverPhoto[0].key.split('/');
