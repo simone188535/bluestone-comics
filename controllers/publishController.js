@@ -37,7 +37,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
     issueTitle,
     issueCoverPhoto,
     issueAssets
-    workCredits
+    // workCredits
   } = req.body;
 
   const newBook = new Book({
