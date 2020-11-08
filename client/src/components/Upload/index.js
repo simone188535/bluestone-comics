@@ -7,12 +7,14 @@ import { PublishServices } from '../../services';
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
 import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload.js';
 import Checkboxes from '../CommonUI/Checkboxes.js';
+import Modal from '../CommonUI/Modal';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
 const Upload = () => {
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
@@ -47,12 +49,14 @@ const Upload = () => {
         try {
             const res = await PublishServices.createBook(formData);
             console.log('success', res);
+            toggleModal();
         } catch (err) {
             console.log('failed', err.response.data.message);
         }
         setEnableMessage(true);
         setSubmitting(false);
     }
+    const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
     return (
         <div className="upload-page">
@@ -108,6 +112,11 @@ const Upload = () => {
                         </Form>
                     )}
                 </Formik>
+                <button onClick={toggleModal}>open Modal</button>
+                <Modal isOpen={modalIsOpen} onClose={toggleModal}>
+                    <h1>Modal Header</h1>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                </Modal>
             </div>
         </div>
     );
