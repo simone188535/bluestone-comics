@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
-const Modal = ({ children, isOpen }) => {
-    const [display, setDisplay] = useState(false);
+const Modal = ({ children, isOpen, onClose }) => {
 
-    const toggleModalDisplay = () => {
-        setDisplay(!display);
-    }
-
-    return (display ? createPortal(
+    return (isOpen ? createPortal(
         <div className="modal-wrapper">
-            <div onClick={toggleModalDisplay} className="modal-backdrop" />
+            <div onClick={onClose} className="modal-backdrop" />
             <div className="modal-box">
                 {children}
             </div>
