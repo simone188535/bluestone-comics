@@ -2,7 +2,6 @@ import React, { useEffect, useState, createRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { authActions } from "../../actions";
 import { PublishServices } from '../../services';
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
@@ -55,13 +54,7 @@ const Upload = () => {
             const progress = document.getElementById('progress');
             console.log('!!!!!!',progress);
 
-            // send request to create a book which will contain the first issue
-            const jwtToken = localStorage.getItem('jwtToken');
-
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`
-                },
+            let config = {
                 onUploadProgress: function (progressEvent) {
                     const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     console.log('percentCompleted', percentCompleted);
@@ -70,8 +63,7 @@ const Upload = () => {
                 }
             };
 
-            const res = await axios.post('/api/v1/publish', formData, config);
-            // const res = await PublishServices.createBook(formData);
+            const res = await PublishServices.createBook(formData, config);
             console.log('success');
         } catch (err) {
             console.log('failed', err.response.data.message);

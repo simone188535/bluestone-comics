@@ -5,19 +5,14 @@ export const PublishServices = {
     // signUp
 }
 
-function createBook(formData) {
+function createBook(formData, config = {}) {
     // send request to create a book which will contain the first issue
     const jwtToken = localStorage.getItem('jwtToken');
 
-    const config = {
+     config = {
         headers: {
             Authorization: `Bearer ${jwtToken}`
-        },
-        onUploadProgress: function(progressEvent) {
-            const percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
-            console.log('percentCompleted', percentCompleted);
-
-          }
+        }
     };
 
     return axios.post('/api/v1/publish', formData, config);
