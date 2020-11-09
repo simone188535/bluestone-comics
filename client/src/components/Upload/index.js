@@ -18,7 +18,7 @@ const Upload = () => {
 
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
-       
+
         /*
         these FormData appends must be done because we are using the uploaded file data in the backend using multer. 
         in the createBook axios request, we cannot destructure the data (in the param) AND pass in the form data (in the param) 
@@ -27,7 +27,7 @@ const Upload = () => {
         */
 
         let formData = new FormData();
-        
+
         formData.append('bookTitle', values.bookTitle);
         formData.append('bookCoverPhoto', values.bookCoverPhoto);
         formData.append('bookDescription', values.bookDescription);
@@ -35,7 +35,7 @@ const Upload = () => {
         formData.append('genres', values.genres);
         formData.append('issueTitle', values.issueTitle);
         formData.append('issueCoverPhoto', values.issueCoverPhoto);
-        
+
         // push all issueAssets to formData
         values.issueAssets.forEach((formValue) => formData.append('issueAssets', formValue));
         // formData.append('workCredits', values.genres);
@@ -45,10 +45,10 @@ const Upload = () => {
         // ]);
 
         console.log('triggered', values);
-        
+
         try {
-            const res = await PublishServices.createBook(formData);
-            console.log('success', res);
+            // const res = await PublishServices.createBook(formData);
+            // console.log('success', res);
             toggleModal();
         } catch (err) {
             console.log('failed', err.response.data.message);
@@ -88,7 +88,7 @@ const Upload = () => {
                                 <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
 
-                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo"/>
+                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="bookCoverPhoto" />
 
                                 <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
@@ -100,12 +100,12 @@ const Upload = () => {
                                 <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" />
 
-                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo"/>
+                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
-                                
-                                <Checkboxes identifier="genres" checkboxValues={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']}/>
 
-                                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" className="form-input form-item"/>
+                                <Checkboxes identifier="genres" checkboxValues={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']} />
+
+                                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" className="form-input form-item" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
@@ -114,8 +114,10 @@ const Upload = () => {
                 </Formik>
                 <button onClick={toggleModal}>open Modal</button>
                 <Modal isOpen={modalIsOpen} onClose={toggleModal}>
-                    <h1>Modal Header</h1>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                    <h1>Upload Progress</h1>
+                    <div className="progress-bar">
+                        <div className="progress"></div>
+                    </div>
                 </Modal>
             </div>
         </div>
