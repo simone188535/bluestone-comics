@@ -1,10 +1,12 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 
-const Modal = ({ children, isOpen, onClose }) => {
-
+const Modal = ({ children, isOpen, onClose, className }) => {
+    
+    const providedClassNames = className ? className : '';
+    
     return (isOpen ? createPortal(
-        <div className="modal-wrapper">
+        <div className={`modal-wrapper ${providedClassNames}`}>
             <div onClick={onClose} className="modal-backdrop" />
             <div className="modal-box">
                 {children}

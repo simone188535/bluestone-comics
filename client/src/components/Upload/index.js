@@ -1,7 +1,8 @@
 import React, { useEffect, useState, createRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from "yup";
+import * as Yup from 'yup';
+import axios from 'axios';
 import { authActions } from "../../actions";
 import { PublishServices } from '../../services';
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
@@ -16,6 +17,8 @@ const Upload = () => {
     const [enableMessage, setEnableMessage] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
+    const toggleModal = () => setModalIsOpen(!modalIsOpen);
+    
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
 
@@ -47,16 +50,35 @@ const Upload = () => {
         console.log('triggered', values);
 
         try {
-            // const res = await PublishServices.createBook(formData);
-            // console.log('success', res);
+            // open modal
             toggleModal();
+            const progress = document.getElementById('progress');
+            console.log('!!!!!!',progress);
+
+            // send request to create a book which will contain the first issue
+            const jwtToken = localStorage.getItem('jwtToken');
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                },
+                onUploadProgress: function (progressEvent) {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    console.log('percentCompleted', percentCompleted);
+                    progress.style.width = `${percentCompleted}%`;
+
+                }
+            };
+
+            const res = await axios.post('/api/v1/publish', formData, config);
+            // const res = await PublishServices.createBook(formData);
+            console.log('success');
         } catch (err) {
             console.log('failed', err.response.data.message);
         }
         setEnableMessage(true);
         setSubmitting(false);
     }
-    const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
     return (
         <div className="upload-page">
@@ -113,10 +135,10 @@ const Upload = () => {
                     )}
                 </Formik>
                 <button onClick={toggleModal}>open Modal</button>
-                <Modal isOpen={modalIsOpen} onClose={toggleModal}>
+                <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h1>Upload Progress</h1>
                     <div className="progress-bar">
-                        <div className="progress"></div>
+                        <div id="progress"></div>
                     </div>
                 </Modal>
             </div>
