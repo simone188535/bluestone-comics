@@ -64,16 +64,12 @@ const Upload = () => {
                     
                     // Clear percentage
                     setTimeout(() =>setUploadPercentage(0), 10000);
-                    
-                    // setUploadPercentage(prevState => 5);
-                    // completedProgressEl.style.width = `${uploadPercentage}%`;
-                    // console.log('progress', uploadPercentage);
 
                 }
             };
 
             const res = await PublishServices.createBook(formData, config);
-            console.log('success');
+            console.log('success', res);
         } catch (err) {
             console.log('failed', err.response.data.message);
         }
@@ -135,9 +131,9 @@ const Upload = () => {
                         </Form>
                     )}
                 </Formik>
-                <button onClick={toggleModal}>open Modal</button>
+                {/* <button onClick={toggleModal}>open Modal</button> */}
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
-                    <h1>Upload Progress: {`${uploadPercentage}%`}</h1>
+                    <h2 className="modal-head">Upload Progress: </h2>
                     <ProgressBar uploadPercentage={uploadPercentage}/>
                 </Modal>
             </div>
