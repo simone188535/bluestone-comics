@@ -8,6 +8,7 @@ import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
 import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload.js';
 import Checkboxes from '../CommonUI/Checkboxes.js';
 import Modal from '../CommonUI/Modal';
+import ProgressBar from '../CommonUI/ProgressBar';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
@@ -52,8 +53,6 @@ const Upload = () => {
         try {
             // open modal
             toggleModal();
-            const completedProgressEl = document.getElementsByClassName('progress')[0];
-            console.log('!!!!!!', completedProgressEl);
 
             let config = {
                 onUploadProgress: function (progressEvent) {
@@ -62,8 +61,6 @@ const Upload = () => {
                             Math.round((progressEvent.loaded * 100) / progressEvent.total)
                         )
                     );
-                    
-                    completedProgressEl.style.width = `${uploadPercentage}%`;
                     
                     // Clear percentage
                     setTimeout(() =>setUploadPercentage(0), 10000);
@@ -141,12 +138,7 @@ const Upload = () => {
                 <button onClick={toggleModal}>open Modal</button>
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h1>Upload Progress: {`${uploadPercentage}%`}</h1>
-                    <div className="progress-bar">
-                        <div className="progress"></div>
-                        <div className="progress-label">
-                        {`${uploadPercentage}%`}
-                        </div>
-                    </div>
+                    <ProgressBar uploadPercentage={uploadPercentage}/>
                 </Modal>
             </div>
         </div>
