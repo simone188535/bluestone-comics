@@ -15,6 +15,7 @@ const Upload = () => {
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [uploadPercentage, setUploadPercentage] = useState(0);
 
     const toggleModal = () => setModalIsOpen(!modalIsOpen);
     
@@ -51,14 +52,25 @@ const Upload = () => {
         try {
             // open modal
             toggleModal();
-            const progress = document.getElementById('progress');
-            console.log('!!!!!!',progress);
+            const completedProgressEl = document.getElementsByClassName('progress')[0];
+            console.log('!!!!!!', completedProgressEl);
 
             let config = {
                 onUploadProgress: function (progressEvent) {
-                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                    console.log('percentCompleted', percentCompleted);
-                    progress.style.width = `${percentCompleted}%`;
+                    setUploadPercentage(
+                        parseInt(
+                            Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        )
+                    );
+                    
+                    completedProgressEl.style.width = `${uploadPercentage}%`;
+                    
+                    // Clear percentage
+                    setTimeout(() =>setUploadPercentage(0), 10000);
+                    
+                    // setUploadPercentage(prevState => 5);
+                    // completedProgressEl.style.width = `${uploadPercentage}%`;
+                    // console.log('progress', uploadPercentage);
 
                 }
             };
@@ -128,9 +140,12 @@ const Upload = () => {
                 </Formik>
                 <button onClick={toggleModal}>open Modal</button>
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
-                    <h1>Upload Progress</h1>
+                    <h1>Upload Progress: {`${uploadPercentage}%`}</h1>
                     <div className="progress-bar">
-                        <div id="progress"></div>
+                        <div className="progress"></div>
+                        <div className="progress-label">
+                        {`${uploadPercentage}%`}
+                        </div>
                     </div>
                 </Modal>
             </div>

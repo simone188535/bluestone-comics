@@ -1,4 +1,4 @@
-// @import '../../index.scss';
+@import '../../styles/abstracts/variables.scss';
 
 .upload-page {
     .upload-form-container {
@@ -23,24 +23,4 @@
         }
 
     }
-}
-
-.progress-bar {
-    width: 100%;
-    height: 30px;
-    border: 1px solid black;
-    border-radius: 7px;
-    padding: 4px;
-}
-
-#progress {
-    width: 0%;
-    background-color: #4A90E2;
-    height: 100%;
-    border-top-left-radius: 7px;
-    border-bottom-left-radius: 7px;
-    border-color: #4A90E2;
-    -webkit-transition: width 2s;
-    /* For Safari 3.1 to 6.0 */
-    transition: width 2s;
 }
