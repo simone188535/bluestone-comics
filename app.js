@@ -13,6 +13,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/userRoutes');
 const publishRoutes = require('./routes/publishRoutes');
 const readRoutes = require('./routes/readRoutes');
+const searchRoutes = require('./routes/searchRoutes');
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.use(express.static(path.join(__dirname, 'client', 'build')));
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/publish', publishRoutes);
 app.use('/api/v1/read', readRoutes);
+app.use('/api/v1/search', searchRoutes);
 
 // If route is not defined or not found.
 // in charge of sending the main index.html file back to the client if it didn't receive a request it recognized otherwise

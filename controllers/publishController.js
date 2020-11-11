@@ -28,6 +28,18 @@ exports.createBook = catchAsync(async (req, res, next) => {
   // const users = await User.find();
   // console.log('body', req.body);
 
+  // // Filtered out unwanted fields
+  // const filterBody = filterObj(
+  //   req.body,
+  //   'bookTitle',
+  //   'urlSlug',
+  //   'bookDescription',
+  //   'issueTitle'
+  // );
+
+  // console.log('body', req.body);
+  // console.log('filterBody', filterBody);
+
   const {
     bookTitle,
     urlSlug,
@@ -96,8 +108,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
   console.log('newBook', newBook);
   console.log('newIssue', newIssue);
   // console.log('workCredits', newWorkCredits);
-  // await newBook.save();
-  // await newIssue.save();
+  await newBook.save();
+  await newIssue.save();
   // await newWorkCredits.save();
 
   res.status(201).json({
