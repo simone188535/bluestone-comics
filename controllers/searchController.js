@@ -12,7 +12,7 @@ exports.search = catchAsync(async (req, res, next) => {
   excludedFields.forEach((el) => delete queryObj[el]);
 
   // console.log('req.query', req.query);
-  // 2) Advanced Filtering
+  // 1A) Advanced Filtering
   console.log('queryObj', queryObj);
   let queryStr = JSON.stringify(queryObj);
 
@@ -23,6 +23,9 @@ exports.search = catchAsync(async (req, res, next) => {
   );
   console.log('queryStr', queryStr);
   console.log(JSON.parse(queryStr));
+
+  // 2) Sorting
+
   // may need to query populated publisher field for given author
   // https://mongoosejs.com/docs/populate.html
   // Maybe search users collection seperately as well

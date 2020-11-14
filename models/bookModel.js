@@ -51,6 +51,8 @@ const bookSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+bookSchema.index({ genres: 1 });
+bookSchema.index({ title: 'text', description: 'text' });
 
 bookSchema.pre(/^find/, function (next) {
   this.populate({
