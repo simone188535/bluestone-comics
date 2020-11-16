@@ -30,14 +30,15 @@ exports.search = catchAsync(async (req, res, next) => {
 
   // 4) Text Search
   queryStr = JSON.parse(queryStr);
-  // queryStr = Object.assign(queryStr, {
-  //   $text: { $search: `${queryObj.q}` }
-  // });
-  queryStr.$text = { $search: `${queryObj.q}` };
+  if (req.query.q) {
+    // queryStr = Object.assign(queryStr, {
+    //   $text: { $search: `${queryObj.q}` }
+    // });
+    queryStr.$text = { $search: `${req.query.q}` };
 
-  // removes unneeded value from object
-  delete queryStr.q;
-
+    // removes unneeded value from object
+    delete queryStr.q;
+  }
   console.log('queryStr', queryStr);
   //console.log(JSON.parse(queryStr));
 
