@@ -8,12 +8,11 @@ const Book = require('../models/bookModel');
 exports.search = catchAsync(async (req, res, next) => {
   // 1) Filtering
   const queryObj = { ...req.query };
-  const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  excludedFields.forEach((el) => delete queryObj[el]);
+  // const excludedFields = ['page', 'sort', 'limit', 'fields'];
+  // excludedFields.forEach((el) => delete queryObj[el]);
 
-  // console.log('req.query', req.query);
   // 1A) Advanced Filtering
-  console.log('queryObj', queryObj);
+  // console.log('queryObj', queryObj);
   let queryStr = JSON.stringify(queryObj);
 
   // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
@@ -21,15 +20,34 @@ exports.search = catchAsync(async (req, res, next) => {
     /\b(gt|gte|lt|lte|eq|ne)\b/g,
     (match) => `$${match}`
   );
+
+  // if (req.query.sort) {
+
+  // }
   console.log('queryStr', queryStr);
-  console.log(JSON.parse(queryStr));
 
   // 2) Sorting
+
+  // 4) Text Search
+  queryStr = JSON.parse(queryStr);
+  queryStr.$text = { $search: `${queryObj.q}` };
+
+  // helps sort text results by relevance
+  // queryStr.score = { $meta: 'textScore' };
+
+  // removes unneeded value from object
+  delete queryStr.q;
+
+  console.log('queryStr', queryStr);
+  //console.log(JSON.parse(queryStr));
 
   // may need to query populated publisher field for given author
   // https://mongoosejs.com/docs/populate.html
   // Maybe search users collection seperately as well
-  const books = await Book.find(JSON.parse(queryStr));
+  const books = await Book.find(queryStr)
+    // .project({ score: { $meta: 'textScore' } })
+    // .sort({ date: 1, score: { $meta: 'textScore' } });
+  // const books = await Book.find({ $text: { $search: queryObj.q } });
   // console.log('query', query);
 
   // Execute Query
