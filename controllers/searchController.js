@@ -30,10 +30,10 @@ exports.search = catchAsync(async (req, res, next) => {
 
   // 4) Text Search
   queryStr = JSON.parse(queryStr);
+  // queryStr = Object.assign(queryStr, {
+  //   $text: { $search: `${queryObj.q}` }
+  // });
   queryStr.$text = { $search: `${queryObj.q}` };
-
-  // helps sort text results by relevance
-  // queryStr.score = { $meta: 'textScore' };
 
   // removes unneeded value from object
   delete queryStr.q;
@@ -44,9 +44,11 @@ exports.search = catchAsync(async (req, res, next) => {
   // may need to query populated publisher field for given author
   // https://mongoosejs.com/docs/populate.html
   // Maybe search users collection seperately as well
-  const books = await Book.find(queryStr)
-    // .project({ score: { $meta: 'textScore' } })
-    // .sort({ date: 1, score: { $meta: 'textScore' } });
+  const books = await Book.find(
+    queryStr,
+    // helps sort text results by relevance
+    { score: { $meta: 'textScore' } }
+  ).sort({ score: { $meta: 'textScore' } });
   // const books = await Book.find({ $text: { $search: queryObj.q } });
   // console.log('query', query);
 
