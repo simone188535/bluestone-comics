@@ -46,6 +46,10 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  lastUpdate: {
+    type: Date,
+    default: Date.now
+  },
   dateCreated: {
     type: Date,
     default: Date.now

@@ -21,12 +21,35 @@ exports.search = catchAsync(async (req, res, next) => {
     (match) => `$${match}`
   );
 
-  // if (req.query.sort) {
-
-  // }
   console.log('queryStr', queryStr);
 
   // 2) Sorting
+  const sort = {};
+
+  if (req.query.q) {
+    sort.score = { $meta: 'textScore' };
+  }
+
+  if (req.query.sort) {
+    if (req.query.sort === 'newest') {
+      // Latest/Newest entry
+      sort.lastUpdate = 1;
+    } else if (req.query.sort === 'popular') {
+      // Most Popular
+      sort.popular = 1;
+    } else if (req.query.sort === 'views') {
+      // Most Views
+      sort.views = 1;
+    } else if (req.query.sort === 'likes') {
+      // Most Likes
+      sort.likes = 1;
+    }
+  } else {
+    // sort by Latest/Newest entry
+    sort.lastUpdate = 1;
+  }
+
+  // console.log('sort', sort);
 
   // 4) Text Search
   queryStr = JSON.parse(queryStr);
@@ -35,10 +58,12 @@ exports.search = catchAsync(async (req, res, next) => {
     //   $text: { $search: `${queryObj.q}` }
     // });
     queryStr.$text = { $search: `${req.query.q}` };
-
-    // removes unneeded value from object
-    delete queryStr.q;
   }
+
+  // removes unneeded value from queryStr object
+  delete queryStr.q;
+  delete queryStr.sort;
+
   console.log('queryStr', queryStr);
   //console.log(JSON.parse(queryStr));
 
@@ -49,7 +74,8 @@ exports.search = catchAsync(async (req, res, next) => {
     queryStr,
     // helps sort text results by relevance
     { score: { $meta: 'textScore' } }
-  ).sort({ score: { $meta: 'textScore' } });
+  ).sort(sort);
+  // .sort({ score: { $meta: 'textScore' } });
   // const books = await Book.find({ $text: { $search: queryObj.q } });
   // console.log('query', query);
 
