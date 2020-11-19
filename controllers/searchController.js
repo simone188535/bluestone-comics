@@ -94,7 +94,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
   const usernameQuery = req.query.q;
 
   const users = await User.find({
-    username: { $regex: `/${usernameQuery}/`, $options: 'i' }
+    username: { $regex: usernameQuery, $options: 'i' }
   });
 
   // Send Response
