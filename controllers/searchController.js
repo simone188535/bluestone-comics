@@ -89,6 +89,9 @@ exports.search = catchAsync(async (req, res, next) => {
     status: 'success'
   });
 });
+exports.searchBooks = catchAsync(async (req, res) => {
+
+});
 
 exports.searchUsers = catchAsync(async (req, res) => {
   const usernameQuery = req.query.q;
