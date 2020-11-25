@@ -40,10 +40,10 @@ const issueSchema = new mongoose.Schema({
     type: [String],
     // This is required and must have at least one
     validate: (v) => Array.isArray(v) && v.length > 0
-  },
+  }
   // workCredits: [workCreditsSchema]
 });
-
+issueSchema.index({ title: 'text' });
 issueSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'publisher'

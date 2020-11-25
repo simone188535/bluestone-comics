@@ -91,26 +91,36 @@ exports.search = catchAsync(async (req, res, next) => {
   });
 });
 exports.searchBooks = catchAsync(async (req, res) => {
+  // search for provided query (q) or return everything
+  const textSearchQuery = req.query.q
+    ? { $text: { $search: req.query.q } }
+    : { _id: { $exists: true } };
+
+  // $match $or example https://stackoverflow.com/questions/38359622/mongoose-aggregation-match-or-between-dates
   const aggregate = await Issue.aggregate([
     {
-      $lookup: {
-        from: 'users',
-        localField: 'publisher',
-        foreignField: '_id',
-        as: 'publisher!!!!'
-      }
+      $match: textSearchQuery
     },
-    {
-      $lookup: {
-        from: 'books',
-        localField: 'book',
-        foreignField: '_id',
-        as: 'book!!!!!'
-      }
-    }
+    // {
+    //   $lookup: {
+    //     from: 'users',
+    //     localField: 'publisher',
+    //     foreignField: '_id',
+    //     as: 'publisher!!!!'
+    //   }
+    // },
+    // {
+    //   $lookup: {
+    //     from: 'books',
+    //     localField: 'book',
+    //     foreignField: '_id',
+    //     as: 'book!!!!!'
+    //   }
+    // }
   ]);
 
   res.status(200).json({
+    results: aggregate.length,
     aggregate,
     status: 'success'
   });
