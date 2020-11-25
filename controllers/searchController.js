@@ -3,7 +3,8 @@ const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const Book = require('../models/bookModel');
-// const Issue = require('../models/issueModel');
+// const Issues = require('../models/issueModel');
+const Issue = require('../models/issueModel');
 
 exports.search = catchAsync(async (req, res, next) => {
   // 1) Filtering
@@ -90,7 +91,29 @@ exports.search = catchAsync(async (req, res, next) => {
   });
 });
 exports.searchBooks = catchAsync(async (req, res) => {
+  const aggregate = await Issue.aggregate([
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'publisher',
+        foreignField: '_id',
+        as: 'publisher!!!!'
+      }
+    },
+    {
+      $lookup: {
+        from: 'books',
+        localField: 'book',
+        foreignField: '_id',
+        as: 'book!!!!!'
+      }
+    }
+  ]);
 
+  res.status(200).json({
+    aggregate,
+    status: 'success'
+  });
 });
 
 exports.searchUsers = catchAsync(async (req, res) => {
