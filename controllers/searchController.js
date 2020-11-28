@@ -118,11 +118,6 @@ exports.searchBooks = catchAsync(async (req, res) => {
               }
             }
           }
-          // {
-          //   $group: {
-          //     _id: '$$publisher'
-          //   }
-          // }
         ],
         as: 'publisher!!!!'
       }
@@ -139,9 +134,15 @@ exports.searchBooks = catchAsync(async (req, res) => {
         issueAssets: 0,
         dateCreated: 0,
         workCredits: 0,
-        imagePrefixReference: 0
+        imagePrefixReference: 0,
+        __v: 0
       }
     },
+    {
+      $group: {
+        _id: '$publisher!!!!'
+      }
+    }
     // {
     //   $lookup: {
     //     from: 'users',
