@@ -98,15 +98,40 @@ exports.searchBooks = catchAsync(async (req, res) => {
 
   // $match $or example https://stackoverflow.com/questions/38359622/mongoose-aggregation-match-or-between-dates
   const aggregate = await Issue.aggregate([
+    // {
+    //   $match: textSearchQuery
+    // },
     {
-      $match: textSearchQuery
-    },
+      $lookup: {
+        from: 'users',
+        let: { publisher: '$publisher' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ['$_id', '$$publisher']
+              },
+              $text: {
+                $search: req.query.q
+              }
+            }
+          },
+          {
+            $group: {
+              _id: '$$publisher'
+            }
+          }
+        ],
+        as: 'publisher!!!!'
+      }
+    }
     // {
     //   $lookup: {
     //     from: 'users',
     //     localField: 'publisher',
     //     foreignField: '_id',
-    //     as: 'publisher!!!!'
+    //     as: 'publisher!!!!',
+    //     pipeline: [],
     //   }
     // },
     // {
@@ -114,7 +139,8 @@ exports.searchBooks = catchAsync(async (req, res) => {
     //     from: 'books',
     //     localField: 'book',
     //     foreignField: '_id',
-    //     as: 'book!!!!!'
+    //     as: 'book!!!!!',
+    //     pipeline: [],
     //   }
     // }
   ]);
