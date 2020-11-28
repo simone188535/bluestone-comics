@@ -99,19 +99,60 @@ exports.searchBooks = catchAsync(async (req, res) => {
   // $match $or example https://stackoverflow.com/questions/38359622/mongoose-aggregation-match-or-between-dates
   const aggregate = await Issue.aggregate([
     // Text search Issue
-    // {
-    //   $match: textSearchQuery
-    // },
+    {
+      $match: textSearchQuery
+    },
     // Search publishers
+    // {
+    //   $lookup: {
+    //     from: 'users',
+    //     let: { publisher: '$publisher' },
+    //     pipeline: [
+    //       {
+    //         $match: {
+    //           $expr: {
+    //             $eq: ['$_id', '$$publisher']
+    //           },
+    //           $text: {
+    //             $search: req.query.q
+    //           }
+    //         }
+    //       }
+    //     ],
+    //     as: 'publisher!!!!'
+    //   }
+    // },
+    // {
+    //   $project: {
+    //     _id: 0,
+    //     coverPhoto: 0,
+    //     issueNumber: 0,
+    //     totalPages: 0,
+    //     publisher: 0,
+    //     book: 0,
+    //     title: 0,
+    //     issueAssets: 0,
+    //     dateCreated: 0,
+    //     workCredits: 0,
+    //     imagePrefixReference: 0,
+    //     __v: 0
+    //   }
+    // },
+    // {
+    //   $group: {
+    //     _id: '$publisher!!!!'
+    //   }
+    // }
+    // Search book
     {
       $lookup: {
-        from: 'users',
-        let: { publisher: '$publisher' },
+        from: 'books',
+        let: { book: '$book' },
         pipeline: [
           {
             $match: {
               $expr: {
-                $eq: ['$_id', '$$publisher']
+                $eq: ['$_id', '$$book']
               },
               $text: {
                 $search: req.query.q
@@ -119,7 +160,7 @@ exports.searchBooks = catchAsync(async (req, res) => {
             }
           }
         ],
-        as: 'publisher!!!!'
+        as: 'book!!!!'
       }
     },
     {
@@ -140,7 +181,7 @@ exports.searchBooks = catchAsync(async (req, res) => {
     },
     {
       $group: {
-        _id: '$publisher!!!!'
+        _id: '$book!!!!'
       }
     }
     // {
@@ -151,7 +192,6 @@ exports.searchBooks = catchAsync(async (req, res) => {
     //     as: 'publisher!!!!',
     //   }
     // },
-    // Search book
     // {
     //   $lookup: {
     //     from: 'books',
