@@ -103,46 +103,46 @@ exports.searchBooks = catchAsync(async (req, res) => {
       $match: textSearchQuery
     },
     // Search publishers
-    // {
-    //   $lookup: {
-    //     from: 'users',
-    //     let: { publisher: '$publisher' },
-    //     pipeline: [
-    //       {
-    //         $match: {
-    //           $expr: {
-    //             $eq: ['$_id', '$$publisher']
-    //           },
-    //           $text: {
-    //             $search: req.query.q
-    //           }
-    //         }
-    //       }
-    //     ],
-    //     as: 'publisher!!!!'
-    //   }
-    // },
-    // {
-    //   $project: {
-    //     _id: 0,
-    //     coverPhoto: 0,
-    //     issueNumber: 0,
-    //     totalPages: 0,
-    //     publisher: 0,
-    //     book: 0,
-    //     title: 0,
-    //     issueAssets: 0,
-    //     dateCreated: 0,
-    //     workCredits: 0,
-    //     imagePrefixReference: 0,
-    //     __v: 0
-    //   }
-    // },
-    // {
-    //   $group: {
-    //     _id: '$publisher!!!!'
-    //   }
-    // }
+    {
+      $lookup: {
+        from: 'users',
+        let: { publisher: '$publisher' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ['$_id', '$$publisher']
+              },
+              $text: {
+                $search: req.query.q
+              }
+            }
+          }
+        ],
+        as: 'publisher!!!!'
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        coverPhoto: 0,
+        issueNumber: 0,
+        totalPages: 0,
+        publisher: 0,
+        book: 0,
+        title: 0,
+        issueAssets: 0,
+        dateCreated: 0,
+        workCredits: 0,
+        imagePrefixReference: 0,
+        __v: 0
+      }
+    },
+    {
+      $group: {
+        _id: '$publisher!!!!'
+      }
+    },
     // Search book
     {
       $lookup: {
@@ -184,24 +184,25 @@ exports.searchBooks = catchAsync(async (req, res) => {
         _id: '$book!!!!'
       }
     }
-    // {
-    //   $lookup: {
-    //     from: 'users',
-    //     localField: 'publisher',
-    //     foreignField: '_id',
-    //     as: 'publisher!!!!',
-    //   }
-    // },
-    // {
-    //   $lookup: {
-    //     from: 'books',
-    //     localField: 'book',
-    //     foreignField: '_id',
-    //     as: 'book!!!!!',
-    //   }
-    // }
   ]);
+  // {
+  //   $lookup: {
+  //     from: 'users',
+  //     localField: 'publisher',
+  //     foreignField: '_id',
+  //     as: 'publisher!!!!',
+  //   }
+  // },
+  // {
+  //   $lookup: {
+  //     from: 'books',
+  //     localField: 'book',
+  //     foreignField: '_id',
+  //     as: 'book!!!!!',
+  //   }
+  // }
 
+  // need to add a facet, combine them in an array and sort by text value: https://stackoverflow.com/a/51348446/6195136
   res.status(200).json({
     results: aggregate.length,
     aggregate,
