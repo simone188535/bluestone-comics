@@ -9,20 +9,20 @@ const Issue = require('../models/issueModel');
 exports.search = catchAsync(async (req, res, next) => {
   // 1) Filtering
   const queryObj = { ...req.query };
-  // const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  // excludedFields.forEach((el) => delete queryObj[el]);
+  // // const excludedFields = ['page', 'sort', 'limit', 'fields'];
+  // // excludedFields.forEach((el) => delete queryObj[el]);
 
-  // 1A) Advanced Filtering
-  // console.log('queryObj', queryObj);
-  let queryStr = JSON.stringify(queryObj);
+  // // 1A) Advanced Filtering
+  // // console.log('queryObj', queryObj);
+  // let queryStr = JSON.stringify(queryObj);
 
-  // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
-  queryStr = queryStr.replace(
-    /\b(gt|gte|lt|lte|eq|ne)\b/g,
-    (match) => `$${match}`
-  );
+  // // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
+  // queryStr = queryStr.replace(
+  //   /\b(gt|gte|lt|lte|eq|ne)\b/g,
+  //   (match) => `$${match}`
+  // );
 
-  console.log('queryStr', queryStr);
+  // console.log('queryStr', queryStr);
 
   // 2) Sorting
   const sort = {};
@@ -55,9 +55,6 @@ exports.search = catchAsync(async (req, res, next) => {
   // 4) Text Search
   queryStr = JSON.parse(queryStr);
   if (req.query.q) {
-    // queryStr = Object.assign(queryStr, {
-    //   $text: { $search: `${queryObj.q}` }
-    // });
     queryStr.$text = { $search: `${req.query.q}` };
   }
 
@@ -77,10 +74,10 @@ exports.search = catchAsync(async (req, res, next) => {
     { score: { $meta: 'textScore' } }
   ).sort(sort);
   // .sort({ score: { $meta: 'textScore' } });
-  // const books = await Book.find({ $text: { $search: queryObj.q } });
   // console.log('query', query);
 
   // Execute Query
+  const search = new searchFeatures(Book.find(), req.query).filter();
   // const books = await query;
 
   // Send Response
@@ -90,6 +87,61 @@ exports.search = catchAsync(async (req, res, next) => {
     status: 'success'
   });
 });
+
+class searchFeatures {
+  constructor(query, queryStr) {
+    this.query = query;
+    this.queryStr = queryStr;
+  }
+
+  filter() {
+    const queryObj = { ...this.queryString };
+
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(
+      /\b(gt|gte|lt|lte|eq|ne)\b/g,
+      (match) => `$${match}`
+    );
+
+    this.query = this.query.find(JSON.parse(queryStr), {
+      score: { $meta: 'textScore' }
+    });
+    // console.log('searchFeatures this', this);
+    return this;
+  }
+
+  sort() {
+    if (this.queryString.sort) {
+      const sortBy = this.queryString.sort.split(',').join(' ');
+      this.query = this.query.sort(sortBy);
+    } else {
+      this.query = this.query.sort('-createdAt');
+    }
+
+    return this;
+  }
+
+  limitFields() {
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ');
+      this.query = this.query.select(fields);
+    } else {
+      this.query = this.query.select('-__v');
+    }
+
+    return this;
+  }
+
+  paginate() {
+    const page = this.queryString.page * 1 || 1;
+    const limit = this.queryString.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+
+    this.query = this.query.skip(skip).limit(limit);
+
+    return this;
+  }
+}
 exports.searchBooks = catchAsync(async (req, res) => {
   // search for provided query (q) or return everything
   const textSearchQuery = req.query.q
@@ -98,90 +150,115 @@ exports.searchBooks = catchAsync(async (req, res) => {
 
   // $match $or example https://stackoverflow.com/questions/38359622/mongoose-aggregation-match-or-between-dates
   const aggregate = await Issue.aggregate([
-    // Text search Issue
+    // {
+    //   $match: textSearchQuery
+    // },
     {
-      $match: textSearchQuery
-    },
-    // Search publishers
-    {
-      $lookup: {
-        from: 'users',
-        let: { publisher: '$publisher' },
-        pipeline: [
+      $facet: {
+        // Text search Issue
+        // searchIssue: [
+        //   {
+        //     $match: textSearchQuery
+        //   },
+        //   // {
+        //   //   $project: {
+        //   //     _id: 0,
+        //   //     score: {
+        //   //       $meta: 'textScore'
+        //   //     }
+        //   //   }
+        //   // }
+        // ],
+
+        // Search publishers
+        searchPublishers: [
           {
-            $match: {
-              $expr: {
-                $eq: ['$_id', '$$publisher']
-              },
-              $text: {
-                $search: req.query.q
-              }
+            $lookup: {
+              from: 'users',
+              let: { publisher: '$publisher' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $eq: ['$_id', '$$publisher']
+                    },
+                    $text: {
+                      $search: req.query.q
+                    }
+                  }
+                }
+              ],
+              as: 'publisher!!!!'
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              coverPhoto: 0,
+              issueNumber: 0,
+              totalPages: 0,
+              publisher: 0,
+              book: 0,
+              title: 0,
+              issueAssets: 0,
+              dateCreated: 0,
+              workCredits: 0,
+              imagePrefixReference: 0,
+              __v: 0
+            }
+          },
+          {
+            $group: {
+              _id: '$publisher!!!!',
+              count: { $sum: 1 }
             }
           }
         ],
-        as: 'publisher!!!!'
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        coverPhoto: 0,
-        issueNumber: 0,
-        totalPages: 0,
-        publisher: 0,
-        book: 0,
-        title: 0,
-        issueAssets: 0,
-        dateCreated: 0,
-        workCredits: 0,
-        imagePrefixReference: 0,
-        __v: 0
-      }
-    },
-    {
-      $group: {
-        _id: '$publisher!!!!'
-      }
-    },
-    // Search book
-    {
-      $lookup: {
-        from: 'books',
-        let: { book: '$book' },
-        pipeline: [
+
+        // Search book
+        searchBooks: [
           {
-            $match: {
-              $expr: {
-                $eq: ['$_id', '$$book']
-              },
-              $text: {
-                $search: req.query.q
-              }
+            $lookup: {
+              from: 'books',
+              let: { book: '$book' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $eq: ['$_id', '$$book']
+                    },
+                    $text: {
+                      $search: req.query.q
+                    }
+                  }
+                }
+              ],
+              as: 'book!!!!'
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              coverPhoto: 0,
+              issueNumber: 0,
+              totalPages: 0,
+              publisher: 0,
+              book: 0,
+              title: 0,
+              issueAssets: 0,
+              dateCreated: 0,
+              workCredits: 0,
+              imagePrefixReference: 0,
+              __v: 0
+            }
+          },
+          {
+            $group: {
+              _id: '$book!!!!',
+              count: { $sum: 1 }
             }
           }
-        ],
-        as: 'book!!!!'
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        coverPhoto: 0,
-        issueNumber: 0,
-        totalPages: 0,
-        publisher: 0,
-        book: 0,
-        title: 0,
-        issueAssets: 0,
-        dateCreated: 0,
-        workCredits: 0,
-        imagePrefixReference: 0,
-        __v: 0
-      }
-    },
-    {
-      $group: {
-        _id: '$book!!!!'
+        ]
       }
     }
   ]);
