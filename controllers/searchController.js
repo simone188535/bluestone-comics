@@ -8,9 +8,10 @@ const Issue = require('../models/issueModel');
 
 class SearchFeatures {
   // maybe add optional contructor
-  constructor(query, queryString) {
+  constructor(query, queryString, textSearch = false) {
     this.query = query;
     this.queryString = queryString;
+    this.textSearch = textSearch;
   }
 
   filter() {
@@ -24,25 +25,25 @@ class SearchFeatures {
 
     let searchQuery = {};
     let queryProjection = {};
-    console.log('queryString!!!!!', this.queryString.q);
-    // if (this.queryString.q && this.queryString.q === '') {
-    //   // if queryString.q is present but, is empty, Show all results, do not add queryProjection
-    //   searchQuery = Object.assign(searchQuery, { _id: { $exists: true } });
-    //   // searchQuery = { _id: { $exists: true } };
-    //   console.log('if queryString.q is present but, is empty!!!', searchQuery);
-    //   queryProjection = null;
-    // } else
-    if (this.queryString.q) {
-      // if queryString.q is present and not empty, do a text search and add queryProjection for assist sorting
-      console.log('queryString.q is present and not empty', this.queryString.q);
-      searchQuery = Object.assign(searchQuery, {
-        $text: { $search: this.queryString.q }
-      });
-      // searchQuery.$text = { $search: 'test' };
-      queryProjection = Object.assign(queryProjection, {
-        score: { $meta: 'textScore' }
-      });
-      // queryProjection = { score: { $meta: 'textScore' } };
+
+    if (this.textSearch) {
+      if (this.queryString.q) {
+        // if queryString.q is present, do a text search and add queryProjection for assist sorting
+
+        searchQuery = Object.assign(searchQuery, {
+          $text: { $search: this.queryString.q }
+        });
+        // searchQuery.$text = { $search: 'test' };
+        queryProjection = Object.assign(queryProjection, {
+          score: { $meta: 'textScore' }
+        });
+        // queryProjection = { score: { $meta: 'textScore' } };
+      } else {
+        // if queryString.q is present but, is empty, Show all results, do not add queryProjection
+
+        searchQuery = Object.assign(searchQuery, { _id: { $exists: true } });
+        queryProjection = null;
+      }
     } else {
       // search altered query string and parse, do not add queryProjection
       // searchQuery = Object.assign(searchQuery, {});
@@ -156,7 +157,11 @@ exports.search = catchAsync(async (req, res, next) => {
   // ).sort(sort);
   // // .sort({ score: { $meta: 'textScore' } });
   // // console.log('query', query);
-  const searchResults = new SearchFeatures(Book.find(), req.query).filter();
+  const searchResults = new SearchFeatures(
+    Book.find(),
+    req.query,
+    true
+  ).filter();
 
   // Execute Query
   const doc = await searchResults.query;
