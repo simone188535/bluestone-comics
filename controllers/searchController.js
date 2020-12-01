@@ -61,7 +61,7 @@ class SearchFeatures {
       const sortBy = this.queryString.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {
-      this.query = this.query.sort('-createdAt');
+      this.query = this.query.sort('dateCreated');
     }
 
     return this;
@@ -157,11 +157,9 @@ exports.search = catchAsync(async (req, res, next) => {
   // ).sort(sort);
   // // .sort({ score: { $meta: 'textScore' } });
   // // console.log('query', query);
-  const searchResults = new SearchFeatures(
-    Book.find(),
-    req.query,
-    true
-  ).filter();
+  const searchResults = new SearchFeatures(Book.find(), req.query, true)
+    .filter()
+    .sort();
 
   // Execute Query
   const doc = await searchResults.query;
