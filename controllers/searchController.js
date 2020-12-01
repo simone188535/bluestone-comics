@@ -7,6 +7,7 @@ const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 
 class SearchFeatures {
+  // maybe add optional contructor
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
