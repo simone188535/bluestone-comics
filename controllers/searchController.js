@@ -6,92 +6,10 @@ const Book = require('../models/bookModel');
 // const Issues = require('../models/issueModel');
 const Issue = require('../models/issueModel');
 
-exports.search = catchAsync(async (req, res, next) => {
-  // 1) Filtering
-  const queryObj = { ...req.query };
-  // // const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  // // excludedFields.forEach((el) => delete queryObj[el]);
-
-  // // 1A) Advanced Filtering
-  // // console.log('queryObj', queryObj);
-  // let queryStr = JSON.stringify(queryObj);
-
-  // // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
-  // queryStr = queryStr.replace(
-  //   /\b(gt|gte|lt|lte|eq|ne)\b/g,
-  //   (match) => `$${match}`
-  // );
-
-  // console.log('queryStr', queryStr);
-
-  // 2) Sorting
-  const sort = {};
-
-  if (req.query.q) {
-    sort.score = { $meta: 'textScore' };
-  }
-
-  if (req.query.sort) {
-    if (req.query.sort === 'newest') {
-      // Latest/Newest entry
-      sort.lastUpdate = 1;
-    } else if (req.query.sort === 'popular') {
-      // Most Popular
-      sort.popular = 1;
-    } else if (req.query.sort === 'views') {
-      // Most Views
-      sort.views = 1;
-    } else if (req.query.sort === 'likes') {
-      // Most Likes
-      sort.likes = 1;
-    }
-  } else {
-    // sort by Latest/Newest entry
-    sort.lastUpdate = 1;
-  }
-
-  // console.log('sort', sort);
-
-  // 4) Text Search
-  queryStr = JSON.parse(queryStr);
-  if (req.query.q) {
-    queryStr.$text = { $search: `${req.query.q}` };
-  }
-
-  // removes unneeded value from queryStr object
-  delete queryStr.q;
-  delete queryStr.sort;
-
-  console.log('queryStr', queryStr);
-  //console.log(JSON.parse(queryStr));
-
-  // may need to query populated publisher field for given author
-  // https://mongoosejs.com/docs/populate.html
-  // Maybe search users collection seperately as well
-  const books = await Book.find(
-    queryStr,
-    // helps sort text results by relevance
-    { score: { $meta: 'textScore' } }
-  ).sort(sort);
-  // .sort({ score: { $meta: 'textScore' } });
-  // console.log('query', query);
-
-  // Execute Query
-  const search = new searchFeatures(Book.find(), req.query).filter();
-  // const books = await query;
-
-  // Send Response
-  res.status(200).json({
-    results: books.length,
-    books,
-    status: 'success'
-  });
-});
-
-class searchFeatures {
-  constructor(query, queryStr) {
+class SearchFeatures {
+  constructor(query, queryString) {
     this.query = query;
-    this.queryStr = queryStr;
+    this.queryString = queryString;
   }
 
   filter() {
@@ -103,9 +21,35 @@ class searchFeatures {
       (match) => `$${match}`
     );
 
-    this.query = this.query.find(JSON.parse(queryStr), {
-      score: { $meta: 'textScore' }
-    });
+    let searchQuery = {};
+    let queryProjection = {};
+    console.log('queryString!!!!!', this.queryString.q);
+    // if (this.queryString.q && this.queryString.q === '') {
+    //   // if queryString.q is present but, is empty, Show all results, do not add queryProjection
+    //   searchQuery = Object.assign(searchQuery, { _id: { $exists: true } });
+    //   // searchQuery = { _id: { $exists: true } };
+    //   console.log('if queryString.q is present but, is empty!!!', searchQuery);
+    //   queryProjection = null;
+    // } else
+    if (this.queryString.q) {
+      // if queryString.q is present and not empty, do a text search and add queryProjection for assist sorting
+      console.log('queryString.q is present and not empty', this.queryString.q);
+      searchQuery = Object.assign(searchQuery, {
+        $text: { $search: this.queryString.q }
+      });
+      // searchQuery.$text = { $search: 'test' };
+      queryProjection = Object.assign(queryProjection, {
+        score: { $meta: 'textScore' }
+      });
+      // queryProjection = { score: { $meta: 'textScore' } };
+    } else {
+      // search altered query string and parse, do not add queryProjection
+      // searchQuery = Object.assign(searchQuery, {});
+      searchQuery = JSON.parse(queryStr);
+      queryProjection = null;
+    }
+
+    this.query = this.query.find(searchQuery, queryProjection);
     // console.log('searchFeatures this', this);
     return this;
   }
@@ -142,6 +86,90 @@ class searchFeatures {
     return this;
   }
 }
+exports.search = catchAsync(async (req, res, next) => {
+  // 1) Filtering
+  const queryObj = { ...req.query };
+  // // const excludedFields = ['page', 'sort', 'limit', 'fields'];
+  // // excludedFields.forEach((el) => delete queryObj[el]);
+
+  // // 1A) Advanced Filtering
+  // // console.log('queryObj', queryObj);
+  // let queryStr = JSON.stringify(queryObj);
+
+  // // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
+  // queryStr = queryStr.replace(
+  //   /\b(gt|gte|lt|lte|eq|ne)\b/g,
+  //   (match) => `$${match}`
+  // );
+
+  // // console.log('queryStr', queryStr);
+
+  // // 2) Sorting
+  // const sort = {};
+
+  // if (req.query.q) {
+  //   sort.score = { $meta: 'textScore' };
+  // }
+
+  // if (req.query.sort) {
+  //   if (req.query.sort === 'newest') {
+  //     // Latest/Newest entry
+  //     sort.lastUpdate = 1;
+  //   } else if (req.query.sort === 'popular') {
+  //     // Most Popular
+  //     sort.popular = 1;
+  //   } else if (req.query.sort === 'views') {
+  //     // Most Views
+  //     sort.views = 1;
+  //   } else if (req.query.sort === 'likes') {
+  //     // Most Likes
+  //     sort.likes = 1;
+  //   }
+  // } else {
+  //   // sort by Latest/Newest entry
+  //   sort.lastUpdate = 1;
+  // }
+
+  // // console.log('sort', sort);
+
+  // // 4) Text Search
+  // queryStr = JSON.parse(queryStr);
+  // if (req.query.q) {
+  //   queryStr.$text = { $search: `${req.query.q}` };
+  // }
+
+  // // removes unneeded value from queryStr object
+  // delete queryStr.q;
+  // delete queryStr.sort;
+
+  // console.log('queryStr', queryStr);
+  // //console.log(JSON.parse(queryStr));
+
+  // // may need to query populated publisher field for given author
+  // // https://mongoosejs.com/docs/populate.html
+  // // Maybe search users collection seperately as well
+  // const books = await Book.find(
+  //   queryStr,
+  //   // helps sort text results by relevance
+  //   { score: { $meta: 'textScore' } }
+  // ).sort(sort);
+  // // .sort({ score: { $meta: 'textScore' } });
+  // // console.log('query', query);
+  const searchResults = new SearchFeatures(Book.find(), req.query).filter();
+
+  // Execute Query
+  const doc = await searchResults.query;
+  // const books = await query;
+  // await search.populate('publisher');
+
+  // Send Response
+  res.status(200).json({
+    results: doc.length,
+    books: doc,
+    status: 'success'
+  });
+});
+
 exports.searchBooks = catchAsync(async (req, res) => {
   // search for provided query (q) or return everything
   const textSearchQuery = req.query.q
