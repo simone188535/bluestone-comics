@@ -7,7 +7,6 @@ const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 
 class SearchFeatures {
-  // maybe add optional contructor
   constructor(query, queryString, textSearch = false) {
     this.query = query;
     this.queryString = queryString;
@@ -24,7 +23,7 @@ class SearchFeatures {
     );
 
     let searchQuery = {};
-    let queryProjection = {};
+    // let queryProjection = {};
 
     if (this.textSearch) {
       if (this.queryString.q) {
@@ -34,24 +33,24 @@ class SearchFeatures {
           $text: { $search: this.queryString.q }
         });
 
-        queryProjection = Object.assign(queryProjection, {
-          score: { $meta: 'textScore' }
-        });
+        // queryProjection = Object.assign(queryProjection, {
+        //   score: { $meta: 'textScore' }
+        // });
       } else {
         // if queryString.q is present but, is empty, Show all results, do not add queryProjection
 
         searchQuery = Object.assign(searchQuery, { _id: { $exists: true } });
-        queryProjection = null;
+        // queryProjection = null;
       }
     } else {
       // search altered query string and parse, do not add queryProjection
 
       searchQuery = JSON.parse(queryStr);
-      queryProjection = null;
+      // queryProjection = null;
     }
 
-    console.log('searchFeatures this', queryProjection);
-    this.query = this.query.find(searchQuery, queryProjection);
+    // console.log('searchFeatures this', queryProjection);
+    this.query = this.query.find(searchQuery);
     // console.log('searchFeatures this', this.query);
     return this;
   }
@@ -61,18 +60,36 @@ class SearchFeatures {
 
     if (this.queryString.q) {
       Object.assign(sortQuery, {
-        $text: { $search: this.queryString.q }
+        score: { $meta: 'textScore' }
       });
     }
 
     if (this.queryString.sort) {
       // sort when values are provided
-      const sortBy = this.queryString.sort.split(',').join(' ');
-      this.query = this.query.sort(sortBy);
+
+      // make an array of the sort values
+      const sortBy = this.queryString.sort.split(',');
+
+      sortBy.forEach((sortByValue) => {
+        /*
+        If you ever decide to use Descending sorts add a conditional which checks if theres a - (i.g. -test) 
+        in the value (by using .includes()). Then use .split() to seperate by the - sign. then assign the value 
+        to this. const sortByObject = { [sortBy[index]]: -1 };
+        */
+        const sortByObject = { [sortByValue]: 1 };
+        Object.assign(sortQuery, sortByObject);
+      });
+
+      this.query = this.query.sort(sortQuery);
     } else {
       // sort when no values are provided
       const defaultSort = defaultValue || 'dateCreated';
-      this.query = this.query.sort(defaultSort);
+
+      Object.assign(sortQuery, {
+        [defaultSort]: 1
+      });
+
+      this.query = this.query.sort(sortQuery);
     }
 
     return this;
@@ -83,7 +100,8 @@ class SearchFeatures {
       const fields = this.queryString.fields.split(',').join(' ');
       this.query = this.query.select(fields);
     } else {
-      this.query = this.query.select('-__v');
+      // this.query = this.query.select('-__v');
+      this.query = this.query.select({ score: { $meta: 'textScore' } });
     }
 
     return this;
@@ -100,74 +118,74 @@ class SearchFeatures {
   }
 }
 exports.search = catchAsync(async (req, res, next) => {
-  // 1) Filtering
-  const queryObj = { ...req.query };
-  // const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  // excludedFields.forEach((el) => delete queryObj[el]);
+  // // 1) Filtering
+  // const queryObj = { ...req.query };
+  // // const excludedFields = ['page', 'sort', 'limit', 'fields'];
+  // // excludedFields.forEach((el) => delete queryObj[el]);
 
-  // 1A) Advanced Filtering
-  // console.log('queryObj', queryObj);
-  let queryStr = JSON.stringify(queryObj);
+  // // 1A) Advanced Filtering
+  // // console.log('queryObj', queryObj);
+  // let queryStr = JSON.stringify(queryObj);
 
-  // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
-  queryStr = queryStr.replace(
-    /\b(gt|gte|lt|lte|eq|ne)\b/g,
-    (match) => `$${match}`
-  );
+  // // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
+  // queryStr = queryStr.replace(
+  //   /\b(gt|gte|lt|lte|eq|ne)\b/g,
+  //   (match) => `$${match}`
+  // );
+
+  // // console.log('queryStr', queryStr);
+
+  // // 2) Sorting
+  // const sort = {};
+
+  // if (req.query.q) {
+  //   sort.score = { $meta: 'textScore' };
+  // }
+
+  // if (req.query.sort) {
+  //   if (req.query.sort === 'newest') {
+  //     // Latest/Newest entry
+  //     sort.lastUpdate = 1;
+  //   } else if (req.query.sort === 'popular') {
+  //     // Most Popular
+  //     sort.popular = 1;
+  //   } else if (req.query.sort === 'views') {
+  //     // Most Views
+  //     sort.views = 1;
+  //   } else if (req.query.sort === 'likes') {
+  //     // Most Likes
+  //     sort.likes = 1;
+  //   }
+  // } else {
+  //   // sort by Latest/Newest entry
+  //   sort.lastUpdate = 1;
+  // }
+
+  // // console.log('sort', sort);
+
+  // // 4) Text Search
+  // queryStr = JSON.parse(queryStr);
+  // if (req.query.q) {
+  //   queryStr.$text = { $search: `${req.query.q}` };
+  // }
+
+  // // removes unneeded value from queryStr object
+  // delete queryStr.q;
+  // delete queryStr.sort;
 
   // console.log('queryStr', queryStr);
+  // //console.log(JSON.parse(queryStr));
 
-  // 2) Sorting
-  const sort = {};
-
-  if (req.query.q) {
-    sort.score = { $meta: 'textScore' };
-  }
-
-  if (req.query.sort) {
-    if (req.query.sort === 'newest') {
-      // Latest/Newest entry
-      sort.lastUpdate = 1;
-    } else if (req.query.sort === 'popular') {
-      // Most Popular
-      sort.popular = 1;
-    } else if (req.query.sort === 'views') {
-      // Most Views
-      sort.views = 1;
-    } else if (req.query.sort === 'likes') {
-      // Most Likes
-      sort.likes = 1;
-    }
-  } else {
-    // sort by Latest/Newest entry
-    sort.lastUpdate = 1;
-  }
-
-  // console.log('sort', sort);
-
-  // 4) Text Search
-  queryStr = JSON.parse(queryStr);
-  if (req.query.q) {
-    queryStr.$text = { $search: `${req.query.q}` };
-  }
-
-  // removes unneeded value from queryStr object
-  delete queryStr.q;
-  delete queryStr.sort;
-
-  console.log('queryStr', queryStr);
-  //console.log(JSON.parse(queryStr));
-
-  // may need to query populated publisher field for given author
-  // https://mongoosejs.com/docs/populate.html
-  // Maybe search users collection seperately as well
-  const books = await Book.find(
-    queryStr,
-    // helps sort text results by relevance
-    { score: { $meta: 'textScore' } }
-  ).sort(sort);
-  // .sort({ score: { $meta: 'textScore' } });
-  // console.log('query', query);
+  // // may need to query populated publisher field for given author
+  // // https://mongoosejs.com/docs/populate.html
+  // // Maybe search users collection seperately as well
+  // const books = await Book.find(
+  //   queryStr,
+  //   // helps sort text results by relevance
+  //   { score: { $meta: 'textScore' } }
+  // ).sort(sort);
+  // // .sort({ score: { $meta: 'textScore' } });
+  // // console.log('query', query);
   const searchResults = new SearchFeatures(Book.find(), req.query, true)
     .filter()
     .sort('lastUpdate')
