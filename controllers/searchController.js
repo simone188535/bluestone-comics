@@ -97,6 +97,7 @@ class SearchFeatures {
 
   limitFields() {
     // Removes or shows certain fields
+    // This field needs to be enabled if this.queryString.q / text search
     const limitQuery = {};
 
     if (this.queryString.q) {
