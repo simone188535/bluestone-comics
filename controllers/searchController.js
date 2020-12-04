@@ -27,7 +27,7 @@ class SearchFeatures {
 
     if (this.textSearch) {
       if (this.queryString.q) {
-        // if queryString.q is present, do a text search and add queryProjection for assist sorting
+        // if queryString.q /text search is present, do a text search and add queryProjection for assist sorting
 
         searchQuery = Object.assign(searchQuery, {
           $text: { $search: this.queryString.q }
@@ -96,13 +96,34 @@ class SearchFeatures {
   }
 
   limitFields() {
-    if (this.queryString.fields) {
-      const fields = this.queryString.fields.split(',').join(' ');
-      this.query = this.query.select(fields);
-    } else {
-      // this.query = this.query.select('-__v');
-      this.query = this.query.select({ score: { $meta: 'textScore' } });
+    // Removes or shows certain fields
+    const limitQuery = {};
+
+    if (this.queryString.q) {
+      Object.assign(limitQuery, {
+        score: { $meta: 'textScore' }
+      });
     }
+
+    // DO NOT DELETE, MAY NEED EVETUALLY
+    // if (this.queryString.fields) {
+    //   const fields = this.queryString.fields.split(',');
+    //   console.log('fields', fields);
+    //   fields.forEach((fieldValue) => {
+    //     /*
+    //     If you ever decide to use Descending sorts add a conditional which checks if theres a - (i.g. -test) 
+    //     in the value (by using .includes()). Then use .split() to seperate by the - sign. then assign the value 
+    //     to this. const sortByObject = { [sortBy[index]]: -1 };
+    //     */
+    //     const sortByObject = { [fieldValue]: 1 };
+    //     Object.assign(limitQuery, sortByObject);
+    //   });
+
+    //   this.query = this.query.select(limitQuery);
+    // } else {
+    //   this.query = this.query.select(limitQuery);
+    // }
+    this.query = this.query.select(limitQuery);
 
     return this;
   }
