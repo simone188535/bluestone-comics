@@ -58,12 +58,13 @@ const bookSchema = new mongoose.Schema({
 bookSchema.index({ genres: 1 });
 bookSchema.index({ title: 'text', description: 'text' });
 
-bookSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'publisher'
-  });
-  next();
-});
+// this can be used for testing purposes, please don't commit if commented out
+// bookSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'publisher'
+//   });
+//   next();
+// });
 
 bookSchema.methods.adjustTotalIssue = function (adjustType) {
   if (adjustType === 'increment') {

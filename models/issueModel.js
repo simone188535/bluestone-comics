@@ -44,15 +44,17 @@ const issueSchema = new mongoose.Schema({
   // workCredits: [workCreditsSchema]
 });
 issueSchema.index({ title: 'text' });
-issueSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'publisher'
-  });
-  this.populate({
-    path: 'book'
-  });
-  next();
-});
+
+// this can be used for testing purposes, please don't commit if commented out
+// issueSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'publisher'
+//   });
+//   this.populate({
+//     path: 'book'
+//   });
+//   next();
+// });
 
 const Issues = mongoose.model('Issue', issueSchema);
 
