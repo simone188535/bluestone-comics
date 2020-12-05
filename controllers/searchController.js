@@ -82,7 +82,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     .paginate();
 
   // Execute Query
-  const doc = await searchResults.query.populate('publisher');
+  const doc = await searchResults.query;
   // const books = await query;
   // await search.populate('publisher');
 
@@ -101,7 +101,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     .paginate();
 
   // Execute Query
-  const doc = await searchResults.query.populate('publisher');
+  const doc = await searchResults.query;
   // const books = await query;
   // await search.populate('publisher');
 
