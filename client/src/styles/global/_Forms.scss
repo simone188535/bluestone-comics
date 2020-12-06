@@ -132,32 +132,45 @@ form.bsc-form {
     /* multi file input end */
 
     /* checkbox input */
-    label > input[type="checkbox"] {
-        display: none;
-      }
+    ul.checkbox-group {
+        list-style-type: none;
+        margin-bottom: 15px;
 
-      label > input[type="checkbox"] + *::before {
-        content: "";
-        display: inline-block;
-        vertical-align: bottom;
-        width: 1rem;
-        height: 1rem;
-        border-radius: 10%;
-        border-style: solid;
-        border-width: 0.1rem;
-        border-color: gray;
-      }
+        li {
+            margin-bottom: 5px;
 
-      label > input[type="checkbox"]:checked + *::before {
-        content: "✓";
-        color: white;
-        text-align: center;
-        background: teal;
-        border-color: teal;
-      }
-      label > input[type="checkbox"]:checked + * {
-        color: teal;
-      }
+            label {
+                input[type="checkbox"] {
+                    display: none;
+
+                    &+*::before {
+                        content: "";
+                        display: inline-block;
+                        vertical-align: bottom;
+                        width: 1rem;
+                        height: 1rem;
+                        border-radius: 10%;
+                        border-style: solid;
+                        border-width: 1.5px;
+                        border-color: $light-grey;
+                        background-color: $pure-white;
+                        margin-right: 5px;
+                    }
+
+                    &:checked+*::before {
+                        content: "\2713\0020";
+                        color: $violet-blue;
+                        text-align: center;
+                    }
+
+                    &:checked+* {
+                        color: $violet-blue;
+                    }
+                }
+
+            }
+        }
+    }
 
     /* checkbox input end */
 

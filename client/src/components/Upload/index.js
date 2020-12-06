@@ -54,8 +54,10 @@ const Upload = () => {
             // open modal
             toggleModal();
 
+            // This is needed to show the percentage of the uploaded file. onUploadProgress is a property provided by axios
             let config = {
                 onUploadProgress: function (progressEvent) {
+                    // set setUploadPercentage hook with the upload percentage
                     setUploadPercentage(
                         parseInt(
                             Math.round((progressEvent.loaded * 100) / progressEvent.total)
@@ -97,6 +99,9 @@ const Upload = () => {
                             .required('A Issue Cover Photo is required!'),
                         issueAssets: Yup.array()
                             .required('A Issue Assets are required!'),
+                        genres: Yup.array()
+                            .required('You must select a genre!'),
+                        
                     })}
                     onSubmit={onSubmit}
                 >
@@ -122,7 +127,8 @@ const Upload = () => {
                                 <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
 
-                                <Checkboxes identifier="genres" checkboxValues={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']} />
+                                <Checkboxes className="upload-checkboxes" identifier="genres" setFieldValue={setFieldValue} checkboxValues={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']} />
+                                <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
 
                                 <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" className="form-input form-item" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />

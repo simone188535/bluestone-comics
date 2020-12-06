@@ -1,25 +1,28 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React from 'react';
 import { Field } from 'formik';
 
-const Checkboxes = ({ identifier, checkboxValues }) => {
+const Checkboxes = ({ setFieldValue, identifier, checkboxValues, className }) => {
+    const providedClassNames = className ? className : '';
 
     const mapCheckboxValues = () => {
         return (
             checkboxValues.map((checkboxValue, index) => (
-                <label key={index}>
-                    <Field type="checkbox" name={identifier} value={checkboxValue} />
-                    <span>
-                        {checkboxValue}
-                    </span>
-                </label>
+                <li key={index}>
+                    <label>
+                        <Field type="checkbox" name={identifier} value={checkboxValue} />
+                        <span>
+                            {checkboxValue}
+                        </span>
+                    </label>
+                </li>
             ))
         );
     }
 
     return (
-        <div role="group" aria-labelledby="checkbox-group">
+        <ul className={`checkbox-group ${providedClassNames}`}>
             {mapCheckboxValues()}
-        </div>
+        </ul>
     );
 }
 

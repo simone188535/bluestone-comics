@@ -19,8 +19,16 @@
                 .file-input-single-upload-field {}
 
             }
+            .upload-checkboxes {
+                columns: 1 2em;
+            }
 
         }
 
+    }
+}
+@media only screen and (min-width: $medium) {
+    .upload-page .upload-form-container .upload-form .upload-checkboxes {
+        columns: 3 2em;
     }
 }
