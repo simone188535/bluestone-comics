@@ -1,22 +1,33 @@
 import React from 'react';
 import { Field } from 'formik';
 
-const Checkboxes = ({ setFieldValue, identifier, checkboxValues, className }) => {
-    const providedClassNames = className ? className : '';
 
+// This component conditionally wraps the provided component(HOC) in the HTML Element provided
+const AddWrapperElement = ({children, wrapperElement}) => {
+    
+    let WrappingHTMLElement = wrapperElement ? wrapperElement : React.Fragment; // fallback in case you dont want to wrap your components
+    return <WrappingHTMLElement>{children}</WrappingHTMLElement>
+};
+
+// this is using a formik checkbox: https://formik.org/docs/examples/checkboxes
+const Checkboxes = ({ identifier, type, checkboxValues, className, wrapperElement }) => {
+    const providedClassNames = className ? className : '';
+    
     const mapCheckboxValues = () => {
         return (
             checkboxValues.map((checkboxValue, index) => (
-                <li key={index}>
+                
+                <AddWrapperElement key={index} wrapperElement={wrapperElement}>
                     <label>
-                        <Field type="checkbox" name={identifier} value={checkboxValue} />
+                        <Field type="checkbox" name={identifier} value={checkboxValue}/>
                         <span>
                             {checkboxValue}
                         </span>
                     </label>
-                </li>
+                </AddWrapperElement>
             ))
         );
+        
     }
 
     return (

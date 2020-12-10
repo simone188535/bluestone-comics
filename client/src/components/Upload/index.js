@@ -128,7 +128,7 @@ const Upload = () => {
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
 
                                 <div className="form-header-text">Select the applicable <strong>genres</strong>:</div>
-                                <Checkboxes className="upload-checkboxes" identifier="genres" setFieldValue={setFieldValue} checkboxValues={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']} />
+                                <Checkboxes className="upload-checkboxes" identifier="genres" type="multiple" wrapperElement="li" checkboxValues={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']} />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
 
                                 <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
