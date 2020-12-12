@@ -19,7 +19,7 @@ const Upload = () => {
     const [uploadPercentage, setUploadPercentage] = useState(0);
 
     const toggleModal = () => setModalIsOpen(!modalIsOpen);
-    
+
     const onSubmit = async (values, { setSubmitting }) => {
         // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
 
@@ -63,9 +63,9 @@ const Upload = () => {
                             Math.round((progressEvent.loaded * 100) / progressEvent.total)
                         )
                     );
-                    
+
                     // Clear percentage
-                    setTimeout(() =>setUploadPercentage(0), 10000);
+                    setTimeout(() => setUploadPercentage(0), 10000);
 
                 }
             };
@@ -101,7 +101,7 @@ const Upload = () => {
                             .required('A Issue Assets are required!'),
                         genres: Yup.array()
                             .required('You must select a genre!'),
-                        
+
                     })}
                     onSubmit={onSubmit}
                 >
@@ -128,7 +128,9 @@ const Upload = () => {
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
 
                                 <div className="form-header-text">Select the applicable <strong>genres</strong>:</div>
-                                <Checkboxes className="upload-checkboxes" identifier="genres" type="multiple" wrapperElement="li" checkboxValues={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']} />
+                                <ul className="checkbox-group upload-checkboxes">
+                                    <Checkboxes identifier="genres" type="multiple" wrapperElement="li" checkboxValue={['Action/Adventure', 'Anthropomorphic', 'Children', 'Comedy', 'Crime', 'Drama', 'Family', 'Fantasy', 'Graphic Novels', 'Historical', 'Horror', 'LGBTQ', 'Mature', 'Music', 'Mystery', 'Mythology', 'Psychological', 'Romance', 'School Life', 'Sci-Fi', 'Slice of Life', 'Sport', 'Superhero', 'Supernatural', 'Thriller', 'War', 'Western', 'Zombies']} />
+                                </ul>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
 
                                 <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
@@ -141,7 +143,7 @@ const Upload = () => {
                 {/* <button onClick={toggleModal}>open Modal</button> */}
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h2 className="modal-head">Upload Progress: </h2>
-                    <ProgressBar uploadPercentage={uploadPercentage}/>
+                    <ProgressBar uploadPercentage={uploadPercentage} />
                 </Modal>
             </div>
         </div>

@@ -19,14 +19,20 @@
                 .file-input-single-upload-field {}
 
             }
-            .file-input-multiple-upload-container{
-                
-            }
 
-            .checkbox-group.upload-checkboxes {
-                columns: 1;
-                max-width: 200px;
-                margin: 0 auto 15px;
+            .file-input-multiple-upload-container {}
+
+            .checkbox-group {
+                list-style-type: none;
+                margin-bottom: 15px;
+                li {
+                    margin-bottom: 5px;
+                }
+                &.upload-checkboxes {
+                    columns: 1;
+                    max-width: 200px;
+                    margin: 0 auto 15px;
+                }
             }
 
         }
