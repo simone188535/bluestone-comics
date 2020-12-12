@@ -9,13 +9,13 @@ const AddWrapperElement = ({ children, wrapperElement }) => {
     return <WrappingHTMLElement>{children}</WrappingHTMLElement>
 };
 
-// This component conditionally maps through or displays the checkbox Elements
+// This component conditionally maps through or displays the checkbox elements
 const DisplaySingleOrMultipleCheckboxes = ({ type, checkboxValue, identifier, wrapperElement }) => {
 
     const htmlValue = (checkboxValue, index = null ) => (
         <AddWrapperElement wrapperElement={wrapperElement} key={index}>
             <label className="checkbox-item">
-                <Field type="checkbox" name={identifier} value={checkboxValue} />
+                <Field type="checkbox" name={identifier} value={checkboxValue}/>
                 <span>
                     {checkboxValue}
                 </span>
@@ -33,8 +33,6 @@ const DisplaySingleOrMultipleCheckboxes = ({ type, checkboxValue, identifier, wr
 }
 // this is using a formik checkbox: https://formik.org/docs/examples/checkboxes
 const Checkboxes = ({ identifier, type, checkboxValue, wrapperElement }) => {
-
-    console.log('checkboxValue', checkboxValue);
     return (
         <DisplaySingleOrMultipleCheckboxes identifier={identifier} checkboxValue={checkboxValue} type={type} wrapperElement={wrapperElement} />
     );

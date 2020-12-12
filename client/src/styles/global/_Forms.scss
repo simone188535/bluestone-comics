@@ -158,14 +158,23 @@ form.bsc-form {
                 margin-right: 5px;
             }
 
+            &:checked+* {
+                color: $violet-blue;
+            }
+
             &:checked+*::before {
                 content: "\2713\0020";
                 color: $violet-blue;
                 text-align: center;
             }
 
-            &:checked+* {
-                color: $violet-blue;
+            &:disabled:checked+*::before {
+                color: $mid-dark-gray;
+            }
+
+            &:disabled+*::before {
+                background-color: $mid-gray;
+                color: $mid-dark-gray;
             }
         }
 
