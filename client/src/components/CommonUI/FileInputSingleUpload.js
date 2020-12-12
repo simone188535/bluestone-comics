@@ -21,7 +21,7 @@ const FileInputSingleUpload = ({ setFieldValue, identifier, triggerText, classNa
 
     return (
         <div className={`file-input-single-upload-container ${providedClassNames}`}>
-            <input id={identifier} name={identifier} className="file-input-single-upload-field" name={identifier} type="file" onChange={fileInputOnChange} />
+            <input id={identifier} name={identifier} className="file-input-single-upload-field" type="file" onChange={fileInputOnChange} />
             <label tabIndex="0" htmlFor={identifier} className="file-input-single-upload-trigger">{triggerText}</label>
             <div className="file-input-single-upload-name">{file ? file.name : 'No file selected'}</div>
         </div>
