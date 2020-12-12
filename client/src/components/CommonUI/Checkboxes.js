@@ -24,7 +24,6 @@ const DisplaySingleOrMultipleCheckboxes = ({ type, checkboxValue, identifier, wr
     );
 
     if (type === 'single') {
-
         return htmlValue(checkboxValue)
 
     } else if (type === 'multiple') {
