@@ -2,9 +2,17 @@
 
 .work-credits {
 
-    .work-credits-search-container .search-icon {
-        position: relative;
-        bottom: 50px;
-        left: calc(100% - 30px);
+    .work-credits-search-container {
+
+        .search-bar {
+            border: 1px solid $light-grey;
+        }
+
+        .search-icon {
+            position: relative;
+            bottom: 50px;
+            left: calc(100% - 30px);
+            color: $mid-dark-gray;
+        }
     }
 }
