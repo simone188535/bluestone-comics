@@ -9,6 +9,7 @@ import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload.js';
 import Checkboxes from '../CommonUI/Checkboxes.js';
 import Modal from '../CommonUI/Modal';
 import ProgressBar from '../CommonUI/ProgressBar';
+import WorkCredits from './WorkCredits';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
@@ -152,7 +153,8 @@ const Upload = () => {
                                 <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
 
-                                <div className="form-header-text">Assign <strong>Credits</strong> for yourself and any existing users who helped create this issue: </div>
+                                <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
+                                <WorkCredits />
                                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>

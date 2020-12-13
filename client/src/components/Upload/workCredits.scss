@@ -1,0 +1,10 @@
+@import '../../styles/abstracts/variables.scss';
+
+.work-credits {
+
+    .work-credits-search-container .search-icon {
+        position: relative;
+        bottom: 50px;
+        left: calc(100% - 30px);
+    }
+}
