@@ -209,8 +209,12 @@ form.bsc-form {
 
     .form-header-text {
         margin: 30px 0 20px;
+        font-size: $normal;
     }
-
+    .form-header-subtext {
+        font-size: $small;
+        margin-bottom: 15px;
+    }
     .error-message {
         margin-bottom: 15px;
     }
