@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const PublishServices = {
+export const SearchServices = {
     searchUser
 }
 
