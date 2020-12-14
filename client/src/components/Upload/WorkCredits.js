@@ -22,6 +22,13 @@ const WorkCredits = () => {
     const searchResults = async () => {
         // send text data to the API call and send back matching results
         try {
+
+            // Unset APIResults and do not search if the user did not provide a query string
+            if (!(textSearch) && APIResults) {
+                setAPIResults([]);
+                return;
+            }
+
             const res = await SearchServices.searchUser(textSearch);
             // assign results to APIResults state
             setAPIResults(res.data.users);
