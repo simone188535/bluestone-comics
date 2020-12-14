@@ -11,7 +11,7 @@ const WorkCredits = () => {
     return (
         <div className="work-credits">
             <form class="work-credits-search-container">
-                <input type="text" className="search-bar form-item" placeholder="Search User" />
+                <input type="text" className="search-bar form-item" placeholder="Search Users" />
                 <FontAwesomeIcon
                     icon={faSearch}
                     size="lg"
