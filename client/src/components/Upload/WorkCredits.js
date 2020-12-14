@@ -40,9 +40,7 @@ const WorkCredits = () => {
 
     const renderSearchList = () => {
         // Map though APIResults state and iteratively display list items
-        // APIResults.map((item, index) => <li key={index}>{item}</li>)
-    return APIResults.map((item, index) => <li key={index}>test</li>)
-        
+        return APIResults.map((item, index) => <li key={index}>{item.username}</li>);
     }
 
     return (
