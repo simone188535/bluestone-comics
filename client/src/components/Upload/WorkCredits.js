@@ -23,13 +23,14 @@ const WorkCredits = () => {
         // send text data to the API call and send back matching results
         try {
 
-            // Unset APIResults and do not search if the user did not provide a query string
+            // Unset the APIResults state and do not search if the user did not provide a query string
             if (!(textSearch) && APIResults) {
                 setAPIResults([]);
                 return;
             }
 
             const res = await SearchServices.searchUser(textSearch);
+
             // assign results to APIResults state
             setAPIResults(res.data.users);
             // console.log('success', res.data.users);
@@ -38,9 +39,22 @@ const WorkCredits = () => {
         }
     }
 
+    const selectedUserClicked = (selectedListItem) => {
+        console.log('!!!!!!!!!', selectedListItem);
+    }
+
     const renderSearchList = () => {
-        // Map though APIResults state and iteratively display list items
-        return APIResults.map((item, index) => <li key={index}>{item.username}</li>);
+
+        // Map though APIResults state and iteratively display list items if they exist OR return nothing
+
+        if (APIResults.length > 0) {
+            return (
+                <ul className="work-credit-search-list">
+                    { APIResults.map((item, index) => <li key={index} className="work-credit-search-list-item" onClick={() => selectedUserClicked(item)}>{item.username}</li>)}
+                </ul>
+            );
+        } 
+        return null;
     }
 
     return (
@@ -53,9 +67,9 @@ const WorkCredits = () => {
                     className="search-icon"
                 />
             </div>
-            <ul>
+            <>
                 {renderSearchList()}
-            </ul>
+            </>
         </div>
     );
 }

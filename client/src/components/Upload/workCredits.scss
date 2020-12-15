@@ -15,4 +15,19 @@
             color: $mid-dark-gray;
         }
     }
+    .work-credit-search-list {
+        background: $pure-white;
+        list-style-type: none;
+        border-radius: 10px;
+        padding: 10px 0px;
+        border: 1px solid $light-grey;
+        cursor: pointer;
+        
+        &-item {
+            padding: 10px;
+            &:hover {
+                background: $white-light-grey;
+            }
+        }
+    }
 }
