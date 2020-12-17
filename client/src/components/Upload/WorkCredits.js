@@ -47,22 +47,23 @@ const WorkCredits = ({ identifier, formikValues }) => {
         }
     }
 
-    const renderSearchList = () => {
+    const renderSearchList = (push) => {
 
         // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
         if (APIResults.length > 0) {
             return (
                 <ul className="work-credit-search-list">
-                    { APIResults.map((item, index) => <li key={index} className="work-credit-search-list-item" onClick={() => selectedUser(item)}>{item.username}</li>)}
+                    { APIResults.map((item, index) => <li key={index} className="work-credit-search-list-item" onClick={() => selectedUser(item, push)}>{item.username}</li>)}
                 </ul>
             );
         }
         return null;
     }
 
-    const selectedUser = (selectedListItem) => {
+    const selectedUser = (selectedListItem, push) => {
         // console.log('!!!!!!!!!', selectedListItem);
+        push({ id: Math.random(), firstName: "", lastName: "" });
         // clear value of search bar
         // push object to selectedUserWorkCredits array
 
@@ -74,42 +75,6 @@ const WorkCredits = ({ identifier, formikValues }) => {
 
     const renderSelectedUsers = (identifier, formikValues) => {
         console.log(formikValues)
-        return (
-            <FieldArray name={identifier}>
-                {({ push, remove }) => (
-                    <div>
-                        {formikValues.workCredits.map((p, index) => {
-                            const firstName = `contact`;
-
-                            const lastName = `test`;
-
-                            return (
-                                <div key={index}>
-                                    <Field
-                                        label="First name"
-                                        name={firstName}
-                                        value={p.firstName}
-                                        required
-                                    />
-                                    <Field
-                                        name={lastName}
-                                        value={p.lastName}
-                                        required
-                                    />
-                                    <button
-                                        margin="normal"
-                                        type="button"
-                                        onClick={() => remove(index)}
-                                    >x</button>
-                                </div>
-                            );
-                        })}
-                        <button type="button" onClick={() => push({ id: Math.random(), firstName: "", lastName: "" })} >Add </button>
-                    </div>
-                )}
-            </FieldArray>
-
-        )
     }
 
     return (
@@ -122,11 +87,44 @@ const WorkCredits = ({ identifier, formikValues }) => {
                     className="search-icon"
                 />
             </div>
-            <>
-                {renderSearchList()}
-            </>
             <div className="selected-users">
-                {renderSelectedUsers(identifier, formikValues)}
+                <FieldArray name={identifier}>
+                    {({ push, remove }) => (
+                        <div>
+                            <>
+                                {renderSearchList(push)}
+                            </>
+                            {formikValues.workCredits.map((p, index) => {
+                                const firstName = `contact`;
+
+                                const lastName = `test`;
+
+                                return (
+                                    <div key={index}>
+                                        <Field
+                                            label="First name"
+                                            name={firstName}
+                                            value={p.firstName}
+                                            required
+                                        />
+                                        <Field
+                                            name={lastName}
+                                            value={p.lastName}
+                                            required
+                                        />
+                                        <button
+                                            margin="normal"
+                                            type="button"
+                                            onClick={() => remove(index)}
+                                        >x</button>
+                                    </div>
+                                );
+                            })}
+
+                            {/* <button type="button" onClick={() => push({ id: Math.random(), firstName: "", lastName: "" })} >Add </button> */}
+                        </div>
+                    )}
+                </FieldArray>
             </div>
         </div>
     );
