@@ -84,7 +84,7 @@ const Upload = () => {
         <div className="upload-page">
             <div className="upload-form-container">
                 <Formik
-                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, genres: [], issueAssets: [] }}
+                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, genres: [], issueAssets: [], workCredits:[] }}
                     validationSchema={Yup.object().shape({
                         bookTitle: Yup.string()
                             .required('Book Title required!'),
@@ -106,19 +106,19 @@ const Upload = () => {
                         //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
                         //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
                         // ]
-                        // workCredits: Yup.array().of(
-                        //     Yup.object().shape({
-                        //         user: Yup.string()
-                        //         .required('A User muct be selected'),
-                        //         credits: Yup.array()
-                        //         .required('Please select credits')
-                        //     })
-                        // )
+                        workCredits: Yup.array().of(
+                            Yup.object().shape({
+                                user: Yup.string()
+                                .required('A User muct be selected'),
+                                credits: Yup.array()
+                                .required('Please select credits')
+                            })
+                        )
 
                     })}
                     onSubmit={onSubmit}
                 >
-                    {({ setFieldValue }) => (
+                    {({ setFieldValue, values }) => (
                         <Form className="bsc-form upload-form" encType="multipart/form-data" method="post">
                             <div className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </div>
                             <div>
@@ -154,7 +154,7 @@ const Upload = () => {
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
 
                                 <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
-                                <WorkCredits setFieldValue={setFieldValue} />
+                                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values}/>
                                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
