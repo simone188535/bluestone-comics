@@ -6,6 +6,32 @@ import { SearchServices } from '../../services';
 import { FieldArray, getIn, Field } from 'formik';
 import './workCredits.scss';
 
+
+const RenderSearchList = ({ push, apiResults }) => {
+    // Map though APIResults state and iteratively display list items if they exist OR return nothing
+
+    if (apiResults.length > 0) {
+        return (
+            <ul className="work-credit-search-list">
+                {/* { APIResults.map((item, index) => <li key={index} className="work-credit-search-list-item" onClick={() => selectedUser(item, push)}>{item.username}</li>)} */}
+                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push}/>)}
+            </ul>
+        );
+    }
+    return null;
+}
+
+const SearchedUsers = ({selectedListItem, push}) => {
+    const [selectedUserNames, setSelectedUserNames] = useState([]);
+
+    const selectedUser = (selectedListItem, push) => {
+        // console.log('Horse',selectedListItem);
+        push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
+    }
+    
+    return <li className="work-credit-search-list-item" onClick={() => selectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
+}
+
 // https://codesandbox.io/s/formik-fieldarray-materialui-ig19g?file=/src/form.js:179-186
 // https://www.youtube.com/results?search_query=autocomplete+search+bar+react
 // https://codeytek.com/live-search-search-react-live-search-in-react-axios-autocomplete-pagination/
@@ -13,15 +39,10 @@ import './workCredits.scss';
 const WorkCredits = ({ identifier, formikValues }) => {
     const [textSearch, setTextSearch] = useState('');
     const [APIResults, setAPIResults] = useState([]);
-    const [selectedUserNames, setSelectedUserNames] = useState([]);
 
     useEffect(() => {
         searchResults();
     }, [textSearch]);
-
-    // useEffect(() => {
-    //     console.log('!!!!!', selectedUserWorkCredits);
-    // }, [selectedUserWorkCredits]);
 
     const handleTextInputOnChange = (e) => {
         setTextSearch(e.currentTarget.value);
@@ -45,19 +66,6 @@ const WorkCredits = ({ identifier, formikValues }) => {
         } catch (err) {
             console.log('failed', err.response.data.message);
         }
-    }
-
-    const renderSearchList = (push) => {
-        // Map though APIResults state and iteratively display list items if they exist OR return nothing
-
-        if (APIResults.length > 0) {
-            return (
-                <ul className="work-credit-search-list">
-                    { APIResults.map((item, index) => <li key={index} className="work-credit-search-list-item" onClick={() => selectedUser(item, push)}>{item.username}</li>)}
-                </ul>
-            );
-        }
-        return null;
     }
 
     const selectedUser = (selectedListItem, push) => {
@@ -91,7 +99,7 @@ const WorkCredits = ({ identifier, formikValues }) => {
                     {({ push, remove }) => (
                         <div>
                             <>
-                                {renderSearchList(push)}
+                                <RenderSearchList apiResults={APIResults} push={push} />
                             </>
                             {formikValues.workCredits.map((p, index) => {
                                 const firstName = `contact`;
