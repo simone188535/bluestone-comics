@@ -13,7 +13,7 @@ import './workCredits.scss';
 const WorkCredits = ({ identifier, formikValues }) => {
     const [textSearch, setTextSearch] = useState('');
     const [APIResults, setAPIResults] = useState([]);
-    // const [selectedUserWorkCredits, setSelectedUserWorkCredits] = useState([]);
+    const [selectedUserNames, setSelectedUserNames] = useState([]);
 
     useEffect(() => {
         searchResults();
@@ -48,7 +48,6 @@ const WorkCredits = ({ identifier, formikValues }) => {
     }
 
     const renderSearchList = (push) => {
-
         // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
         if (APIResults.length > 0) {
@@ -63,7 +62,7 @@ const WorkCredits = ({ identifier, formikValues }) => {
 
     const selectedUser = (selectedListItem, push) => {
         // console.log('!!!!!!!!!', selectedListItem);
-        push({ id: Math.random(), firstName: "", lastName: "" });
+        push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
         // clear value of search bar
         // push object to selectedUserWorkCredits array
 
