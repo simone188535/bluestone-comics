@@ -14,22 +14,64 @@ const RenderSearchList = ({ push, apiResults }) => {
         return (
             <ul className="work-credit-search-list">
                 {/* { APIResults.map((item, index) => <li key={index} className="work-credit-search-list-item" onClick={() => selectedUser(item, push)}>{item.username}</li>)} */}
-                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push}/>)}
+                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} />)}
             </ul>
         );
     }
     return null;
 }
 
-const SearchedUsers = ({selectedListItem, push}) => {
+const SearchedUsers = ({ selectedListItem, push }) => {
     const [selectedUserNames, setSelectedUserNames] = useState([]);
 
     const selectedUser = (selectedListItem, push) => {
         // console.log('Horse',selectedListItem);
         push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
     }
-    
+
     return <li className="work-credit-search-list-item" onClick={() => selectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
+}
+
+const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
+    return (
+        <FieldArray name={identifier}>
+            {({ push, remove }) => (
+                <div>
+                    <>
+                        <RenderSearchList apiResults={apiResults} push={push} />
+                    </>
+                    {formikValues.workCredits.map((p, index) => {
+                        const firstName = `contact`;
+
+                        const lastName = `test`;
+
+                        return (
+                            <div key={index}>
+                                <Field
+                                    label="First name"
+                                    name={firstName}
+                                    value={p.firstName}
+                                    required
+                                />
+                                <Field
+                                    name={lastName}
+                                    value={p.lastName}
+                                    required
+                                />
+                                <button
+                                    margin="normal"
+                                    type="button"
+                                    onClick={() => remove(index)}
+                                >x</button>
+                            </div>
+                        );
+                    })}
+
+                    {/* <button type="button" onClick={() => push({ id: Math.random(), firstName: "", lastName: "" })} >Add </button> */}
+                </div>
+            )}
+        </FieldArray>
+    )
 }
 
 // https://codesandbox.io/s/formik-fieldarray-materialui-ig19g?file=/src/form.js:179-186
@@ -95,43 +137,7 @@ const WorkCredits = ({ identifier, formikValues }) => {
                 />
             </div>
             <div className="selected-users">
-                <FieldArray name={identifier}>
-                    {({ push, remove }) => (
-                        <div>
-                            <>
-                                <RenderSearchList apiResults={APIResults} push={push} />
-                            </>
-                            {formikValues.workCredits.map((p, index) => {
-                                const firstName = `contact`;
-
-                                const lastName = `test`;
-
-                                return (
-                                    <div key={index}>
-                                        <Field
-                                            label="First name"
-                                            name={firstName}
-                                            value={p.firstName}
-                                            required
-                                        />
-                                        <Field
-                                            name={lastName}
-                                            value={p.lastName}
-                                            required
-                                        />
-                                        <button
-                                            margin="normal"
-                                            type="button"
-                                            onClick={() => remove(index)}
-                                        >x</button>
-                                    </div>
-                                );
-                            })}
-
-                            {/* <button type="button" onClick={() => push({ id: Math.random(), firstName: "", lastName: "" })} >Add </button> */}
-                        </div>
-                    )}
-                </FieldArray>
+                <WorkCreditsFields identifier={identifier} apiResults={APIResults} formikValues={formikValues} />
             </div>
         </div>
     );
