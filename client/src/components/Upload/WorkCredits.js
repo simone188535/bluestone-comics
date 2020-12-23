@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SearchServices } from '../../services';
 // import Checkboxes from '../CommonUI/Checkboxes.js';
-import { FieldArray, getIn, Field } from 'formik';
+import { FieldArray, Field } from 'formik';
 import './workCredits.scss';
 
 
@@ -24,12 +24,23 @@ const RenderSearchList = ({ push, apiResults }) => {
 const SearchedUsers = ({ selectedListItem, push }) => {
     const [selectedUserNames, setSelectedUserNames] = useState([]);
 
-    const selectedUser = (selectedListItem, push) => {
-        // console.log('Horse',selectedListItem);
+    useEffect(() => {
+        console.log({selectedUserNames});
+      }, [selectedUserNames]);
+
+    const addSelectedUser = (selectedListItem, push) => {
+        // When a list item is selected, append it to the selectedUserNames state and push to formik workCredits array value
+        setSelectedUserNames(prevState => [...prevState, selectedListItem.username]);
         push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
     }
 
-    return <li className="work-credit-search-list-item" onClick={() => selectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
+    const removeSelectedUser= () => {
+        return 'test';
+    }
+
+
+
+    return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
 }
 
 const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
@@ -41,25 +52,16 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
                         <RenderSearchList apiResults={apiResults} push={push} />
                     </>
                     {formikValues.workCredits.map((p, index) => {
-                        const firstName = `contact`;
-
-                        const lastName = `test`;
 
                         return (
                             <div key={index}>
                                 <Field
                                     label="First name"
-                                    name={firstName}
-                                    value={p.firstName}
-                                    required
-                                />
-                                <Field
-                                    name={lastName}
-                                    value={p.lastName}
+                                    name='{firstName}'
+                                    value='{p.firstName}'
                                     required
                                 />
                                 <button
-                                    margin="normal"
                                     type="button"
                                     onClick={() => remove(index)}
                                 >x</button>
@@ -98,13 +100,14 @@ const WorkCredits = ({ identifier, formikValues }) => {
             if (!(textSearch) && APIResults) {
                 setAPIResults([]);
                 return;
+            } else {
+
+                const res = await SearchServices.searchUser(textSearch);
+
+                // assign results to APIResults state
+                setAPIResults(res.data.users);
+                // console.log('success', res.data.users);
             }
-
-            const res = await SearchServices.searchUser(textSearch);
-
-            // assign results to APIResults state
-            setAPIResults(res.data.users);
-            // console.log('success', res.data.users);
         } catch (err) {
             console.log('failed', err.response.data.message);
         }
