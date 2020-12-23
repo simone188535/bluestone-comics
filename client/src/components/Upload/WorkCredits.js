@@ -7,49 +7,58 @@ import { FieldArray, Field } from 'formik';
 import './workCredits.scss';
 
 
-const RenderSearchList = ({ push, apiResults }) => {
+const RenderSearchList = ({ push, apiResults, addSelectedUsername }) => {
     // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
     if (apiResults.length > 0) {
         return (
             <ul className="work-credit-search-list">
                 {/* { APIResults.map((item, index) => <li key={index} className="work-credit-search-list-item" onClick={() => selectedUser(item, push)}>{item.username}</li>)} */}
-                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} />)}
+                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} addSelectedUsername={addSelectedUsername}/>)}
             </ul>
         );
     }
     return null;
 }
 
-const SearchedUsers = ({ selectedListItem, push }) => {
-    const [selectedUserNames, setSelectedUserNames] = useState([]);
-
-    useEffect(() => {
-        console.log({selectedUserNames});
-      }, [selectedUserNames]);
+const SearchedUsers = ({ selectedListItem, push, addSelectedUsername}) => {
 
     const addSelectedUser = (selectedListItem, push) => {
         // When a list item is selected, append it to the selectedUserNames state and push to formik workCredits array value
-        setSelectedUserNames(prevState => [...prevState, selectedListItem.username]);
+
+        addSelectedUsername(selectedListItem);
         push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
     }
-
-    const removeSelectedUser= () => {
-        return 'test';
-    }
-
-
 
     return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
 }
 
 const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
+   
+    const [selectedUserNames, setSelectedUsernames] = useState([]);
+
+    useEffect(() => {
+        console.log({selectedUserNames});
+      }, [selectedUserNames]);
+
+    const addSelectedUsername = (selectedListItem) => {
+        // When a list item is selected, append it to the selectedUserNames state
+        setSelectedUsernames(prevState => [...prevState, selectedListItem.username]);
+    }
+
+    const removeSelectedUser = (remove, index) => {
+        // When the remove button is selected, remove it to the selectedUserNames state, and remove from formik
+        remove(index);
+        // use index to remove username from state
+        setSelectedUsernames(prevState => prevState.filter((username, i) => i !== index));
+    }
+
     return (
         <FieldArray name={identifier}>
             {({ push, remove }) => (
                 <div>
                     <>
-                        <RenderSearchList apiResults={apiResults} push={push} />
+                        <RenderSearchList apiResults={apiResults} push={push} addSelectedUsername={addSelectedUsername}/>
                     </>
                     {formikValues.workCredits.map((p, index) => {
 
@@ -61,9 +70,10 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
                                     value='{p.firstName}'
                                     required
                                 />
+                                <div>{selectedUserNames[index]}</div>
                                 <button
                                     type="button"
-                                    onClick={() => remove(index)}
+                                    onClick={() => removeSelectedUser(remove, index)}
                                 >x</button>
                             </div>
                         );
