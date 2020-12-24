@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SearchServices } from '../../services';
-// import Checkboxes from '../CommonUI/Checkboxes.js';
+import Checkboxes from '../CommonUI/Checkboxes.js';
 import { FieldArray, Field } from 'formik';
 import './workCredits.scss';
 
@@ -27,7 +27,9 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername}) => {
         // When a list item is selected, append it to the selectedUserNames state and push to formik workCredits array value
 
         addSelectedUsername(selectedListItem);
-        push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
+        // push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
+        push({ user: selectedListItem._id, credits: [] });
+        // clear out text search
     }
 
     return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
@@ -61,15 +63,27 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
                         <RenderSearchList apiResults={apiResults} push={push} addSelectedUsername={addSelectedUsername}/>
                     </>
                     {formikValues.workCredits.map((p, index) => {
-
+                        // console.log('ppppppp', p);
                         return (
                             <div key={index}>
                                 <Field
                                     label="First name"
-                                    name='{firstName}'
-                                    value='{p.firstName}'
-                                    required
+                                    name={`workCredits[${index}].user`}
+                                    value={p.user}
                                 />
+                                <Checkboxes
+                                    identifier={`workCredits[${index}].credits`}
+                                    type="multiple"
+                                    checkboxValue={[
+                                    { name: 'Writer' }, 
+                                    { name: 'Artist' }, 
+                                    { name: 'Editor' }, 
+                                    { name: 'Inker' }, 
+                                    { name: 'Letterer' }, 
+                                    { name: 'Penciller' }, 
+                                    { name: 'Colorist' }, 
+                                    { name: 'Cover Artist' }
+                                    ]} />
                                 <div>{selectedUserNames[index]}</div>
                                 <button
                                     type="button"
@@ -123,21 +137,21 @@ const WorkCredits = ({ identifier, formikValues }) => {
         }
     }
 
-    const selectedUser = (selectedListItem, push) => {
-        // console.log('!!!!!!!!!', selectedListItem);
-        push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
-        // clear value of search bar
-        // push object to selectedUserWorkCredits array
+    // const selectedUser = (selectedListItem, push) => {
+    //     // console.log('!!!!!!!!!', selectedListItem);
+    //     push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
+    //     // clear value of search bar
+    //     // push object to selectedUserWorkCredits array
 
-        // do not allow duplicates in state
-        // setSelectedUserWorkCredits(prevState => (
-        //     [...prevState, {"user": selectedListItem._id, "credits": []}]
-        // ));
-    }
+    //     // do not allow duplicates in state
+    //     // setSelectedUserWorkCredits(prevState => (
+    //     //     [...prevState, {"user": selectedListItem._id, "credits": []}]
+    //     // ));
+    // }
 
-    const renderSelectedUsers = (identifier, formikValues) => {
-        console.log(formikValues)
-    }
+    // const renderSelectedUsers = (identifier, formikValues) => {
+    //     console.log(formikValues)
+    // }
 
     return (
         <div className="work-credits">
