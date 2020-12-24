@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SearchServices } from '../../services';
 import Checkboxes from '../CommonUI/Checkboxes.js';
-import { FieldArray, Field } from 'formik';
+import { FieldArray, Field, ErrorMessage } from 'formik';
 import './workCredits.scss';
 
 
@@ -71,6 +71,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
                                     name={`workCredits[${index}].user`}
                                     value={p.user}
                                 />
+                                <ErrorMessage className="error-message error-text-color" component="div" name={`workCredits[${index}].user`} />
                                 <Checkboxes
                                     identifier={`workCredits[${index}].credits`}
                                     type="multiple"
@@ -84,6 +85,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
                                     { name: 'Colorist' }, 
                                     { name: 'Cover Artist' }
                                     ]} />
+                                    <ErrorMessage className="error-message error-text-color" component="div" name={`workCredits[${index}].credits`} />
                                 <div>{selectedUserNames[index]}</div>
                                 <button
                                     type="button"

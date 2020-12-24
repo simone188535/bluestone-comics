@@ -155,7 +155,7 @@ const Upload = () => {
 
                                 <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
                                 <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values}/>
-                                <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" />
+                                {/* <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" /> */}
                                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
