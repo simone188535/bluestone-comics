@@ -13,6 +13,68 @@ import WorkCredits from './WorkCredits';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
+const UploadBookFields = ({ setFieldValue, values, errors }) => {
+
+    const workCreditsErrorMessage = errors => {
+        /* 
+        This has been added because we are using a Field Array Validation within the WorkCredits Component. 
+        In order to display the outer error message for this array of objects, this conditional is needed. 
+        More info here: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
+        */
+        return (typeof errors.workCredits === 'string' ? <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" /> : null);
+    }
+
+    return (
+        <Form className="bsc-form upload-form" encType="multipart/form-data" method="post">
+            <div className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </div>
+            <div>
+                <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
+                <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
+
+                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
+                <ErrorMessage className="error-message error-text-color" component="div" name="bookCoverPhoto" />
+
+                <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
+                <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
+
+                <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />
+                <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
+
+                <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
+                <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" />
+
+                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo" />
+                <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
+
+                <div className="form-header-text">Select the applicable <strong>genres</strong>:</div>
+                <ul className="checkbox-group upload-checkboxes">
+                    <Checkboxes
+                        identifier="genres"
+                        type="multiple"
+                        wrapperElement="li"
+                        checkboxValue={[{ name: 'Action/Adventure' }, { name: 'Anthropomorphic' }, { name: 'Children' }, { name: 'Comedy' }, { name: 'Crime' }, { name: 'Drama' }, { name: 'Family' }, { name: 'Fantasy' }, { name: 'Graphic Novels' }, { name: 'Historical' }, { name: 'Horror' }, { name: 'LGBTQ' }, { name: 'Mature' }, { name: 'Music' }, { name: 'Mystery' }, { name: 'Mythology' }, { name: 'Psychological' }, { name: 'Romance' }, { name: 'School Life' }, { name: 'Sci-Fi' }, { name: 'Slice of Life' }, { name: 'Sport' }, { name: 'Superhero' }, { name: 'Supernatural' }, { name: 'Thriller' }, { name: 'War' }, { name: 'Western' }, { name: 'Zombies' }]} />
+                </ul>
+                <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
+
+                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
+                <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
+
+                <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
+                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} />
+                {workCreditsErrorMessage(errors)}
+
+                <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
+            </div>
+            <button type="submit" className="form-submit form-item">Submit</button>
+            {/* 
+            This is being left for testing purposes. Example found in this video: https://www.youtube.com/watch?v=Dm0TXbGvgvo&t=142s
+            <pre>{JSON.stringify(errors, null, 2)}</pre>
+            <pre>{JSON.stringify(values, null, 2)}</pre> 
+            */}
+        </Form>
+    )
+}
+
 const Upload = () => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -117,7 +179,7 @@ const Upload = () => {
                                         .required('Please select credits')
                                 })
                             ).required('Must have at least one work credit')
-                            // This represents and array of objects: [
+                            // This represents an array of objects: [
                             //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
                             //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
                             // ]
@@ -125,54 +187,8 @@ const Upload = () => {
                         })
                     }
                     onSubmit={onSubmit}
-                >
-                    {({ setFieldValue, values, errors }) => (
-                        <Form className="bsc-form upload-form" encType="multipart/form-data" method="post">
-                            <div className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </div>
-                            <div>
-                                <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
-
-                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="bookCoverPhoto" />
-
-                                <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
-
-                                <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
-
-                                <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" />
-
-                                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
-
-                                <div className="form-header-text">Select the applicable <strong>genres</strong>:</div>
-                                <ul className="checkbox-group upload-checkboxes">
-                                    <Checkboxes
-                                        identifier="genres"
-                                        type="multiple"
-                                        wrapperElement="li"
-                                        checkboxValue={[{ name: 'Action/Adventure' }, { name: 'Anthropomorphic' }, { name: 'Children' }, { name: 'Comedy' }, { name: 'Crime' }, { name: 'Drama' }, { name: 'Family' }, { name: 'Fantasy' }, { name: 'Graphic Novels' }, { name: 'Historical' }, { name: 'Horror' }, { name: 'LGBTQ' }, { name: 'Mature' }, { name: 'Music' }, { name: 'Mystery' }, { name: 'Mythology' }, { name: 'Psychological' }, { name: 'Romance' }, { name: 'School Life' }, { name: 'Sci-Fi' }, { name: 'Slice of Life' }, { name: 'Sport' }, { name: 'Superhero' }, { name: 'Supernatural' }, { name: 'Thriller' }, { name: 'War' }, { name: 'Western' }, { name: 'Zombies' }]} />
-                                </ul>
-                                <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
-
-                                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
-                                <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
-
-                                <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
-                                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} />
-                                {typeof errors.workCredits === 'string' ? <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" /> : null}
-
-                                <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
-                            </div>
-                            <button type="submit" className="form-submit form-item">Submit</button>
-                            {/* <pre>{JSON.stringify(errors, null, 2)}</pre>
-                            <pre>{JSON.stringify(values, null, 2)}</pre> */}
-                        </Form>
-                    )}
-                </Formik>
+                    component={UploadBookFields}
+                />
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h2 className="modal-head">Upload Progress: </h2>
                     <ProgressBar uploadPercentage={uploadPercentage} />
