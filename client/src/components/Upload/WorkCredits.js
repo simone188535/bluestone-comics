@@ -139,22 +139,6 @@ const WorkCredits = ({ identifier, formikValues }) => {
         }
     }
 
-    // const selectedUser = (selectedListItem, push) => {
-    //     // console.log('!!!!!!!!!', selectedListItem);
-    //     push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
-    //     // clear value of search bar
-    //     // push object to selectedUserWorkCredits array
-
-    //     // do not allow duplicates in state
-    //     // setSelectedUserWorkCredits(prevState => (
-    //     //     [...prevState, {"user": selectedListItem._id, "credits": []}]
-    //     // ));
-    // }
-
-    // const renderSelectedUsers = (identifier, formikValues) => {
-    //     console.log(formikValues)
-    // }
-
     return (
         <div className="work-credits">
             <div className="work-credits-search-container">

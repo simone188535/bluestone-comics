@@ -14,16 +14,13 @@ import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
 const Upload = () => {
-    const dispatch = useDispatch();
-    const [enableMessage, setEnableMessage] = useState(false);
+
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [uploadPercentage, setUploadPercentage] = useState(0);
 
     const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
     const onSubmit = async (values, { setSubmitting }) => {
-        // dispatch(authActions.signUp(values.bookTitle, values.bookDescription, values.urlSlug, values.issueTitle, values.password, values.passwordConfirm));
-
         /*
         these FormData appends must be done because we are using the uploaded file data in the backend using multer. 
         in the createBook axios request, we cannot destructure the data (in the param) AND pass in the form data (in the param) 
@@ -67,7 +64,6 @@ const Upload = () => {
 
                     // Clear percentage
                     setTimeout(() => setUploadPercentage(0), 10000);
-
                 }
             };
 
@@ -76,7 +72,7 @@ const Upload = () => {
         } catch (err) {
             console.log('failed', err.response.data.message);
         }
-        setEnableMessage(true);
+
         setSubmitting(false);
     }
 
@@ -84,41 +80,53 @@ const Upload = () => {
         <div className="upload-page">
             <div className="upload-form-container">
                 <Formik
-                    initialValues={{ bookTitle: '', bookCoverPhoto: null, bookDescription: '', urlSlug: '', issueTitle: '', issueCoverPhoto: null, genres: [], issueAssets: [], workCredits:[] }}
-                    validationSchema={Yup.object().shape({
-                        bookTitle: Yup.string()
-                            .required('Book Title required!'),
-                        bookCoverPhoto: Yup.mixed()
-                            .required('You need to provide a file'),
-                        bookDescription: Yup.string()
-                            .required('Book Description required!'),
-                        urlSlug: Yup.string()
-                            .required('URL Slug required!'),
-                        issueTitle: Yup.string()
-                            .required('Issue Title required!'),
-                        issueCoverPhoto: Yup.mixed()
-                            .required('A Issue Cover Photo is required!'),
-                        issueAssets: Yup.array()
-                            .required('A Issue Assets are required!'),
-                        genres: Yup.array()
-                            .required('You must select a genre!'),
-                        // This represents and array of objects: [
-                        //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
-                        //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
-                        // ]
-                        workCredits: Yup.array().of(
-                            Yup.object().shape({
-                                user: Yup.string()
-                                .required('A User muct be selected'),
-                                credits: Yup.array()
-                                .required('Please select credits')
-                            })
-                        ).required('Must have at least one work credit')
+                    initialValues={{
+                        bookTitle: '',
+                        bookCoverPhoto: null,
+                        bookDescription: '',
+                        urlSlug: '',
+                        issueTitle: '',
+                        issueCoverPhoto: null,
+                        genres: [],
+                        issueAssets: [],
+                        workCredits: []
+                    }}
+                    validationSchema={
+                        Yup.object().shape({
+                            bookTitle: Yup.string()
+                                .required('Book Title required!'),
+                            bookCoverPhoto: Yup.mixed()
+                                .required('You need to provide a file'),
+                            bookDescription: Yup.string()
+                                .required('Book Description required!'),
+                            urlSlug: Yup.string()
+                                .required('URL Slug required!'),
+                            issueTitle: Yup.string()
+                                .required('Issue Title required!'),
+                            issueCoverPhoto: Yup.mixed()
+                                .required('A Issue Cover Photo is required!'),
+                            issueAssets: Yup.array()
+                                .required('A Issue Assets are required!'),
+                            genres: Yup.array()
+                                .required('You must select a genre!'),
+                            workCredits: Yup.array().of(
+                                Yup.object().shape({
+                                    user: Yup.string()
+                                        .required('A User muct be selected'),
+                                    credits: Yup.array()
+                                        .required('Please select credits')
+                                })
+                            ).required('Must have at least one work credit')
+                            // This represents and array of objects: [
+                            //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
+                            //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
+                            // ]
 
-                    })}
+                        })
+                    }
                     onSubmit={onSubmit}
                 >
-                    {({ setFieldValue, values }) => (
+                    {({ setFieldValue, values, errors }) => (
                         <Form className="bsc-form upload-form" encType="multipart/form-data" method="post">
                             <div className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </div>
                             <div>
@@ -142,11 +150,11 @@ const Upload = () => {
 
                                 <div className="form-header-text">Select the applicable <strong>genres</strong>:</div>
                                 <ul className="checkbox-group upload-checkboxes">
-                                    <Checkboxes 
-                                    identifier="genres" 
-                                    type="multiple" 
-                                    wrapperElement="li" 
-                                    checkboxValue={[ { name: 'Action/Adventure'}, { name: 'Anthropomorphic' }, { name: 'Children'}, { name: 'Comedy'}, { name: 'Crime'}, { name: 'Drama'}, { name: 'Family'}, { name: 'Fantasy'}, { name: 'Graphic Novels'}, { name: 'Historical'}, { name: 'Horror'}, { name: 'LGBTQ'}, { name: 'Mature'}, { name: 'Music'}, { name: 'Mystery'}, { name: 'Mythology'}, { name: 'Psychological'}, { name: 'Romance'}, { name: 'School Life'}, { name: 'Sci-Fi'}, { name: 'Slice of Life'}, { name: 'Sport'}, { name: 'Superhero'}, { name: 'Supernatural'}, { name: 'Thriller'}, { name: 'War'}, { name: 'Western'}, { name: 'Zombies'}]} />
+                                    <Checkboxes
+                                        identifier="genres"
+                                        type="multiple"
+                                        wrapperElement="li"
+                                        checkboxValue={[{ name: 'Action/Adventure' }, { name: 'Anthropomorphic' }, { name: 'Children' }, { name: 'Comedy' }, { name: 'Crime' }, { name: 'Drama' }, { name: 'Family' }, { name: 'Fantasy' }, { name: 'Graphic Novels' }, { name: 'Historical' }, { name: 'Horror' }, { name: 'LGBTQ' }, { name: 'Mature' }, { name: 'Music' }, { name: 'Mystery' }, { name: 'Mythology' }, { name: 'Psychological' }, { name: 'Romance' }, { name: 'School Life' }, { name: 'Sci-Fi' }, { name: 'Slice of Life' }, { name: 'Sport' }, { name: 'Superhero' }, { name: 'Supernatural' }, { name: 'Thriller' }, { name: 'War' }, { name: 'Western' }, { name: 'Zombies' }]} />
                                 </ul>
                                 <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
 
@@ -154,15 +162,17 @@ const Upload = () => {
                                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
 
                                 <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
-                                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values}/>
-                                {/* <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" /> */}
+                                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} />
+                                {typeof errors.workCredits === 'string' ? <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" /> : null}
+
                                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
                             </div>
                             <button type="submit" className="form-submit form-item">Submit</button>
+                            {/* <pre>{JSON.stringify(errors, null, 2)}</pre>
+                            <pre>{JSON.stringify(values, null, 2)}</pre> */}
                         </Form>
                     )}
                 </Formik>
-                {/* <button onClick={toggleModal}>open Modal</button> */}
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h2 className="modal-head">Upload Progress: </h2>
                     <ProgressBar uploadPercentage={uploadPercentage} />
