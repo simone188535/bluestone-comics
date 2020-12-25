@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const workCreditsSchema = new mongoose.Schema({
+const workCreditSchema = new mongoose.Schema({
   publisher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -48,4 +48,6 @@ const workCreditsSchema = new mongoose.Schema({
   ]
 });
 
-module.exports = workCreditsSchema;
+const workCredits = mongoose.model('workCredit', workCreditSchema);
+
+module.exports = workCredits;

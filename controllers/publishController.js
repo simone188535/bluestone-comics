@@ -48,9 +48,11 @@ exports.createBook = catchAsync(async (req, res, next) => {
     genres,
     issueTitle,
     issueCoverPhoto,
-    issueAssets
-    // workCredits
+    issueAssets,
+    workCredits
   } = req.body;
+
+  console.log('??????', workCredits);
 
   const newBook = new Book({
     publisher: res.locals.user.id,
@@ -68,17 +70,16 @@ exports.createBook = catchAsync(async (req, res, next) => {
     title: issueTitle,
     coverPhoto: issueCoverPhoto,
     totalPages: req.files.issueAssets.length,
-    //issueAssets,
     issueAssets
     // workCredits
   });
 
-  // const newWorkCredits = new WorkCredits({
-  //   publisher: res.locals.user.id,
-  //   book: newBook.id,
-  //   issue: newIssue.id,
-  //   workCredits
-  // });
+  const newWorkCredits = new WorkCredits({
+    publisher: res.locals.user.id,
+    book: newBook.id,
+    issue: newIssue.id,
+    workCredits
+  });
 
   // grab AWS file prefix and save it to each model (each of these files should share the same one)
   const AWSPrefixArray = req.files.bookCoverPhoto[0].key.split('/');
@@ -107,16 +108,17 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   console.log('newBook', newBook);
   console.log('newIssue', newIssue);
-  // console.log('workCredits', newWorkCredits);
+  console.log('workCredits', newWorkCredits);
+
   await newBook.save();
   await newIssue.save();
-  // await newWorkCredits.save();
+  await newWorkCredits.save();
 
   res.status(201).json({
     status: 'success',
     book: newBook,
     issue: newIssue,
-    // workCredits: newWorkCredits
+    workCredits: newWorkCredits
   });
 });
 
