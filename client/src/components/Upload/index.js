@@ -96,20 +96,21 @@ const Upload = () => {
         formData.append('bookCoverPhoto', values.bookCoverPhoto);
         formData.append('bookDescription', values.bookDescription);
         formData.append('urlSlug', values.urlSlug);
-        formData.append('genres', values.genres);
         formData.append('issueTitle', values.issueTitle);
         formData.append('issueCoverPhoto', values.issueCoverPhoto);
 
+        // push all issueAssets to genres
+        values.genres.forEach((formValue) => formData.append('genres', formValue));
         // push all issueAssets to formData
         values.issueAssets.forEach((formValue) => formData.append('issueAssets', formValue));
-        // push all issueAssets to workCredits
-        formData.append('workCredits', values.workCredits);
-        // values.workCredits.forEach((formValue) => formData.append('workCredits', formValue));
-        // formData.append('workCredits', values.genres);
+        // push all issueAssets to workCredits. formData cannot contain plain objects, so it must be stringified
+        values.workCredits.forEach((formValue) => formData.append('workCredits', JSON.stringify(formValue)));
         // formData.append('workCredits', [
         //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
         //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
         // ]);
+
+        // MAY NEED TO USE FOR EACH ON  genres and workCredits
 
         console.log('triggered', values);
 

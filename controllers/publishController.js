@@ -58,7 +58,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
     urlSlug,
     coverPhoto: bookCoverPhoto,
     description: bookDescription,
-    genres: JSON.parse(genres)
+    genres
   });
 
   const newIssue = new Issue({
@@ -70,11 +70,18 @@ exports.createBook = catchAsync(async (req, res, next) => {
     issueAssets
   });
 
+  // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
+  const parsedWorkCredits = [];
+
+  workCredits.forEach((formValue) =>
+    parsedWorkCredits.push(JSON.parse(formValue))
+  );
+
   const newWorkCredits = new WorkCredits({
     publisher: res.locals.user.id,
     book: newBook.id,
     issue: newIssue.id,
-    workCredits: JSON.parse(workCredits)
+    workCredits: parsedWorkCredits
   });
 
   // grab AWS file prefix and save it to each model (each of these files should share the same one)
