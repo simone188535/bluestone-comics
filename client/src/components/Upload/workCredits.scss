@@ -49,5 +49,17 @@
         .user-input {
             display: none;
         }
+        
+        .delete-work-credits-button {
+            width: 150px;
+            height: 50px;
+            background-color: $error-red;
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+            color: $pure-white;
+            border: none;
+            border-radius: 10px;
+        }
     }
 }

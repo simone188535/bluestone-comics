@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createRef } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { authActions } from "../../actions";
@@ -14,7 +14,8 @@ import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
 const UploadBookFields = ({ setFieldValue, values, errors }) => {
-
+    const currentUsername =  useSelector(state => state.auth.user);
+    console.log({currentUsername});
     const workCreditsErrorMessage = errors => {
         /* 
         This has been added because we are using a Field Array Validation within the WorkCredits Component. 
@@ -60,7 +61,7 @@ const UploadBookFields = ({ setFieldValue, values, errors }) => {
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
 
                 <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
-                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} />
+                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} defaultSelectedUsername={currentUsername} />
                 {workCreditsErrorMessage(errors)}
 
                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
@@ -155,7 +156,7 @@ const Upload = () => {
                         issueCoverPhoto: null,
                         genres: [],
                         issueAssets: [],
-                        workCredits: []
+                        workCredits: [{user:'', credits:''}]
                     }}
                     validationSchema={
                         Yup.object().shape({
@@ -192,6 +193,7 @@ const Upload = () => {
                     }
                     onSubmit={onSubmit}
                     component={UploadBookFields}
+                    // render={formikProps => <UploadBookFields {...formikProps}/>}
                 />
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h2 className="modal-head">Upload Progress: </h2>
