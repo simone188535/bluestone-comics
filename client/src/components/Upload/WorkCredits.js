@@ -7,7 +7,7 @@ import { FieldArray, Field, ErrorMessage } from 'formik';
 import './workCredits.scss';
 
 
-const RenderSearchList = ({ push, apiResults, addSelectedUsername }) => {
+const RenderSearchList = ({ push, apiResults, addSelectedUsername, textSearch }) => {
     // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
     if (apiResults.length > 0) {
@@ -21,7 +21,7 @@ const RenderSearchList = ({ push, apiResults, addSelectedUsername }) => {
     return null;
 }
 
-const SearchedUsers = ({ selectedListItem, push, addSelectedUsername}) => {
+const SearchedUsers = ({ selectedListItem, push, addSelectedUsername, textSearch}) => {
 
     const addSelectedUser = (selectedListItem, push) => {
         // When a list item is selected, append it to the selectedUserNames state and push to formik workCredits array value
@@ -35,7 +35,7 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername}) => {
     return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
 }
 
-const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
+const WorkCreditsFields = ({ identifier, apiResults, formikValues, textSearch }) => {
    
     const [selectedUserNames, setSelectedUsernames] = useState([]);
 
@@ -65,9 +65,12 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
                     {formikValues.workCredits.map((p, index) => {
                         // console.log('ppppppp', p);
                         return (
-                            <div key={index}>
+                            <div key={index} className="work-credit-selected-search-list-item">
+                                <div className="username">{selectedUserNames[index]}</div>
+
+                                {/* This input contains the user ID */}
                                 <Field
-                                    label="First name"
+                                    className="user-input"
                                     name={`workCredits[${index}].user`}
                                     value={p.user}
                                 />
@@ -86,8 +89,8 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues }) => {
                                     { name: 'Cover Artist' }
                                     ]} />
                                     <ErrorMessage className="error-message error-text-color" component="div" name={`workCredits[${index}].credits`} />
-                                <div>{selectedUserNames[index]}</div>
                                 <button
+                                    className="delete-work-credits-button"
                                     type="button"
                                     onClick={() => removeSelectedUser(remove, index)}
                                 >x</button>
@@ -150,7 +153,7 @@ const WorkCredits = ({ identifier, formikValues }) => {
                 />
             </div>
             <div className="selected-users">
-                <WorkCreditsFields identifier={identifier} apiResults={APIResults} formikValues={formikValues} />
+                <WorkCreditsFields identifier={identifier} apiResults={APIResults} formikValues={formikValues}/>
             </div>
         </div>
     );
