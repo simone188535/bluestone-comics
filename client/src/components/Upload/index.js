@@ -13,17 +13,7 @@ import WorkCredits from './WorkCredits';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
-const UploadBookFields = ({ setFieldValue, values, errors }) => {
-    const currentUsername =  useSelector(state => state.auth.user);
-
-    // if currentUsername pass username
-     useEffect(() => {
-        getCurrentUsername();
-    }, [currentUsername]);
-
-    const getCurrentUsername = () => {
-        return currentUsername ? currentUsername.username : null;
-    }
+const UploadBookFields = ({ setFieldValue, values, errors, enableReinitialize, defaultSelectedUsernames }) => {
 
     const workCreditsErrorMessage = errors => {
         /* 
@@ -70,17 +60,18 @@ const UploadBookFields = ({ setFieldValue, values, errors }) => {
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
 
                 <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
-                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} defaultSelectedUsername={getCurrentUsername()} />
+                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} defaultSelectedUsernames={defaultSelectedUsernames} />
                 {workCreditsErrorMessage(errors)}
 
                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
             </div>
             <button type="submit" className="form-submit form-item">Submit</button>
-            {/* 
+            {/*             
             This is being left for testing purposes. Example found in this video: https://www.youtube.com/watch?v=Dm0TXbGvgvo&t=142s
             <pre>{JSON.stringify(errors, null, 2)}</pre>
-            <pre>{JSON.stringify(values, null, 2)}</pre> 
+            <pre>{JSON.stringify(values, null, 2)}</pre>  
             */}
+
         </Form>
     )
 }
@@ -91,6 +82,17 @@ const Upload = () => {
     const [uploadPercentage, setUploadPercentage] = useState(0);
 
     const toggleModal = () => setModalIsOpen(!modalIsOpen);
+
+    const currentUser = useSelector(state => state.auth.user);
+    const [currentUsername, setCurrentUsername] = useState('');
+
+    // if currentUser pass username
+    useEffect(() => {
+        if (currentUser) {
+            setCurrentUsername(currentUser.username);
+        }
+    }, [currentUser]);
+
 
     const onSubmit = async (values, { setSubmitting }) => {
         /*
@@ -165,7 +167,7 @@ const Upload = () => {
                         issueCoverPhoto: null,
                         genres: [],
                         issueAssets: [],
-                        workCredits: [{user:'', credits:''}]
+                        workCredits: [{ user: currentUsername, credits: '' }]
                     }}
                     validationSchema={
                         Yup.object().shape({
@@ -200,9 +202,10 @@ const Upload = () => {
 
                         })
                     }
+                    enableReinitialize={true}
                     onSubmit={onSubmit}
-                    component={UploadBookFields}
-                    // render={formikProps => <UploadBookFields {...formikProps}/>}
+                    // component={UploadBookFields}
+                    render={formikProps => <UploadBookFields {...formikProps} defaultSelectedUsernames={currentUsername} />}
                 />
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h2 className="modal-head">Upload Progress: </h2>

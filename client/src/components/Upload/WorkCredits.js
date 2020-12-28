@@ -34,23 +34,29 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername }) => {
     return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
 }
 
-const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelectedUsername }) => {
+const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelectedUsernames }) => {
 
     const [selectedUsernames, setSelectedUsernames] = useState([]);
 
     useEffect(() => {
         /* 
-            This adds an inital/default value to the work credits array. If the defaultSelectedUsername prop is populated
+            This adds an inital/default value to the work credits array. If the defaultSelectedUsernames prop is populated
             it is added to the state. This prevents the user from having to search their own username when adding work credits. 
         */
-        if (defaultSelectedUsername) {
-            addSelectedUsername(defaultSelectedUsername);
+        if (defaultSelectedUsernames) {
+            // This allows defaultSelectedUsernames to accept an array or a string
+            // if (defaultSelectedUsernames instanceof Array) {
+                // defaultSelectedUsernames.forEach((username) => {addSelectedUsername(username)});
+            // } else {
+            addSelectedUsername(defaultSelectedUsernames);
+            // }
         }
-    }, [defaultSelectedUsername]);
 
-    // useEffect(() => {
-    //     console.log({ selectedUsernames });
-    // }, [selectedUsernames]);
+    }, [defaultSelectedUsernames]);
+
+    useEffect(() => {
+        console.log({ selectedUsernames });
+    }, [selectedUsernames]);
 
     const addSelectedUsername = (selectedListItemUsername) => {
         // When a list item is selected, append it to the selectedUsernames state
@@ -117,13 +123,13 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
 // https://www.youtube.com/results?search_query=autocomplete+search+bar+react
 // https://codeytek.com/live-search-search-react-live-search-in-react-axios-autocomplete-pagination/
 // https://stackoverflow.com/questions/41074622/save-array-of-objects-in-state-reactjs
-const WorkCredits = ({ identifier, formikValues, defaultSelectedUsername }) => {
+const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => {
     const [textSearch, setTextSearch] = useState('');
     const [APIResults, setAPIResults] = useState([]);
 
     useEffect(() => {
-        console.log({ defaultSelectedUsername });
-    }, [defaultSelectedUsername]);
+        console.log({ defaultSelectedUsernames });
+    }, [defaultSelectedUsernames]);
 
     useEffect(() => {
         searchResults();
@@ -165,7 +171,7 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsername }) => {
                 />
             </div>
             <div className="selected-users">
-                <WorkCreditsFields identifier={identifier} apiResults={APIResults} formikValues={formikValues} defaultSelectedUsername={defaultSelectedUsername} />
+                <WorkCreditsFields identifier={identifier} apiResults={APIResults} formikValues={formikValues} defaultSelectedUsernames={defaultSelectedUsernames} />
             </div>
         </div>
     );
