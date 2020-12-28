@@ -6,14 +6,13 @@ import Checkboxes from '../CommonUI/Checkboxes.js';
 import { FieldArray, Field, ErrorMessage } from 'formik';
 import './workCredits.scss';
 
-
+// THESE COMPONENTS WORKS WITH FORMIK. 
 const RenderSearchList = ({ push, apiResults, addSelectedUsername }) => {
     // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
     if (apiResults.length > 0) {
         return (
             <ul className="work-credit-search-list">
-                {/* { APIResults.map((item, index) => <li key={index} className="work-credit-search-list-item" onClick={() => selectedUser(item, push)}>{item.username}</li>)} */}
                 { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} addSelectedUsername={addSelectedUsername} />)}
             </ul>
         );
@@ -27,9 +26,9 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername }) => {
         // When a list item is selected, append it to the selectedUsernames state and push to formik workCredits array value
 
         addSelectedUsername(selectedListItem.username);
-        // push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
         push({ user: selectedListItem._id, credits: [] });
         // clear out text search
+        
     }
 
     return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
@@ -59,9 +58,8 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
     }
 
     const removeSelectedUser = (remove, index) => {
-        // When the remove button is selected, remove it to the selectedUsernames state, and remove from formik
+        // When the remove button is selected, remove it to the selectedUsernames state (using the index), and remove from formik
         remove(index);
-        // use index to remove username from state
         setSelectedUsernames(prevState => prevState.filter((username, i) => i !== index));
     }
 
@@ -78,7 +76,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
                             <div key={index} className="work-credit-selected-search-list-item">
                                 <div className="username">{selectedUsernames[index]}</div>
 
-                                {/* This input contains the user ID */}
+                                {/* This input contains the users ID */}
                                 <Field
                                     className="user-input"
                                     name={`workCredits[${index}].user`}
