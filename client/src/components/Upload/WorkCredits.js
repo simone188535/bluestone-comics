@@ -26,7 +26,7 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername }) => {
     const addSelectedUser = (selectedListItem, push) => {
         // When a list item is selected, append it to the selectedUsernames state and push to formik workCredits array value
 
-        addSelectedUsername(selectedListItem);
+        addSelectedUsername(selectedListItem.username);
         // push({ user: selectedListItem._id, credits: ['horror', 'drama'] });
         push({ user: selectedListItem._id, credits: [] });
         // clear out text search
@@ -37,19 +37,25 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername }) => {
 
 const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelectedUsername }) => {
 
-    const [selectedUsernames, setSelectedUsernames] = useState(() => {
-        // Return the defaultSelectedUsername in an array or return an empty array
-        const initialState = defaultSelectedUsername ? [defaultSelectedUsername] : [];
-        return initialState;
-    });
+    const [selectedUsernames, setSelectedUsernames] = useState([]);
 
     useEffect(() => {
-        console.log({ selectedUsernames });
-    }, [selectedUsernames]);
+        /* 
+            This adds an inital/default value to the work credits array. If the defaultSelectedUsername prop is populated
+            it is added to the state. This prevents the user from having to search their own username when adding work credits. 
+        */
+        if (defaultSelectedUsername) {
+            addSelectedUsername(defaultSelectedUsername);
+        }
+    }, [defaultSelectedUsername]);
 
-    const addSelectedUsername = (selectedListItem) => {
+    // useEffect(() => {
+    //     console.log({ selectedUsernames });
+    // }, [selectedUsernames]);
+
+    const addSelectedUsername = (selectedListItemUsername) => {
         // When a list item is selected, append it to the selectedUsernames state
-        setSelectedUsernames(prevState => [...prevState, selectedListItem.username]);
+        setSelectedUsernames(prevState => [...prevState, selectedListItemUsername]);
     }
 
     const removeSelectedUser = (remove, index) => {
@@ -94,12 +100,12 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
                                     ]} />
                                 <ErrorMessage className="error-message error-text-color" component="div" name={`workCredits[${index}].credits`} />
 
-                                <button type="button" onClick={() => removeSelectedUser(remove, index)} className="delete-work-credits-button"> 
-                                <FontAwesomeIcon
-                                    icon={faTimes}
-                                    size="2x"
-                                />
-                                </button> 
+                                <button type="button" onClick={() => removeSelectedUser(remove, index)} className="delete-work-credits-button">
+                                    <FontAwesomeIcon
+                                        icon={faTimes}
+                                        size="2x"
+                                    />
+                                </button>
                             </div>
                         );
                     })}
@@ -118,6 +124,10 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsername }) => {
     const [APIResults, setAPIResults] = useState([]);
 
     useEffect(() => {
+        console.log({ defaultSelectedUsername });
+    }, [defaultSelectedUsername]);
+
+    useEffect(() => {
         searchResults();
     }, [textSearch]);
 
@@ -133,7 +143,7 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsername }) => {
             if (!(textSearch) && APIResults) {
                 setAPIResults([]);
                 return;
-        
+
             } else {
 
                 const res = await SearchServices.searchUser(textSearch);

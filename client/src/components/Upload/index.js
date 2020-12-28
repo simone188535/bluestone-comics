@@ -15,7 +15,16 @@ import './upload.scss';
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
 const UploadBookFields = ({ setFieldValue, values, errors }) => {
     const currentUsername =  useSelector(state => state.auth.user);
-    console.log({currentUsername});
+
+    // if currentUsername pass username
+     useEffect(() => {
+        getCurrentUsername();
+    }, [currentUsername]);
+
+    const getCurrentUsername = () => {
+        return currentUsername ? currentUsername.username : null;
+    }
+
     const workCreditsErrorMessage = errors => {
         /* 
         This has been added because we are using a Field Array Validation within the WorkCredits Component. 
@@ -61,7 +70,7 @@ const UploadBookFields = ({ setFieldValue, values, errors }) => {
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
 
                 <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
-                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} defaultSelectedUsername={currentUsername} />
+                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} defaultSelectedUsername={getCurrentUsername()} />
                 {workCreditsErrorMessage(errors)}
 
                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
