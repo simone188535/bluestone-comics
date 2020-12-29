@@ -182,3 +182,31 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => 
 
 
 export default memo(WorkCredits);
+
+/* 
+    EXAMPLES OF USE: 
+
+    This component is is designed to be used with formik.
+
+    1. In its most basic form, It can be used like this: 
+    (Assuming the formik initial value is this/is not populated with data: 
+        initialValues={{
+        workCredits: [{ user: '', credits: [] }]
+    }})
+    <WorkCredits identifier="workCredits" formikValues={values}  />
+
+    2. This component also allows the user to have values provided by default using the defaultSelectedUsernames prop 
+    (Which accepts a string or an array). 
+    
+    (Assuming the formik initial value is this/ is populated with data: 
+        initialValues={{
+            workCredits: [{ user: USER_ID, credits: ['horror', 'comedy'] }]
+        }}
+    )
+    <WorkCredits identifier="workCredits" formikValues={values} defaultSelectedUsernames={defaultSelectedUsernames} />
+
+    the defaultSelectedUsernames prop contains usernames and is typically connected to the state
+    in the parent component. It is not added to the formik data 
+    (like these:  workCredits: [{ user: '', credits: [] }]) because it is not needed it the backend.
+    It is purely cosmetic so that the user can see the username.
+*/

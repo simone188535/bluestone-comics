@@ -60,7 +60,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
 
                 <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
-                <WorkCredits setFieldValue={setFieldValue} identifier="workCredits" formikValues={values} defaultSelectedUsernames={defaultSelectedUsernames} />
+                <WorkCredits identifier="workCredits" formikValues={values} defaultSelectedUsernames={defaultSelectedUsernames} />
                 {workCreditsErrorMessage(errors)}
 
                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
@@ -172,7 +172,7 @@ const Upload = () => {
                         issueCoverPhoto: null,
                         genres: [],
                         issueAssets: [],
-                        workCredits: [{ user: currentUserId, credits: '' }]
+                        workCredits: [{ user: currentUserId, credits: [] }]
                     }}
                     validationSchema={
                         Yup.object().shape({
