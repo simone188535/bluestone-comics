@@ -85,11 +85,13 @@ const Upload = () => {
 
     const currentUser = useSelector(state => state.auth.user);
     const [currentUsername, setCurrentUsername] = useState('');
+    const [currentUserId, setCurrentUserId] = useState('');
 
     // if currentUser pass username
     useEffect(() => {
         if (currentUser) {
             setCurrentUsername(currentUser.username);
+            setCurrentUserId(currentUser._id);
         }
     }, [currentUser]);
 
@@ -167,7 +169,7 @@ const Upload = () => {
                         issueCoverPhoto: null,
                         genres: [],
                         issueAssets: [],
-                        workCredits: [{ user: currentUsername, credits: '' }]
+                        workCredits: [{ user: currentUserId, credits: '' }]
                     }}
                     validationSchema={
                         Yup.object().shape({
