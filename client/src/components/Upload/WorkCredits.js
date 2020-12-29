@@ -7,28 +7,33 @@ import { FieldArray, Field, ErrorMessage } from 'formik';
 import './workCredits.scss';
 
 // THESE COMPONENTS WORKS WITH FORMIK. 
-const RenderSearchList = ({ push, apiResults, addSelectedUsername }) => {
+const RenderSearchList = ({ push, apiResults, addSelectedUsername, selectedUsernames }) => {
     // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
     if (apiResults.length > 0) {
         return (
             <ul className="work-credit-search-list">
-                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} addSelectedUsername={addSelectedUsername} />)}
+                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} addSelectedUsername={addSelectedUsername} selectedUsernames={selectedUsernames}/>)}
             </ul>
         );
     }
     return null;
 }
 
-const SearchedUsers = ({ selectedListItem, push, addSelectedUsername }) => {
+const SearchedUsers = ({ selectedListItem, push, addSelectedUsername, selectedUsernames }) => {
 
     const addSelectedUser = (selectedListItem, push) => {
-        // When a list item is selected, append it to the selectedUsernames state and push to formik workCredits array value
-
-        addSelectedUsername(selectedListItem.username);
-        push({ user: selectedListItem._id, credits: [] });
-        // clear out text search
         
+        // if the Selected User was not already selected, push it to selectedUsernames state and formik workCredits value
+        if(!selectedUsernames.includes(selectedListItem.username)) {
+            // When a list item is selected, append it to the selectedUsernames state and push to formik workCredits array value
+           
+            addSelectedUsername(selectedListItem.username);
+            push({ user: selectedListItem._id, credits: [] });
+            // clear out text search
+        } else {
+            return false;
+        }
     }
 
     return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
@@ -77,7 +82,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
             {({ push, remove }) => (
                 <div>
                     <>
-                        <RenderSearchList apiResults={apiResults} push={push} addSelectedUsername={addSelectedUsername} />
+                        <RenderSearchList apiResults={apiResults} push={push} addSelectedUsername={addSelectedUsername} selectedUsernames={selectedUsernames} />
                     </>
                     {formikValues.workCredits.map((p, index) => {
                         // console.log('ppppppp', p);
