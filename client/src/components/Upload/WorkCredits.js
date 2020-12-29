@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { SearchServices } from '../../services';
@@ -44,12 +44,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
             it is added to the state. This prevents the user from having to search their own username when adding work credits. 
         */
         if (defaultSelectedUsernames) {
-            // This allows defaultSelectedUsernames to accept an array or a string
-            // if (defaultSelectedUsernames instanceof Array) {
-                // defaultSelectedUsernames.forEach((username) => {addSelectedUsername(username)});
-            // } else {
             addSelectedUsername(defaultSelectedUsernames);
-            // }
         }
 
     }, [defaultSelectedUsernames]);
@@ -59,8 +54,16 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
     }, [selectedUsernames]);
 
     const addSelectedUsername = (selectedListItemUsername) => {
+        
         // When a list item is selected, append it to the selectedUsernames state
-        setSelectedUsernames(prevState => [...prevState, selectedListItemUsername]);
+        const userNameToAddToSelectedUsernamesState = (selectedListItemUsername) => setSelectedUsernames(prevState => [...prevState, selectedListItemUsername]);
+
+        // This conditional was added to allow an array of values to be added to the user state if needed
+        if (selectedListItemUsername instanceof Array) {
+            selectedListItemUsername.forEach((username) => userNameToAddToSelectedUsernamesState(username));
+        } else {
+            userNameToAddToSelectedUsernamesState(selectedListItemUsername);
+        }
     }
 
     const removeSelectedUser = (remove, index) => {
@@ -127,9 +130,9 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => 
     const [textSearch, setTextSearch] = useState('');
     const [APIResults, setAPIResults] = useState([]);
 
-    useEffect(() => {
-        console.log({ defaultSelectedUsernames });
-    }, [defaultSelectedUsernames]);
+    // useEffect(() => {
+    //     console.log({ defaultSelectedUsernames });
+    // }, [defaultSelectedUsernames]);
 
     useEffect(() => {
         searchResults();
@@ -178,4 +181,4 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => 
 }
 
 
-export default WorkCredits;
+export default memo(WorkCredits);

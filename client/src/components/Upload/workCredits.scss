@@ -36,14 +36,16 @@
 
     .work-credit-selected-search-list-item {
         margin-bottom: 15px;
+        border: 1px solid $light-grey;
+        border-radius: 10px;
 
         .username {
             width: 100%;
             text-align: center;
             padding: 15px 0px;
-            border: 1px solid $light-grey;
-            border-radius: 10px 10px 0 0;
-            border-bottom: none;
+            // border: 1px solid $light-grey;
+            // border-radius: 10px 10px 0 0;
+            // border-bottom: none;
         }
 
         .user-input {
@@ -51,13 +53,13 @@
         }
         
         .delete-work-credits-button {
-            width: 150px;
+            width: 50px;
             height: 50px;
-            background-color: $error-red;
+            background-color: transparent;
             display: block;
-            margin: 0 auto;
+            margin: 10px auto;
             text-align: center;
-            color: $pure-white;
+            color: $error-red;
             border: none;
             border-radius: 10px;
         }

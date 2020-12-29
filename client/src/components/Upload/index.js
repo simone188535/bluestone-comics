@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createRef } from 'react';
+import React, { useEffect, useState, createRef, memo } from 'react';
 import { useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -13,7 +13,7 @@ import WorkCredits from './WorkCredits';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
-const UploadBookFields = ({ setFieldValue, values, errors, enableReinitialize, defaultSelectedUsernames }) => {
+const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUsernames }) => {
 
     const workCreditsErrorMessage = errors => {
         /* 
@@ -86,12 +86,15 @@ const Upload = () => {
     const currentUser = useSelector(state => state.auth.user);
     const [currentUsername, setCurrentUsername] = useState('');
     const [currentUserId, setCurrentUserId] = useState('');
+     // Testing state below
+     const [currentUsernames, setCurrentUsernames] = useState([]);
 
-    // if currentUser pass username
+    // if currentUser is logged in/redux state is populated
     useEffect(() => {
         if (currentUser) {
             setCurrentUsername(currentUser.username);
             setCurrentUserId(currentUser._id);
+            setCurrentUsernames(['test', 'test2']);
         }
     }, [currentUser]);
 
@@ -217,4 +220,4 @@ const Upload = () => {
         </div>
     );
 }
-export default Upload;
+export default memo(Upload);
