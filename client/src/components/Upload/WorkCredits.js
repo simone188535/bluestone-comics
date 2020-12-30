@@ -7,20 +7,20 @@ import { FieldArray, Field, ErrorMessage } from 'formik';
 import './workCredits.scss';
 
 // THESE COMPONENTS WORKS WITH FORMIK. 
-const RenderSearchList = ({ push, apiResults, addSelectedUsername, selectedUsernames }) => {
+const RenderSearchList = ({ push, apiResults, addSelectedUsername, selectedUsernames, clearTextInput }) => {
     // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
     if (apiResults.length > 0) {
         return (
             <ul className="work-credit-search-list">
-                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} addSelectedUsername={addSelectedUsername} selectedUsernames={selectedUsernames}/>)}
+                { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} addSelectedUsername={addSelectedUsername} selectedUsernames={selectedUsernames} clearTextInput={clearTextInput} />)}
             </ul>
         );
     }
     return null;
 }
 
-const SearchedUsers = ({ selectedListItem, push, addSelectedUsername, selectedUsernames }) => {
+const SearchedUsers = ({ selectedListItem, push, addSelectedUsername, selectedUsernames, clearTextInput }) => {
 
     const addSelectedUser = (selectedListItem, push) => {
         
@@ -31,7 +31,9 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername, selectedUs
             addSelectedUsername(selectedListItem.username);
             push({ user: selectedListItem._id, credits: [] });
             // clear out text search
+            clearTextInput();
         } else {
+            clearTextInput();
             return false;
         }
     }
@@ -39,7 +41,7 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername, selectedUs
     return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
 }
 
-const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelectedUsernames }) => {
+const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelectedUsernames, clearTextInput }) => {
 
     const [selectedUsernames, setSelectedUsernames] = useState([]);
 
@@ -82,7 +84,13 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
             {({ push, remove }) => (
                 <div>
                     <>
-                        <RenderSearchList apiResults={apiResults} push={push} addSelectedUsername={addSelectedUsername} selectedUsernames={selectedUsernames} />
+                        <RenderSearchList 
+                            apiResults={apiResults} 
+                            push={push} 
+                            addSelectedUsername={addSelectedUsername} 
+                            selectedUsernames={selectedUsernames} 
+                            clearTextInput={clearTextInput}
+                        />
                     </>
                     {formikValues.workCredits.map((p, index) => {
                         // console.log('ppppppp', p);
@@ -147,6 +155,10 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => 
         setTextSearch(e.currentTarget.value);
     }
 
+    const clearTextInput = () => {
+        setTextSearch('');
+    }
+
     const searchResults = async () => {
         // send text data to the API call and send back matching results
         try {
@@ -179,7 +191,13 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => 
                 />
             </div>
             <div className="selected-users">
-                <WorkCreditsFields identifier={identifier} apiResults={APIResults} formikValues={formikValues} defaultSelectedUsernames={defaultSelectedUsernames} />
+                <WorkCreditsFields 
+                    identifier={identifier} 
+                    apiResults={APIResults} 
+                    formikValues={formikValues} 
+                    defaultSelectedUsernames={defaultSelectedUsernames} 
+                    clearTextInput={clearTextInput}
+                />
             </div>
         </div>
     );

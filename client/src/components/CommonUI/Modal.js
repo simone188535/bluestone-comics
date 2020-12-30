@@ -16,3 +16,18 @@ const Modal = ({ children, isOpen, onClose, className }) => {
 }
 
 export default Modal;
+
+/* 
+    EXAMPLE OF HOW THIS WORKS
+
+    From parent:
+     const [modalIsOpen, setModalIsOpen] = useState(false);
+     const toggleModal = () => setModalIsOpen(!modalIsOpen);
+
+    
+    <Modal isOpen={modalIsOpen} onClose={toggleModal} >
+        <div>
+            Some child element. Anything can go in here.
+        </div>
+    </Modal>
+*/

@@ -22,3 +22,9 @@ const ProgressBar = ({ uploadPercentage, className }) => {
 }
 
 export default ProgressBar;
+/*
+    EXAMPLE OF HOW THIS WORKS:
+    
+    uploadPercentage props is a number.
+    <ProgressBar uploadPercentage={uploadPercentage} className="someClass"/>
+*/

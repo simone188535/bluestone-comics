@@ -10,7 +10,6 @@ const AddWrapperElement = ({ children, wrapperElement }) => {
 };
 
 // This component conditionally maps through or displays the checkbox elements
-// example of checkboxValue prop with checked and false enabled: checkboxValue={[ { name: 'Action/Adventure', checked: true, disabled: true} ]}
 const DisplaySingleOrMultipleCheckboxes = ({ type, checkboxValue = {checked: false, disabled: false}, identifier, wrapperElement }) => {
     
     const htmlValue = (checkboxValue, index = null ) => (
@@ -39,3 +38,33 @@ const Checkboxes = ({ identifier, type, checkboxValue, wrapperElement }) => {
 }
 
 export default Checkboxes;
+
+/* 
+    EXAMPLES OF HOW THIS WORKS:
+    the checkboxValue takes a string or an array. If you are using an array. the type should be: 
+    type="multiple".
+    If you are using a string. the type should be: 
+    type="single".
+
+    the wrapperElement prop is optional and will wrap the checkbox in the html element name provided
+
+    checkboxes can also checked and/or false by default: checkboxValue={[ { name: 'Action/Adventure', checked: true, disabled: true} ]}
+
+    How Single Checkboxes works:
+    <Checkboxes
+        identifier="genres"
+        type="single"
+        wrapperElement="li"
+        checkboxValue={{ name: 'Action/Adventure' }} 
+    />
+
+    How multi Checkboxes works:
+
+    <Checkboxes
+        identifier="genres"
+        type="multiple"
+        wrapperElement="li"
+        checkboxValue={[{ name: 'Action/Adventure' }, { name: 'Anthropomorphic' } 
+    />
+
+*/

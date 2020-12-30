@@ -150,3 +150,11 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
 }
 
 export default FileInputMultipleUpload;
+/*
+    EXAMPLES OF HOW THIS WORKS:
+    setFieldValue is a formik value.
+    
+    <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
+
+
+*/

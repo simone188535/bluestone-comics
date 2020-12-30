@@ -29,3 +29,10 @@ const FileInputSingleUpload = ({ setFieldValue, identifier, triggerText, classNa
 }
 
 export default FileInputSingleUpload;
+/* 
+    EXAMPLE OF HOW THIS WORKS:
+    setFieldValue is a formik value.
+
+    <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
+
+*/
