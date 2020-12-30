@@ -56,10 +56,6 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
 
     }, [defaultSelectedUsernames]);
 
-    useEffect(() => {
-        console.log({ selectedUsernames });
-    }, [selectedUsernames]);
-
     const addSelectedUsername = (selectedListItemUsername) => {
         
         // When a list item is selected, append it to the selectedUsernames state
@@ -143,10 +139,6 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => 
     const [textSearch, setTextSearch] = useState('');
     const [APIResults, setAPIResults] = useState([]);
 
-    // useEffect(() => {
-    //     console.log({ defaultSelectedUsernames });
-    // }, [defaultSelectedUsernames]);
-
     useEffect(() => {
         searchResults();
     }, [textSearch]);
@@ -183,7 +175,7 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => 
     return (
         <div className="work-credits">
             <div className="work-credits-search-container">
-                <input type="text" className="search-bar form-item" placeholder="Search Users" onChange={handleTextInputOnChange} />
+                <input type="text" className="search-bar form-item" placeholder="Search Users" onChange={handleTextInputOnChange} value={textSearch}/>
                 <FontAwesomeIcon
                     icon={faSearch}
                     size="lg"
