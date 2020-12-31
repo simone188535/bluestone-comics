@@ -41,7 +41,7 @@ form.bsc-form {
     .file-input-single-upload-container {
         position: relative;
         display: flex;
-        margin-bottom: 15px;
+        margin-bottom: 30px;
         flex-wrap: wrap;
 
         .file-input-single-upload-field {
@@ -65,6 +65,9 @@ form.bsc-form {
             padding: 15.5px 5%;
             display: inline-block;
             flex-basis: 100%;
+            &:hover {
+                background: $dark-violet-blue;
+            }
         }
 
         .file-input-single-upload-name {
@@ -91,7 +94,7 @@ form.bsc-form {
         transition: border .24s ease-in-out;
         text-align: center;
         height: 150px;
-        margin-bottom: 15px;
+        margin-bottom: 30px;
 
         p {
             margin: auto;
@@ -199,7 +202,7 @@ form.bsc-form {
     /* general form styles */
     .form-item {
         height: 50px;
-        margin-bottom: 15px;
+        margin-bottom: 30px;
     }
 
     .form-input {
@@ -210,13 +213,17 @@ form.bsc-form {
     .form-header-text {
         margin: 30px 0 20px;
         font-size: $normal;
+        line-height: 1.5em;
     }
+
     .form-header-subtext {
         font-size: $small;
-        margin-bottom: 15px;
+        margin-bottom: 30px;
+        line-height: 1.5em;
     }
+
     .error-message {
-        margin-bottom: 15px;
+        margin-bottom: 30px;
     }
 
     /* general form styles end */
@@ -225,10 +232,11 @@ form.bsc-form {
 
 @media only screen and (min-width: $medium) {
     form.bsc-form {
-        width: 50%;
+        width: 60%;
 
         /* single file input */
         .file-input-single-upload-container {
+            margin-bottom: 15px;
 
             .file-input-single-upload-field {
                 margin-bottom: 0;
@@ -252,5 +260,29 @@ form.bsc-form {
         }
 
         /* single file input end */
+
+        /* multi file input */
+        .file-input-multiple-upload-container {
+            margin-bottom: 15px;
+        }
+
+        /* multi file input end */
+
+        /* general form styles */
+        .form-item {
+            margin-bottom: 15px;
+        }
+
+        .form-header-subtext {
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            margin-bottom: 15px;
+        }
+
+        /* general form styles end */
+
+        
     }
 }

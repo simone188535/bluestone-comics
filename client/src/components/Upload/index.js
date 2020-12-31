@@ -26,7 +26,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
 
     return (
         <Form className="bsc-form upload-form" encType="multipart/form-data" method="post">
-            <div className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </div>
+            <h1 className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </h1>
             <div>
                 <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
@@ -59,11 +59,12 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
 
-                <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div>
+                {/* <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div> */}
+                <div className="form-header-text">Give <strong>Credits</strong> to yourself and any other existing users by selecting the role(s) they fulfilled while helping to create this Book/Issue: </div>
                 <WorkCredits identifier="workCredits" formikValues={values} defaultSelectedUsernames={defaultSelectedUsernames} />
                 {workCreditsErrorMessage(errors)}
 
-                <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice.</strong></div>
+                <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice. It may overcomplicate the search for any of your other works.</strong></div>
             </div>
             <button type="submit" className="form-submit form-item">Submit</button>
             {/*             

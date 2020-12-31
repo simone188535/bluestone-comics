@@ -7,6 +7,7 @@
 
         .search-bar {
             border: 1px solid $light-grey;
+            margin-bottom: 15px;
         }
 
         .search-icon {
@@ -38,18 +39,43 @@
         margin-bottom: 15px;
         border: 1px solid $light-grey;
         border-radius: 10px;
+        background: $pure-white;
 
         .username {
             width: 100%;
             text-align: center;
             padding: 15px 0px;
-            // border: 1px solid $light-grey;
-            // border-radius: 10px 10px 0 0;
-            // border-bottom: none;
+            background-color: $white-light-grey;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 1px solid $light-grey;
+            margin-bottom: 15px;
+        }
+
+        .info-head {
+            margin: 0 10px;
         }
 
         .user-input {
             display: none;
+        }
+
+        ul.work-credits-checkbox-section {
+            list-style-type: none;
+            // position: relative;
+            li {
+                padding: 15px 0;
+                border-bottom: 1px solid #f0f2f3;
+                margin: 0px 10px;
+            
+                label.checkbox-item {
+                    // position: relative;
+                    // left: 37%;
+                    
+                    input[type="checkbox"] + *::before {
+                        margin-right: 10px;
+                    }
+                }
+            }
         }
         
         .delete-work-credits-button {

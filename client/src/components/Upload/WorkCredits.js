@@ -101,19 +101,25 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
                                     value={p.user}
                                 />
                                 <ErrorMessage className="error-message error-text-color" component="div" name={`workCredits[${index}].user`} />
-                                <Checkboxes
-                                    identifier={`workCredits[${index}].credits`}
-                                    type="multiple"
-                                    checkboxValue={[
-                                        { name: 'Writer' },
-                                        { name: 'Artist' },
-                                        { name: 'Editor' },
-                                        { name: 'Inker' },
-                                        { name: 'Letterer' },
-                                        { name: 'Penciller' },
-                                        { name: 'Colorist' },
-                                        { name: 'Cover Artist' }
-                                    ]} />
+                                 <div className="info-head">
+                                    While creating this work, this user fulfilled the role(s) of: 
+                                </div>
+                                <ul className="work-credits-checkbox-section">
+                                    <Checkboxes
+                                        identifier={`workCredits[${index}].credits`}
+                                        type="multiple"
+                                        wrapperElement="li"
+                                        checkboxValue={[
+                                            { name: 'Writer' },
+                                            { name: 'Artist' },
+                                            { name: 'Editor' },
+                                            { name: 'Inker' },
+                                            { name: 'Letterer' },
+                                            { name: 'Penciller' },
+                                            { name: 'Colorist' },
+                                            { name: 'Cover Artist' }
+                                        ]} />
+                                    </ul>
                                 <ErrorMessage className="error-message error-text-color" component="div" name={`workCredits[${index}].credits`} />
 
                                 <button type="button" onClick={() => removeSelectedUser(remove, index)} className="delete-work-credits-button">
