@@ -87,15 +87,12 @@ const Upload = () => {
     const currentUser = useSelector(state => state.auth.user);
     const [currentUsername, setCurrentUsername] = useState('');
     const [currentUserId, setCurrentUserId] = useState('');
-     // Testing state below
-     const [currentUsernames, setCurrentUsernames] = useState([]);
 
     // if currentUser is logged in/redux state is populated
     useEffect(() => {
         if (currentUser) {
             setCurrentUsername(currentUser.username);
             setCurrentUserId(currentUser._id);
-            setCurrentUsernames(['test', 'test2']);
         }
     }, [currentUser]);
 
@@ -210,13 +207,17 @@ const Upload = () => {
                     }
                     enableReinitialize={true}
                     onSubmit={onSubmit}
-                    // component={UploadBookFields}
-                    render={formikProps => <UploadBookFields {...formikProps} defaultSelectedUsernames={currentUsername} />}
-                />
+                >
+                { props => (
+                <>
+                <UploadBookFields {...props} defaultSelectedUsernames={currentUsername} />
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h2 className="modal-head">Upload Progress: </h2>
                     <ProgressBar uploadPercentage={uploadPercentage} />
                 </Modal>
+                </>
+                )}
+                </Formik>
             </div>
         </div>
     );
