@@ -22,6 +22,7 @@ const AllRoutes = () => {
     // This watches for a route change in location
     useEffect(
         () => {
+            // This clears the global redux error state if the route changes
             if (hasError) {
                 store.dispatch(errorActions.removeError());
             }
