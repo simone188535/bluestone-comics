@@ -3,14 +3,15 @@ import { Switch, Route, useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
 
 import Home from './Home';
-import SignUp from './SignUp';
-import Login from './Login';
+import SignUp from './Auth/SignUp';
+import Login from './Auth/Login';
 import About from './About';
 import Articles from './Articles';
 import ComicList from './ComicList';
 import Contest from './Contest';
 import News from './News';
 import Upload from './Upload';
+import ProtectedRoute from './Auth/ProtectedRoute';
 
 import store from '../store';
 
@@ -35,7 +36,8 @@ const AllRoutes = () => {
             <Route path="/contest" component={Contest} />
             <Route path="/comic-list" component={ComicList} />
             <Route path="/news" component={News} />
-            <Route path="/upload" component={Upload} />
+            <ProtectedRoute path="/upload" component={Upload}/>
+            {/* <Route path="/upload" component={Upload} /> */}
             <Route path="/sign-up" component={SignUp} />
             <Route path="/login" component={Login} />
             <Route path="/" component={Home} />
