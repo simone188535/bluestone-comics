@@ -48,7 +48,7 @@ const authNavItems = (dispatch, isAuthenticated) => {
                         <Link to="/upload">Upload</Link>
                     </li>
                     <li className="subitem" onClick={() => dispatch(authActions.logout())}>
-                        <Link to="/logout">Logout</Link>
+                        <Link to="/">Logout</Link>
                     </li>
                 </ul>
             </li>
