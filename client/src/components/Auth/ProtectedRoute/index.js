@@ -11,20 +11,30 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
-    console.log('isAuthenticated', isAuthenticated);
+    const checkIfUserIsAllowedToAccessRoute = () => {
+        switch (isAuthenticated) {
+            case null:
+                // if isAuthenticated is null do nothing
+                return null
+            case false:
+                // if isAuthenticated is false, redirect to login route
+                return (
+                    <Redirect to={
+                        {
+                            pathname: '/login',
+                        }
+                    } />
+                )
+            default:
+                // if isAuthenticated equals true proceed to provided route
+                return <Route {...rest} render={props => <Component {...rest} {...props} />} />;
+        }
+    }
     return (
         // If the user is logged in, allow them to continue to the route, if not, redirect them to the login page.
         <>
             {
-                <Route {...rest} render={props => <Component {...rest} {...props} />} />
-                // (isAuthenticated) ?
-                //     <Route {...rest} render={props => <Component {...rest} {...props} />} />
-                //     :
-                //     <Redirect to={
-                //         {
-                //             pathname: '/login',
-                //         }
-                //     } />
+               checkIfUserIsAllowedToAccessRoute()
             }
         </>
     );
