@@ -27,7 +27,7 @@ const AllRoutes = () => {
             if (hasError) {
                 store.dispatch(errorActions.removeError());
             }
-        }, [location]
+        }, [location, hasError]
     )
     return (
         <Switch>
@@ -37,7 +37,6 @@ const AllRoutes = () => {
             <Route path="/comic-list" component={ComicList} />
             <Route path="/news" component={News} />
             <ProtectedRoute path="/upload" component={Upload}/>
-            {/* <Route path="/upload" component={Upload} /> */}
             <Route path="/sign-up" component={SignUp} />
             <Route path="/login" component={Login} />
             <Route path="/" component={Home} />

@@ -1,8 +1,7 @@
-import React, { useEffect, useState, createRef, memo } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { authActions } from "../../actions";
 import { PublishServices } from '../../services';
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
 import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload.js';

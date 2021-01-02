@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from "react-redux";
 import { Route, Redirect } from 'react-router-dom';
 
 /* 
-For more info on how this works: 
-https://dev.to/mychal/protected-routes-with-react-function-components-dh
-https://www.youtube.com/watch?v=Y0-qdp-XBJg
+    For more info on how this works: 
+    https://dev.to/mychal/protected-routes-with-react-function-components-dh
+    https://www.youtube.com/watch?v=Y0-qdp-XBJg
 */
 const ProtectedRoute = ({ component: Component, ...rest }) => {
 
