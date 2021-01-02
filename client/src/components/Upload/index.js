@@ -118,7 +118,8 @@ const Upload = () => {
         // push all issueAssets to formData
         values.issueAssets.forEach((formValue) => formData.append('issueAssets', formValue));
         // push all issueAssets to workCredits. formData cannot contain plain objects, so it must be stringified
-        values.workCredits.forEach((formValue) => formData.append('workCredits', JSON.stringify(formValue)));
+        // values.workCredits.forEach((formValue) => formData.append('workCredits', console.log(JSON.stringify(formValue))));
+        formData.append('workCredits', JSON.stringify(values.workCredits));
         // formData.append('workCredits', [
         //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
         //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}

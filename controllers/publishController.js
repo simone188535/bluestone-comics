@@ -71,11 +71,12 @@ exports.createBook = catchAsync(async (req, res, next) => {
   });
 
   // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
-  const parsedWorkCredits = [];
+  const parsedWorkCredits = JSON.parse(workCredits);
 
-  workCredits.forEach((formValue) =>
-    parsedWorkCredits.push(JSON.parse(formValue))
-  );
+  // console.log('workCredits', JSON.parse(workCredits));
+  // workCredits.forEach((formValue) =>
+  //   parsedWorkCredits.push(JSON.parse(formValue))
+  // );
 
   const newWorkCredits = new WorkCredits({
     publisher: res.locals.user.id,
