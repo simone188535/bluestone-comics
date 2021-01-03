@@ -99,12 +99,12 @@ const Upload = () => {
     
     const ModalStatusMessage = () => {
         if (errorMessage) {
-            return <div className="error-message error-text-color">{errorMessage}</div>
+            return <div className="error-message error-text-color modal-spacing-md-top">{errorMessage}</div>
         }
         else {
             let progressMessage = (uploadPercentage === 100) ? 'Upload was successful!' : 'Still loading... Please wait.';
 
-            return <div className="success-text-color">{progressMessage}</div>
+            return <div className="success-text-color modal-spacing-md-top">{progressMessage}</div>
         }
     }
     const onSubmit = async (values, { setSubmitting }) => {
@@ -154,9 +154,6 @@ const Upload = () => {
                     }
 
                     setUploadPercentage(progress);
-
-                    // // Clear percentage
-                    // setTimeout(() => setUploadPercentage(0), 10000);
                 }
             };
 
@@ -164,11 +161,11 @@ const Upload = () => {
             // Set progress bar to 100 percent upon returned promise
             setUploadPercentage(100);
             
-            setTimeout(() => {
+            // setTimeout(() => {
                 // after a couple of seconds close modal and redirect to new page
                 toggleModal();
-                history.push("/");
-            }, 3000);
+                // history.push("/");
+            // }, 3000);
 
             console.log('success', res);
         } catch (err) {

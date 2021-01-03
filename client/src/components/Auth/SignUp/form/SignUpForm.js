@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { authActions } from "../../../../actions";
@@ -7,6 +8,7 @@ import { authActions } from "../../../../actions";
 
 
 function SignUpForm() {
+    const history = useHistory();
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -23,7 +25,7 @@ function SignUpForm() {
         if (hasError) {
             return <span className="error-text-color">{errorMessage} </span>;
         } else if (isAuthenticated) {
-            return <span className="success-text-color"> Login successful!</span>;
+            return <span className="success-text-color"> Sign Up successful!</span>;
         } else {
             return '';
         }
@@ -31,6 +33,10 @@ function SignUpForm() {
 
     useEffect(() => {
     // if isAuthenticated redirect
+    setTimeout(() => {
+        // redirect to home page
+        history.push("/");
+    }, 3000);
     }, [isAuthenticated]);
 
     return (
