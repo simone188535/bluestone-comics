@@ -1,4 +1,5 @@
 import React, { useEffect, useState, memo } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -77,11 +78,10 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
 }
 
 const Upload = () => {
-
+    const history = useHistory();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [uploadPercentage, setUploadPercentage] = useState(0);
-
-    const toggleModal = () => setModalIsOpen(!modalIsOpen);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const currentUser = useSelector(state => state.auth.user);
     const [currentUsername, setCurrentUsername] = useState('');
@@ -95,7 +95,18 @@ const Upload = () => {
         }
     }, [currentUser]);
 
+    const toggleModal = () => setModalIsOpen(!modalIsOpen);
+    
+    const ModalStatusMessage = () => {
+        if (errorMessage) {
+            return <div className="error-message error-text-color">{errorMessage}</div>
+        }
+        else {
+            let progressMessage = (uploadPercentage === 100) ? 'Upload was successful!' : 'Still loading... Please wait.';
 
+            return <div className="success-text-color">{progressMessage}</div>
+        }
+    }
     const onSubmit = async (values, { setSubmitting }) => {
         /*
         these FormData appends must be done because we are using the uploaded file data in the backend using multer. 
@@ -117,7 +128,7 @@ const Upload = () => {
         values.genres.forEach((formValue) => formData.append('genres', formValue));
         // push all issueAssets to formData
         values.issueAssets.forEach((formValue) => formData.append('issueAssets', formValue));
-        // push all issueAssets to workCredits. formData cannot contain plain objects, so it must be stringified
+        // formData cannot contain plain objects, so it must be stringified
         // values.workCredits.forEach((formValue) => formData.append('workCredits', console.log(JSON.stringify(formValue))));
         formData.append('workCredits', JSON.stringify(values.workCredits));
         // formData.append('workCredits', [
@@ -125,10 +136,7 @@ const Upload = () => {
         //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
         // ]);
 
-        // MAY NEED TO USE FOR EACH ON  genres and workCredits
-
         console.log('triggered', values);
-
         try {
             // open modal
             toggleModal();
@@ -137,21 +145,37 @@ const Upload = () => {
             let config = {
                 onUploadProgress: function (progressEvent) {
                     // set setUploadPercentage hook with the upload percentage
-                    setUploadPercentage(
-                        parseInt(
-                            Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                        )
-                    );
+                    let progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 
-                    // Clear percentage
-                    setTimeout(() => setUploadPercentage(0), 10000);
+                    // stop bar from filling to 100 until promise is returned. 
+                    if (progress > 95) {
+                        setUploadPercentage(95);
+                        return;
+                    }
+
+                    setUploadPercentage(progress);
+
+                    // // Clear percentage
+                    // setTimeout(() => setUploadPercentage(0), 10000);
                 }
             };
 
             const res = await PublishServices.createBook(formData, config);
+            // Set progress bar to 100 percent upon returned promise
+            setUploadPercentage(100);
+            
+            setTimeout(() => {
+                // after a couple of seconds close modal and redirect to new page
+                toggleModal();
+                history.push("/");
+            }, 3000);
+
             console.log('success', res);
         } catch (err) {
             console.log('failed', err.response.data.message);
+            setErrorMessage('An Error occurred. Please try again Later.');
+            setUploadPercentage(0);
+
         }
 
         setSubmitting(false);
@@ -214,6 +238,7 @@ const Upload = () => {
                 <Modal isOpen={modalIsOpen} onClose={toggleModal} >
                     <h2 className="modal-head">Upload Progress: </h2>
                     <ProgressBar uploadPercentage={uploadPercentage} />
+                    {ModalStatusMessage()}
                 </Modal>
                 </>
                 )}
