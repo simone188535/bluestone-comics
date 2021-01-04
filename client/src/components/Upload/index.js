@@ -1,7 +1,8 @@
 import React, { useEffect, useState, memo } from 'react';
+import slugify from 'slugify';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from "react-redux";
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, useField, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import { PublishServices } from '../../services';
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
@@ -13,13 +14,39 @@ import WorkCredits from './WorkCredits';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
+const UrlSlugFieldSlugifed = ( props ) => {
+    /* 
+        The default value of this field is dependent on the value of the book title field. The user is 
+        still able to customize it though.
+    */
+    const {
+        values: { bookTitle },
+        touched,
+        setFieldValue
+    } = useFormikContext();
+    const [field] = useField(props);
+
+    React.useEffect(() => {
+      // setFieldValue here
+    //   if (bookTitle.trim() !== '') {
+        setFieldValue(props.name, slugify(bookTitle));
+    //   }
+    }, [bookTitle, setFieldValue, props.name]);
+
+    return (
+        <>
+            <input {...props} {...field} />
+        </>
+    );
+};
+
 const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUsernames }) => {
 
     const workCreditsErrorMessage = errors => {
         /* 
-        This has been added because we are using a Field Array Validation within the WorkCredits Component. 
-        In order to display the outer error message for this array of objects, this conditional is needed. 
-        More info here: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
+            This has been added because we are using a Field Array Validation within the WorkCredits Component. 
+            In order to display the outer error message for this array of objects, this conditional is needed. 
+            More info here: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
         */
         return (typeof errors.workCredits === 'string' ? <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" /> : null);
     }
@@ -37,7 +64,8 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
-                <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />
+                {/* <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" /> */}
+                <UrlSlugFieldSlugifed className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on"className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on"/>
                 <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
 
                 <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
@@ -96,7 +124,7 @@ const Upload = () => {
     }, [currentUser]);
 
     const toggleModal = () => setModalIsOpen(!modalIsOpen);
-    
+
     const ModalStatusMessage = () => {
         if (errorMessage) {
             return <div className="error-message error-text-color modal-spacing-md-top">{errorMessage}</div>
@@ -160,11 +188,11 @@ const Upload = () => {
             const res = await PublishServices.createBook(formData, config);
             // Set progress bar to 100 percent upon returned promise
             setUploadPercentage(100);
-            
+
             // setTimeout(() => {
-                // after a couple of seconds close modal and redirect to new page
-                toggleModal();
-                // history.push("/");
+            // after a couple of seconds close modal and redirect to new page
+            toggleModal();
+            // history.push("/");
             // }, 3000);
 
             console.log('success', res);
@@ -229,16 +257,16 @@ const Upload = () => {
                     enableReinitialize={true}
                     onSubmit={onSubmit}
                 >
-                { props => (
-                <>
-                <UploadBookFields {...props} defaultSelectedUsernames={currentUsername} />
-                <Modal isOpen={modalIsOpen} onClose={toggleModal} >
-                    <h2 className="modal-head">Upload Progress: </h2>
-                    <ProgressBar uploadPercentage={uploadPercentage} />
-                    {ModalStatusMessage()}
-                </Modal>
-                </>
-                )}
+                    {props => (
+                        <>
+                            <UploadBookFields {...props} defaultSelectedUsernames={currentUsername} />
+                            <Modal isOpen={modalIsOpen} onClose={toggleModal} >
+                                <h2 className="modal-head">Upload Progress: </h2>
+                                <ProgressBar uploadPercentage={uploadPercentage} />
+                                {ModalStatusMessage()}
+                            </Modal>
+                        </>
+                    )}
                 </Formik>
             </div>
         </div>
