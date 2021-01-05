@@ -14,23 +14,21 @@ import WorkCredits from './WorkCredits';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
-const UrlSlugFieldSlugifed = ( props ) => {
+const UrlSlugifedField = ( props ) => {
     /* 
         The default value of this field is dependent on the value of the book title field. The user is 
         still able to customize it though.
     */
     const {
         values: { bookTitle },
-        touched,
         setFieldValue
     } = useFormikContext();
     const [field] = useField(props);
 
     React.useEffect(() => {
-      // setFieldValue here
-    //   if (bookTitle.trim() !== '') {
+        
         setFieldValue(props.name, slugify(bookTitle));
-    //   }
+
     }, [bookTitle, setFieldValue, props.name]);
 
     return (
@@ -64,8 +62,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
-                {/* <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" /> */}
-                <UrlSlugFieldSlugifed className="form-input form-item slug-field" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on"/>
+                <UrlSlugifedField className="form-input form-item slug-field" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on"/>
                 <div className="form-header-subtext"><strong>This is how your Comic URL will appear on the site: </strong> https://bluestonecomics.com/api/v1/read/<strong>{values.urlSlug ? values.urlSlug : '<URL Slug>'}</strong>/book/1234</div>
                 <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
 
