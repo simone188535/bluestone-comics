@@ -66,7 +66,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
 
                 {/* <Field className="form-input form-item" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" /> */}
                 <UrlSlugFieldSlugifed className="form-input form-item slug-field" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on"/>
-                <div className="form-header-subtext"><strong>This is how your Comic URL will on the site: </strong> https://bluestonecomics.com/api/v1/read/<strong>{values.urlSlug ? values.urlSlug : '<URL Slug>'}</strong>/book/1234</div>
+                <div className="form-header-subtext"><strong>This is how your Comic URL will appear on the site: </strong> https://bluestonecomics.com/api/v1/read/<strong>{values.urlSlug ? values.urlSlug : '<URL Slug>'}</strong>/book/1234</div>
                 <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
 
                 <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
