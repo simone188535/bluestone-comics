@@ -1,5 +1,6 @@
 import React, { useEffect, useState, memo } from 'react';
 import slugify from 'slugify';
+import { useHistory } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage, useField, useFormikContext } from 'formik';
 import * as Yup from 'yup';
@@ -103,6 +104,8 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
 }
 
 const Upload = () => {
+    // redirect after completed 
+    const history = useHistory();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [uploadPercentage, setUploadPercentage] = useState(0);
     const [errorMessage, setErrorMessage] = useState('');
@@ -185,11 +188,11 @@ const Upload = () => {
             // Set progress bar to 100 percent upon returned promise
             setUploadPercentage(100);
 
-            // setTimeout(() => {
+            setTimeout(() => {
             // after a couple of seconds close modal and redirect to new page
             toggleModal();
-            // history.push("/");
-            // }, 3000);
+            history.push("/");
+            }, 3000);
 
             console.log('success', res);
         } catch (err) {
