@@ -1,7 +1,7 @@
 * {
-   box-sizing: border-box;
-   padding: 0;
-   margin: 0; 
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
 
 body {
@@ -9,9 +9,27 @@ body {
     background-color: $bg-color;
     margin: 0;
 }
-.success-text-color {
-    color: $violet-blue;
+
+html,
+body {
+    height: 100%;
 }
-.error-text-color {
-    color: $error-red;
+
+.bsc {
+
+    .success-text-color {
+        color: $violet-blue;
+    }
+
+    .error-text-color {
+        color: $error-red;
+    }
+
+    .text-blue {
+        color: $violet-blue;
+    }
+
+    .container, .container-fluid {
+        min-height: 100vh;
+    }
 }

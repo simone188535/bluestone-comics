@@ -2,6 +2,6 @@ import React from 'react';
 import './footer.scss';
 
 const Footer = () => {
-    return(<div className="bsc-footer"><h2>Footer</h2></div>);
+    return(<footer className="bsc-footer"><h2>Footer</h2></footer>);
 }
 export default Footer;

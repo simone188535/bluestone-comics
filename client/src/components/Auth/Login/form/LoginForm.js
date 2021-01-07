@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-
 import { authActions } from "../../../../actions";
 
 
@@ -36,10 +35,12 @@ function LoginForm() {
 
     useEffect(() => {
         // if isAuthenticated redirect
-        setTimeout(() => {
-            // redirect to home page
-            history.push("/");
-        }, 3000);
+        if (isAuthenticated) {
+            setTimeout(() => {
+                // redirect to home page
+                history.push("/");
+            }, 3000);
+        }
     }, [isAuthenticated]);
 
     return (
@@ -66,7 +67,7 @@ function LoginForm() {
                     <button type="submit" className="form-submit form-item">Submit</button>
                 </Form>
             </Formik>
-            <div className="final-message">{enableMessage && authMessage()}</div>
+            <div className="login-status-message">{enableMessage && authMessage()}</div>
         </div>
     );
 }
