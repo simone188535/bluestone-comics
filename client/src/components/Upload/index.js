@@ -1,6 +1,5 @@
 import React, { useEffect, useState, memo } from 'react';
 import slugify from 'slugify';
-import { useHistory } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage, useField, useFormikContext } from 'formik';
 import * as Yup from 'yup';
@@ -62,7 +61,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
-                <UrlSlugifedField className="form-input form-item slug-field" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on"/>
+                <UrlSlugifedField className="form-input form-item slug-field" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on"/>
                 <div className="form-header-subtext"><strong>This is how your Comic URL will appear on the site: </strong> https://bluestonecomics.com/api/v1/read/<strong>{values.urlSlug ? values.urlSlug : '<URL Slug>'}</strong>/book/1234</div>
                 <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
 
@@ -104,7 +103,6 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
 }
 
 const Upload = () => {
-    const history = useHistory();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [uploadPercentage, setUploadPercentage] = useState(0);
     const [errorMessage, setErrorMessage] = useState('');
@@ -205,7 +203,7 @@ const Upload = () => {
     }
 
     return (
-        <div className="upload-page">
+        <div className="upload-page container">
             <div className="upload-form-container">
                 <Formik
                     initialValues={{
