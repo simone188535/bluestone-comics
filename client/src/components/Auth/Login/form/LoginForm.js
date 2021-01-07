@@ -16,14 +16,10 @@ function LoginForm() {
     const errorMessage = useSelector(state => state.error.errorMessage);
 
     const authMessage = () => {
-        // console.log('errorMessage', errorMessage);
-        // console.log('hasError', hasError);
-        // console.log('isAuthenticated', isAuthenticated);
-        // console.log('enableMessage', enableMessage);
-        if (hasError) {
-            return <span className="error-text-color">{errorMessage} </span>;
-        } else if (isAuthenticated) {
+        if (isAuthenticated) {
             return <span className="success-text-color"> Login successful!</span>;
+        } else if (hasError) {
+            return <span className="error-text-color">{errorMessage} </span>;
         } else {
             return '';
         }
