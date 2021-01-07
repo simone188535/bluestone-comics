@@ -8,7 +8,7 @@ const Login = () => {
     return (
         <div className="container login-page">
             <LoginForm />
-            <Link className="text-blue forgot-password">Forgot your password?</Link>
+            <Link className="text-blue forgot-password" to="/forgot-password">Forgot your password?</Link>
         </div>
     );
 }
