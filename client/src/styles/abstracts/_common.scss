@@ -29,7 +29,21 @@ body {
         color: $violet-blue;
     }
 
-    .container, .container-fluid {
+    .container,
+    .container-fluid {
         min-height: 100vh;
+    }
+
+    .container {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .bsc {
+        .container {
+            width: 60%;
+        }
     }
 }

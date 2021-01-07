@@ -1,5 +1,5 @@
 form.bsc-form {
-    width: 80%;
+    width: 100%;
 
     input {
         box-sizing: border-box;
@@ -233,7 +233,6 @@ form.bsc-form {
 
 @media only screen and (min-width: $medium) {
     form.bsc-form {
-        width: 60%;
 
         /* textarea */
         textarea {
