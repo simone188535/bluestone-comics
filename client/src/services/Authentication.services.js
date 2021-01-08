@@ -4,7 +4,8 @@ export const AuthenticationServices = {
     ReAuthUser,
     login,
     logout,
-    signUp
+    signUp,
+    forgotPassword
 }
 
 // This function helps ReAuth a user if the jwtToken is in the browser 
@@ -45,4 +46,11 @@ function signUp(firstName, lastName, username, email, password, passwordConfirm)
 
 function logout() {
     localStorage.removeItem('jwtToken');
+}
+
+function forgotPassword(email) {
+    // send request to forgotPassword
+    return axios.post('/api/v1/users/forgot-password', {
+        email 
+    });
 }

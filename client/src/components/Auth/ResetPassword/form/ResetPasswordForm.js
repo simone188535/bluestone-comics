@@ -44,7 +44,7 @@ function ResetPassword() {
     }, [isAuthenticated, history]);
 
     return (
-        <div className="login-page-form-container">
+        <div className="reset-password-form-container">
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={Yup.object({
@@ -56,7 +56,7 @@ function ResetPassword() {
                 })}
                 onSubmit={onSubmit}
             >
-                <Form className="bsc-form login-page-form">
+                <Form className="bsc-form reset-password-form">
                     <div className="form-header-text">Please, <strong>Login</strong> to continue</div>
                     <div>
                         <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on" />

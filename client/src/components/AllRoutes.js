@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import Home from './Home';
 import SignUp from './Auth/SignUp';
 import Login from './Auth/Login';
+import ForgotPassword from './Auth/ForgotPassword';
+import ResetPassword from './Auth/ResetPassword';
 import About from './About';
 import Articles from './Articles';
 import ComicList from './ComicList';
@@ -40,6 +42,8 @@ const AllRoutes = () => {
             <ProtectedRoute path="/upload" component={Upload}/>
             <Route path="/sign-up" component={SignUp} />
             <Route path="/login" component={Login} />
+            <Route path="/forgot-password" component={ForgotPassword} />
+            <Route path="/reset-password/:reset-token" component={ResetPassword} />
             <Route path="/" component={Home} />
         </Switch>
     );
