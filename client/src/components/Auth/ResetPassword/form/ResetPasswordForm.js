@@ -35,7 +35,7 @@ function ResetPassword() {
             setStatusMessage('A reset token has been sent to your email.');
 
         } catch (err) {
-            setStatusMessage(err.message);
+            setStatusMessage(err.response.data.message);
             setErrorMessage(true);
         }
         
