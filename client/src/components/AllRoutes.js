@@ -43,7 +43,7 @@ const AllRoutes = () => {
             <Route path="/sign-up" component={SignUp} />
             <Route path="/login" component={Login} />
             <Route path="/forgot-password" component={ForgotPassword} />
-            <Route path="/reset-password/:reset-token" component={ResetPassword} />
+            <Route path="/reset-password/:resetToken" component={ResetPassword} />
             <Route path="/" component={Home} />
         </Switch>
     );

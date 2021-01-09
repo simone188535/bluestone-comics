@@ -149,7 +149,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const host =
     process.env.NODE_ENV === 'production' ? req.get('host') : 'localhost:3000';
 
-  const resetURL = `${req.protocol}://${host}/api/v1/users/reset-password/${resetToken}`;
+  // const resetURL = `${req.protocol}://${host}/api/v1/users/reset-password/${resetToken}`;
+  const resetURL = `${req.protocol}://${host}/reset-password/${resetToken}`;
 
   const message = `Forgot your password? Password Reset: <a href="${resetURL}">${resetURL}</a>. If not, please ignore this message.`;
 
