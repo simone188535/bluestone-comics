@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom'
+import React from 'react';
 import SignUpForm from './form/SignUpForm';
+import './../auth.scss';
 import './sign-up.scss';
 
 const SignUp = () => {
 
     return (
-        <div className="sign-up-page container">
+        <div className="sign-up-page auth-pages container">
                 <SignUpForm />
         </div>
     );

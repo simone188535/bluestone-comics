@@ -55,7 +55,7 @@ function ForgotPasswordForm() {
     // }, [isAuthenticated, history]);
 
     return (
-        <div className="forgot-password-form-container">
+        <div className="forgot-password-form-container auth-container">
             <Formik
                 initialValues={{ email: '' }}
                 validationSchema={Yup.object({
@@ -65,16 +65,16 @@ function ForgotPasswordForm() {
                 })}
                 onSubmit={onSubmit}
             >
-                <Form className="bsc-form forgot-password-form">
+                <Form className="bsc-form forgot-password-form auth-form">
                     <div className="form-header-text">Please, Provide your <strong>email</strong> so that your password can be reset.</div>
                     <div>
-                        <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="email" type="email" placeholder="Email" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="email" />
                     </div>
-                    <button type="submit" className="form-submit form-item">Submit</button>
+                    <button type="submit" className="form-submit form-item auth-submit">Submit</button>
                 </Form>
             </Formik>
-            <div className="forgot-password-status-message">{enableMessage && authMessage()}</div>
+            <div className="status-message">{enableMessage && authMessage()}</div>
         </div>
     );
 }

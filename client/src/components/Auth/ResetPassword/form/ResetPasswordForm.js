@@ -56,7 +56,7 @@ function ResetPassword() {
     // }, [isAuthenticated, history]);
 
     return (
-        <div className="reset-password-form-container">
+        <div className="reset-password-form-container auth-container">
             <Formik
                 initialValues={{ newPassword: '', newPasswordConfirm: '' }}
                 validationSchema={Yup.object({
@@ -68,18 +68,18 @@ function ResetPassword() {
                 })}
                 onSubmit={onSubmit}
             >
-                <Form className="bsc-form reset-password-form">
+                <Form className="bsc-form reset-password-form auth-form">
                     <div className="form-header-text">Please, <strong>reset</strong> your password.</div>
                     <div>
-                        <Field className="form-input form-item" name="newPassword" type="password" placeholder="New Password" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="newPassword" type="password" placeholder="New Password" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="newPassword" />
-                        <Field className="form-input form-item" name="newPasswordConfirm" type="password" placeholder="Confirm New Password" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="newPasswordConfirm" type="password" placeholder="Confirm New Password" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="newPasswordConfirm" />
                     </div>
-                    <button type="submit" className="form-submit form-item">Submit</button>
+                    <button type="submit" className="form-submit form-item auth-submit">Submit</button>
                 </Form>
             </Formik>
-            <div className="reset-password-status-message">{enableMessage && authMessage()}</div>
+            <div className="status-message">{enableMessage && authMessage()}</div>
         </div>
     );
 }

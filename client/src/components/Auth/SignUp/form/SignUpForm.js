@@ -42,7 +42,7 @@ function SignUpForm() {
     }, [isAuthenticated]);
 
     return (
-        <div className="sign-up-form-container">
+        <div className="sign-up-form-container auth-container">
             <Formik
                 initialValues={{ firstName: '', lastName: '', username: '', email: '', password: '', passwordConfirm: '' }}
                 validationSchema={Yup.object({
@@ -63,31 +63,31 @@ function SignUpForm() {
                 })}
                 onSubmit={onSubmit}
             >
-                <Form className="bsc-form sign-up-form">
+                <Form className="bsc-form sign-up-form auth-form">
                     <div className="form-header-text">Please, <strong>Sign Up</strong> to continue</div>
                     <div>
-                        <Field className="form-input form-item" name="firstName" type="text" placeholder="First Name" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="firstName" type="text" placeholder="First Name" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="firstName" />
 
-                        <Field className="form-input form-item" name="lastName" type="text" placeholder="Last Name" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="lastName" type="text" placeholder="Last Name" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="lastName" />
 
-                        <Field className="form-input form-item" name="username" type="text" placeholder="Username" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="username" type="text" placeholder="Username" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="username" />
 
-                        <Field className="form-input form-item" name="email" type="email" placeholder="Email" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="email" type="email" placeholder="Email" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="email" />
 
-                        <Field className="form-input form-item" name="password" type="password" placeholder="Password" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="password" type="password" placeholder="Password" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="password" />
 
-                        <Field className="form-input form-item" name="passwordConfirm" type="password" placeholder="Password Confirm" autoComplete="on" />
+                        <Field className="form-input form-item auth-input" name="passwordConfirm" type="password" placeholder="Password Confirm" autoComplete="on" />
                         <ErrorMessage className="error-message error-text-color" component="div" name="passwordConfirm" />
                     </div>
-                    <button type="submit" className="form-submit form-item">Submit</button>
+                    <button type="submit" className="form-submit form-item auth-submit">Submit</button>
                 </Form>
             </Formik>
-            <div className="final-message">{enableMessage && isAuthMessage()}</div>
+            <div className="status-message">{enableMessage && isAuthMessage()}</div>
         </div>
     );
 }

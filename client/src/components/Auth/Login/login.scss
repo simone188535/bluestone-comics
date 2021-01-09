@@ -1,25 +1,6 @@
 // @import '../../index.scss';
 
 .login-page {
-    .login-page-form-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        flex-direction: column;
-
-        .login-page-form {
-            margin: 0 auto;
-
-            input,
-            button {
-                width: 100%;
-            }
-
-        }
-    }
-    .login-status-message {
-        text-align: center;
-    }
     .forgot-password {
         text-align: center;
         display: block;
