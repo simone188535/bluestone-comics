@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { AuthenticationServices } from '../../../../services';
@@ -8,10 +8,11 @@ import { AuthenticationServices } from '../../../../services';
 
 
 function ResetPassword() {
-    // const history = useHistory();
+    const history = useHistory();
     const [statusMessage, setStatusMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState(false);
     const [enableMessage, setEnableMessage] = useState(false);
+    const { resetToken } = useParams();
     // const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     // const hasError = useSelector(state => state.error.hasError);
     // const errorMessage = useSelector(state => state.error.errorMessage);
@@ -25,7 +26,7 @@ function ResetPassword() {
 
     const onSubmit = async (values, { setSubmitting }) => {
         try {
-            await AuthenticationServices.forgotPassword(values.email);
+            await AuthenticationServices.resetPassword( resetToken, values.newPassword, values.newPasswordConfirm);
             
             // unset error message if it is set.
             if (errorMessage) {
@@ -63,7 +64,7 @@ function ResetPassword() {
                     newPassword: Yup.string()
                         .required('Password required!'),
                     newPasswordConfirm: Yup.string()
-                        .oneOf([Yup.ref('password'), null], 'Passwords must match!')
+                        .oneOf([Yup.ref('newPassword'), null], 'Passwords must match!')
                         .required('Password confirm required!')
                 })}
                 onSubmit={onSubmit}

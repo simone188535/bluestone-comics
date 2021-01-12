@@ -15,15 +15,3 @@ function createBook(formData, config = {}) {
 
     return axios.post('/api/v1/publish', formData, config);
 }
-
-// function signUp(firstName, lastName, username, email, password, passwordConfirm) {
-//     // send request to sign up
-//     return axios.post('/api/v1/users/signup', {
-//         firstName,
-//         lastName,
-//         email,
-//         username,
-//         password,
-//         passwordConfirm 
-//     });
-// }
