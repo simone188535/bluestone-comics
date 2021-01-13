@@ -3,58 +3,63 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { authActions } from "../../../../actions";
 import { AuthenticationServices } from '../../../../services';
 
 
 
 function ResetPassword() {
     const history = useHistory();
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const [statusMessage, setStatusMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState(false);
     const [enableMessage, setEnableMessage] = useState(false);
+    const [resetIsPassword, setResetIsPassword] = useState(false);
     const { resetToken } = useParams();
-    // const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-    // const hasError = useSelector(state => state.error.hasError);
-    // const errorMessage = useSelector(state => state.error.errorMessage);
 
     const authMessage = () => {
 
         let textColor = (errorMessage) ? 'error-text-color' : 'success-text-color';
-       
+
         return <span className={textColor}> {statusMessage} </span>;
     }
 
     const onSubmit = async (values, { setSubmitting }) => {
         try {
-            await AuthenticationServices.resetPassword( resetToken, values.newPassword, values.newPasswordConfirm);
-            
+            await AuthenticationServices.resetPassword(resetToken, values.newPassword, values.newPasswordConfirm);
+
             // unset error message if it is set.
             if (errorMessage) {
                 setErrorMessage(false);
             }
 
-            setStatusMessage('A reset token has been sent to your email.');
+            setStatusMessage('Your password has been reset.');
+            setResetIsPassword(true);
 
         } catch (err) {
             setStatusMessage(err.response.data.message);
             setErrorMessage(true);
         }
-        
+
         setEnableMessage(true);
         setSubmitting(false);
 
     }
 
-
-    // useEffect(() => {
-    //     // if isAuthenticated redirect
-    //     if (isAuthenticated) {
-    //         setTimeout(() => {
-    //             // redirect to home page
-    //             history.push("/");
-    //         }, 3000);
-    //     }
-    // }, [isAuthenticated, history]);
+    useEffect(() => {
+        //  if password is reset. user should be logged out and redirected to login page 
+        if (resetIsPassword) {
+            // if isAuthenticated redirect
+            if (isAuthenticated) {
+                dispatch(authActions.logout());
+            }
+            setTimeout(() => {
+                // redirect to home page
+                history.push("/login");
+            }, 3000);
+        }
+    }, [resetIsPassword, history, dispatch, isAuthenticated]);
 
     return (
         <div className="reset-password-form-container auth-container">
