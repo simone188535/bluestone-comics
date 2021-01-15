@@ -36,7 +36,8 @@ const userSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
-    default: 'default.jpg'
+    default:
+      'https://bluestone-images.s3.us-east-2.amazonaws.com/default/profile-pic.jpeg'
   },
   password: {
     type: String,
