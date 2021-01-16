@@ -31,8 +31,10 @@ const toggleMenu = (e, toggleFocus) => {
 
 
 // These are nav items the render conditionally depending on whether the user is login or not
-const authNavItems = (dispatch, isAuthenticated) => {
-
+const AuthNavItems = () => {
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector(state => state.auth.user);
+    // const username = useSelector(state => state.auth.username);
     const authNavValues = isAuthenticated ?
         <>
             <li className="nav-menu-item has-submenu"
@@ -42,7 +44,7 @@ const authNavItems = (dispatch, isAuthenticated) => {
                 <Link tabIndex="0" to="#">Profile</Link>
                 <ul className="submenu">
                     <li className="subitem">
-                        <Link to="/profile">Profile</Link>
+                        <Link to={`/profile`}>Profile</Link>
                     </li>
                     <li className="subitem">
                         <Link to="/upload">Upload</Link>
@@ -67,8 +69,6 @@ const authNavItems = (dispatch, isAuthenticated) => {
 
 
 const Header = () => {
-    const dispatch = useDispatch();
-    const isAuthenticated = useSelector(state => state.auth.user);
     const [searchToggle, setSearchToggle] = useState(false);
 
     const searchButtonClicked = (e) => {
@@ -128,7 +128,7 @@ const Header = () => {
                     <Link to="/news">News</Link>
                 </li>
                 <>
-                    {authNavItems(dispatch, isAuthenticated)}
+                    <AuthNavItems/>
                 </>
             </ul>
             <div className="global-nav-item mobile-toggle" onClick={(e) => toggleMenu(e, 'mainNav')}>

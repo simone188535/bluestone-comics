@@ -45,7 +45,7 @@ const AllRoutes = () => {
             <Route path="/login" component={Login} />
             <Route path="/forgot-password" component={ForgotPassword} />
             <Route path="/reset-password/:resetToken" component={ResetPassword} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/profile/:username" component={Profile} />
             <Route path="/" component={Home} />
         </Switch>
     );
