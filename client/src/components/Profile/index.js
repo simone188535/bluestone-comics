@@ -9,7 +9,8 @@ import './profile.scss';
 // https://uicookies.com/bootstrap-profile-page/
 const Profile = () => {
     let { username } = useParams();
-    const [profilePageUser, setProfilePageUser] = useState('');
+    // Should be an object
+    const [profilePageUser, setProfilePageUser] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     // const [currentUsername, setCurrentUsername] = useState('');
     // const { isAuthenticated, currentUser, isFetching } = useSelector(state => ({

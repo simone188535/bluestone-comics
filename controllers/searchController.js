@@ -112,7 +112,10 @@ exports.searchIssues = catchAsync(async (req, res) => {
     status: 'success'
   });
 });
+
+
 exports.search = catchAsync(async (req, res) => {
+  // THIS IS NOT IN USE.
   // search for provided query (q) or return everything
   const textSearchQuery = req.query.q
     ? { $text: { $search: req.query.q } }

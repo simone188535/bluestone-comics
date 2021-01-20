@@ -4,6 +4,25 @@ const filterObj = require('../utils/filterObj');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 
+exports.getUser = catchAsync(async (req, res, next) => {
+  const { firstName, lastName, username, email } = req.body;
+  const user = await User.findOne({
+    firstName,
+    lastName,
+    username,
+    email
+  });
+
+  if (!user) {
+    return next(new AppError('This user does not exist.', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: user
+  });
+});
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 
@@ -31,10 +50,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'email',
     'username'
   );
-  const updatedUser = await User.findByIdAndUpdate(res.locals.user.id, filterBody, {
-    new: true,
-    runValidators: true
-  });
+  const updatedUser = await User.findByIdAndUpdate(
+    res.locals.user.id,
+    filterBody,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
 
   res.status(200).json({
     status: 'success',

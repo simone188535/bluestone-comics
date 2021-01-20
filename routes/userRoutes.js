@@ -22,5 +22,6 @@ router
   .delete(authController.protect, userController.deleteMe);
 
 router.route('/get-me').get(authController.protect, userController.getMe);
+router.route('/get-user').get(userController.getUser);
 
 module.exports = router;
