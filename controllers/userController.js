@@ -5,13 +5,23 @@ const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { firstName, lastName, username, email } = req.body;
-  const user = await User.findOne({
+  const { _id, firstName, lastName, username, email } = req.body;
+  const queryObject = {
+    _id,
     firstName,
     lastName,
     username,
     email
+  };
+
+  // Check if each key-value pair has a value, if not loop through and remove the empty values
+  Object.keys(queryObject).forEach((key) => {
+    if (!queryObject[key]) {
+      delete queryObject[key];
+    }
   });
+
+  const user = await User.findOne(queryObject);
 
   if (!user) {
     return next(new AppError('This user does not exist.', 404));
