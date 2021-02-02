@@ -14,9 +14,12 @@ if (jwtToken) {
     (async () => {
         store.dispatch(authActions.loginRequest());
         const currentUser = await AuthenticationServices.ReAuthUser(jwtToken);
-        // console.log('current', currentUser);
+        
         if (currentUser.status === 200) {
             return store.dispatch(authActions.loginSuccess(currentUser.data.data.user));
+        } else {
+            // if there is a problem with the current token (like if token is Expired, untrusted...)
+            return store.dispatch(authActions.logout());
         }
     })();
 } // this may need an else statement to clear store  if users jwt token expires while in use. 

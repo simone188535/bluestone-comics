@@ -17,8 +17,7 @@ async function ReAuthUser(jwtToken) {
             headers: { Authorization: `Bearer ${jwtToken}` }
         };
         // send request to get-me (with bearer token) and return it
-        const res = await axios.get('/api/v1/users/get-me', config);
-        return res;
+        return await axios.get('/api/v1/users/get-me', config);
     }
     catch(err) {
         return err;

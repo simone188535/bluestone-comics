@@ -100,27 +100,32 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // 2) Verification token
-  const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
+  try {
+    // 2) Verification token
+    const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
 
-  // 3) Check if user still exists
-  const freshUser = await User.findById(decoded.id);
-  if (!freshUser) {
-    return next(
-      new AppError('The user belonging to the token no longer exists.', 401)
-    );
+    // 3) Check if user still exists
+    const freshUser = await User.findById(decoded.id);
+    if (!freshUser) {
+      return next(
+        new AppError('The user belonging to the token no longer exists.', 401)
+      );
+    }
+
+    // 4) Check if password was updated after the token was issued.
+    if (freshUser.changedPasswordAfter(decoded.iat)) {
+      return next(
+        new AppError('Password was recently changed. Login again.', 401)
+      );
+    }
+
+    // GRANT ACCESS TO PROTECTED ROUTE
+    res.locals.user = freshUser;
+    next();
+  } catch (err) {
+    // This will likely be an error presented by JWT
+    return next(new AppError(err.message, 500));
   }
-
-  // 4) Check if password was updated after the token was issued.
-  if (freshUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError('Password was recently changed. Login again.', 401)
-    );
-  }
-
-  // GRANT ACCESS TO PROTECTED ROUTE
-  res.locals.user = freshUser;
-  next();
 });
 
 exports.restrictTo = (...role) => {
