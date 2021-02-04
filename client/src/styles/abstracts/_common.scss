@@ -1,16 +1,54 @@
-// * {
-//    box-sizing: border-box;
-//    padding: 0;
-//    margin: 0; 
-// }
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
 body {
     font-family: $Roboto, $base-font;
     background-color: $bg-color;
     margin: 0;
 }
-.success-text-color {
-    color: $violet-blue;
+
+html,
+body {
+    height: 100%;
 }
-.error-text-color {
-    color: $error-red;
+
+.bsc {
+
+    .success-text-color {
+        color: $violet-blue;
+    }
+
+    .error-text-color {
+        color: $error-red;
+    }
+
+    .text-blue {
+        color: $violet-blue;
+    }
+
+    .container,
+    .container-fluid {
+        min-height: 100vh;
+    }
+
+    .container {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .container-fluid {
+        width: 100%;
+        margin: 0 auto;
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .bsc {
+        .container {
+            width: 60%;
+        }
+    }
 }

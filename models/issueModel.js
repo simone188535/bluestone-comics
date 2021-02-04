@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 // const issueAssetsSchema = require('./issueAssetsModel');
-const workCreditsSchema = require('./workCreditsModel');
+// const workCreditsSchema = require('./workCreditsModel');
 
 const issueSchema = new mongoose.Schema({
   publisher: {
@@ -27,6 +27,10 @@ const issueSchema = new mongoose.Schema({
     type: Number,
     default: 1
   },
+  imagePrefixReference: {
+    type: String,
+    required: true
+  },
   dateCreated: {
     type: Date,
     default: Date.now
@@ -36,19 +40,21 @@ const issueSchema = new mongoose.Schema({
     type: [String],
     // This is required and must have at least one
     validate: (v) => Array.isArray(v) && v.length > 0
-  },
-  workCredits: [workCreditsSchema]
+  }
+  // workCredits: [workCreditsSchema]
 });
+issueSchema.index({ title: 'text' });
 
-issueSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'publisher'
-  });
-  this.populate({
-    path: 'book'
-  });
-  next();
-});
+// this can be used for testing purposes, please don't commit if commented out
+// issueSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'publisher'
+//   });
+//   this.populate({
+//     path: 'book'
+//   });
+//   next();
+// });
 
 const Issues = mongoose.model('Issue', issueSchema);
 

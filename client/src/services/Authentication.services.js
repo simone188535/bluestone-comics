@@ -4,7 +4,9 @@ export const AuthenticationServices = {
     ReAuthUser,
     login,
     logout,
-    signUp
+    signUp,
+    forgotPassword,
+    resetPassword
 }
 
 // This function helps ReAuth a user if the jwtToken is in the browser 
@@ -15,8 +17,7 @@ async function ReAuthUser(jwtToken) {
             headers: { Authorization: `Bearer ${jwtToken}` }
         };
         // send request to get-me (with bearer token) and return it
-        const res = await axios.get('/api/v1/users/get-me', config);
-        return res;
+        return await axios.get('/api/v1/users/get-me', config);
     }
     catch(err) {
         return err;
@@ -45,4 +46,19 @@ function signUp(firstName, lastName, username, email, password, passwordConfirm)
 
 function logout() {
     localStorage.removeItem('jwtToken');
+}
+
+function forgotPassword(email) {
+    // send request to forgotPassword
+    return axios.post('/api/v1/users/forgot-password', {
+        email 
+    });
+}
+
+function resetPassword(resetToken, password, passwordConfirm) {
+    // send request to resetPassword
+    return axios.patch(`/api/v1/users/reset-password/${resetToken}`, {
+        password,
+        passwordConfirm 
+    });
 }

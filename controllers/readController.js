@@ -2,12 +2,15 @@
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
 // const User = require('../models/userModel');
-// const Book = require('../models/bookModel');
+const Book = require('../models/bookModel');
 // const Issue = require('../models/issueModel');
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
   // edit any issue of a book
+  const books = await Book.find({});
   res.status(200).json({
+    results: books.length,
+    books,
     status: 'success'
   });
 });

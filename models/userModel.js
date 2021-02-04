@@ -36,7 +36,8 @@ const userSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
-    default: 'default.jpg'
+    default:
+      'https://bluestone-images.s3.us-east-2.amazonaws.com/default/profile-pic.jpeg'
   },
   password: {
     type: String,
@@ -71,6 +72,8 @@ const userSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+userSchema.index({ username: 'text' });
+
 // Encrypts password before saving it
 userSchema.pre('save', async function save(next) {
   if (!this.isModified('password')) return next();
@@ -91,10 +94,12 @@ userSchema.pre('save', async function save(next) {
   next();
 });
 
+// Only return Users who have active accounts
 userSchema.pre(/^find/, function save(next) {
   this.where('active').ne(false);
   next();
 });
+
 // Checks if users password is correct
 userSchema.methods.passwordCompare = async function (
   providedPassword,

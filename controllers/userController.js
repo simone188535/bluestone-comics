@@ -4,6 +4,33 @@ const filterObj = require('../utils/filterObj');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 
+exports.getUser = catchAsync(async (req, res, next) => {
+  const { _id, username, email } = req.body;
+  const queryObject = {
+    _id,
+    username,
+    email
+  };
+
+  // Check if each key-value pair has a value, if not loop through and remove the empty values
+  Object.keys(queryObject).forEach((key) => {
+    if (!queryObject[key]) {
+      delete queryObject[key];
+    }
+  });
+
+  const user = await User.findOne(queryObject);
+
+  if (!user) {
+    return next(new AppError('This user does not exist.', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    user
+  });
+});
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 
@@ -31,10 +58,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'email',
     'username'
   );
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filterBody, {
-    new: true,
-    runValidators: true
-  });
+  const updatedUser = await User.findByIdAndUpdate(
+    res.locals.user.id,
+    filterBody,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
 
   res.status(200).json({
     status: 'success',
@@ -47,7 +78,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 exports.deleteMe = catchAsync(async (req, res, next) => {
   // User is never really deleted. Just deactivated as a safety precaution
   await User.findByIdAndUpdate(
-    req.user.id,
+    res.locals.user.id,
     { $set: { active: false } },
     { new: true }
   );
@@ -61,7 +92,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      user: req.user
+      user: res.locals.user
     }
   });
 });

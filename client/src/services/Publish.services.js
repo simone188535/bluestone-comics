@@ -5,29 +5,13 @@ export const PublishServices = {
     // signUp
 }
 
-function createBook(bookTitle, bookCoverPhoto, bookDescription, urlSlug, genres, issueTitle, issueCoverPhoto, issueAssets, workCredits) {
+function createBook(formData, config = {}) {
     // send request to create a book which will contain the first issue
-    return axios.post('/api/v1/publish', {
-        bookTitle,
-        bookCoverPhoto,
-        bookDescription,
-        urlSlug,
-        genres,
-        issueTitle,
-        issueCoverPhoto,
-        issueAssets,
-        workCredits
-    });
-}
+    const jwtToken = localStorage.getItem('jwtToken');
+    
+     config.headers = {
+        Authorization: `Bearer ${jwtToken}`
+    };
 
-// function signUp(firstName, lastName, username, email, password, passwordConfirm) {
-//     // send request to sign up
-//     return axios.post('/api/v1/users/signup', {
-//         firstName,
-//         lastName,
-//         email,
-//         username,
-//         password,
-//         passwordConfirm 
-//     });
-// }
+    return axios.post('/api/v1/publish', formData, config);
+}

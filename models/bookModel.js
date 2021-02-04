@@ -42,18 +42,29 @@ const bookSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  imagePrefixReference: {
+    type: String,
+    required: true
+  },
+  lastUpdate: {
+    type: Date,
+    default: Date.now
+  },
   dateCreated: {
     type: Date,
     default: Date.now
   }
 });
+bookSchema.index({ genres: 1 });
+bookSchema.index({ title: 'text', description: 'text' });
 
-bookSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'publisher'
-  });
-  next();
-});
+// this can be used for testing purposes, please don't commit if commented out
+// bookSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'publisher'
+//   });
+//   next();
+// });
 
 bookSchema.methods.adjustTotalIssue = function (adjustType) {
   if (adjustType === 'increment') {
@@ -62,8 +73,6 @@ bookSchema.methods.adjustTotalIssue = function (adjustType) {
     this.totalIssues -= 1;
   }
 };
-
-
 
 const Books = mongoose.model('Book', bookSchema);
 

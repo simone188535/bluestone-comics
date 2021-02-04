@@ -1,0 +1,23 @@
+// @import '../../index.scss';
+
+.auth-pages {
+
+    .auth-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        flex-direction: column;
+    
+        .auth-form {
+            margin: 0 auto;
+
+            input.auth-input,
+            button.auth-submit {
+                width: 100%;
+            }
+        }
+    }
+    .status-message {
+        text-align: center;
+    }
+}

@@ -16,6 +16,7 @@
     "http-proxy-middleware": "^1.0.4",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
+    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.2.0",
     "react-redux": "^7.2.0",
@@ -25,6 +26,7 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "slugify": "^1.4.6",
     "yup": "^0.29.1"
   },
   "scripts": {

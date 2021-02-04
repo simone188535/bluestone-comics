@@ -1,27 +1,53 @@
 const mongoose = require('mongoose');
 
-const workCreditsSchema = new mongoose.Schema({
-  user: {
+const workCreditSchema = new mongoose.Schema({
+  publisher: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
+  },
+  book: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book',
     required: true
   },
-  credits: [
+  issue: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Issue',
+    required: true
+  },
+  issueNumber: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  workCredits: [
     {
-      type: String,
-      enum: [
-        'Writer',
-        'Artist',
-        'Editor',
-        'Inker',
-        'Letterer',
-        'Penciller',
-        'Colorist',
-        'Cover Artist'
-      ],
-      required: true
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
+
+      credits: [
+        {
+          type: String,
+          enum: [
+            'Writer',
+            'Artist',
+            'Editor',
+            'Inker',
+            'Letterer',
+            'Penciller',
+            'Colorist',
+            'Cover Artist'
+          ],
+          required: true
+        }
+      ]
     }
   ]
 });
 
-module.exports = workCreditsSchema;
+const workCredits = mongoose.model('workCredit', workCreditSchema);
+
+module.exports = workCredits;

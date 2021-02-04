@@ -15,36 +15,13 @@ const sendEmail = async (options) => {
     html: options.message
   };
 
-  // try {
-  //   await sgMail.send(msg);
-  //   console.log('email sent');
-  // } catch (err) {
-  //   new AppError('Email could not be sent', 503);
-  // }
-  sgMail.send(msg).then(
-    () => {
-      console.log('email sent');
-    },
-    (error) => {
-      console.error(error);
-
-      if (error.response) {
-        console.error(error.response.body);
-      }
-    }
-  );
-  // 3) Actually send the email
-  //   try {
-  //   await client.sendMail(mailOptions, function (err, res) {
-  //     if (err) {
-  //       console.log(err);
-  //     }
-  //     console.log(res);
-  //   });
-  //   console.log('WORKING!!!!!');
-  //   } catch (err) {
-  //     new AppError('Email could not be sent', 503);
-  //   }
+  try {
+    // 2) Actually send the email
+    await sgMail.send(msg);
+    console.log('email sent successfully');
+  } catch (err) {
+    new AppError('Email could not be sent', 503);
+  }
 };
 
 module.exports = sendEmail;

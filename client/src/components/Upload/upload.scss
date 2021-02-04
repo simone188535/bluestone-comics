@@ -1,4 +1,4 @@
-// @import '../../index.scss';
+@import '../../styles/abstracts/variables.scss';
 
 .upload-page {
     .upload-form-container {
@@ -10,8 +10,8 @@
         .upload-form {
             margin: 0 auto;
 
-            input:not(.single-upload-field),
-            button{
+            input[type=text],
+            button.form-submit {
                 width: 100%;
             }
 
@@ -20,6 +20,33 @@
 
             }
 
+            .file-input-multiple-upload-container {}
+
+            .checkbox-group {
+                list-style-type: none;
+                margin-bottom: 15px;
+                li {
+                    margin-bottom: 5px;
+                }
+                &.upload-checkboxes {
+                    columns: 1;
+                    max-width: 200px;
+                    margin: 0 auto 15px;
+                }
+            }
+
         }
+
+        .slug-field {
+            margin-bottom: 5px;
+        }
+
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .upload-page .upload-form-container .upload-form .checkbox-group.upload-checkboxes {
+        column-count: 2;
+        max-width: 400px;
     }
 }

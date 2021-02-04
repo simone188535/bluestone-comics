@@ -9,12 +9,8 @@ const authController = require('../controllers/authController');
 router.route('/').get(authController.protect, userController.getAllUsers);
 router.route('/signup').post(authController.signup);
 router.route('/login').post(authController.login);
-router
-  .route('/forgot-password')
-  .post(authController.protect, authController.forgotPassword);
-router
-  .route('/reset-password/:token')
-  .patch(authController.protect, authController.resetPassword);
+router.route('/forgot-password').post(authController.forgotPassword);
+router.route('/reset-password/:resetToken').patch(authController.resetPassword);
 router
   .route('/update-password')
   .patch(authController.protect, authController.updatePassword);
@@ -26,5 +22,6 @@ router
   .delete(authController.protect, userController.deleteMe);
 
 router.route('/get-me').get(authController.protect, userController.getMe);
+router.route('/get-user').get(userController.getUser);
 
 module.exports = router;

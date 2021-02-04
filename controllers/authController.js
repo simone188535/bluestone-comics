@@ -96,36 +96,41 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   if (!token) {
     return next(
-      new AppError('You are not logged in! Please login to get access', 401)
+      new AppError('You are not logged in! Please login to get access.', 401)
     );
   }
 
-  // 2) Verification token
-  const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
+  try {
+    // 2) Verification token
+    const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
 
-  // 3) Check if user still exists
-  const freshUser = await User.findById(decoded.id);
-  if (!freshUser) {
-    return next(
-      new AppError('The user belonging to the token no longer exists.', 401)
-    );
+    // 3) Check if user still exists
+    const freshUser = await User.findById(decoded.id);
+    if (!freshUser) {
+      return next(
+        new AppError('The user belonging to the token no longer exists.', 401)
+      );
+    }
+
+    // 4) Check if password was updated after the token was issued.
+    if (freshUser.changedPasswordAfter(decoded.iat)) {
+      return next(
+        new AppError('Password was recently changed. Login again.', 401)
+      );
+    }
+
+    // GRANT ACCESS TO PROTECTED ROUTE
+    res.locals.user = freshUser;
+    next();
+  } catch (err) {
+    // This will likely be an error presented by JWT
+    return next(new AppError(err.message, 500));
   }
-
-  // 4) Check if password was updated after the token was issued.
-  if (freshUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError('Password was recently changed. Login again.', 401)
-    );
-  }
-
-  // GRANT ACCESS TO PROTECTED ROUTE
-  req.user = freshUser;
-  next();
 });
 
 exports.restrictTo = (...role) => {
   return (req, res, next) => {
-    if (!role.includes(req.user.role)) {
+    if (!role.includes(res.locals.user.role)) {
       return next(
         new AppError('You do not have permission to perform this action', 403)
       );
@@ -139,16 +144,20 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new AppError('There is no user with that email', 403));
+    return next(new AppError('There is no user with that email.', 403));
   }
   // 2) Generate random reset token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
   // 3) Send it to user's email
-  const resetURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/reset-password/${resetToken}`;
+  const host =
+    process.env.NODE_ENV === 'production'
+      ? req.get('host')
+      : process.env.FRONTEND_PORT;
+
+  // const resetURL = `${req.protocol}://${host}/api/v1/users/reset-password/${resetToken}`;
+  const resetURL = `${req.protocol}://${host}/reset-password/${resetToken}`;
 
   const message = `Forgot your password? Password Reset: <a href="${resetURL}">${resetURL}</a>. If not, please ignore this message.`;
 
@@ -177,7 +186,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on the token
   const hashedToken = crypto
     .createHash('sha256')
-    .update(req.params.token)
+    .update(req.params.resetToken)
     .digest('hex');
 
   const user = await User.findOne({
@@ -203,7 +212,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password, passwordConfirm } = req.body;
   // 1) Get user from collection
-  const user = await User.findById(req.user.id).select('+password');
+  const user = await User.findById(res.locals.user.id).select('+password');
   if (!user) {
     new AppError('User cannot be found. Login or Sign up', 401);
   }

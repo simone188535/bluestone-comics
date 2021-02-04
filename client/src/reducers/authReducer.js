@@ -10,7 +10,7 @@ export default function(state = initialState, action) {
         case LOGIN_REQUEST: 
             return Object.assign({}, state, {
                 isFetching: true,
-                isAuthenticated: false
+                isAuthenticated: null
             });
         case LOGIN_SUCCESS: 
             return Object.assign({}, state, {
