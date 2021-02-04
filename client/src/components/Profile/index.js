@@ -7,6 +7,8 @@ import './profile.scss';
 // https://codepen.io/Lima_Hammoud_/pen/WBYYQZ
 // https://codepen.io/creativetim/pen/mzVQrP
 // https://uicookies.com/bootstrap-profile-page/
+// https://codepen.io/JavaScriptJunkie/full/jvRGZy
+// https://www.dccomics.com/talent/tanya-horie
 const Profile = () => {
     let { username } = useParams();
     // Should be an object
@@ -44,8 +46,11 @@ const Profile = () => {
     return (
         <div className="container-fluid profile-page">
             <div className="row">
+                <div className="profile-page-header-image">
+                    <img src={profilePageUser.photo}/>
+                </div>
                 {/* <h2>Profile</h2> */}
-                <img />
+                
             </div>
         </div>
     );
