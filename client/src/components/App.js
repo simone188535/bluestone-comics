@@ -22,7 +22,7 @@ if (jwtToken) {
             return store.dispatch(authActions.logout());
         }
     })();
-} // this may need an else statement to clear store  if users jwt token expires while in use. 
+}
 
 const App = () => {
     return (

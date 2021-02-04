@@ -5,11 +5,9 @@ const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { _id, firstName, lastName, username, email } = req.body;
+  const { _id, username, email } = req.body;
   const queryObject = {
     _id,
-    firstName,
-    lastName,
     username,
     email
   };
@@ -29,7 +27,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: user
+    user
   });
 });
 
