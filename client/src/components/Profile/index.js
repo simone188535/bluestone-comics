@@ -23,7 +23,7 @@ const Profile = () => {
 
     const fetchProfileUser = async () => {
         try {
-            const res = await UserServices.getUser('','', username);
+            const res = await UserServices.getUser('', '', username);
 
             if (errorMessage) {
                 setErrorMessage('');
@@ -36,21 +36,35 @@ const Profile = () => {
 
     useEffect(() => {
         fetchProfileUser();
-      }, []);
+    }, []);
 
-      useEffect(() => {
+    useEffect(() => {
         console.log('profilePageUser', profilePageUser);
-      }, [profilePageUser]);
-    
+    }, [profilePageUser]);
+
 
     return (
         <div className="container-fluid profile-page">
-            <div className="row">
-                <div className="profile-page-header-image">
-                    <img src={profilePageUser.photo}/>
+            <div className="profile-page-header">
+                <div className="background-overlay">
+                    <img className="profile-pic" src={profilePageUser.userPhoto} />
+                    <h2 className="username-header">{profilePageUser.username}</h2>
+                    <p className="role">{profilePageUser.role}</p>
+                    <div className="general-info">
+                        <div className="general-info-content">
+                            <h2></h2>
+                            <p>Views</p>
+                        </div>
+                        <div className="general-info-content">
+                            <h2></h2>
+                            <p>Subscribers</p>
+                        </div>
+                        <div className="general-info-content">
+                            <h2></h2>
+                            <p>Subscribed</p>
+                        </div>
+                    </div>
                 </div>
-                {/* <h2>Profile</h2> */}
-                
             </div>
         </div>
     );
