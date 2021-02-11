@@ -21,6 +21,8 @@ const Profile = () => {
     //     isFetching: state.auth.isFetching
     // }));
 
+    // a helper function will be needed to format profile numbers: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900
+
     const fetchProfileUser = async () => {
         try {
             const res = await UserServices.getUser('', '', username);
@@ -52,19 +54,23 @@ const Profile = () => {
                     <p className="role">{profilePageUser.role}</p>
                     <div className="general-info">
                         <div className="general-info-content">
-                            <h2></h2>
+                            <h2>WWW.W</h2>
                             <p>Views</p>
                         </div>
                         <div className="general-info-content">
-                            <h2></h2>
+                            <h2>WWW.W</h2>
                             <p>Subscribers</p>
                         </div>
                         <div className="general-info-content">
-                            <h2></h2>
+                            <h2>WWW.W</h2>
                             <p>Subscribed</p>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="container profile-page-body">
+                <h2 className="title">Bio</h2>
+                <p className="description">{profilePageUser.bio}</p>
             </div>
         </div>
     );
