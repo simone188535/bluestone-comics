@@ -70,42 +70,80 @@
     .profile-page-body {
         overflow: auto;
         padding-top: 70px;
-        .title {
-            text-align: center;
-            margin-top: 30px;
+
+        .user-bio {
+            margin-top: 50px;
+            .title {
+                text-align: center;
+                margin-top: 30px;
+            }
+
+            .description {
+                text-align: center;
+                margin-top: 30px;
+                color: $gray-black;
+                line-height: 1.9em;
+                font-weight: $light;
+                font-size: 1.1em;
+            }
+
         }
 
-        .description {
-            text-align: center;
-            margin-top: 30px;
-            color: $gray-black;
-            line-height: 1.9em;
-            font-weight: $light;
-            font-size: 1.1em;
+        .user-info {
+            .tab-navigation {
+                ul {
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    margin-bottom: 20px;
+
+                    li {
+                        width: 150px;
+                    }
+                }
+
+                .react-tabs__tab-panel {
+                    width: 150px;
+                }
+            }
         }
     }
 }
 
 @media only screen and (min-width: $medium) {
-    .profile-page .profile-page-header .background-overlay {
+    .profile-page {
+        .profile-page-header .background-overlay {
 
-        .profile-pic {
-            margin: 60px auto;
+            .profile-pic {
+                margin: 60px auto;
+            }
+
+            .general-info {
+                &-content {
+                    float: left;
+                    width: 50%;
+                    text-align: center;
+                    margin: 30px auto;
+
+                    h2 {
+                        font-size: 1.4em;
+                    }
+
+                    &:last-child {
+                        width: 100%;
+                    }
+                }
+            }
         }
 
-        .general-info {
-            &-content {
-                float: left;
-                width: 50%;
-                text-align: center;
-                margin: 30px auto;
-
-                h2 {
-                    font-size: 1.4em;
-                }
-
-                &:last-child {
-                    width: 100%;
+        .profile-page-body {
+            .user-info {
+                .tab-navigation {
+                    ul {
+                        li {
+                            width: 25%;
+                        }
+                    }
                 }
             }
         }
@@ -113,15 +151,27 @@
 }
 
 @media only screen and (min-width: $large) {
-    .profile-page .profile-page-header .background-overlay .general-info {
-        &-content {
-            float: left;
-            width: 33.333%;
-            text-align: center;
-            margin-top: 30px;
-
-            &:last-child {
+    .profile-page {
+        .profile-page-header .background-overlay .general-info {
+            &-content {
+                float: left;
                 width: 33.333%;
+                text-align: center;
+                margin-top: 30px;
+
+                &:last-child {
+                    width: 33.333%;
+                }
+            }
+        }
+
+        .profile-page-body {
+            .user-info {
+                .tab-navigation {
+                    ul {
+                        justify-content: space-between;
+                    }
+                }
             }
         }
     }

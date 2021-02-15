@@ -1,0 +1,23 @@
+.tab-navigation {
+    ul {
+        position: relative;
+        border-bottom: 1px solid $light-grey;
+
+    li {
+        display: inline-block;
+        padding-right: 5px;
+        padding-left: 5px;
+        padding: 16px 30px;
+        cursor: default;
+        transition: all ease-in-out .2s;
+        border-bottom: 5px solid transparent;
+        color: $gray-black;
+        text-align: center;
+
+        &.react-tabs__tab--selected {
+            border-bottom: 5px #0088dd solid;
+            color: $off-black;
+        }
+    }
+}
+}

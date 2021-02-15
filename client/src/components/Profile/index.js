@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { UserServices } from '../../services';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import './profile.scss';
 
 // https://www.google.com/search?q=profile+page+examples&tbm=isch&ved=2ahUKEwiHqYjq8pfuAhUWGs0KHX0JDK8Q2-cCegQIABAA&oq=profile+page+ex&gs_lcp=CgNpbWcQARgAMgIIADIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAgQHjoECAAQQ1CjxxZYquUWYLTuFmgAcAB4AIABeIgBrQKSAQMyLjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=iV_-X8fAB5a0tAb9krD4Cg&bih=610&biw=1191&rlz=1C5CHFA_enUS873US873#imgrc=H1KWibQNaM5UGM
@@ -59,18 +60,44 @@ const Profile = () => {
                         </div>
                         <div className="general-info-content">
                             <h2>WWW.W</h2>
-                            <p>Subscribers</p>
+                            <p>Followers</p>
                         </div>
                         <div className="general-info-content">
                             <h2>WWW.W</h2>
-                            <p>Subscribed</p>
+                            <p>Following</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="container profile-page-body">
-                <h2 className="title">Bio</h2>
-                <p className="description">{profilePageUser.bio}</p>
+                <section className="user-bio">
+                    <h2 className="title">Bio</h2>
+                    <p className="description">{profilePageUser.bio}</p>
+                </section>
+                <section className="user-info">
+                    <Tabs className="tab-navigation">
+                        <TabList>
+                            <Tab>Works</Tab>
+                            <Tab>Bookmarks</Tab>
+                            <Tab>Followers</Tab>
+                            <Tab>Following</Tab>
+                            {/* <Tab>Achievements</Tab> */}
+                        </TabList>
+
+                        <TabPanel>
+                            <h2>Any content 1</h2>
+                        </TabPanel>
+                        <TabPanel>
+                            <h2>Any content 2</h2>
+                        </TabPanel>
+                        <TabPanel>
+                            <h2>Any content 3</h2>
+                        </TabPanel>
+                        <TabPanel>
+                            <h2>Any content 4</h2>
+                        </TabPanel>
+                    </Tabs>
+                </section>
             </div>
         </div>
     );
