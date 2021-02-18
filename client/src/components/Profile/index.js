@@ -60,11 +60,11 @@ const Profile = () => {
                         </div>
                         <div className="general-info-content">
                             <h2>WWW.W</h2>
-                            <p>Followers</p>
+                            <p>Subscribers</p>
                         </div>
                         <div className="general-info-content">
                             <h2>WWW.W</h2>
-                            <p>Following</p>
+                            <p>Subscribed</p>
                         </div>
                     </div>
                 </div>
@@ -79,8 +79,8 @@ const Profile = () => {
                         <TabList>
                             <Tab>Works</Tab>
                             <Tab>Bookmarks</Tab>
-                            <Tab>Followers</Tab>
-                            <Tab>Following</Tab>
+                            <Tab>Subscribers</Tab>
+                            <Tab>Subscribed</Tab>
                             {/* <Tab>Achievements</Tab> */}
                         </TabList>
 
