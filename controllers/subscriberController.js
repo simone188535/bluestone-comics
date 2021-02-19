@@ -20,7 +20,7 @@ exports.checkSubscription = (onlyCheckSubscription = false) =>
     });
   });
 
-exports.Subscribe = catchAsync(async (req, res, next) => {
+exports.subscribe = catchAsync(async (req, res, next) => {
   if (res.locals.subscriber) {
     return next(
       new AppError('This user is already subscribed to this publisher.', 401)
@@ -37,7 +37,7 @@ exports.Subscribe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.Unsubscribe = catchAsync(async (req, res, next) => {
+exports.unsubscribe = catchAsync(async (req, res, next) => {
   if (!res.locals.subscriber) {
     return next(
       new AppError('This user is not subscribed to this publisher.', 404)
@@ -50,6 +50,40 @@ exports.Unsubscribe = catchAsync(async (req, res, next) => {
   });
 
   res.status(204).json({
+    status: 'success'
+  });
+});
+
+exports.getAllSubscribers = catchAsync(async (req, res, next) => {
+  // if (!res.locals.subscriber) {
+  //   return next(
+  //     new AppError('This user is not subscribed to this publisher.', 404)
+  //   );
+  // }
+
+  // await Subscriber.deleteOne({
+  //   publisher: res.locals.subscriber.publisher,
+  //   subscriber: res.locals.subscriber.subscriber
+  // });
+
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
+exports.getAllSubscribed = catchAsync(async (req, res, next) => {
+  // if (!res.locals.subscriber) {
+  //   return next(
+  //     new AppError('This user is not subscribed to this publisher.', 404)
+  //   );
+  // }
+
+  // await Subscriber.deleteOne({
+  //   publisher: res.locals.subscriber.publisher,
+  //   subscriber: res.locals.subscriber.subscriber
+  // });
+
+  res.status(200).json({
     status: 'success'
   });
 });

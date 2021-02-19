@@ -10,15 +10,14 @@ router
   .route('/add')
   .get(
     subscriberController.checkSubscription(false),
-    subscriberController.Subscribe
+    subscriberController.subscribe
   );
 router
   .route('/remove')
   .get(
     subscriberController.checkSubscription(false),
-    subscriberController.Unsubscribe
+    subscriberController.unsubscribe
   );
-// router.route('/check-subscription').get(subscriberController.checkSubscription);
 router
   .route('/check-subscription')
   .get(subscriberController.checkSubscription(true));
