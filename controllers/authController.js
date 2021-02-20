@@ -154,7 +154,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const host =
     process.env.NODE_ENV === 'production'
       ? req.get('host')
-      : process.env.FRONTEND_PORT;
+      : keys.FRONTEND_PORT;
+  // const host =
+  // process.env.NODE_ENV === 'production'
+  // ? req.get('host')
+  // : process.env.FRONTEND_PORT;
 
   // const resetURL = `${req.protocol}://${host}/api/v1/users/reset-password/${resetToken}`;
   const resetURL = `${req.protocol}://${host}/reset-password/${resetToken}`;
