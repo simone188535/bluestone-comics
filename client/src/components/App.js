@@ -13,6 +13,7 @@ const jwtToken = localStorage.getItem('jwtToken');
 if (jwtToken) {
     (async () => {
         store.dispatch(authActions.loginRequest());
+        // Use a try catch here for this await, the catch will unset the token on failure. go into the backend and throw an error if decoding fails: https://stackoverflow.com/a/34329947/6195136
         const currentUser = await AuthenticationServices.ReAuthUser(jwtToken);
         
         if (currentUser.status === 200) {
