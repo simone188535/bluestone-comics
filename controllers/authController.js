@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const pool = require('../db');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
@@ -16,6 +17,7 @@ const signToken = (user) => {
 };
 
 const createSendToken = (user, status, res) => {
+  // this sends the new jwt token and updated user to the frontend
   const token = signToken(user);
 
   // res.cookie('jwtToken', token, {
@@ -36,6 +38,10 @@ const createSendToken = (user, status, res) => {
   });
 };
 
+const bcryptEncrypt = () => {
+  
+}
+
 exports.signup = catchAsync(async (req, res, next) => {
   const {
     firstName,
@@ -46,7 +52,19 @@ exports.signup = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm
   } = req.body;
-  const newUser = await User.create({
+  // const newUser = await User.create({
+  //   firstName,
+  //   lastName,
+  //   username,
+  //   email,
+  //   photo,
+  //   password,
+  //   passwordConfirm
+  // });
+  const insert = `INSERT INTO 
+    users(first_name, last_name, username, email, user_photo, password, password_confirm) 
+    VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
+  const values = [
     firstName,
     lastName,
     username,
@@ -54,8 +72,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     photo,
     password,
     passwordConfirm
-  });
+  ];
 
+  const { rows: newUser } = await pool.query(insert, values);
   createSendToken(newUser, 200, res);
 });
 
