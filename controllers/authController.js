@@ -49,7 +49,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     lastName,
     username,
     email,
-    photo,
     password,
     passwordConfirm
   } = req.body;
@@ -63,15 +62,14 @@ exports.signup = catchAsync(async (req, res, next) => {
   //   passwordConfirm
   // });
   const insertTable =
-    'users(first_name, last_name, username, email, user_photo, password, password_confirm)';
-  const preparedStatment = '$1, $2, $3, $4, $5, $6, $7';
+    'users(first_name, last_name, username, email, password, password_confirm)';
+  const preparedStatment = '$1, $2, $3, $4, $5, $6';
 
   const values = [
     firstName,
     lastName,
     username,
     email,
-    photo,
     password,
     passwordConfirm
   ];
