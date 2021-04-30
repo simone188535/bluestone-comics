@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const pool = require('../db');
@@ -10,6 +11,10 @@ const QueryPG = require('../utils/QueryPGFeature');
 
 const keys = require('../config/keys.js');
 
+/* 
+  This method creates a jwt Token for auth purposes in the front end to help identify
+  a user. This token is named JWTToken and is stored in local storage in the browser
+*/
 const signToken = (user) => {
   return jwt.sign({ id: user._id }, keys.JWT_SECRET, {
     // expires in 7 days
@@ -17,15 +22,12 @@ const signToken = (user) => {
   });
 };
 
+/* 
+  This method send the jwt token to the client/browser
+*/
 const createSendToken = (user, status, res) => {
   // this sends the new jwt token and updated user to the frontend
   const token = signToken(user);
-
-  // res.cookie('jwtToken', token, {
-  //   // expires in 7 days
-  //   expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  //   httpOnly: true
-  // });
 
   // hides password in json response
   user.password = undefined;
@@ -39,9 +41,21 @@ const createSendToken = (user, status, res) => {
   });
 };
 
-// const bcryptEncrypt = () => {
+/* 
+  This method encrypts a give users password and returns the encryption
+*/
+const bcryptPasswordEncryption = (password) => {
+  return bcrypt.hash(password, 12);
+};
 
-// }
+/* 
+  This method compares a user encrypted currentPassword(from the DB) to
+  the providedPassword(provided by the user which is not yet encrypted)
+  and returns true if they match. 
+*/
+const bcryptPasswordCompare = (providedPassword, currentPassword) => {
+  return bcrypt.compare(providedPassword, currentPassword);
+};
 
 exports.signup = catchAsync(async (req, res, next) => {
   const {
@@ -61,6 +75,8 @@ exports.signup = catchAsync(async (req, res, next) => {
   //   password,
   //   passwordConfirm
   // });
+  const encryptedPassword = await bcryptPasswordEncryption(password);
+
   const insertTable =
     'users(first_name, last_name, username, email, password, password_confirm)';
   const preparedStatment = '$1, $2, $3, $4, $5, $6';
@@ -70,7 +86,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     lastName,
     username,
     email,
-    password,
+    encryptedPassword,
     passwordConfirm
   ];
 
