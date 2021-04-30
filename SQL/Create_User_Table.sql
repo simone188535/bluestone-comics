@@ -9,7 +9,7 @@ CREATE TABLE users(
 	user_photo VARCHAR default 'https://bluestone-images.s3.us-east-2.amazonaws.com/default/profile-pic.jpeg',
 	background_user_photo VARCHAR default 'https://bluestone-images.s3.us-east-2.amazonaws.com/default/plain-white-background.jpg',
 	password VARCHAR NOT NULL,
-	password_confirm VARCHAR NOT NULL,
+	-- password_confirm VARCHAR NOT NULL,
 	password_changed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 	password_reset_token VARCHAR,
 	password_reset_token_expires TIMESTAMP WITH TIME ZONE DEFAULT NULL,

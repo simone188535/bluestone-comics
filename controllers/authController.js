@@ -77,18 +77,10 @@ exports.signup = catchAsync(async (req, res, next) => {
   // });
   const encryptedPassword = await bcryptPasswordEncryption(password);
 
-  const insertTable =
-    'users(first_name, last_name, username, email, password, password_confirm)';
-  const preparedStatment = '$1, $2, $3, $4, $5, $6';
+  const insertTable = 'users(first_name, last_name, username, email, password)';
+  const preparedStatment = '$1, $2, $3, $4, $5';
 
-  const values = [
-    firstName,
-    lastName,
-    username,
-    email,
-    encryptedPassword,
-    passwordConfirm
-  ];
+  const values = [firstName, lastName, username, email, encryptedPassword];
 
   const newUser = await new QueryPG(pool).insert(
     insertTable,
