@@ -6,6 +6,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const sendEmail = require('../utils/email');
+const QueryPG = require('../utils/QueryPGFeature');
 
 const keys = require('../config/keys.js');
 
@@ -38,9 +39,9 @@ const createSendToken = (user, status, res) => {
   });
 };
 
-const bcryptEncrypt = () => {
-  
-}
+// const bcryptEncrypt = () => {
+
+// }
 
 exports.signup = catchAsync(async (req, res, next) => {
   const {
@@ -61,9 +62,10 @@ exports.signup = catchAsync(async (req, res, next) => {
   //   password,
   //   passwordConfirm
   // });
-  const insert = `INSERT INTO 
-    users(first_name, last_name, username, email, user_photo, password, password_confirm) 
-    VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
+  const insertTable =
+    'users(first_name, last_name, username, email, user_photo, password, password_confirm)';
+  const preparedStatment = '$1, $2, $3, $4, $5, $6, $7';
+
   const values = [
     firstName,
     lastName,
@@ -74,7 +76,12 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm
   ];
 
-  const { rows: newUser } = await pool.query(insert, values);
+  const newUser = await new QueryPG(pool).insert(
+    insertTable,
+    preparedStatment,
+    values
+  );
+
   createSendToken(newUser, 200, res);
 });
 
