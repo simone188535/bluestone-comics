@@ -16,7 +16,7 @@ const keys = require('../config/keys.js');
   a user. This token is named JWTToken and is stored in local storage in the browser
 */
 const signToken = (user) => {
-  return jwt.sign({ id: user._id }, keys.JWT_SECRET, {
+  return jwt.sign({ id: user.id }, keys.JWT_SECRET, {
     // expires in 7 days
     expiresIn: '7d'
   });

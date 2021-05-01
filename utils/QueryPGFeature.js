@@ -7,11 +7,13 @@ class QueryPGFeature {
     this.queryInstance = queryInstance;
   }
 
-  insert(tableInfo, preparedStatment, values) {
-    return this.queryInstance.query(
+  async insert(tableInfo, preparedStatment, values) {
+    const { rows } = await this.queryInstance.query(
       `INSERT INTO ${tableInfo} VALUES(${preparedStatment}) RETURNING *`,
       values
     );
+
+    return rows;
   }
 }
 
