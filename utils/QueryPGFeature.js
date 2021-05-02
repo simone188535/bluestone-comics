@@ -7,10 +7,44 @@ class QueryPGFeature {
     this.queryInstance = queryInstance;
   }
 
+  async find(
+    selectScope,
+    tableInfo,
+    additionalSelectQuery = null,
+    preparedStatment = null,
+    returnOnlyOneRow = false
+  ) {
+    let selectQuery = `SELECT ${selectScope} FROM ${tableInfo} `;
+
+    if (additionalSelectQuery) {
+      selectQuery += additionalSelectQuery;
+    }
+
+    const { rows } = await this.queryInstance.query(
+      selectQuery,
+      preparedStatment,
+      (err, res) => {
+        if (err) {
+          console.log(err.stack);
+        }
+      }
+    );
+
+    // const rowsReturned = !specificRowReturned ? rows: rowsReturned[specificRowReturned];
+    const rowsReturned = returnOnlyOneRow ? rows[0] : rows;
+
+    return rowsReturned;
+  }
+
   async insert(tableInfo, preparedStatment, values) {
     const { rows } = await this.queryInstance.query(
       `INSERT INTO ${tableInfo} VALUES(${preparedStatment}) RETURNING *`,
-      values
+      values,
+      (err, res) => {
+        if (err) {
+          console.log(err.stack);
+        }
+      }
     );
 
     return rows;
