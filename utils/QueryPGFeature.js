@@ -1,3 +1,4 @@
+const AppError = require('./appError');
 /* The purpose of this class to do reduce the 
 redundency of db queries to PostgresSQL */
 
@@ -25,7 +26,7 @@ class QueryPGFeature {
       preparedStatment,
       (err, res) => {
         if (err) {
-          console.log(err.stack);
+          throw new AppError(err.stack, 500);
         }
       }
     );
@@ -42,7 +43,7 @@ class QueryPGFeature {
       values,
       (err, res) => {
         if (err) {
-          console.log(err.stack);
+          throw new AppError(err.stack, 500);
         }
       }
     );
