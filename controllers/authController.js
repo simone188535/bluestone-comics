@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const validator = require('validator');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const pool = require('../db');
@@ -75,20 +76,33 @@ exports.signup = catchAsync(async (req, res, next) => {
   //   password,
   //   passwordConfirm
   // });
-  const encryptedPassword = await bcryptPasswordEncryption(password);
 
-  const insertTable = 'users(first_name, last_name, username, email, password)';
-  const preparedStatment = '$1, $2, $3, $4, $5';
+  if (!validator.isEmail(email)) {
+    return next(new AppError('This is not a valid email!', 406));
+  }
 
-  const values = [firstName, lastName, username, email, encryptedPassword];
+  if (password !== passwordConfirm) {
+    return next(new AppError('Passwords do not match. Try again!', 406));
+  }
+  try {
+    const encryptedPassword = await bcryptPasswordEncryption(password);
 
-  const newUser = await new QueryPG(pool).insert(
-    insertTable,
-    preparedStatment,
-    values
-  );
+    const insertTable =
+      'users(first_name, last_name, username, email, password)';
+    const preparedStatment = '$1, $2, $3, $4, $5';
 
-  createSendToken(newUser, 200, res);
+    const values = [firstName, lastName, username, email, encryptedPassword];
+
+    const newUser = await new QueryPG(pool).insert(
+      insertTable,
+      preparedStatment,
+      values
+    );
+
+    createSendToken(newUser, 200, res);
+  } catch (err) {
+    return next(new AppError(err.message, 500));
+  }
 });
 
 exports.login = catchAsync(async (req, res, next) => {

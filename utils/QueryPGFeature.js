@@ -20,35 +20,31 @@ class QueryPGFeature {
     if (additionalSelectQuery) {
       selectQuery += additionalSelectQuery;
     }
+    try {
+      const { rows } = await this.queryInstance.query(
+        selectQuery,
+        preparedStatment
+      );
 
-    const { rows } = await this.queryInstance.query(
-      selectQuery,
-      preparedStatment,
-      (err, res) => {
-        if (err) {
-          throw new AppError(err.stack, 500);
-        }
-      }
-    );
+      const rowsReturned = returnOnlyOneRow ? rows[0] : rows;
 
-    // const rowsReturned = !specificRowReturned ? rows: rowsReturned[specificRowReturned];
-    const rowsReturned = returnOnlyOneRow ? rows[0] : rows;
-
-    return rowsReturned;
+      return rowsReturned;
+    } catch (err) {
+      throw new AppError(err.message, 500);
+    }
   }
 
   async insert(tableInfo, preparedStatment, values) {
-    const { rows } = await this.queryInstance.query(
-      `INSERT INTO ${tableInfo} VALUES(${preparedStatment}) RETURNING *`,
-      values,
-      (err, res) => {
-        if (err) {
-          throw new AppError(err.stack, 500);
-        }
-      }
-    );
+    try {
+      const { rows } = await this.queryInstance.query(
+        `INSERT INTO ${tableInfo} VALUES(${preparedStatment}) RETURNING *`,
+        values
+      );
 
-    return rows;
+      return rows;
+    } catch (err) {
+      throw new AppError(err.message, 500);
+    }
   }
 }
 
