@@ -11,15 +11,11 @@ class QueryPGFeature {
   async find(
     selectScope,
     tableInfo,
-    additionalSelectQuery = null,
     preparedStatment = null,
     returnOnlyOneRow = false
   ) {
-    let selectQuery = `SELECT ${selectScope} FROM ${tableInfo} `;
+    const selectQuery = `SELECT ${selectScope} FROM ${tableInfo} `;
 
-    if (additionalSelectQuery) {
-      selectQuery += additionalSelectQuery;
-    }
     try {
       const { rows } = await this.queryInstance.query(
         selectQuery,

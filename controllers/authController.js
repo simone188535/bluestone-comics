@@ -112,22 +112,31 @@ exports.login = catchAsync(async (req, res, next) => {
     next(new AppError(`Email or Password has not been provided!`, 400));
   }
 
-  const existingUser = await User.findOne({ email }).select('+password');
+  // const existingUser = await User.findOne({ email }).select('+password');
+  const existingUser = await new QueryPG(pool).find(
+    'email, password',
+    'users WHERE email = $1;',
+    [email],
+    true
+  );
 
   if (!existingUser) {
     next(new AppError(`User not found. Please Sign Up.`, 401));
   }
+  try {
+    const passedPasswordVerification = await bcryptPasswordCompare(
+      password,
+      existingUser.password
+    );
 
-  const passedPasswordVerification = await existingUser.passwordCompare(
-    password,
-    existingUser.password
-  );
+    if (!passedPasswordVerification) {
+      return next(new AppError('Password is incorrect.', 406));
+    }
 
-  if (!passedPasswordVerification) {
-    return next(new AppError('Password is incorrect.', 406));
+    createSendToken(existingUser, 200, res);
+  } catch (err) {
+    return next(new AppError(err.message, 500));
   }
-
-  createSendToken(existingUser, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
