@@ -67,15 +67,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm
   } = req.body;
-  // const newUser = await User.create({
-  //   firstName,
-  //   lastName,
-  //   username,
-  //   email,
-  //   photo,
-  //   password,
-  //   passwordConfirm
-  // });
 
   if (!validator.isEmail(email)) {
     return next(new AppError('This is not a valid email!', 406));
@@ -112,7 +103,6 @@ exports.login = catchAsync(async (req, res, next) => {
     next(new AppError(`Email or Password has not been provided!`, 400));
   }
 
-  // const existingUser = await User.findOne({ email }).select('+password');
   const existingUser = await new QueryPG(pool).find(
     'email, password',
     'users WHERE email = $1;',
@@ -123,6 +113,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!existingUser) {
     next(new AppError(`User not found. Please Sign Up.`, 401));
   }
+
   try {
     const passedPasswordVerification = await bcryptPasswordCompare(
       password,
