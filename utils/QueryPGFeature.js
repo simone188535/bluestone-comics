@@ -12,7 +12,7 @@ class QueryPGFeature {
     selectScope,
     tableInfo,
     preparedStatment = null,
-    returnOnlyOneRow = false
+    returnMultipleRows = false
   ) {
     const selectQuery = `SELECT ${selectScope} FROM ${tableInfo} `;
 
@@ -22,7 +22,7 @@ class QueryPGFeature {
         preparedStatment
       );
 
-      const rowsReturned = returnOnlyOneRow ? rows[0] : rows;
+      const rowsReturned = returnMultipleRows ? rows : rows[0];
 
       return rowsReturned;
     } catch (err) {
@@ -30,11 +30,37 @@ class QueryPGFeature {
     }
   }
 
-  async insert(tableInfo, preparedStatment, values) {
+  async insert(tableInfo, preparedStatment, preparedStatmentValues) {
     try {
       const { rows } = await this.queryInstance.query(
         `INSERT INTO ${tableInfo} VALUES(${preparedStatment}) RETURNING *`,
-        values
+        preparedStatmentValues
+      );
+
+      return rows;
+    } catch (err) {
+      throw new AppError(err.message, 500);
+    }
+  }
+
+  async update(tableInfo, setQuery, whereQuery, preparedStatmentValues) {
+    try {
+      const { rows } = await this.queryInstance.query(
+        `UPDATE ${tableInfo} SET ${setQuery} WHERE ${whereQuery} RETURNING *`,
+        preparedStatmentValues
+      );
+
+      return rows;
+    } catch (err) {
+      throw new AppError(err.message, 500);
+    }
+  }
+
+  async delete(tableInfo, whereQuery, preparedStatmentValues) {
+    try {
+      const { rows } = await this.queryInstance.query(
+        `DELETE FROM ${tableInfo} WHERE ${whereQuery} RETURNING *`,
+        preparedStatmentValues
       );
 
       return rows;
