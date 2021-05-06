@@ -4,24 +4,42 @@ const keys = require('../config/keys');
 const AppError = require('./appError');
 
 const sendEmail = async (options) => {
-  // 1) Create a transporterOptions
-  sgMail.setApiKey(keys.SENDGRID_API_KEY);
+  // const msg = {
+  //   from: keys.EMAIL,
+  //   to: options.email,
+  //   subject: options.subject,
+  //   text: options.text,
+  //   html: options.message
+  // };
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.office365.com',
+    port: '587',
+    secureConnection: false,
+    secure: false,
+    requireTLS: true,
+    auth: {
+      user: keys.EMAIL_AUTH_USER,
+      pass: keys.EMAIL_AUTH_PASSWORD
+    },
+    tls: {
+      ciphers: 'SSLv3'
+    }
+  });
 
-  const msg = {
+  const mailOptions = {
     from: keys.EMAIL,
     to: options.email,
     subject: options.subject,
-    text: options.text,
-    html: options.message
+    text: options.message
   };
 
-  try {
-    // 2) Actually send the email
-    await sgMail.send(msg);
-    console.log('email sent successfully');
-  } catch (err) {
-    new AppError('Email could not be sent', 503);
-  }
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(`Email sent: ${info.response}`);
+    }
+  });
 };
 
 module.exports = sendEmail;

@@ -66,22 +66,6 @@ const wasPasswordChangedAfterJWTIssued = (JWTTimestamp, passwordChangedAt) => {
   return JWTTimestampConverted < passwordChangedAt;
 };
 
-const createPasswordResetToken = () => {
-  // create resetToken
-  const resetToken = crypto.randomBytes(32).toString('hex');
-
-  // encrypt reset token and save it to the password_reset_token field on the user table
-  const passwordResetToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
-
-  // create an expiration date/time for token to the password_reset_token_expires field on the user table
-  const passwordResetTokenExpires = Date.now() + 30 * 60 * 1000; // Expires in 30 minutes
-
-  return resetToken;
-};
-
 exports.signup = catchAsync(async (req, res, next) => {
   const {
     firstName,
@@ -220,17 +204,37 @@ exports.restrictTo = (...role) => {
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on email
+  const { email } = req.body;
   // const user = await User.findOne({ email: req.body.email });
-  const user = new QueryPG(pool).find('email', 'users WHERE email = $1;', [
-    req.body.email
+  const user = await new QueryPG(pool).find('*', 'users WHERE email = $1;', [
+    email
   ]);
+
+  // console.log('user', user, user.email);
 
   if (!user) {
     return next(new AppError('There is no user with that email.', 403));
   }
   // 2) Generate random reset token
-  const resetToken = user.createPasswordResetToken();
-  await user.save({ validateBeforeSave: false });
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  // encrypt reset token and save it to the password_reset_token field on the user table
+  const passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // create an expiration date/time for token to the password_reset_token_expires field on the user table
+  const passwordResetTokenExpires = new Date(
+    Date.now() + 30 * 60 * 1000
+  ).toISOString(); // Expires in 30 minutes
+
+  await new QueryPG(pool).update(
+    'users',
+    `password_reset_token = ($1), password_reset_token_expires = ($2)`,
+    'email = ($3)',
+    [passwordResetToken, passwordResetTokenExpires, email]
+  );
 
   // 3) Send it to user's email
   const host =
@@ -246,7 +250,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: 'Your password reset token (valid for 10 minutes).',
+      subject: 'Your password reset token (valid for 30 minutes).',
       message
     });
 
@@ -255,9 +259,14 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'Token sent to email!'
     });
   } catch (err) {
-    user.passwordResetToken = undefined;
-    user.passwordResetTokenExpires = undefined;
-    await user.save({ validateBeforeSave: false });
+    // unset password_reset_token and password_reset_token_expires if there is an issue sending the email
+    await new QueryPG(pool).update(
+      'users',
+      `password_reset_token = ($1), password_reset_token_expires = ($2)`,
+      'email = ($3)',
+      [undefined, undefined, user.email]
+    );
+
     return next(
       new AppError('There was an error sending the email. Try again', 500)
     );
