@@ -4,13 +4,6 @@ const keys = require('../config/keys');
 const AppError = require('./appError');
 
 const sendEmail = async (options) => {
-  // const msg = {
-  //   from: keys.EMAIL,
-  //   to: options.email,
-  //   subject: options.subject,
-  //   text: options.text,
-  //   html: options.message
-  // };
   const transporter = nodemailer.createTransport({
     host: 'smtp.office365.com',
     port: '587',
@@ -27,15 +20,16 @@ const sendEmail = async (options) => {
   });
 
   const mailOptions = {
-    from: keys.EMAIL,
-    to: options.email,
-    subject: options.subject,
-    text: options.message
+    from: keys.EMAIL, // sender address
+    to: options.email, // list of receivers
+    subject: options.subject, // Subject line
+    text: options.text, // plain text body
+    html: options.message // html body
   };
 
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
+  transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+      new AppError(err, 503);
     } else {
       console.log(`Email sent: ${info.response}`);
     }
