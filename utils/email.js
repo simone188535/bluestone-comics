@@ -27,13 +27,19 @@ const sendEmail = async (options) => {
     html: options.message // html body
   };
 
-  transporter.sendMail(mailOptions, function (err, info) {
-    if (err) {
-      new AppError(err, 503);
-    } else {
-      console.log(`Email sent: ${info.response}`);
-    }
-  });
+  // transporter.sendMail(mailOptions, function (err, info) {
+  //   if (err) {
+  //     new AppError(err, 503);
+  //   } else {
+  //     console.log(`Email sent: ${info.response}`);
+  //   }
+  // });
+  try {
+    const { response } = await transporter.sendMail(mailOptions);
+    console.log(`Email sent: ${response}`);
+  } catch (err) {
+    throw new AppError(err, 503);
+  }
 };
 
 module.exports = sendEmail;
