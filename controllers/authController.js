@@ -17,6 +17,10 @@ const keys = require('../config/keys.js');
   a user. This token is named JWTToken and is stored in local storage in the browser
 */
 const signToken = (user) => {
+  if (!user.id) {
+    throw new AppError('id field is missing, token is invalid', 500);
+  }
+
   return jwt.sign({ id: user.id }, keys.JWT_SECRET, {
     // expires in 7 days
     expiresIn: '7d'
@@ -113,7 +117,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   const existingUser = await new QueryPG(pool).find(
     'id, email, password',
-    'users WHERE email = $1;',
+    'users WHERE email = $1',
     [email]
   );
 
@@ -158,11 +162,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
 
     // 3) Check if user still exists
-    const freshUser = await new QueryPG(pool).find(
-      '*',
-      'users WHERE id = $1;',
-      [decoded.id]
-    );
+    const freshUser = await new QueryPG(pool).find('*', 'users WHERE id = $1', [
+      decoded.id
+    ]);
 
     if (!freshUser) {
       return next(
@@ -206,7 +208,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on email
   const { email } = req.body;
   // const user = await User.findOne({ email: req.body.email });
-  const user = await new QueryPG(pool).find('*', 'users WHERE email = $1;', [
+  const user = await new QueryPG(pool).find('*', 'users WHERE email = $1', [
     email
   ]);
 
@@ -280,24 +282,38 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .update(req.params.resetToken)
     .digest('hex');
 
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetTokenExpires: { $gt: Date.now() }
-  });
+  // find user that contains hashedToken and password reset token is not expired (time of token is greater than current time)
+  const user = await new QueryPG(pool).find(
+    '*',
+    'users WHERE password_reset_token = ($1) AND password_reset_token_expires > ($2)',
+    [hashedToken, new Date()]
+  );
 
   // 2) If token has not expired, and there is a user, set the new password
   if (!user) {
     new AppError('Token is invalid or has expired.', 400);
   }
-  const { password, passwordConfirm } = req.body;
-  user.password = password;
-  user.passwordConfirm = passwordConfirm;
-  user.passwordResetToken = undefined;
-  user.passwordResetTokenExpires = undefined;
-  await user.save();
 
-  // 4) Log the user in, send JWT
-  createSendToken(user, 200, res);
+  const { password, passwordConfirm } = req.body;
+
+  if (password !== passwordConfirm) {
+    return next(new AppError('Passwords do not match. Try again!', 406));
+  }
+  try {
+    const encryptedPassword = await bcryptPasswordEncryption(password);
+
+    const updatedUser = await new QueryPG(pool).update(
+      'users',
+      `password = ($1), password_reset_token = ($2) ,password_reset_token_expires = ($3)`,
+      'email = ($4)',
+      [encryptedPassword, undefined, undefined, user.email]
+    );
+
+    // 4) Log the user in, send JWT
+    createSendToken(updatedUser[0], 200, res);
+  } catch (err) {
+    return next(new AppError(err.message, 500));
+  }
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
