@@ -18,7 +18,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^7.2.0",
     "aws-sdk": "^2.746.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",

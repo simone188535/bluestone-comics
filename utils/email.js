@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const sgMail = require('@sendgrid/mail');
 const keys = require('../config/keys');
 const AppError = require('./appError');
 
