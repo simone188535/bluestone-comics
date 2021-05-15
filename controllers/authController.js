@@ -17,10 +17,6 @@ const keys = require('../config/keys.js');
   a user. This token is named JWTToken and is stored in local storage in the browser
 */
 const signToken = (user) => {
-  if (!user.id) {
-    throw new AppError('id field is missing, token is invalid', 500);
-  }
-
   return jwt.sign({ id: user.id }, keys.JWT_SECRET, {
     // expires in 7 days
     expiresIn: '7d'
@@ -31,6 +27,10 @@ const signToken = (user) => {
   This method send the jwt token to the client/browser
 */
 const createSendToken = (user, status, res) => {
+  if (!user.id) {
+    throw new AppError('id field is missing, token is invalid', 500);
+  }
+  console.log('user', user.id);
   // this sends the new jwt token and updated user to the frontend
   const token = signToken(user);
 
@@ -102,7 +102,7 @@ exports.signup = catchAsync(async (req, res, next) => {
       values
     );
 
-    createSendToken(newUser, 200, res);
+    createSendToken(newUser[0], 200, res);
   } catch (err) {
     return next(new AppError(err.message, 500));
   }
@@ -116,7 +116,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   const existingUser = await new QueryPG(pool).find(
-    'id, email, password',
+    '*',
     'users WHERE email = $1',
     [email]
   );
@@ -318,25 +318,51 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password, passwordConfirm } = req.body;
-  // 1) Get user from collection
-  const user = await User.findById(res.locals.user.id).select('+password');
+
+  if (password !== passwordConfirm) {
+    return next(new AppError('Passwords do not match. Try again!', 406));
+  }
+
+  // 1) Get user from DB
+  // const user = await User.findById(res.locals.user.id).select('+password');
+  const user = await new QueryPG(pool).find('*', 'users WHERE id = ($1)', [
+    res.locals.user.id
+  ]);
   if (!user) {
     new AppError('User cannot be found. Login or Sign up', 401);
   }
-  // 2) Check if POSTed current password is correct
-  const passedPasswordVerification = await user.passwordCompare(
-    currentPassword,
-    user.password
-  );
+  try {
+    // 2) Check if POSTed current password is correct
+    // const passedPasswordVerification = await user.passwordCompare(
+    //   currentPassword,
+    //   user.password
+    // );
+    const passedPasswordVerification = await bcryptPasswordCompare(
+      currentPassword,
+      user.password
+    );
 
-  if (!passedPasswordVerification) {
-    return next(new AppError('Password is incorrect.', 406));
+    if (!passedPasswordVerification) {
+      return next(new AppError('Password is incorrect.', 406));
+    }
+
+    const encryptedPassword = await bcryptPasswordEncryption(password);
+
+    // 3) If so, update password
+    const updatedUser = await new QueryPG(pool).update(
+      'users',
+      `password = ($1), password_changed_at = ($2)`,
+      'id = ($3)',
+      [encryptedPassword, new Date(), res.locals.user.id]
+    );
+
+    // user.password = password;
+    // user.passwordConfirm = passwordConfirm;
+    // await user.save();
+
+    // 4) Log user in send jwt
+    createSendToken(updatedUser[0], 200, res);
+  } catch (err) {
+    return next(new AppError(err.message, 500));
   }
-  // 3) If so, update password
-  user.password = password;
-  user.passwordConfirm = passwordConfirm;
-  await user.save();
-
-  // 4) Log user in send jwt
-  createSendToken(user, 200, res);
 });
