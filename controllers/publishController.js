@@ -1,12 +1,13 @@
 // const User = require('../models/userModel');
 // const multer = require('multer');
-const AmazonSDKS3 = require('../utils/AmazonSDKS3');
+// const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 const WorkCredits = require('../models/workCreditsModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const filterObj = require('../utils/filterObj');
+const QueryPG = require('../utils/QueryPGFeature');
 
 // THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
 exports.getBookAndIssues = catchAsync(async (req, res, next) => {
