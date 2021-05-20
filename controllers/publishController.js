@@ -8,6 +8,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
+const pool = require('../db');
 
 // THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
 exports.getBookAndIssues = catchAsync(async (req, res, next) => {
@@ -44,81 +45,133 @@ exports.createBook = catchAsync(async (req, res, next) => {
   const {
     bookTitle,
     urlSlug,
-    bookCoverPhoto,
+    // bookCoverPhoto,
     bookDescription,
     genres,
     issueTitle,
-    issueCoverPhoto,
-    issueAssets,
+    // issueCoverPhoto,
+    // issueAssets,
     workCredits
   } = req.body;
 
-  const newBook = new Book({
-    publisher: res.locals.user.id,
-    title: bookTitle,
-    urlSlug,
-    coverPhoto: bookCoverPhoto,
-    description: bookDescription,
-    genres
-  });
+  // const newBook = new Book({
+  //   publisher: res.locals.user.id,
+  //   title: bookTitle,
+  //   urlSlug,
+  //   coverPhoto: bookCoverPhoto,
+  //   description: bookDescription,
+  //   genres
+  // });
 
-  const newIssue = new Issue({
-    publisher: res.locals.user.id,
-    book: newBook.id,
-    title: issueTitle,
-    coverPhoto: issueCoverPhoto,
-    totalPages: req.files.issueAssets.length,
-    issueAssets
-  });
-
-  // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
-  const parsedWorkCredits = JSON.parse(workCredits);
-
-  // console.log('workCredits', JSON.parse(workCredits));
-  // workCredits.forEach((formValue) =>
-  //   parsedWorkCredits.push(JSON.parse(formValue))
-  // );
-
-  const newWorkCredits = new WorkCredits({
-    publisher: res.locals.user.id,
-    book: newBook.id,
-    issue: newIssue.id,
-    workCredits: parsedWorkCredits
-  });
-
-  // grab AWS file prefix and save it to each model (each of these files should share the same one)
+  // grab AWS file prefix(where the file is saved) and save it to the db (each of these files should share the same one)
   const AWSPrefixArray = req.files.bookCoverPhoto[0].key.split('/');
-
-  newBook.imagePrefixReference = AWSPrefixArray[0];
-  newIssue.imagePrefixReference = AWSPrefixArray[1];
 
   // save these to models .......
   // console.log('bookCoverPhoto:', req.files.bookCoverPhoto);
   // console.log('issueCoverPhoto:', req.files.issueCoverPhoto);
   // console.log('issueAssets:', req.files.issueAssets);
 
-  // add AWS images to models
-  newBook.coverPhoto = req.files.bookCoverPhoto[0].location;
-  newIssue.coverPhoto = req.files.issueCoverPhoto[0].location;
+  // newIssue.issueAssets = req.files.issueAssets.map(
+  //   (issueAsset) => issueAsset.location
+  // );
 
-  newIssue.issueAssets = req.files.issueAssets.map(
-    (issueAsset) => issueAsset.location
+  const insertBook =
+    'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference)';
+  const bookPreparedStatement = '$1, $2, $3, $4, $5, $6';
+
+  const bookValues = [
+    res.locals.user.id,
+    bookTitle,
+    urlSlug,
+    req.files.bookCoverPhoto[0].location,
+    bookDescription,
+    AWSPrefixArray[0]
+  ];
+
+  const newBook = await new QueryPG(pool).insert(
+    insertBook,
+    bookPreparedStatement,
+    bookValues
+  );
+
+  // const newIssue = new Issue({
+  //   publisher: res.locals.user.id,
+  //   book: newBook.id,
+  //   title: issueTitle,
+  //   coverPhoto: issueCoverPhoto,
+  //   totalPages: req.files.issueAssets.length,
+  //   issueAssets
+  // });
+
+  const insertIssue =
+    'issues(publisher_id, book_id, title, cover_photo, image_prefix_reference)';
+  const issuePreparedStatement = '$1, $2, $3, $4, $5';
+
+  const issueValues = [
+    res.locals.user.id,
+    newBook[0].id,
+    issueTitle,
+    req.files.issueCoverPhoto[0].location,
+    AWSPrefixArray[1]
+  ];
+
+  const newIssue = await new QueryPG(pool).insert(
+    insertIssue,
+    issuePreparedStatement,
+    issueValues
+  );
+
+  console.log('newBook: ', newBook, 'newIssue: ', newIssue);
+  return;
+
+  // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
+  const parsedWorkCredits = JSON.parse(workCredits);
+
+  // const newWorkCredits = new WorkCredits({
+  //   publisher: res.locals.user.id,
+  //   book: newBook.id,
+  //   issue: newIssue.id,
+  //   workCredits: parsedWorkCredits
+  // });
+
+  // this will have to be added iteratively, probably with a nested for loop
+  const insertWorkCredits =
+    'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credits)';
+  const workCreditsPreparedStatement = '$1, $2, $3, $4, $5';
+
+  const workCreditsValues = [
+    res.locals.user.id,
+    newBook.id,
+    newIssue.id,
+    req.files.issueCoverPhoto[0].location,
+    AWSPrefixArray[1]
+  ];
+
+  const newWorkCredits = await new QueryPG(pool).insert(
+    insertWorkCredits,
+    workCreditsPreparedStatement,
+    workCreditsValues
   );
 
   // Change user role to creator
-  res.locals.user.role = 'creator';
-  const user = await res.locals.user.save({ validateBeforeSave: false });
+  const updatedUser = await new QueryPG(pool).update(
+    'users',
+    'role = ($1)',
+    'id = ($2)',
+    ['creator', res.locals.user.id]
+  );
 
-  res.locals.user = user;
+  res.locals.user = updatedUser[0];
 
-  // console.log('newBook', newBook);
-  // console.log('newIssue', newIssue);
-  // console.log('workCredits', newWorkCredits);
-
-  await newBook.save();
-  await newIssue.save();
-  await newWorkCredits.save();
-
+  console.log(
+    'newBook: ',
+    newBook,
+    'newIssue: ',
+    newIssue,
+    'parsedWorkCredits: ',
+    parsedWorkCredits
+  );
+  return;
   res.status(201).json({
     status: 'success',
     book: newBook,

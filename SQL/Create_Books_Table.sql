@@ -9,6 +9,6 @@ CREATE TABLE books(
 	status status_types DEFAULT 'ongoing' NOT NULL,
 	removed BOOLEAN DEFAULT 'false',
 	image_prefix_reference VARCHAR NOT NULL,
-	last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+	last_updated TIMESTAMP WITH TIME ZONE DEFAULT NULL,
 	date_created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

@@ -30,7 +30,7 @@ const createSendToken = (user, status, res) => {
   if (!user.id) {
     throw new AppError('id field is missing, token is invalid', 500);
   }
-  console.log('user', user.id);
+
   // this sends the new jwt token and updated user to the frontend
   const token = signToken(user);
 
@@ -92,13 +92,13 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     const insertTable =
       'users(first_name, last_name, username, email, password)';
-    const preparedStatment = '$1, $2, $3, $4, $5';
+    const preparedStatement = '$1, $2, $3, $4, $5';
 
     const values = [firstName, lastName, username, email, encryptedPassword];
 
     const newUser = await new QueryPG(pool).insert(
       insertTable,
-      preparedStatment,
+      preparedStatement,
       values
     );
 
@@ -351,7 +351,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     // 3) If so, update password
     const updatedUser = await new QueryPG(pool).update(
       'users',
-      `password = ($1), password_changed_at = ($2)`,
+      'password = ($1), password_changed_at = ($2)',
       'id = ($3)',
       [encryptedPassword, new Date(), res.locals.user.id]
     );
