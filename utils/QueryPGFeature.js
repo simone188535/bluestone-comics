@@ -30,40 +30,62 @@ class QueryPGFeature {
     }
   }
 
-  async insert(tableInfo, preparedStatment, preparedStatmentValues) {
+  async insert(
+    tableInfo,
+    preparedStatment,
+    preparedStatmentValues,
+    returnMultipleRows = false
+  ) {
     try {
       const { rows } = await this.queryInstance.query(
         `INSERT INTO ${tableInfo} VALUES(${preparedStatment}) RETURNING *`,
         preparedStatmentValues
       );
 
-      return rows;
+      const rowsReturned = returnMultipleRows ? rows : rows[0];
+
+      return rowsReturned;
     } catch (err) {
       throw new AppError(err.message, 500);
     }
   }
 
-  async update(tableInfo, setQuery, whereQuery, preparedStatmentValues) {
+  async update(
+    tableInfo,
+    setQuery,
+    whereQuery,
+    preparedStatmentValues,
+    returnMultipleRows = false
+  ) {
     try {
       const { rows } = await this.queryInstance.query(
         `UPDATE ${tableInfo} SET ${setQuery} WHERE ${whereQuery} RETURNING *`,
         preparedStatmentValues
       );
 
-      return rows;
+      const rowsReturned = returnMultipleRows ? rows : rows[0];
+
+      return rowsReturned;
     } catch (err) {
       throw new AppError(err.message, 500);
     }
   }
 
-  async delete(tableInfo, whereQuery, preparedStatmentValues) {
+  async delete(
+    tableInfo,
+    whereQuery,
+    preparedStatmentValues,
+    returnMultipleRows = false
+  ) {
     try {
       const { rows } = await this.queryInstance.query(
         `DELETE FROM ${tableInfo} WHERE ${whereQuery} RETURNING *`,
         preparedStatmentValues
       );
 
-      return rows;
+      const rowsReturned = returnMultipleRows ? rows : rows[0];
+
+      return rowsReturned;
     } catch (err) {
       throw new AppError(err.message, 500);
     }

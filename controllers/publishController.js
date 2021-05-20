@@ -109,7 +109,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   const issueValues = [
     res.locals.user.id,
-    newBook[0].id,
+    newBook.id,
     issueTitle,
     req.files.issueCoverPhoto[0].location,
     AWSPrefixArray[1]
@@ -161,7 +161,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
     ['creator', res.locals.user.id]
   );
 
-  res.locals.user = updatedUser[0];
+  res.locals.user = updatedUser;
 
   console.log(
     'newBook: ',

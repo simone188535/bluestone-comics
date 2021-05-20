@@ -102,7 +102,7 @@ exports.signup = catchAsync(async (req, res, next) => {
       values
     );
 
-    createSendToken(newUser[0], 200, res);
+    createSendToken(newUser, 200, res);
   } catch (err) {
     return next(new AppError(err.message, 500));
   }
@@ -310,7 +310,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     );
 
     // 4) Log the user in, send JWT
-    createSendToken(updatedUser[0], 200, res);
+    createSendToken(updatedUser, 200, res);
   } catch (err) {
     return next(new AppError(err.message, 500));
   }
@@ -361,7 +361,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     // await user.save();
 
     // 4) Log user in send jwt
-    createSendToken(updatedUser[0], 200, res);
+    createSendToken(updatedUser, 200, res);
   } catch (err) {
     return next(new AppError(err.message, 500));
   }
