@@ -27,9 +27,6 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
 
 // This creates both the book and the first Issue
 exports.createBook = catchAsync(async (req, res, next) => {
-  // const users = await User.find();
-  // console.log('body', req.body);
-
   // // Filtered out unwanted fields
   // const filterBody = filterObj(
   //   req.body,
@@ -54,15 +51,6 @@ exports.createBook = catchAsync(async (req, res, next) => {
     workCredits
   } = req.body;
 
-  // const newBook = new Book({
-  //   publisher: res.locals.user.id,
-  //   title: bookTitle,
-  //   urlSlug,
-  //   coverPhoto: bookCoverPhoto,
-  //   description: bookDescription,
-  //   genres
-  // });
-
   // grab AWS file prefix(where the file is saved) and save it to the db (each of these files should share the same one)
   const AWSPrefixArray = req.files.bookCoverPhoto[0].key.split('/');
 
@@ -71,121 +59,95 @@ exports.createBook = catchAsync(async (req, res, next) => {
   // console.log('issueCoverPhoto:', req.files.issueCoverPhoto);
   // console.log('issueAssets:', req.files.issueAssets);
 
-  // newIssue.issueAssets = req.files.issueAssets.map(
-  //   (issueAsset) => issueAsset.location
-  // );
-
-  const insertBook =
-    'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference)';
-  const bookPreparedStatement = '$1, $2, $3, $4, $5, $6';
-
-  const bookValues = [
-    res.locals.user.id,
-    bookTitle,
-    urlSlug,
-    req.files.bookCoverPhoto[0].location,
-    bookDescription,
-    AWSPrefixArray[0]
-  ];
-
-  const newBook = await new QueryPG(pool).insert(
-    insertBook,
-    bookPreparedStatement,
-    bookValues
+  const newBook = await new QueryPG(
+    pool
+  ).insert(
+    'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference)',
+    '$1, $2, $3, $4, $5, $6',
+    [
+      res.locals.user.id,
+      bookTitle,
+      urlSlug,
+      req.files.bookCoverPhoto[0].location,
+      bookDescription,
+      AWSPrefixArray[0]
+    ]
   );
 
-  // const newIssue = new Issue({
-  //   publisher: res.locals.user.id,
-  //   book: newBook.id,
-  //   title: issueTitle,
-  //   coverPhoto: issueCoverPhoto,
-  //   totalPages: req.files.issueAssets.length,
-  //   issueAssets
-  // });
-
-  const insertIssue =
-    'issues(publisher_id, book_id, title, cover_photo, image_prefix_reference)';
-  const issuePreparedStatement = '$1, $2, $3, $4, $5';
-
-  const issueValues = [
-    res.locals.user.id,
-    newBook.id,
-    issueTitle,
-    req.files.issueCoverPhoto[0].location,
-    AWSPrefixArray[1]
-  ];
-
-  const newIssue = await new QueryPG(pool).insert(
-    insertIssue,
-    issuePreparedStatement,
-    issueValues
+  const newIssue = await new QueryPG(
+    pool
+  ).insert(
+    'issues(publisher_id, book_id, title, cover_photo, image_prefix_reference)',
+    '$1, $2, $3, $4, $5',
+    [
+      res.locals.user.id,
+      newBook.id,
+      issueTitle,
+      req.files.issueCoverPhoto[0].location,
+      AWSPrefixArray[1]
+    ]
   );
-
-  console.log('newBook: ', newBook, 'newIssue: ', newIssue);
 
   const newIssueAssets = [];
-  const insertIssueAssets =
-    'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)';
-  const issueAssetsPreparedStatement = '$1, $2, $3, $4, $5';
 
   req.files.issueAssets.forEach(async (issueAsset, index) => {
     // this will have to be added iteratively, probably with a nested for loop
-    // issueAsset.credits.forEach(async (credit) => {
-    const issueAssetsValues = [
-      res.locals.user.id,
-      newBook.id,
-      newIssue.id,
-      index,
-      issueAsset.location
-    ];
-    const addedIssueAsset = await new QueryPG(pool).insert(
-      insertIssueAssets,
-      issueAssetsPreparedStatement,
-      issueAssetsValues
+    const addedIssueAsset = await new QueryPG(
+      pool
+    ).insert(
+      'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
+      '$1, $2, $3, $4, $5',
+      [res.locals.user.id, newBook.id, newIssue.id, index, issueAsset.location]
     );
 
     newIssueAssets.push(addedIssueAsset);
-    console.log('addedIssueAsset: ', addedIssueAsset);
-    // });
   });
-
-  // const newWorkCredits = new WorkCredits({
-  //   publisher: res.locals.user.id,
-  //   book: newBook.id,
-  //   issue: newIssue.id,
-  //   workCredits: parsedWorkCredits
-  // });
 
   // add work edits to db
   // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
+  const newWorkCredits = [];
   const parsedWorkCredits = JSON.parse(workCredits);
 
-  console.log('parsedWorkCredits: ', parsedWorkCredits);
-  const newWorkCredits = [];
-  const insertWorkCredits =
-    'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credit)';
-  const workCreditsPreparedStatement = '$1, $2, $3, $4, $5';
+  await Promise.all(
+    parsedWorkCredits.map((workCredit) => {
+      // this will have to be added iteratively, probably with a nested for loop
+      workCredit.credits.forEach(async (credit) => {
+        const addedWorkCredit = await new QueryPG(
+          pool
+        ).insert(
+          'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credit)',
+          '$1, $2, $3, $4, $5',
+          [
+            res.locals.user.id,
+            newBook.id,
+            newIssue.id,
+            workCredit.user,
+            credit.toLowerCase()
+          ]
+        );
 
-  parsedWorkCredits.forEach((workCredit) => {
-    // this will have to be added iteratively, probably with a nested for loop
-    workCredit.credits.forEach(async (credit) => {
-      const workCreditsValues = [
-        res.locals.user.id,
-        newBook.id,
-        newIssue.id,
-        workCredit.user,
-        credit.toLowerCase()
-      ];
-      const addedWorkCredit = await new QueryPG(pool).insert(
-        insertWorkCredits,
-        workCreditsPreparedStatement,
-        workCreditsValues
-      );
+        newWorkCredits.push(addedWorkCredit);
+        // console.log('addedWorkCredit:', addedWorkCredit);
+      });
+    })
+  );
 
-      newWorkCredits.push(addedWorkCredit);
-      // console.log('addedWorkCredits:', addedWorkCredits);
-    });
-  });
+  console.log('newWorkCredits:', newWorkCredits);
+
+  const newGenres = [];
+  const parsedGenres = JSON.parse(genres);
+
+  await Promise.all(
+    parsedGenres.map(async (genre) => {
+      const addedGenre = await new QueryPG(
+        pool
+      ).insert('genres(book_id, genre)', '$1, $2', [newBook.id, genre]);
+
+      newGenres.push(addedGenre);
+      // console.log('addedGenre:', addedGenre);
+    })
+  );
+  console.log('newGenres:', newGenres);
 
   // Change user role to creator
   const updatedUser = await new QueryPG(pool).update(
@@ -197,20 +159,13 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   res.locals.user = updatedUser;
 
-  console.log(
-    'newBook: ',
-    newBook,
-    'newIssue: ',
-    newIssue,
-    'parsedWorkCredits: ',
-    parsedWorkCredits
-  );
   res.status(201).json({
     status: 'success',
     book: newBook,
     issue: newIssue,
     issueAssets: newIssueAssets,
-    workcredits: newWorkCredits
+    workcredits: newWorkCredits,
+    genres: newGenres
   });
 });
 
