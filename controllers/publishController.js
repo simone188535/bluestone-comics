@@ -122,10 +122,32 @@ exports.createBook = catchAsync(async (req, res, next) => {
   );
 
   console.log('newBook: ', newBook, 'newIssue: ', newIssue);
-  return;
 
-  // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
-  const parsedWorkCredits = JSON.parse(workCredits);
+  const newIssueAssets = [];
+  const insertIssueAssets =
+    'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)';
+  const issueAssetsPreparedStatement = '$1, $2, $3, $4, $5';
+
+  req.files.issueAssets.forEach(async (issueAsset, index) => {
+    // this will have to be added iteratively, probably with a nested for loop
+    // issueAsset.credits.forEach(async (credit) => {
+    const issueAssetsValues = [
+      res.locals.user.id,
+      newBook.id,
+      newIssue.id,
+      index,
+      issueAsset.location
+    ];
+    const addedIssueAsset = await new QueryPG(pool).insert(
+      insertIssueAssets,
+      issueAssetsPreparedStatement,
+      issueAssetsValues
+    );
+
+    newIssueAssets.push(addedIssueAsset);
+    console.log('addedIssueAsset: ', addedIssueAsset);
+    // });
+  });
 
   // const newWorkCredits = new WorkCredits({
   //   publisher: res.locals.user.id,
@@ -134,24 +156,36 @@ exports.createBook = catchAsync(async (req, res, next) => {
   //   workCredits: parsedWorkCredits
   // });
 
-  // this will have to be added iteratively, probably with a nested for loop
+  // add work edits to db
+  // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
+  const parsedWorkCredits = JSON.parse(workCredits);
+
+  console.log('parsedWorkCredits: ', parsedWorkCredits);
+  const newWorkCredits = [];
   const insertWorkCredits =
-    'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credits)';
+    'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credit)';
   const workCreditsPreparedStatement = '$1, $2, $3, $4, $5';
 
-  const workCreditsValues = [
-    res.locals.user.id,
-    newBook.id,
-    newIssue.id,
-    req.files.issueCoverPhoto[0].location,
-    AWSPrefixArray[1]
-  ];
+  parsedWorkCredits.forEach((workCredit) => {
+    // this will have to be added iteratively, probably with a nested for loop
+    workCredit.credits.forEach(async (credit) => {
+      const workCreditsValues = [
+        res.locals.user.id,
+        newBook.id,
+        newIssue.id,
+        workCredit.user,
+        credit.toLowerCase()
+      ];
+      const addedWorkCredit = await new QueryPG(pool).insert(
+        insertWorkCredits,
+        workCreditsPreparedStatement,
+        workCreditsValues
+      );
 
-  const newWorkCredits = await new QueryPG(pool).insert(
-    insertWorkCredits,
-    workCreditsPreparedStatement,
-    workCreditsValues
-  );
+      newWorkCredits.push(addedWorkCredit);
+      // console.log('addedWorkCredits:', addedWorkCredits);
+    });
+  });
 
   // Change user role to creator
   const updatedUser = await new QueryPG(pool).update(
@@ -171,12 +205,12 @@ exports.createBook = catchAsync(async (req, res, next) => {
     'parsedWorkCredits: ',
     parsedWorkCredits
   );
-  return;
   res.status(201).json({
     status: 'success',
     book: newBook,
     issue: newIssue,
-    workCredits: newWorkCredits
+    issueAssets: newIssueAssets,
+    workcredits: newWorkCredits
   });
 });
 
