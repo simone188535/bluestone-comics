@@ -51,17 +51,15 @@ exports.createBook = catchAsync(async (req, res, next) => {
     workCredits
   } = req.body;
 
-  // grab AWS file prefix(where the file is saved) and save it to the db (each of these files should share the same one)
+  // grab AWS file path (where the file is saved in aws) and save it to the db (each of these files should share path/location in aws)
   const AWSPrefixArray = req.files.bookCoverPhoto[0].key.split('/');
 
-  // save these to models .......
   // console.log('bookCoverPhoto:', req.files.bookCoverPhoto);
   // console.log('issueCoverPhoto:', req.files.issueCoverPhoto);
   // console.log('issueAssets:', req.files.issueAssets);
 
-  const newBook = await new QueryPG(
-    pool
-  ).insert(
+  // create new Book
+  const newBook = await new QueryPG(pool).insert(
     'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference)',
     '$1, $2, $3, $4, $5, $6',
     [
@@ -70,13 +68,12 @@ exports.createBook = catchAsync(async (req, res, next) => {
       urlSlug,
       req.files.bookCoverPhoto[0].location,
       bookDescription,
-      AWSPrefixArray[0]
+      AWSPrefixArray[0] // book path
     ]
   );
 
-  const newIssue = await new QueryPG(
-    pool
-  ).insert(
+  // create Issue
+  const newIssue = await new QueryPG(pool).insert(
     'issues(publisher_id, book_id, title, cover_photo, image_prefix_reference)',
     '$1, $2, $3, $4, $5',
     [
@@ -84,34 +81,42 @@ exports.createBook = catchAsync(async (req, res, next) => {
       newBook.id,
       issueTitle,
       req.files.issueCoverPhoto[0].location,
-      AWSPrefixArray[1]
+      AWSPrefixArray[1] // issue path
     ]
   );
 
+  // create Issue Sssets
   const newIssueAssets = [];
 
-  req.files.issueAssets.forEach(async (issueAsset, index) => {
-    // this will have to be added iteratively, probably with a nested for loop
-    const addedIssueAsset = await new QueryPG(
-      pool
-    ).insert(
-      'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
-      '$1, $2, $3, $4, $5',
-      [res.locals.user.id, newBook.id, newIssue.id, index, issueAsset.location]
-    );
+  await Promise.all(
+    req.files.issueAssets.map(async (issueAsset, index) => {
+      const addedIssueAsset = await new QueryPG(
+        pool
+      ).insert(
+        'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
+        '$1, $2, $3, $4, $5',
+        [
+          res.locals.user.id,
+          newBook.id,
+          newIssue.id,
+          index,
+          issueAsset.location
+        ]
+      );
 
-    newIssueAssets.push(addedIssueAsset);
-  });
+      newIssueAssets.push(addedIssueAsset);
+    })
+  );
 
-  // add work edits to db
+  // create Work Credits
   // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
   const newWorkCredits = [];
   const parsedWorkCredits = JSON.parse(workCredits);
 
   await Promise.all(
+    // eslint-disable-next-line array-callback-return
     parsedWorkCredits.map((workCredit) => {
-      // this will have to be added iteratively, probably with a nested for loop
-      workCredit.credits.forEach(async (credit) => {
+      workCredit.credits.map(async (credit) => {
         const addedWorkCredit = await new QueryPG(
           pool
         ).insert(
@@ -127,13 +132,11 @@ exports.createBook = catchAsync(async (req, res, next) => {
         );
 
         newWorkCredits.push(addedWorkCredit);
-        // console.log('addedWorkCredit:', addedWorkCredit);
       });
     })
   );
 
-  console.log('newWorkCredits:', newWorkCredits);
-
+  // create Genres
   const newGenres = [];
   const parsedGenres = JSON.parse(genres);
 
@@ -144,10 +147,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
       ).insert('genres(book_id, genre)', '$1, $2', [newBook.id, genre]);
 
       newGenres.push(addedGenre);
-      // console.log('addedGenre:', addedGenre);
     })
   );
-  console.log('newGenres:', newGenres);
 
   // Change user role to creator
   const updatedUser = await new QueryPG(pool).update(
