@@ -173,24 +173,23 @@ exports.createBook = catchAsync(async (req, res, next) => {
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
-  const existingBookByCurrentUser = await Book.findOne({
-    _id: bookId,
-    publisher: res.locals.user.id
-  });
+  const existingBookByCurrentUser = await new QueryPG(pool).find(
+    '*',
+    'books WHERE id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
+  // const existingBookByCurrentUser = await Book.findOne({
+  //   _id: bookId,
+  //   publisher: res.locals.user.id
+  // });
   if (!existingBookByCurrentUser) {
     next(new AppError(`Existing book cannot be found.`, 401));
   }
-  // delete existing Issues of Book by user
-  await Issue.deleteMany({
-    publisher: res.locals.user.id,
-    book: bookId
-  });
-
-  // delete the book
-  await Book.deleteOne({
-    _id: bookId,
-    publisher: res.locals.user.id
-  });
+  // delete existing Books by user. issues, issues assets ect will be deleted as well because of cascading in PG
+  await new QueryPG(pool).delete('books', 'id = $1 AND publisher_id = $2', [
+    bookId,
+    res.locals.user.id
+  ]);
 
   res.status(204).json({
     status: 'success',
