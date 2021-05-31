@@ -28,7 +28,10 @@ router
   .route('/:urlSlug/book/:bookId')
   .get(publishController.getBookAndIssues)
   .post(publishController.createIssue)
-  .patch(publishController.updateBook)
+  .patch(
+    AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
+    publishController.updateBook
+  )
   .delete(publishController.deleteBook);
 router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber')

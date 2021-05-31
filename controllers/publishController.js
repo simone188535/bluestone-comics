@@ -85,7 +85,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
     ]
   );
 
-  // create Issue Sssets
+  // create Issue Assets
   const newIssueAssets = [];
 
   await Promise.all(
@@ -199,31 +199,88 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 
 exports.updateBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
+  const bookCoverPhoto = req.file.location;
 
-  // Filtered out unwanted fields
-  const filterBody = filterObj(
-    req.body,
-    'coverPhoto',
-    'title',
-    'genres',
-    'description',
-    'urlSlug',
-    'status',
-    'removed'
+  const { title, genres, description, urlSlug, status, removed } = req.body;
+  // const filterBody = filterObj(
+  //   req.body,
+  //   'coverPhoto',
+  //   'title',
+  //   'genres',
+  //   'description',
+  //   'urlSlug',
+  //   'status',
+  //   'removed'
+  // );
+
+  const existingBookByCurrentUser = await new QueryPG(pool).find(
+    '*',
+    'books WHERE id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
   );
+
+  if (!existingBookByCurrentUser) {
+    next(new AppError(`Existing book cannot be found.`, 401));
+  }
 
   // edit any issue of a book
-  const updatedBook = await Book.findOneAndUpdate(
-    {
-      _id: bookId,
-      publisher: res.locals.user.id
-    },
-    filterBody,
-    { new: true, runValidators: true, useFindAndModify: false }
+  const updatedBook = await new QueryPG(pool).update(
+    'books',
+    'cover_photo = ($1), title = ($2), description = ($3), url_slug = ($4), status = ($5), removed = ($6)',
+    'id = ($7) AND publisher_id = ($8)',
+    [
+      bookCoverPhoto,
+      title,
+      description,
+      urlSlug,
+      status,
+      removed,
+      bookId,
+      res.locals.user.id
+    ]
   );
+
+  const parsedGenres = JSON.parse(genres);
+  const providedGenres = parsedGenres.map((genre) => genre.toLowerCase());
+  const newGenres = [];
+
+  const existingGenres = await new QueryPG(pool).find(
+    '*',
+    'genres WHERE book_id = ($1)',
+    [bookId],
+    true
+  );
+
+  const filteredExistingGenre = existingGenres.map(
+    (existingGenre) => existingGenre.genre
+  );
+
+ // console.log('filteredExistingGenre: ', filteredExistingGenre);
+
+  await Promise.all(
+    providedGenres.map(async (genre) => {
+      if (!filteredExistingGenre.includes(genre)) {
+        const addedGenre = await new QueryPG(
+          pool
+        ).insert('genres(book_id, genre)', '$1, $2', [bookId, genre]);
+
+        newGenres.push(addedGenre);
+      }
+    })
+  );
+
+  // const updatedBook = await Book.findOneAndUpdate(
+  //   {
+  //     _id: bookId,
+  //     publisher: res.locals.user.id
+  //   },
+  //   filterBody,
+  //   { new: true, runValidators: true, useFindAndModify: false }
+  // );
   res.status(200).json({
     status: 'success',
-    updatedBook
+    updatedBook,
+    updatedGenres: newGenres
   });
 });
 
