@@ -202,16 +202,6 @@ exports.updateBook = catchAsync(async (req, res, next) => {
   const bookCoverPhoto = req.file.location;
 
   const { title, genres, description, urlSlug, status, removed } = req.body;
-  // const filterBody = filterObj(
-  //   req.body,
-  //   'coverPhoto',
-  //   'title',
-  //   'genres',
-  //   'description',
-  //   'urlSlug',
-  //   'status',
-  //   'removed'
-  // );
 
   const existingBookByCurrentUser = await new QueryPG(pool).find(
     '*',
@@ -244,39 +234,20 @@ exports.updateBook = catchAsync(async (req, res, next) => {
   const providedGenres = parsedGenres.map((genre) => genre.toLowerCase());
   const newGenres = [];
 
-  const existingGenres = await new QueryPG(pool).find(
-    '*',
-    'genres WHERE book_id = ($1)',
-    [bookId],
-    true
-  );
+  // delete existing genres
+  await new QueryPG(pool).delete('genres', 'book_id = ($1)', [bookId]);
 
-  const filteredExistingGenre = existingGenres.map(
-    (existingGenre) => existingGenre.genre
-  );
-
- // console.log('filteredExistingGenre: ', filteredExistingGenre);
-
+  // add new genres
   await Promise.all(
     providedGenres.map(async (genre) => {
-      if (!filteredExistingGenre.includes(genre)) {
-        const addedGenre = await new QueryPG(
-          pool
-        ).insert('genres(book_id, genre)', '$1, $2', [bookId, genre]);
+      const addedGenre = await new QueryPG(
+        pool
+      ).insert('genres(book_id, genre)', '$1, $2', [bookId, genre]);
 
-        newGenres.push(addedGenre);
-      }
+      newGenres.push(addedGenre);
     })
   );
 
-  // const updatedBook = await Book.findOneAndUpdate(
-  //   {
-  //     _id: bookId,
-  //     publisher: res.locals.user.id
-  //   },
-  //   filterBody,
-  //   { new: true, runValidators: true, useFindAndModify: false }
-  // );
   res.status(200).json({
     status: 'success',
     updatedBook,
