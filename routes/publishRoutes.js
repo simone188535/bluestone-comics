@@ -29,6 +29,7 @@ router
   .get(publishController.getBookAndIssues)
   .post(publishController.createIssue)
   .patch(
+    // It may be helpful to make a seperate route for the ability to upload the bookCoverPhoto file. this will give the ability to upload the image optionally/ away from the text field
     AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
     publishController.updateBook
   )
