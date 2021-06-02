@@ -199,7 +199,6 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 
 exports.updateBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
-  const bookCoverPhoto = req.file.location;
 
   const { title, genres, description, urlSlug, status, removed } = req.body;
 
@@ -213,21 +212,12 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     next(new AppError(`Existing book cannot be found.`, 401));
   }
 
-  // edit any issue of a book
+  // update book values
   const updatedBook = await new QueryPG(pool).update(
     'books',
-    'cover_photo = ($1), title = ($2), description = ($3), url_slug = ($4), status = ($5), removed = ($6)',
-    'id = ($7) AND publisher_id = ($8)',
-    [
-      bookCoverPhoto,
-      title,
-      description,
-      urlSlug,
-      status,
-      removed,
-      bookId,
-      res.locals.user.id
-    ]
+    'title = ($1), description = ($2), url_slug = ($3), status = ($4), removed = ($5)',
+    'id = ($6) AND publisher_id = ($7)',
+    [title, description, urlSlug, status, removed, bookId, res.locals.user.id]
   );
 
   const parsedGenres = JSON.parse(genres);
@@ -252,6 +242,24 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     status: 'success',
     updatedBook,
     updatedGenres: newGenres
+  });
+});
+
+exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
+  const { bookId } = req.params;
+  const bookCoverPhoto = req.file.location;
+
+  // update cover photo of book
+  const updatedBook = await new QueryPG(pool).update(
+    'books',
+    'cover_photo = ($1)',
+    'id = ($2) AND publisher_id = ($3)',
+    [bookCoverPhoto, bookId, res.locals.user.id]
+  );
+
+  res.status(200).json({
+    status: 'success',
+    updatedBook
   });
 });
 
