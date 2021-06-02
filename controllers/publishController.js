@@ -13,15 +13,30 @@ const pool = require('../db');
 // THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
 exports.getBookAndIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
-  const bookByUser = await Book.findOne({
-    _id: bookId,
-    publisher: res.locals.user.id
-  }).populate('publisher');
+
+  const bookByUser = await new QueryPG(pool).find(
+    '*',
+    'books WHERE id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
+
+  const issuesOfBookByUser = await new QueryPG(pool).find(
+    '*',
+    'issues WHERE book_id = ($1) AND publisher_id = ($2)',
+    [bookId, res.locals.user.id],
+    true
+  );
+
+  // const bookByUser = await Book.findOne({
+  //   _id: bookId,
+  //   publisher: res.locals.user.id
+  // }).populate('publisher');
 
   // Get book and issues.
   res.status(200).json({
     status: 'success',
-    book: bookByUser
+    book: bookByUser,
+    issues: issuesOfBookByUser
   });
 });
 
