@@ -37,11 +37,12 @@ router
   )
   .delete(publishController.deleteBook);
 
-router.route('/:urlSlug/book/:bookId/cover-photo').patch(
-  // It may be helpful to make a seperate route for the ability to upload the bookCoverPhoto file. this will give the ability to upload the image optionally/ away from the text field
-  AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
-  publishController.updateBookCoverPhoto
-);
+router
+  .route('/:urlSlug/book/:bookId/cover-photo')
+  .patch(
+    AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
+    publishController.updateBookCoverPhoto
+  );
 
 router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber')
