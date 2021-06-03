@@ -8,6 +8,8 @@ const upload = multer();
 // const upload = multer({ dest: 'uploads/' });
 const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 
+const uploadS3 = AmazonSDKS3.uploadS3();
+
 const authController = require('../controllers/authController');
 const publishController = require('../controllers/publishController');
 
@@ -18,7 +20,7 @@ router.use(authController.protect);
 router
   .route('/')
   .post(
-    AmazonSDKS3.uploadS3().fields([
+    uploadS3.fields([
       { name: 'bookCoverPhoto', maxCount: 1 },
       { name: 'issueCoverPhoto', maxCount: 1 },
       { name: 'issueAssets' }
@@ -33,10 +35,9 @@ router
     publishController.getBookAndIssues(true),
     function (req, res, next) {
       // https://stackoverflow.com/questions/35847293/uploading-a-file-and-passing-a-additional-parameter-with-multer
-      AmazonSDKS3.uploadS3(
-        res.locals.bookImagePrefix,
-        res.locals.issueImagePrefix
-      ).array('issueAssets');
+      uploadS3(res.locals.bookImagePrefix, res.locals.issueImagePrefix).array(
+        'issueAssets'
+      );
       next();
     },
     publishController.createIssue
@@ -50,7 +51,7 @@ router
 
 router.route('/:urlSlug/book/:bookId/book-cover-photo').patch(
   // add a middleware that checks the S3 book prefix
-  AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
+  uploadS3.single('bookCoverPhoto'),
   publishController.updateBookCoverPhoto
 );
 // router.route('/:urlSlug/book/:bookId/issue-cover-photo').patch(
