@@ -20,18 +20,26 @@ const addWorkCredits = async (workCredits, publisherId, bookId, issueId) => {
 
   await Promise.all(
     // eslint-disable-next-line array-callback-return
-    parsedWorkCredits.map((workCredit) => {
-      workCredit.credits.map(async (credit) => {
-        const addedWorkCredit = await new QueryPG(
-          pool
-        ).insert(
-          'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credit)',
-          '$1, $2, $3, $4, $5',
-          [publisherId, bookId, issueId, workCredit.user, credit.toLowerCase()]
-        );
+    parsedWorkCredits.map(async (workCredit) => {
+      await Promise.all(
+        workCredit.credits.map(async (credit) => {
+          const addedWorkCredit = await new QueryPG(
+            pool
+          ).insert(
+            'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credit)',
+            '$1, $2, $3, $4, $5',
+            [
+              publisherId,
+              bookId,
+              issueId,
+              workCredit.user,
+              credit.toLowerCase()
+            ]
+          );
 
-        newWorkCredits.push(addedWorkCredit);
-      });
+          newWorkCredits.push(addedWorkCredit);
+        })
+      );
     })
   );
   return newWorkCredits;
@@ -101,7 +109,8 @@ exports.getBookAndIssues = (setImagePrefix = false) =>
 
     if (setImagePrefix) {
       res.locals.bookImagePrefix = bookByUser.image_prefix_reference;
-      res.locals.issueImagePrefix = issuesOfBookByUser.image_prefix_reference;
+      res.locals.issueImagePrefix =
+        issuesOfBookByUser[0].image_prefix_reference;
       return next();
     }
 
@@ -291,7 +300,7 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
 // });
 
 exports.createIssue = catchAsync(async (req, res, next) => {
-  const { issueTitle, issueCoverPhoto, issueAssets, workCredits } = req.body;
+  const { issueTitle, workCredits } = req.body;
   const { bookId } = req.params;
 
   // create Issue
@@ -303,25 +312,24 @@ exports.createIssue = catchAsync(async (req, res, next) => {
       bookId,
       issueTitle,
       req.files.issueCoverPhoto[0].location,
-      AWSPrefixArray[1] // issue path
+      res.locals.issueImagePrefix // issue path
     ]
   );
 
   // create Issue Assets
-  const newIssueAssets = [];
+  const newIssueAssets = await addIssueAssets(
+    req.files.issueAssets,
+    res.locals.user.id,
+    bookId,
+    newIssue.id
+  );
 
-  await Promise.all(
-    req.files.issueAssets.map(async (issueAsset, index) => {
-      const addedIssueAsset = await new QueryPG(
-        pool
-      ).insert(
-        'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
-        '$1, $2, $3, $4, $5',
-        [res.locals.user.id, bookId, newIssue.id, index, issueAsset.location]
-      );
-
-      newIssueAssets.push(addedIssueAsset);
-    })
+  // create Work Credits
+  const newWorkCredits = await addWorkCredits(
+    workCredits,
+    res.locals.user.id,
+    bookId,
+    newIssue.id
   );
 
   // const existingBookByCurrentUser = await Book.findOne({
@@ -355,9 +363,10 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   // });
 
   res.status(201).json({
-    status: 'success'
-    // book: existingBookByCurrentUser,
-    // newIssue
+    status: 'success',
+    issue: newIssue,
+    issueAssets: newIssueAssets,
+    workcredits: newWorkCredits
   });
 });
 

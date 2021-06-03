@@ -1,4 +1,5 @@
 const express = require('express');
+const { promisify } = require('util');
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ const uploadS3 = AmazonSDKS3.uploadS3();
 
 const authController = require('../controllers/authController');
 const publishController = require('../controllers/publishController');
+const catchAsync = require('../utils/catchAsync');
 
 // This middleware runs before all the routes beneath get the chance to. This checks if user is present for all routes before continuing.
 router.use(authController.protect);
@@ -33,15 +35,31 @@ router
   .get(publishController.getBookAndIssues)
   .post(
     publishController.getBookAndIssues(true),
-    function (req, res, next) {
-      // https://stackoverflow.com/questions/35847293/uploading-a-file-and-passing-a-additional-parameter-with-multer
-      uploadS3(res.locals.bookImagePrefix, res.locals.issueImagePrefix).array(
-        'issueAssets'
-      );
-      next();
-    },
+    uploadS3.fields([
+      { name: 'issueCoverPhoto', maxCount: 1 },
+      { name: 'issueAssets' }
+    ]),
     publishController.createIssue
   )
+  // .post(
+  //   publishController.getBookAndIssues(true),
+  //   catchAsync(async (req, res, next) => {
+  //     // https://stackoverflow.com/questions/35847293/uploading-a-file-and-passing-a-additional-parameter-with-multer
+
+  //     const issueUploadTest = promisify(
+  //       AmazonSDKS3.uploadS3(
+  //         res.locals.bookImagePrefix,
+  //         res.locals.issueImagePrefix
+  //       ).fields([
+  //         { name: 'issueCoverPhoto', maxCount: 1 },
+  //         { name: 'issueAssets' }
+  //       ])
+  //     );
+  //     await issueUploadTest();
+  //     next();
+  //   }),
+  //   publishController.createIssue
+  // )
   .patch(
     // upload.none() is for text-only multipart form data
     upload.none(),
