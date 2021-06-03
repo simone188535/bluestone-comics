@@ -10,6 +10,74 @@ const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
 const pool = require('../db');
 
+/*
+  This method inserts new work credits into the work_credits table
+*/
+const addWorkCredits = async (workCredits, publisherId, bookId, issueId) => {
+  // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
+  const newWorkCredits = [];
+  const parsedWorkCredits = JSON.parse(workCredits);
+
+  await Promise.all(
+    // eslint-disable-next-line array-callback-return
+    parsedWorkCredits.map((workCredit) => {
+      workCredit.credits.map(async (credit) => {
+        const addedWorkCredit = await new QueryPG(
+          pool
+        ).insert(
+          'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credit)',
+          '$1, $2, $3, $4, $5',
+          [publisherId, bookId, issueId, workCredit.user, credit.toLowerCase()]
+        );
+
+        newWorkCredits.push(addedWorkCredit);
+      });
+    })
+  );
+  return newWorkCredits;
+};
+
+/*
+  This method inserts the uploaded Issue Assets (By Multer/S3) into the issue_assets table
+*/
+const addIssueAssets = async (issueAssets, publisherId, bookId, issueId) => {
+  const newIssueAssets = [];
+
+  await Promise.all(
+    issueAssets.map(async (issueAsset, index) => {
+      const addedIssueAsset = await new QueryPG(
+        pool
+      ).insert(
+        'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
+        '$1, $2, $3, $4, $5',
+        [publisherId, bookId, issueId, index, issueAsset.location]
+      );
+
+      newIssueAssets.push(addedIssueAsset);
+    })
+  );
+  return newIssueAssets;
+};
+
+/*
+  This method inserts an array of genres into the genres table
+*/
+const addGenres = async (genres, bookId) => {
+  const newGenres = [];
+  const parsedGenres = JSON.parse(genres);
+
+  await Promise.all(
+    parsedGenres.map(async (genre) => {
+      const addedGenre = await new QueryPG(
+        pool
+      ).insert('genres(book_id, genre)', '$1, $2', [bookId, genre]);
+
+      newGenres.push(addedGenre);
+    })
+  );
+  return newGenres;
+};
+
 // THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
 exports.getBookAndIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
@@ -42,27 +110,12 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
 
 // This creates both the book and the first Issue
 exports.createBook = catchAsync(async (req, res, next) => {
-  // // Filtered out unwanted fields
-  // const filterBody = filterObj(
-  //   req.body,
-  //   'bookTitle',
-  //   'urlSlug',
-  //   'bookDescription',
-  //   'issueTitle'
-  // );
-
-  // console.log('body', req.body);
-  // console.log('filterBody', filterBody);
-
   const {
     bookTitle,
     urlSlug,
-    // bookCoverPhoto,
     bookDescription,
     genres,
     issueTitle,
-    // issueCoverPhoto,
-    // issueAssets,
     workCredits
   } = req.body;
 
@@ -101,69 +154,23 @@ exports.createBook = catchAsync(async (req, res, next) => {
   );
 
   // create Issue Assets
-  const newIssueAssets = [];
-
-  await Promise.all(
-    req.files.issueAssets.map(async (issueAsset, index) => {
-      const addedIssueAsset = await new QueryPG(
-        pool
-      ).insert(
-        'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
-        '$1, $2, $3, $4, $5',
-        [
-          res.locals.user.id,
-          newBook.id,
-          newIssue.id,
-          index,
-          issueAsset.location
-        ]
-      );
-
-      newIssueAssets.push(addedIssueAsset);
-    })
+  const newIssueAssets = await addIssueAssets(
+    req.files.issueAssets,
+    res.locals.user.id,
+    newBook.id,
+    newIssue.id
   );
 
   // create Work Credits
-  // The objects in workCredits are stringified and need to be parsed before adding the data to the schema
-  const newWorkCredits = [];
-  const parsedWorkCredits = JSON.parse(workCredits);
-
-  await Promise.all(
-    // eslint-disable-next-line array-callback-return
-    parsedWorkCredits.map((workCredit) => {
-      workCredit.credits.map(async (credit) => {
-        const addedWorkCredit = await new QueryPG(
-          pool
-        ).insert(
-          'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credit)',
-          '$1, $2, $3, $4, $5',
-          [
-            res.locals.user.id,
-            newBook.id,
-            newIssue.id,
-            workCredit.user,
-            credit.toLowerCase()
-          ]
-        );
-
-        newWorkCredits.push(addedWorkCredit);
-      });
-    })
+  const newWorkCredits = await addWorkCredits(
+    workCredits,
+    res.locals.user.id,
+    newBook.id,
+    newIssue.id
   );
 
   // create Genres
-  const newGenres = [];
-  const parsedGenres = JSON.parse(genres);
-
-  await Promise.all(
-    parsedGenres.map(async (genre) => {
-      const addedGenre = await new QueryPG(
-        pool
-      ).insert('genres(book_id, genre)', '$1, $2', [newBook.id, genre]);
-
-      newGenres.push(addedGenre);
-    })
-  );
+  const newGenres = await addGenres(genres, newBook.id);
 
   // Change user role to creator
   const updatedUser = await new QueryPG(pool).update(
@@ -285,50 +292,74 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
 //   });
 // });
 
-// This creates a new issue and increments the total number of issues in a book
 exports.createIssue = catchAsync(async (req, res, next) => {
   const { issueTitle, issueCoverPhoto, issueAssets, workCredits } = req.body;
   const { bookId } = req.params;
 
-  /* 
-  The reason findOneAndUpdate was not used for incrementing here is because the 
-  same functionality in the adjustTotalIssue instance method may need to be
-  used elsewhere it makes since to define it where it can be reused (within the Model)
-  */
-  const existingBookByCurrentUser = await Book.findOne({
-    _id: bookId,
-    publisher: res.locals.user.id
-  });
-  if (!existingBookByCurrentUser) {
-    next(
-      new AppError(`Existing book not found. Cannot create new issue.`, 401)
-    );
-  }
-  existingBookByCurrentUser.adjustTotalIssue('increment');
-  await existingBookByCurrentUser.save();
+  // create Issue
+  const newIssue = await new QueryPG(pool).insert(
+    'issues(publisher_id, book_id, title, cover_photo, image_prefix_reference)',
+    '$1, $2, $3, $4, $5',
+    [
+      res.locals.user.id,
+      bookId,
+      issueTitle,
+      req.files.issueCoverPhoto[0].location,
+      AWSPrefixArray[1] // issue path
+    ]
+  );
 
-  // calculates the total pages of assets provided
-  let totalPages = 0;
-  issueAssets.forEach(() => {
-    totalPages += 1;
-  });
+  // create Issue Assets
+  const newIssueAssets = [];
 
-  const newIssue = await Issue.create({
-    publisher: res.locals.user.id,
-    book: existingBookByCurrentUser.id,
-    title: issueTitle,
-    coverPhoto: issueCoverPhoto,
-    issueAssets,
-    // This makes totalIssues (from Book Model) and the current issueNumber(from Issue Model) consistent
-    issueNumber: existingBookByCurrentUser.totalIssues,
-    totalPages,
-    workCredits
-  });
+  await Promise.all(
+    req.files.issueAssets.map(async (issueAsset, index) => {
+      const addedIssueAsset = await new QueryPG(
+        pool
+      ).insert(
+        'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
+        '$1, $2, $3, $4, $5',
+        [res.locals.user.id, bookId, newIssue.id, index, issueAsset.location]
+      );
+
+      newIssueAssets.push(addedIssueAsset);
+    })
+  );
+
+  // const existingBookByCurrentUser = await Book.findOne({
+  //   _id: bookId,
+  //   publisher: res.locals.user.id
+  // });
+  // if (!existingBookByCurrentUser) {
+  //   next(
+  //     new AppError(`Existing book not found. Cannot create new issue.`, 401)
+  //   );
+  // }
+  // existingBookByCurrentUser.adjustTotalIssue('increment');
+  // await existingBookByCurrentUser.save();
+
+  // // calculates the total pages of assets provided
+  // let totalPages = 0;
+  // issueAssets.forEach(() => {
+  //   totalPages += 1;
+  // });
+
+  // const newIssue = await Issue.create({
+  //   publisher: res.locals.user.id,
+  //   book: existingBookByCurrentUser.id,
+  //   title: issueTitle,
+  //   coverPhoto: issueCoverPhoto,
+  //   issueAssets,
+  //   // This makes totalIssues (from Book Model) and the current issueNumber(from Issue Model) consistent
+  //   issueNumber: existingBookByCurrentUser.totalIssues,
+  //   totalPages,
+  //   workCredits
+  // });
 
   res.status(201).json({
-    status: 'success',
-    book: existingBookByCurrentUser,
-    newIssue
+    status: 'success'
+    // book: existingBookByCurrentUser,
+    // newIssue
   });
 });
 

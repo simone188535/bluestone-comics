@@ -37,12 +37,21 @@ router
   )
   .delete(publishController.deleteBook);
 
-router
-  .route('/:urlSlug/book/:bookId/cover-photo')
-  .patch(
-    AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
-    publishController.updateBookCoverPhoto
-  );
+router.route('/:urlSlug/book/:bookId/book-cover-photo').patch(
+  // add a middleware that checks the S3 book prefix
+  AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
+  publishController.updateBookCoverPhoto
+);
+// router.route('/:urlSlug/book/:bookId/issue-cover-photo').patch(
+//   // add a middleware that checks the S3 book prefix
+//   AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
+//   publishController.updateBookCoverPhoto
+// );
+// router.route('/:urlSlug/book/:bookId/issue-assets').patch(
+//   // add a middleware that checks the S3 book prefix
+//   AmazonSDKS3.uploadS3().fields([{ name: 'issueAssets' }]),
+//   publishController.updateBookCoverPhoto
+// );
 
 router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber')
