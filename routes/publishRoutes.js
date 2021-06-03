@@ -29,7 +29,18 @@ router
 router
   .route('/:urlSlug/book/:bookId')
   .get(publishController.getBookAndIssues)
-  .post(publishController.createIssue)
+  .post(
+    publishController.getBookAndIssues(true),
+    function (req, res, next) {
+      // https://stackoverflow.com/questions/35847293/uploading-a-file-and-passing-a-additional-parameter-with-multer
+      AmazonSDKS3.uploadS3(
+        res.locals.bookImagePrefix,
+        res.locals.issueImagePrefix
+      ).array('issueAssets');
+      next();
+    },
+    publishController.createIssue
+  )
   .patch(
     // upload.none() is for text-only multipart form data
     upload.none(),

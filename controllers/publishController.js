@@ -82,34 +82,41 @@ const addGenres = async (genres, bookId) => {
 };
 
 // THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
-exports.getBookAndIssues = catchAsync(async (req, res, next) => {
-  const { bookId } = req.params;
+exports.getBookAndIssues = (setImagePrefix = false) =>
+  catchAsync(async (req, res, next) => {
+    const { bookId } = req.params;
 
-  const bookByUser = await new QueryPG(pool).find(
-    '*',
-    'books WHERE id = $1 AND publisher_id = $2',
-    [bookId, res.locals.user.id]
-  );
+    const bookByUser = await new QueryPG(pool).find(
+      '*',
+      'books WHERE id = $1 AND publisher_id = $2',
+      [bookId, res.locals.user.id]
+    );
 
-  const issuesOfBookByUser = await new QueryPG(pool).find(
-    '*',
-    'issues WHERE book_id = ($1) AND publisher_id = ($2)',
-    [bookId, res.locals.user.id],
-    true
-  );
+    const issuesOfBookByUser = await new QueryPG(pool).find(
+      '*',
+      'issues WHERE book_id = ($1) AND publisher_id = ($2)',
+      [bookId, res.locals.user.id],
+      true
+    );
 
-  // const bookByUser = await Book.findOne({
-  //   _id: bookId,
-  //   publisher: res.locals.user.id
-  // }).populate('publisher');
+    if (setImagePrefix) {
+      res.locals.bookImagePrefix = bookByUser.image_prefix_reference;
+      res.locals.issueImagePrefix = issuesOfBookByUser.image_prefix_reference;
+      return next();
+    }
 
-  // Get book and issues.
-  res.status(200).json({
-    status: 'success',
-    book: bookByUser,
-    issues: issuesOfBookByUser
+    // const bookByUser = await Book.findOne({
+    //   _id: bookId,
+    //   publisher: res.locals.user.id
+    // }).populate('publisher');
+
+    // Get book and issues.
+    res.status(200).json({
+      status: 'success',
+      book: bookByUser,
+      issues: issuesOfBookByUser
+    });
   });
-});
 
 // This creates both the book and the first Issue
 exports.createBook = catchAsync(async (req, res, next) => {
