@@ -70,7 +70,10 @@ const addGenres = async (genres, bookId) => {
     parsedGenres.map(async (genre) => {
       const addedGenre = await new QueryPG(
         pool
-      ).insert('genres(book_id, genre)', '$1, $2', [bookId, genre]);
+      ).insert('genres(book_id, genre)', '$1, $2', [
+        bookId,
+        genre.toLowerCase()
+      ]);
 
       newGenres.push(addedGenre);
     })
@@ -242,23 +245,11 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     [title, description, urlSlug, status, removed, bookId, res.locals.user.id]
   );
 
-  const parsedGenres = JSON.parse(genres);
-  const providedGenres = parsedGenres.map((genre) => genre.toLowerCase());
-  const newGenres = [];
-
   // delete existing genres
   await new QueryPG(pool).delete('genres', 'book_id = ($1)', [bookId]);
 
   // add new genres
-  await Promise.all(
-    providedGenres.map(async (genre) => {
-      const addedGenre = await new QueryPG(
-        pool
-      ).insert('genres(book_id, genre)', '$1, $2', [bookId, genre]);
-
-      newGenres.push(addedGenre);
-    })
-  );
+  const newGenres = await addGenres(genres, bookId);
 
   res.status(200).json({
     status: 'success',
