@@ -556,29 +556,46 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
 
 exports.updateIssue = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
+  const { title, workCredits } = req.body;
 
-  // Filtered out unwanted fields
-  const filterBody = filterObj(
-    req.body,
-    'coverPhoto',
-    'title',
-    'issueAssets',
-    'workCredits'
+  const issueToUpdate = await new QueryPG(pool).find(
+    'id',
+    'issues WHERE issue_number = ($1) AND publisher_id = ($2)',
+    [issueNumber, res.locals.user.id]
   );
-  // console.log('!!!!!!!!', filterBody);
-  // edit any issue of a book
-  const updatedIssue = await Issue.findOneAndUpdate(
-    {
-      publisher: res.locals.user.id,
-      book: bookId,
-      issueNumber
-    },
-    filterBody,
-    { new: true, runValidators: true, useFindAndModify: false }
+
+  const updatedIssue = await new QueryPG(pool).update(
+    'issues',
+    'title = ($1)',
+    'book_id = ($2) AND issue_number = ($3) AND publisher_id = ($4)',
+    [title, bookId, issueNumber, res.locals.user.id]
+  );
+
+  if (!updatedIssue) {
+    return next(
+      new AppError(`Existing Issue not found. Cannot update issue.`, 401)
+    );
+  }
+
+  // delete work credits for an issues so that they can be reuploaded
+  await new QueryPG(pool).delete(
+    'work_credits',
+    'book_id = ($1) AND issue_id = ($2) AND publisher_id = ($3)',
+    [bookId, issueToUpdate.id, res.locals.user.id],
+    true
+  );
+
+  // create Work Credits
+  const newWorkCredits = await addWorkCredits(
+    workCredits,
+    res.locals.user.id,
+    bookId,
+    updatedIssue.id
   );
 
   res.status(200).json({
     status: 'success',
-    updatedIssue
+    updatedIssue,
+    updatedWorkCredits: newWorkCredits
   });
 });

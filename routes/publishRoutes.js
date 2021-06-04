@@ -89,7 +89,7 @@ router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber?')
   // .get(publishController.getIssue)
   .get(publishController.getBookAndIssueImagePrefix)
-  .patch(publishController.updateIssue)
+  .patch( upload.none(), publishController.updateIssue)
   .delete(publishController.deleteIssue);
 
 module.exports = router;
