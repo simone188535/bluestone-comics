@@ -1,5 +1,4 @@
 const express = require('express');
-const { promisify } = require('util');
 
 const router = express.Router();
 
@@ -13,7 +12,6 @@ const uploadS3 = AmazonSDKS3.uploadS3();
 
 const authController = require('../controllers/authController');
 const publishController = require('../controllers/publishController');
-const catchAsync = require('../utils/catchAsync');
 
 // This middleware runs before all the routes beneath get the chance to. This checks if user is present for all routes before continuing.
 router.use(authController.protect);
@@ -67,6 +65,7 @@ router
   )
   .delete(publishController.deleteBook);
 
+// File Update Routes
 router
   .route('/:urlSlug/book/:bookId/book-cover-photo')
   .patch(
@@ -77,14 +76,14 @@ router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber/issue-cover-photo')
   .patch(
     // add a middleware that checks the S3 book prefix
-    AmazonSDKS3.uploadS3().single('issueCoverPhoto'),
+    uploadS3.single('issueCoverPhoto'),
     publishController.updateIssueCoverPhoto
   );
-// router.route('/:urlSlug/book/:bookId/issue-assets').patch(
-//   // add a middleware that checks the S3 book prefix
-//   AmazonSDKS3.uploadS3().fields([{ name: 'issueAssets' }]),
-//   publishController.updateBookCoverPhoto
-// );
+router.route('/:urlSlug/book/:bookId/issue-assets').patch(
+  // add a middleware that checks the S3 book prefix
+  uploadS3.fields([{ name: 'issueAssets' }]),
+  publishController.updateIssueAssets
+);
 
 router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber?')

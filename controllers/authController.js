@@ -112,7 +112,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    next(new AppError(`Email or Password has not been provided!`, 400));
+    return next(new AppError(`Email or Password has not been provided!`, 400));
   }
 
   const existingUser = await new QueryPG(pool).find(
@@ -122,7 +122,7 @@ exports.login = catchAsync(async (req, res, next) => {
   );
 
   if (!existingUser) {
-    next(new AppError(`User not found. Please Sign Up.`, 401));
+    return next(new AppError(`User not found. Please Sign Up.`, 401));
   }
 
   try {

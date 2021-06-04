@@ -53,12 +53,13 @@ const addIssueAssets = async (issueAssets, publisherId, bookId, issueId) => {
 
   await Promise.all(
     issueAssets.map(async (issueAsset, index) => {
+      const pageNumber = index + 1;
       const addedIssueAsset = await new QueryPG(
         pool
       ).insert(
         'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
         '$1, $2, $3, $4, $5',
-        [publisherId, bookId, issueId, index, issueAsset.location]
+        [publisherId, bookId, issueId, pageNumber, issueAsset.location]
       );
 
       newIssueAssets.push(addedIssueAsset);
@@ -225,7 +226,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
   //   publisher: res.locals.user.id
   // });
   if (!existingBookByCurrentUser) {
-    next(new AppError(`Existing book cannot be found.`, 401));
+    return next(new AppError(`Existing book cannot be found.`, 401));
   }
   // delete existing Books by user. issues, issues assets ect will be deleted as well because of cascading in PG
   await new QueryPG(pool).delete('books', 'id = $1 AND publisher_id = $2', [
@@ -251,7 +252,12 @@ exports.updateBook = catchAsync(async (req, res, next) => {
   );
 
   if (!existingBookByCurrentUser) {
-    next(new AppError(`Existing book cannot be found.`, 401));
+    return next(
+      new AppError(
+        `Existing book cannot be found. Book Could not be updated.`,
+        401
+      )
+    );
   }
 
   // update book values
@@ -286,7 +292,15 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
     'id = ($2) AND publisher_id = ($3)',
     [bookCoverPhoto, bookId, res.locals.user.id]
   );
-
+  if (!updatedBook) {
+    return next(
+      new AppError(
+        `Existing book not found. Book photo cannot be updated.`,
+        401
+      )
+    );
+  }
+  // BUG Should the previous Book Cover photo be deleted from AWS?
   res.status(200).json({
     status: 'success',
     updatedBook
@@ -305,9 +319,38 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
     [issueCoverPhoto, bookId, issueNumber, res.locals.user.id]
   );
 
+  if (!updatedIssue) {
+    return next(
+      new AppError(
+        `Existing Issue not found. Issue cover photo cannot be updated.`,
+        401
+      )
+    );
+  }
+
+  // BUG Should the previous Issue Cover photo be deleted from AWS
+
   res.status(200).json({
     status: 'success',
     updatedIssue
+  });
+});
+
+exports.updateIssueAssets = catchAsync(async (req, res, next) => {
+  // const { bookId, issueNumber } = req.params;
+  // const issueCoverPhoto = req.file.location;
+
+  // // update cover photo of issue
+  // const updatedIssue = await new QueryPG(pool).update(
+  //   'issues',
+  //   'cover_photo = ($1)',
+  //   'book_id = ($2) AND issue_number = ($3) AND publisher_id = ($4)',
+  //   [issueCoverPhoto, bookId, issueNumber, res.locals.user.id]
+  // );
+
+  res.status(200).json({
+    status: 'success'
+    // updatedIssue
   });
 });
 
@@ -359,15 +402,38 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
   const AWSPrefixArray = req.files.issueCoverPhoto[0].key.split('/');
+
+  const existingBookByCurrentUser = await new QueryPG(pool).find(
+    '*',
+    'books WHERE id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
+  if (!existingBookByCurrentUser) {
+    // BUG Should the previous Book Cover photo be deleted from AWS?
+    return next(
+      new AppError(`Existing book not found. Cannot create new issue.`, 401)
+    );
+  }
+
+  const existingIssueCount = await new QueryPG(pool).find(
+    'COUNT(*)',
+    'issues WHERE book_id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
+
+  // Add one to existing issues to provide the new issue number
+  const newIssueNumber = Number(existingIssueCount.count) + 1;
+
   // create Issue
   const newIssue = await new QueryPG(pool).insert(
-    'issues(publisher_id, book_id, title, cover_photo, image_prefix_reference)',
-    '$1, $2, $3, $4, $5',
+    'issues(publisher_id, book_id, title, cover_photo, issue_number, image_prefix_reference)',
+    '$1, $2, $3, $4, $5, $6',
     [
       res.locals.user.id,
       bookId,
       issueTitle,
       req.files.issueCoverPhoto[0].location,
+      newIssueNumber,
       AWSPrefixArray[1] // issue path
     ]
   );
@@ -427,9 +493,23 @@ exports.createIssue = catchAsync(async (req, res, next) => {
 });
 
 // This deletes an existing issue and decrements the total number of issues in a book
+// Remeber only the most recent issue should be deleted to uphold the sequential order of issues within a book
 exports.deleteIssue = catchAsync(async (req, res, next) => {
   // const { urlSlug, bookId } = req.params;
   const { bookId, issueNumber } = req.params;
+
+  const deletedIssue = await new QueryPG(pool).delete(
+    'issues',
+    'book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
+    [bookId, issueNumber, res.locals.user.id]
+  );
+
+  if (!deletedIssue) {
+    // BUG Should the previous Issue Cover photo be deleted from AWS
+    return next(
+      new AppError(`Existing Issue not found. Cannot delete issue.`, 401)
+    );
+  }
 
   /* 
   The reason findOneAndUpdate was not used for decrementing here is because the 
@@ -437,39 +517,40 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
   used elsewhere it makes since to define it where it can be reused (within the Model)
   */
   // Find existing book
-  const existingBookByCurrentUser = await Book.findOne({
-    _id: bookId,
-    publisher: res.locals.user.id
-  });
-  if (!existingBookByCurrentUser) {
-    next(
-      new AppError(
-        `Existing book cannot be found. Issue cannot be deleted.`,
-        401
-      )
-    );
-  }
-  // find existing issue and delete it
-  const existingIssueByCurrentUser = await Issue.findOneAndDelete({
-    publisher: res.locals.user.id,
-    book: bookId,
-    issueNumber
-  });
+  // const existingBookByCurrentUser = await Book.findOne({
+  //   _id: bookId,
+  //   publisher: res.locals.user.id
+  // });
+  // if (!existingBookByCurrentUser) {
+  //   next(
+  //     new AppError(
+  //       `Existing book cannot be found. Issue cannot be deleted.`,
+  //       401
+  //     )
+  //   );
+  // }
+  // // find existing issue and delete it
+  // const existingIssueByCurrentUser = await Issue.findOneAndDelete({
+  //   publisher: res.locals.user.id,
+  //   book: bookId,
+  //   issueNumber
+  // });
 
-  if (!existingIssueByCurrentUser) {
-    next(new AppError(`Existing issue cannot be found.`, 401));
-  }
+  // if (!existingIssueByCurrentUser) {
+  //   next(new AppError(`Existing issue cannot be found.`, 401));
+  // }
 
-  existingBookByCurrentUser.adjustTotalIssue('decrement');
-  await existingBookByCurrentUser.save();
+  // existingBookByCurrentUser.adjustTotalIssue('decrement');
+  // await existingBookByCurrentUser.save();
 
-  // If all issues are deleted remove book
-  if (existingBookByCurrentUser.totalIssues === 0) {
-    await Book.deleteOne(existingBookByCurrentUser);
-  }
+  // // If all issues are deleted remove book
+  // if (existingBookByCurrentUser.totalIssues === 0) {
+  //   await Book.deleteOne(existingBookByCurrentUser);
+  // }
 
   res.status(204).json({
-    status: 'success'
+    status: 'success',
+    deletedIssue
   });
 });
 
