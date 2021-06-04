@@ -90,42 +90,43 @@ const addGenres = async (genres, bookId) => {
 };
 
 // THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
-exports.getBookAndIssues = (setImagePrefix = false) =>
-  catchAsync(async (req, res, next) => {
-    const { bookId } = req.params;
+exports.getBookAndIssues = catchAsync(async (req, res, next) => {
+  const { bookId } = req.params;
 
-    const bookByUser = await new QueryPG(pool).find(
-      '*',
-      'books WHERE id = $1 AND publisher_id = $2',
-      [bookId, res.locals.user.id]
-    );
+  const bookByUser = await new QueryPG(pool).find(
+    '*',
+    'books WHERE id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
 
-    const issuesOfBookByUser = await new QueryPG(pool).find(
-      '*',
-      'issues WHERE book_id = ($1) AND publisher_id = ($2)',
-      [bookId, res.locals.user.id],
-      true
-    );
+  const issuesOfBookByUser = await new QueryPG(pool).find(
+    '*',
+    'issues WHERE book_id = ($1) AND publisher_id = ($2)',
+    [bookId, res.locals.user.id],
+    true
+  );
 
-    if (setImagePrefix) {
-      res.locals.bookImagePrefix = bookByUser.image_prefix_reference;
-      res.locals.issueImagePrefix =
-        issuesOfBookByUser[0].image_prefix_reference;
-      return next();
-    }
+  // if (setImagePrefix) {
+  //   res.locals.bookImagePrefix = bookByUser.image_prefix_reference;
+  //   res.locals.issueImagePrefix =
+  //     issuesOfBookByUser[0].image_prefix_reference;
+  //   return next();
+  // }
 
-    // const bookByUser = await Book.findOne({
-    //   _id: bookId,
-    //   publisher: res.locals.user.id
-    // }).populate('publisher');
+  // const bookByUser = await Book.findOne({
+  //   _id: bookId,
+  //   publisher: res.locals.user.id
+  // }).populate('publisher');
 
-    // Get book and issues.
-    res.status(200).json({
-      status: 'success',
-      book: bookByUser,
-      issues: issuesOfBookByUser
-    });
+  // Get book and issues.
+  res.status(200).json({
+    status: 'success',
+    book: bookByUser,
+    issues: issuesOfBookByUser
+    // bookImagePrefix: bookByUser.image_prefix_reference,
+    // issueImagePrefix: issuesOfBookByUser[0].image_prefix_reference
   });
+});
 
 // This creates both the book and the first Issue
 exports.createBook = catchAsync(async (req, res, next) => {
@@ -292,6 +293,24 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
+  const { bookId, issueNumber } = req.params;
+  const issueCoverPhoto = req.file.location;
+
+  // update cover photo of issue
+  const updatedIssue = await new QueryPG(pool).update(
+    'issues',
+    'cover_photo = ($1)',
+    'book_id = ($2) AND issue_number = ($3) AND publisher_id = ($4)',
+    [issueCoverPhoto, bookId, issueNumber, res.locals.user.id]
+  );
+
+  res.status(200).json({
+    status: 'success',
+    updatedIssue
+  });
+});
+
 // Get Issue
 // exports.getIssue = catchAsync(async (req, res, next) => {
 //   res.status(200).json({
@@ -299,10 +318,47 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
 //   });
 // });
 
+exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
+  const { bookId, issueNumber } = req.params;
+
+  // these queries search for the book and issue paths in aws
+  const bookImagePrefixRef = await new QueryPG(
+    pool
+  ).find(
+    'image_prefix_reference',
+    'books WHERE id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
+
+  let issueImagePrefixRef = null;
+  // the issue Number is optional. if it isnt present only the bookImagePrefix is shown
+  if (issueNumber) {
+    const issueImagePrefix = await new QueryPG(
+      pool
+    ).find(
+      'image_prefix_reference',
+      'issues WHERE issue_number = ($1) AND publisher_id = ($2)',
+      [issueNumber, res.locals.user.id]
+    );
+
+    if (issueImagePrefix) {
+      issueImagePrefixRef = issueImagePrefix.image_prefix_reference;
+    }
+  }
+
+  // Get book and issues.
+  res.status(200).json({
+    status: 'success',
+    bookImagePrefixRef: bookImagePrefixRef.image_prefix_reference,
+    issueImagePrefixRef: issueImagePrefixRef
+  });
+});
+
 exports.createIssue = catchAsync(async (req, res, next) => {
   const { issueTitle, workCredits } = req.body;
   const { bookId } = req.params;
 
+  const AWSPrefixArray = req.files.issueCoverPhoto[0].key.split('/');
   // create Issue
   const newIssue = await new QueryPG(pool).insert(
     'issues(publisher_id, book_id, title, cover_photo, image_prefix_reference)',
@@ -312,7 +368,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
       bookId,
       issueTitle,
       req.files.issueCoverPhoto[0].location,
-      res.locals.issueImagePrefix // issue path
+      AWSPrefixArray[1] // issue path
     ]
   );
 

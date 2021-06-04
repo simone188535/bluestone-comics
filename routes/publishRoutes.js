@@ -34,7 +34,7 @@ router
   .route('/:urlSlug/book/:bookId')
   .get(publishController.getBookAndIssues)
   .post(
-    publishController.getBookAndIssues(true),
+    // publishController.getBookAndIssues,
     uploadS3.fields([
       { name: 'issueCoverPhoto', maxCount: 1 },
       { name: 'issueAssets' }
@@ -67,16 +67,19 @@ router
   )
   .delete(publishController.deleteBook);
 
-router.route('/:urlSlug/book/:bookId/book-cover-photo').patch(
-  // add a middleware that checks the S3 book prefix
-  uploadS3.single('bookCoverPhoto'),
-  publishController.updateBookCoverPhoto
-);
-// router.route('/:urlSlug/book/:bookId/issue-cover-photo').patch(
-//   // add a middleware that checks the S3 book prefix
-//   AmazonSDKS3.uploadS3().single('bookCoverPhoto'),
-//   publishController.updateBookCoverPhoto
-// );
+router
+  .route('/:urlSlug/book/:bookId/book-cover-photo')
+  .patch(
+    uploadS3.single('bookCoverPhoto'),
+    publishController.updateBookCoverPhoto
+  );
+router
+  .route('/:urlSlug/book/:bookId/issue/:issueNumber/issue-cover-photo')
+  .patch(
+    // add a middleware that checks the S3 book prefix
+    AmazonSDKS3.uploadS3().single('issueCoverPhoto'),
+    publishController.updateIssueCoverPhoto
+  );
 // router.route('/:urlSlug/book/:bookId/issue-assets').patch(
 //   // add a middleware that checks the S3 book prefix
 //   AmazonSDKS3.uploadS3().fields([{ name: 'issueAssets' }]),
@@ -84,8 +87,9 @@ router.route('/:urlSlug/book/:bookId/book-cover-photo').patch(
 // );
 
 router
-  .route('/:urlSlug/book/:bookId/issue/:issueNumber')
+  .route('/:urlSlug/book/:bookId/issue/:issueNumber?')
   // .get(publishController.getIssue)
+  .get(publishController.getBookAndIssueImagePrefix)
   .patch(publishController.updateIssue)
   .delete(publishController.deleteIssue);
 

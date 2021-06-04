@@ -14,11 +14,9 @@ const s3 = new AWS.S3({
 });
 // https://stackoverflow.com/questions/48015968/node-js-unique-folder-for-each-upload-with-multer-and-shortid
 // Where the idea to write this function came from concerning unique Bucket Name: https://stackoverflow.com/a/61029813/6195136
-exports.uploadS3 = (bookIdentifier = '', issueIdentifier = '') => {
+exports.uploadS3 = () => {
   // use the parameter or generate random string. This prefix is used for grouping and can help with deleting a group of images
   const randomString = () => uuid.v4().replace(/-/g, '');
-  const bookPrefix = bookIdentifier || randomString();
-  const issuePrefix = issueIdentifier || randomString();
 
   return multer({
     storage: multerS3({
@@ -30,6 +28,24 @@ exports.uploadS3 = (bookIdentifier = '', issueIdentifier = '') => {
         cb(null, { fieldName: file.fieldname });
       },
       key: (req, file, cb) => {
+        /*
+          bookPrefix is the reference for the folder where the book resides in AWS.
+          issuePrefix is the reference for the folder where the issue resides within the book in AWS.
+        */
+        const { bookImagePrefixRef, issueImagePrefixRef } = req.body;
+        const bookPrefix = bookImagePrefixRef || randomString();
+        const issuePrefix = issueImagePrefixRef || randomString();
+        // console.log('req.body: ', req.body);
+        // console.log(
+        //   'bookImagePrefixRef: ',
+        //   bookImagePrefixRef,
+        //   'bookPrefix',
+        //   bookPrefix,
+        //   'issueImagePrefixRef: ',
+        //   issueImagePrefixRef,
+        //   'issuePrefix: ',
+        //   issuePrefix
+        // );
         cb(null, `${bookPrefix}/${issuePrefix}/${randomString()}`);
       }
     })
