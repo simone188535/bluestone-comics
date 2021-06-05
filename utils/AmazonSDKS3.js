@@ -36,16 +36,16 @@ exports.uploadS3 = () => {
         const bookPrefix = bookImagePrefixRef || randomString();
         const issuePrefix = issueImagePrefixRef || randomString();
         // console.log('req.body: ', req.body);
-        // console.log(
-        //   'bookImagePrefixRef: ',
-        //   bookImagePrefixRef,
-        //   'bookPrefix',
-        //   bookPrefix,
-        //   'issueImagePrefixRef: ',
-        //   issueImagePrefixRef,
-        //   'issuePrefix: ',
-        //   issuePrefix
-        // );
+        console.log(
+          'bookImagePrefixRef: ',
+          bookImagePrefixRef,
+          'bookPrefix',
+          bookPrefix,
+          'issueImagePrefixRef: ',
+          issueImagePrefixRef,
+          'issuePrefix: ',
+          issuePrefix
+        );
         cb(null, `${bookPrefix}/${issuePrefix}/${randomString()}`);
       }
     })
