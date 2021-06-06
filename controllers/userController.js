@@ -5,9 +5,9 @@ const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { _id, username, email } = req.body;
+  const { id, username, email } = req.body;
   const queryObject = {
-    _id,
+    id,
     username,
     email
   };

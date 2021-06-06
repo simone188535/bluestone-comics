@@ -118,7 +118,7 @@ const Upload = () => {
     useEffect(() => {
         if (currentUser) {
             setCurrentUsername(currentUser.username);
-            setCurrentUserId(currentUser._id);
+            setCurrentUserId(currentUser.id);
         }
     }, [currentUser]);
 
@@ -141,20 +141,22 @@ const Upload = () => {
         seperately because node/multer will not populate req.files. 
         check here for more info: https://laracasts.com/index.php/discuss/channels/vue/axios-post-multipart-formdata-object-attribute?page=1
         */
-
+    try {
+    const imagePrefixesRes = await PublishServices.getBookAndIssueImagePrefix();
+    const { bookImagePrefixRef, issueImagePrefixRef } =  imagePrefixesRes.data;
+        console.log(
+            'FbookImagePrefixRef: ',
+            bookImagePrefixRef,
+            'issueImagePrefixRef: ',
+            issueImagePrefixRef
+          );
+        // console.log('res', res);
         let formData = new FormData();
 
         formData.append('bookTitle', values.bookTitle);
-        formData.append('bookCoverPhoto', values.bookCoverPhoto);
         formData.append('bookDescription', values.bookDescription);
         formData.append('urlSlug', values.urlSlug);
         formData.append('issueTitle', values.issueTitle);
-        formData.append('issueCoverPhoto', values.issueCoverPhoto);
-
-        // push all issueAssets to genres
-        values.genres.forEach((formValue) => formData.append('genres', formValue));
-        // push all issueAssets to formData
-        values.issueAssets.forEach((formValue) => formData.append('issueAssets', formValue));
         // formData cannot contain plain objects, so it must be stringified
         // values.workCredits.forEach((formValue) => formData.append('workCredits', console.log(JSON.stringify(formValue))));
         formData.append('workCredits', JSON.stringify(values.workCredits));
@@ -163,8 +165,21 @@ const Upload = () => {
         //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
         // ]);
 
+        
+        formData.append('bookImagePrefixRef', bookImagePrefixRef);
+        formData.append('issueImagePrefixRef', issueImagePrefixRef);
+        // stringify genres
+        // values.genres.forEach((formValue) => formData.append('genres', formValue));
+        formData.append('genres', JSON.stringify(values.genres));
+        // All Files must be moved to the bottom so that multer reads them last
+        formData.append('bookCoverPhoto', values.bookCoverPhoto);
+        formData.append('issueCoverPhoto', values.issueCoverPhoto);
+        // push all issueAssets to formData
+        values.issueAssets.forEach((formValue) => formData.append('issueAssets', formValue));
+    
+
         console.log('triggered', values);
-        try {
+       
             // open modal
             toggleModal();
 
@@ -184,7 +199,7 @@ const Upload = () => {
                 }
             };
 
-            const res = await PublishServices.createBook(formData, config);
+            const createBookRes = await PublishServices.createBook(formData, config);
             // Set progress bar to 100 percent upon returned promise
             setUploadPercentage(100);
 
@@ -194,7 +209,7 @@ const Upload = () => {
             history.push("/");
             }, 3000);
 
-            console.log('success', res);
+            console.log('success', createBookRes);
         } catch (err) {
             console.log('failed', err.response.data.message);
             setErrorMessage('An Error occurred. Please try again Later.');

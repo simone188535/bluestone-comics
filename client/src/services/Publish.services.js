@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const PublishServices = {
     createBook,
-    // signUp
+    getBookAndIssueImagePrefix
 }
 
 function createBook(formData, config = {}) {
@@ -14,4 +14,24 @@ function createBook(formData, config = {}) {
     };
 
     return axios.post('/api/v1/publish', formData, config);
+}
+
+function getBookAndIssueImagePrefix( bookId = '', issueNumber = '', config = {}) {
+    // send request to create a book which will contain the first issue
+    const jwtToken = localStorage.getItem('jwtToken');
+    
+     config.headers = {
+        Authorization: `Bearer ${jwtToken}`
+    };
+
+    let optionalBookIssue = ``; 
+    
+    if (bookId) {
+        optionalBookIssue+=`/${bookId}`;
+        if (issueNumber) {
+            optionalBookIssue+=`/${issueNumber}`
+        }
+    }
+
+    return axios.get(`/api/v1/publish/get-book-and-issue-image-prefix${optionalBookIssue}`, config);
 }
