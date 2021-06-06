@@ -1,6 +1,7 @@
 // const User = require('../models/userModel');
 // const multer = require('multer');
 // const AmazonSDKS3 = require('../utils/AmazonSDKS3');
+const uuid = require('uuid');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 const WorkCredits = require('../models/workCreditsModel');
@@ -9,6 +10,7 @@ const AppError = require('../utils/appError');
 const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
 const pool = require('../db');
+const { listen } = require('../app');
 
 /*
   This method inserts new work credits into the work_credits table
@@ -364,36 +366,73 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
 exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
 
-  // these queries search for the book and issue paths in aws
-  const bookImagePrefixRef = await new QueryPG(
-    pool
-  ).find(
-    'image_prefix_reference',
-    'books WHERE id = $1 AND publisher_id = $2',
-    [bookId, res.locals.user.id]
-  );
+  // This will need to be called on create book and all other routes containing file uploads. change url for this for simplicity
+  // this may be able to be used as middleware by forcibly adding data to req.body: https://stackoverflow.com/questions/41956293/express-middleware-to-modify-requests
+  const randomString = () => uuid.v4().replace(/-/g, '');
 
-  let issueImagePrefixRef = null;
-  // the issue Number is optional. if it isnt present only the bookImagePrefix is shown
+  // these queries search for the book and issue paths in aws
+
+  /* 
+  If an book id has been provided, search the db for a previously 
+  existing Image prefix for the provided book and use it if it exist. 
+  else create a new one and pass it through to multer.
+  */
+  let bookImagePrefixRef;
+
+  if (bookId) {
+    const bookImagePrefix = await new QueryPG(
+      pool
+    ).find(
+      'image_prefix_reference',
+      'books WHERE id = $1 AND publisher_id = $2',
+      [bookId, res.locals.user.id]
+    );
+
+    // bookImagePrefixRef = bookImagePrefix
+    //   ? bookImagePrefix.image_prefix_reference
+    //   : randomString();
+    bookImagePrefixRef = bookImagePrefix.image_prefix_reference;
+  } else {
+    bookImagePrefixRef = randomString();
+  }
+
+  /* 
+  If an issue number has been provided, search the db for a previously 
+  existing Image prefix for the provided issue and use it if it exist. 
+  else create a new one and pass it through to multer.
+  */
+  let issueImagePrefixRef;
+
   if (issueNumber) {
     const issueImagePrefix = await new QueryPG(
       pool
     ).find(
       'image_prefix_reference',
-      'issues WHERE issue_number = ($1) AND publisher_id = ($2)',
-      [issueNumber, res.locals.user.id]
+      'issues WHERE book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
+      [bookId, issueNumber, res.locals.user.id]
     );
 
-    if (issueImagePrefix) {
-      issueImagePrefixRef = issueImagePrefix.image_prefix_reference;
-    }
+    // issueImagePrefixRef = issueImagePrefix
+    //   ? issueImagePrefix.image_prefix_reference
+    //   : randomString();
+    issueImagePrefixRef = issueImagePrefix.image_prefix_reference;
+  } else {
+    issueImagePrefixRef = null;
   }
 
   // Get book and issues.
+  // console.log('req.body', req.body);
+  // req.body.bookImagePrefixRef = bookImagePrefixRef;
+  // req.body.issueImagePrefixRef = issueImagePrefixRef;
+  // req.body = {'a': 1, ...req.body};
+  // console.log('req.body', req);
+  // form.append('bookImagePrefixRef', 'my value');
+  // return;
+  // next();
   res.status(200).json({
     status: 'success',
-    bookImagePrefixRef: bookImagePrefixRef.image_prefix_reference,
-    issueImagePrefixRef: issueImagePrefixRef
+    bookImagePrefixRef,
+    issueImagePrefixRef
   });
 });
 
