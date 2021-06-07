@@ -45,12 +45,12 @@ exports.uploadS3 = () => {
         // if (issueImagePrefixRef) {
         //   console.log('imagePrefix', issueImagePrefixRef);
         // }
-        const optionalIssueImagePrefixRef = issueImagePrefixRef
-          ? `/${issueImagePrefixRef}`
-          : '';
+        // const optionalIssueImagePrefixRef = issueImagePrefixRef
+        //   ? `/${issueImagePrefixRef}`
+        //   : '';
         cb(
           null,
-          `${bookImagePrefixRef}${optionalIssueImagePrefixRef}/${randomString()}`
+          `${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`
         );
       }
     })

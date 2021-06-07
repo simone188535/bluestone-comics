@@ -10,7 +10,6 @@ const AppError = require('../utils/appError');
 const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
 const pool = require('../db');
-const { listen } = require('../app');
 
 /*
   This method inserts new work credits into the work_credits table
@@ -417,7 +416,7 @@ exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
     //   : randomString();
     issueImagePrefixRef = issueImagePrefix.image_prefix_reference;
   } else {
-    issueImagePrefixRef = null;
+    issueImagePrefixRef = randomString();
   }
 
   // Get book and issues.
@@ -532,7 +531,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
 });
 
 // This deletes an existing issue and decrements the total number of issues in a book
-// Remeber only the most recent issue should be deleted to uphold the sequential order of issues within a book
+// Remember only the most recent issue should be deleted to uphold the sequential order of issues within a book
 exports.deleteIssue = catchAsync(async (req, res, next) => {
   // const { urlSlug, bookId } = req.params;
   const { bookId, issueNumber } = req.params;
@@ -549,6 +548,8 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
       new AppError(`Existing Issue not found. Cannot delete issue.`, 401)
     );
   }
+
+  // BUG If all issues are deleted remove book
 
   /* 
   The reason findOneAndUpdate was not used for decrementing here is because the 
