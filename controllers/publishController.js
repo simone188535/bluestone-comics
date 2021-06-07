@@ -530,7 +530,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   });
 });
 
-// This deletes an existing issue and decrements the total number of issues in a book
+// This deletes an existing issue
 // Remember only the most recent issue should be deleted to uphold the sequential order of issues within a book
 exports.deleteIssue = catchAsync(async (req, res, next) => {
   // const { urlSlug, bookId } = req.params;
@@ -549,48 +549,27 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
     );
   }
 
-  // BUG If all issues are deleted remove book
+  // all issues are deleted remove book
+  const remainingIssues = await new QueryPG(pool).find(
+    '*',
+    'issues WHERE book_id = ($1) AND publisher_id = ($2)',
+    [bookId, res.locals.user.id]
+  );
 
-  /* 
-  The reason findOneAndUpdate was not used for decrementing here is because the 
-  same functionality in the adjustTotalIssue instance method may need to be
-  used elsewhere it makes since to define it where it can be reused (within the Model)
-  */
-  // Find existing book
-  // const existingBookByCurrentUser = await Book.findOne({
-  //   _id: bookId,
-  //   publisher: res.locals.user.id
-  // });
-  // if (!existingBookByCurrentUser) {
-  //   next(
-  //     new AppError(
-  //       `Existing book cannot be found. Issue cannot be deleted.`,
-  //       401
-  //     )
-  //   );
-  // }
-  // // find existing issue and delete it
-  // const existingIssueByCurrentUser = await Issue.findOneAndDelete({
-  //   publisher: res.locals.user.id,
-  //   book: bookId,
-  //   issueNumber
-  // });
+  let deletedBook = null;
 
-  // if (!existingIssueByCurrentUser) {
-  //   next(new AppError(`Existing issue cannot be found.`, 401));
-  // }
-
-  // existingBookByCurrentUser.adjustTotalIssue('decrement');
-  // await existingBookByCurrentUser.save();
-
-  // // If all issues are deleted remove book
-  // if (existingBookByCurrentUser.totalIssues === 0) {
-  //   await Book.deleteOne(existingBookByCurrentUser);
-  // }
+  if (!remainingIssues) {
+    deletedBook = await new QueryPG(pool).delete(
+      'books',
+      'id = $1 AND publisher_id = $2',
+      [bookId, res.locals.user.id]
+    );
+  }
 
   res.status(204).json({
     status: 'success',
-    deletedIssue
+    deletedIssue,
+    deletedBook
   });
 });
 
