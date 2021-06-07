@@ -143,13 +143,7 @@ const Upload = () => {
         */
     try {
     const imagePrefixesRes = await PublishServices.getBookAndIssueImagePrefix();
-    const { bookImagePrefixRef, issueImagePrefixRef } =  imagePrefixesRes.data;
-        console.log(
-            'FbookImagePrefixRef: ',
-            bookImagePrefixRef,
-            'issueImagePrefixRef: ',
-            issueImagePrefixRef
-          );
+    const { bookImagePrefixRef } =  imagePrefixesRes.data;
         // console.log('res', res);
         let formData = new FormData();
 
@@ -167,7 +161,12 @@ const Upload = () => {
 
         
         formData.append('bookImagePrefixRef', bookImagePrefixRef);
-        formData.append('issueImagePrefixRef', issueImagePrefixRef);
+        /* 
+        issueImagePrefixRef has been provided an empty string because
+        form data converts null into a string (i.e. "null") which causes issue: 
+        https://stackoverflow.com/questions/67226995/why-is-formdata-null-value-converted-to-null-when-send-to-laravel
+        */
+        formData.append('issueImagePrefixRef', '');
         // stringify genres
         // values.genres.forEach((formValue) => formData.append('genres', formValue));
         formData.append('genres', JSON.stringify(values.genres));
