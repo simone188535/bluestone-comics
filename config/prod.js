@@ -6,5 +6,7 @@ module.exports = {
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  PG_URI: process.env.PG_URI
+  PG_URI: process.env.PG_URI,
+  EMAIL_AUTH_USER: process.env.EMAIL_AUTH_USER,
+  EMAIL_AUTH_PASSWORD: process.env.EMAIL_AUTH_PASSWORD
 };
