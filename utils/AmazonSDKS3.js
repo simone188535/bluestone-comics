@@ -3,6 +3,7 @@ const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 const uuid = require('uuid');
 const keys = require('../config/keys.js');
+const AppError = require('./appError');
 // come here for more details concerning how this works: https://stackabuse.com/uploading-files-to-aws-s3-with-node-js/
 const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = keys;
 // The name of the AWS bucket that you have created
@@ -55,4 +56,50 @@ exports.uploadS3 = () => {
       }
     })
   });
+};
+
+// AWS docs are here: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html
+
+// Retrieve object from Amazon s3
+exports.getObject = async (params) => {
+  try {
+    const s3Response = await s3.getObject(params).promise();
+    console.log('s3Response: ', s3Response);
+    return s3Response;
+  } catch (err) {
+    throw new AppError(err.message, 500);
+  }
+};
+
+// Returns some or all objects in a bucket
+exports.listObjects = async (params) => {
+  try {
+    const s3Response = await s3.listObjectsV2(params).promise();
+    console.log('s3Response: ', s3Response);
+    return s3Response;
+  } catch (err) {
+    throw new AppError(err.message, 500);
+  }
+};
+
+// Delete an object/single file
+exports.deleteObject = async (params) => {
+  try {
+    const s3Response = await s3.deleteObject(params).promise();
+    console.log('s3Response: ', s3Response);
+    return s3Response;
+  } catch (err) {
+    throw new AppError(err.message, 500);
+  }
+};
+
+// Delete an entire Bucket
+exports.deleteBucket = async (params) => {
+  try {
+    const s3Response = await s3.deleteBucket(params).promise();
+    console.log('s3Response: ', s3Response);
+    return s3Response;
+  } catch (err) {
+    throw new AppError(err.message, 500);
+  }
 };

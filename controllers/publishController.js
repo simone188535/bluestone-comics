@@ -1,12 +1,13 @@
 // const User = require('../models/userModel');
 // const multer = require('multer');
-// const AmazonSDKS3 = require('../utils/AmazonSDKS3');
+
 const uuid = require('uuid');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
 const WorkCredits = require('../models/workCreditsModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
 const pool = require('../db');
@@ -108,25 +109,19 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
     true
   );
 
-  // if (setImagePrefix) {
-  //   res.locals.bookImagePrefix = bookByUser.image_prefix_reference;
-  //   res.locals.issueImagePrefix =
-  //     issuesOfBookByUser[0].image_prefix_reference;
-  //   return next();
-  // }
-
-  // const bookByUser = await Book.findOne({
-  //   _id: bookId,
-  //   publisher: res.locals.user.id
-  // }).populate('publisher');
+  //eg var params = {Bucket: 'bucketname', Key:'keyname'}
+  const AWSFileLocation = bookByUser.cover_photo.split('/');
+  // console.log('AWSFileLocation', bookByUser.cover_photo.split('/'));
+  await AmazonSDKS3.getObject({
+    Bucket: `${AWSFileLocation[-3]}/${AWSFileLocation[-2]}`,
+    Key: `${AWSFileLocation[-1]}`
+  });
 
   // Get book and issues.
   res.status(200).json({
     status: 'success',
     book: bookByUser,
     issues: issuesOfBookByUser
-    // bookImagePrefix: bookByUser.image_prefix_reference,
-    // issueImagePrefix: issuesOfBookByUser[0].image_prefix_reference
   });
 });
 
