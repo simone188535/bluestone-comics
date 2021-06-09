@@ -87,25 +87,21 @@ exports.signup = catchAsync(async (req, res, next) => {
   if (password !== passwordConfirm) {
     return next(new AppError('Passwords do not match. Try again!', 406));
   }
-  try {
-    const encryptedPassword = await bcryptPasswordEncryption(password);
 
-    const insertTable =
-      'users(first_name, last_name, username, email, password)';
-    const preparedStatement = '$1, $2, $3, $4, $5';
+  const encryptedPassword = await bcryptPasswordEncryption(password);
 
-    const values = [firstName, lastName, username, email, encryptedPassword];
+  const insertTable = 'users(first_name, last_name, username, email, password)';
+  const preparedStatement = '$1, $2, $3, $4, $5';
 
-    const newUser = await new QueryPG(pool).insert(
-      insertTable,
-      preparedStatement,
-      values
-    );
+  const values = [firstName, lastName, username, email, encryptedPassword];
 
-    createSendToken(newUser, 200, res);
-  } catch (err) {
-    return next(new AppError(err.message, 500));
-  }
+  const newUser = await new QueryPG(pool).insert(
+    insertTable,
+    preparedStatement,
+    values
+  );
+
+  createSendToken(newUser, 200, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -125,20 +121,16 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError(`User not found. Please Sign Up.`, 401));
   }
 
-  try {
-    const passedPasswordVerification = await bcryptPasswordCompare(
-      password,
-      existingUser.password
-    );
+  const passedPasswordVerification = await bcryptPasswordCompare(
+    password,
+    existingUser.password
+  );
 
-    if (!passedPasswordVerification) {
-      return next(new AppError('Password is incorrect.', 406));
-    }
-
-    createSendToken(existingUser, 200, res);
-  } catch (err) {
-    return next(new AppError(err.message, 500));
+  if (!passedPasswordVerification) {
+    return next(new AppError('Password is incorrect.', 406));
   }
+
+  createSendToken(existingUser, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -157,40 +149,32 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  try {
-    // 2) Verification token
-    const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
+  // 2) Verification token
+  const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
 
-    // 3) Check if user still exists
-    const freshUser = await new QueryPG(pool).find('*', 'users WHERE id = $1', [
-      decoded.id
-    ]);
+  // 3) Check if user still exists
+  const freshUser = await new QueryPG(pool).find('*', 'users WHERE id = $1', [
+    decoded.id
+  ]);
 
-    if (!freshUser) {
-      return next(
-        new AppError('The user belonging to the token no longer exists.', 401)
-      );
-    }
-
-    // 4) Check if password was updated after the token was issued.
-    if (
-      wasPasswordChangedAfterJWTIssued(
-        decoded.iat,
-        freshUser.password_changed_at
-      )
-    ) {
-      return next(
-        new AppError('Password was recently changed. Login again.', 401)
-      );
-    }
-
-    // GRANT ACCESS TO PROTECTED ROUTE
-    res.locals.user = freshUser;
-    next();
-  } catch (err) {
-    // This will likely be an error presented by JWT
-    return next(new AppError(err.message, 500));
+  if (!freshUser) {
+    return next(
+      new AppError('The user belonging to the token no longer exists.', 401)
+    );
   }
+
+  // 4) Check if password was updated after the token was issued.
+  if (
+    wasPasswordChangedAfterJWTIssued(decoded.iat, freshUser.password_changed_at)
+  ) {
+    return next(
+      new AppError('Password was recently changed. Login again.', 401)
+    );
+  }
+
+  // GRANT ACCESS TO PROTECTED ROUTE
+  res.locals.user = freshUser;
+  next();
 });
 
 exports.restrictTo = (...role) => {
@@ -299,21 +283,18 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   if (password !== passwordConfirm) {
     return next(new AppError('Passwords do not match. Try again!', 406));
   }
-  try {
-    const encryptedPassword = await bcryptPasswordEncryption(password);
 
-    const updatedUser = await new QueryPG(pool).update(
-      'users',
-      `password = ($1), password_reset_token = ($2) ,password_reset_token_expires = ($3)`,
-      'email = ($4)',
-      [encryptedPassword, undefined, undefined, user.email]
-    );
+  const encryptedPassword = await bcryptPasswordEncryption(password);
 
-    // 4) Log the user in, send JWT
-    createSendToken(updatedUser, 200, res);
-  } catch (err) {
-    return next(new AppError(err.message, 500));
-  }
+  const updatedUser = await new QueryPG(pool).update(
+    'users',
+    `password = ($1), password_reset_token = ($2) ,password_reset_token_expires = ($3)`,
+    'email = ($4)',
+    [encryptedPassword, undefined, undefined, user.email]
+  );
+
+  // 4) Log the user in, send JWT
+  createSendToken(updatedUser, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -331,38 +312,38 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   if (!user) {
     new AppError('User cannot be found. Login or Sign up', 401);
   }
-  try {
-    // 2) Check if POSTed current password is correct
-    // const passedPasswordVerification = await user.passwordCompare(
-    //   currentPassword,
-    //   user.password
-    // );
-    const passedPasswordVerification = await bcryptPasswordCompare(
-      currentPassword,
-      user.password
-    );
 
-    if (!passedPasswordVerification) {
-      return next(new AppError('Password is incorrect.', 406));
-    }
+  // 2) Check if POSTed current password is correct
+  // const passedPasswordVerification = await user.passwordCompare(
+  //   currentPassword,
+  //   user.password
+  // );
+  const passedPasswordVerification = await bcryptPasswordCompare(
+    currentPassword,
+    user.password
+  );
 
-    const encryptedPassword = await bcryptPasswordEncryption(password);
-
-    // 3) If so, update password
-    const updatedUser = await new QueryPG(pool).update(
-      'users',
-      'password = ($1), password_changed_at = ($2)',
-      'id = ($3)',
-      [encryptedPassword, new Date(), res.locals.user.id]
-    );
-
-    // user.password = password;
-    // user.passwordConfirm = passwordConfirm;
-    // await user.save();
-
-    // 4) Log user in send jwt
-    createSendToken(updatedUser, 200, res);
-  } catch (err) {
-    return next(new AppError(err.message, 500));
+  if (!passedPasswordVerification) {
+    return next(new AppError('Password is incorrect.', 406));
   }
+
+  const encryptedPassword = await bcryptPasswordEncryption(password);
+
+  // 3) If so, update password
+  const updatedUser = await new QueryPG(pool).update(
+    'users',
+    'password = ($1), password_changed_at = ($2)',
+    'id = ($3)',
+    [encryptedPassword, new Date(), res.locals.user.id]
+  );
+
+  // user.password = password;
+  // user.passwordConfirm = passwordConfirm;
+  // await user.save();
+
+  // 4) Log user in send jwt
+  createSendToken(updatedUser, 200, res);
+  // } catch (err) {
+  //   return next(new AppError(err.message, 500));
+  // }
 });
