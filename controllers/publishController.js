@@ -7,6 +7,7 @@ const Issue = require('../models/issueModel');
 const WorkCredits = require('../models/workCreditsModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const keys = require('../config/keys.js');
 const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
@@ -109,19 +110,21 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
     true
   );
 
-  //eg var params = {Bucket: 'bucketname', Key:'keyname'}
-  const AWSFileLocation = bookByUser.cover_photo.split('/');
-  // console.log('AWSFileLocation', bookByUser.cover_photo.split('/'));
-  await AmazonSDKS3.getObject({
-    Bucket: `${AWSFileLocation[-3]}/${AWSFileLocation[-2]}`,
-    Key: `${AWSFileLocation[-1]}`
-  });
+  const AWSFileLocation = bookByUser.cover_photo.split('/').reverse();
+
+  const bucketKey = `${AWSFileLocation[2]}/${AWSFileLocation[1]}/${AWSFileLocation[0]}`;
+
+  const bookCoverPhoto = await AmazonSDKS3.getObject(
+    keys.AWS_S3_BUCKET_NAME,
+    bucketKey
+  );
 
   // Get book and issues.
   res.status(200).json({
     status: 'success',
     book: bookByUser,
-    issues: issuesOfBookByUser
+    issues: issuesOfBookByUser,
+    bookCoverPhoto
   });
 });
 
