@@ -92,6 +92,17 @@ exports.deleteObject = async (bucket, key, config = {}) => {
   }
 };
 
+// Delete many object/files
+exports.deleteObjects = async (bucket, deleteItems, config = {}) => {
+  Object.assign(config, { Bucket: bucket, Delete: { Objects: deleteItems } });
+
+  try {
+    return await s3.deleteObjects(config).promise();
+  } catch (err) {
+    throw new AppError(err.message, 500);
+  }
+};
+
 // Delete an entire Bucket
 exports.deleteBucket = async (bucket, config = {}) => {
   Object.assign(config, { Bucket: bucket });
