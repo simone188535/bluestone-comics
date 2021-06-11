@@ -17,15 +17,16 @@ const publishController = require('../controllers/publishController');
 router.use(authController.protect);
 // router.use(authController.restrictTo('creator'));
 
-router.route('/').post(
-  // publishController.getBookAndIssueImagePrefix,
-  uploadS3.fields([
-    { name: 'bookCoverPhoto', maxCount: 1 },
-    { name: 'issueCoverPhoto', maxCount: 1 },
-    { name: 'issueAssets' }
-  ]),
-  publishController.createBook
-);
+router
+  .route('/')
+  .post(
+    uploadS3.fields([
+      { name: 'bookCoverPhoto', maxCount: 1 },
+      { name: 'issueCoverPhoto', maxCount: 1 },
+      { name: 'issueAssets' }
+    ]),
+    publishController.createBook
+  );
 
 router
   .route('/:urlSlug/book/:bookId')
@@ -33,7 +34,6 @@ router
   .get(publishController.getBook)
   // .get(publishController.getIssues)
   .post(
-    // publishController.getBookAndIssueImagePrefix,
     uploadS3.fields([
       { name: 'issueCoverPhoto', maxCount: 1 },
       { name: 'issueAssets' }
@@ -47,35 +47,36 @@ router
   )
   .delete(publishController.deleteBook);
 
+router.route('/:urlSlug/book/:bookId/issues').get(publishController.getIssues);
+
 // File Update Routes
-router.route('/:urlSlug/book/:bookId/book-cover-photo').patch(
-  // publishController.getBookAndIssueImagePrefix,
-  uploadS3.single('bookCoverPhoto'),
-  publishController.updateBookCoverPhoto
-);
+router
+  .route('/:urlSlug/book/:bookId/book-cover-photo')
+  .patch(
+    uploadS3.single('bookCoverPhoto'),
+    publishController.updateBookCoverPhoto
+  );
 router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber/issue-cover-photo')
   .patch(
     // add a middleware that checks the S3 book prefix
-    // publishController.getBookAndIssueImagePrefix,
     uploadS3.single('issueCoverPhoto'),
     publishController.updateIssueCoverPhoto
   );
 router.route('/:urlSlug/book/:bookId/issue/:issueNumber/issue-assets').patch(
   // add a middleware that checks the S3 book prefix
-  // publishController.getBookAndIssueImagePrefix,
   uploadS3.fields([{ name: 'issueAssets' }]),
   publishController.updateIssueAssets
 );
 
 router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber')
-  // .get(publishController.getIssue)
-  // .get(publishController.getBookAndIssueImagePrefix)
+  .get(publishController.getIssue)
   .patch(upload.none(), publishController.updateIssue)
   .delete(publishController.deleteIssue);
 
 router
   .route('/get-book-and-issue-image-prefix/:bookId?/:issueNumber?')
   .get(publishController.getBookAndIssueImagePrefix);
+
 module.exports = router;

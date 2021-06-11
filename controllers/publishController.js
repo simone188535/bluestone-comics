@@ -168,12 +168,15 @@ exports.getBook = catchAsync(async (req, res, next) => {
 
 exports.getIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
-  // BUG ADD SKIP LIMIT ect to this route because issues
+  const { page } = req.query;
+
+  let offset = page - 1;
+  if (offset < 1) offset = 0;
 
   const issuesOfBookByUser = await new QueryPG(pool).find(
     '*',
-    'issues WHERE book_id = ($1) AND publisher_id = ($2)',
-    [bookId, res.locals.user.id],
+    'issues WHERE book_id = ($1) AND publisher_id = ($2) ORDER BY issue_number ASC LIMIT 20 OFFSET ($3)',
+    [bookId, res.locals.user.id, offset],
     true
   );
 
@@ -452,12 +455,29 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
   });
 });
 
-// Get Issue
-// exports.getIssue = catchAsync(async (req, res, next) => {
-//   res.status(200).json({
-//     status: 'success'
-//   });
-// });
+exports.getIssue = catchAsync(async (req, res, next) => {
+  const { bookId, issueNumber } = req.params;
+
+  const issueOfBookByUser = await new QueryPG(pool).find(
+    '*',
+    'issues WHERE book_id = ($1) AND publisher_id = ($2) AND issue_number = ($3)',
+    [bookId, res.locals.user.id, issueNumber]
+  );
+  const issueAssets = await new QueryPG(pool).find(
+    '*',
+    'issue_assets WHERE book_id = ($1) AND publisher_id = ($2) AND issue_id = ($3) ORDER BY page_number ASC',
+    [bookId, res.locals.user.id, issueOfBookByUser.id],
+    true
+  );
+
+  // BUG GET AWS FILES
+
+  res.status(200).json({
+    status: 'success',
+    issue: issueOfBookByUser,
+    issueAssets
+  });
+});
 
 exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
