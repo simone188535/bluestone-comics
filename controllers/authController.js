@@ -310,7 +310,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     res.locals.user.id
   ]);
   if (!user) {
-    new AppError('User cannot be found. Login or Sign up', 401);
+    return next(new AppError('User cannot be found. Login or Sign up', 401));
   }
 
   // 2) Check if POSTed current password is correct

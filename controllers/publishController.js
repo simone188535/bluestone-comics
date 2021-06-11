@@ -93,15 +93,82 @@ const addGenres = async (genres, bookId) => {
   return newGenres;
 };
 
-// THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
-exports.getBookAndIssues = catchAsync(async (req, res, next) => {
-  const { bookId } = req.params;
+const S3FilePath = (fileURL) => {
+  const AWSFileLocation = fileURL.split('/').reverse();
 
+  return `${AWSFileLocation[2]}/${AWSFileLocation[1]}/${AWSFileLocation[0]}`;
+};
+
+const getSingleS3Object = async (fileRef) => {
+  const bucketKey = S3FilePath(fileRef);
+
+  return await AmazonSDKS3.getObject(keys.AWS_S3_BUCKET_NAME, bucketKey);
+};
+
+const deleteSingleS3Object = async (fileRef) => {
+  const bucketKey = S3FilePath(fileRef);
+
+  await AmazonSDKS3.deleteObject(keys.AWS_S3_BUCKET_NAME, bucketKey);
+};
+
+// THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
+// exports.getBookAndIssues = catchAsync(async (req, res, next) => {
+//   const { bookId } = req.params;
+//   // BUG ADD SKIP LIMIT ect to this route because issues
+//   const bookByUser = await new QueryPG(pool).find(
+//     '*',
+//     'books WHERE id = $1 AND publisher_id = $2',
+//     [bookId, res.locals.user.id]
+//   );
+
+//   const issuesOfBookByUser = await new QueryPG(pool).find(
+//     '*',
+//     'issues WHERE book_id = ($1) AND publisher_id = ($2)',
+//     [bookId, res.locals.user.id],
+//     true
+//   );
+
+//   // Get the book cover photo file in AWS associated with this book
+//   const AWSFileLocation = bookByUser.cover_photo.split('/').reverse();
+
+//   const bucketKey = `${AWSFileLocation[2]}/${AWSFileLocation[1]}/${AWSFileLocation[0]}`;
+
+//   const bookCoverPhoto = await AmazonSDKS3.getObject(
+//     keys.AWS_S3_BUCKET_NAME,
+//     bucketKey
+//   );
+
+//   // Get book and issues.
+//   res.status(200).json({
+//     status: 'success',
+//     book: bookByUser,
+//     issues: issuesOfBookByUser,
+//     bookCoverPhoto
+//   });
+// });
+
+exports.getBook = catchAsync(async (req, res, next) => {
+  const { bookId } = req.params;
   const bookByUser = await new QueryPG(pool).find(
     '*',
     'books WHERE id = $1 AND publisher_id = $2',
     [bookId, res.locals.user.id]
   );
+
+  // Get the book cover photo file in AWS associated with this book
+  const bookCoverPhoto = await getSingleS3Object(bookByUser.cover_photo);
+
+  // Get book and issues.
+  res.status(200).json({
+    status: 'success',
+    book: bookByUser,
+    bookCoverPhoto
+  });
+});
+
+exports.getIssues = catchAsync(async (req, res, next) => {
+  const { bookId } = req.params;
+  // BUG ADD SKIP LIMIT ect to this route because issues
 
   const issuesOfBookByUser = await new QueryPG(pool).find(
     '*',
@@ -110,21 +177,10 @@ exports.getBookAndIssues = catchAsync(async (req, res, next) => {
     true
   );
 
-  const AWSFileLocation = bookByUser.cover_photo.split('/').reverse();
-
-  const bucketKey = `${AWSFileLocation[2]}/${AWSFileLocation[1]}/${AWSFileLocation[0]}`;
-
-  const bookCoverPhoto = await AmazonSDKS3.getObject(
-    keys.AWS_S3_BUCKET_NAME,
-    bucketKey
-  );
-
   // Get book and issues.
   res.status(200).json({
     status: 'success',
-    book: bookByUser,
-    issues: issuesOfBookByUser,
-    bookCoverPhoto
+    issues: issuesOfBookByUser
   });
 });
 
@@ -233,6 +289,23 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
     res.locals.user.id
   ]);
 
+  // deleteObjects will be needed: paths for book cover photo, issue cover photos and issue assets will need to be deleted here
+  // be mindful that only 1000 objects can be deleted at a time with a single api call
+
+  // const AWSFileLocation = existingBookByCurrentUser.cover_photo
+  //   .split('/')
+  //   .reverse();
+
+  // const bucketKey = `${AWSFileLocation[2]}/`;
+
+  // console.log
+  // const bookCoverPhoto = await AmazonSDKS3.deleteObject(
+  //   keys.AWS_S3_BUCKET_NAME,
+  //   bucketKey
+  // );
+
+  // console.log('deleted bookCoverPhoto: ', bookCoverPhoto);
+
   res.status(204).json({
     status: 'success',
     data: null
@@ -284,6 +357,22 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const bookCoverPhoto = req.file.location;
 
+  const bookCoverPhotoByCurrentUser = await new QueryPG(
+    pool
+  ).find('cover_photo', 'books WHERE id = $1 AND publisher_id = $2', [
+    bookId,
+    res.locals.user.id
+  ]);
+
+  if (!bookCoverPhotoByCurrentUser) {
+    return next(
+      new AppError(
+        `Existing book cannot be found. Book Could not be updated.`,
+        401
+      )
+    );
+  }
+
   // update cover photo of book
   const updatedBook = await new QueryPG(pool).update(
     'books',
@@ -299,7 +388,10 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
       )
     );
   }
-  // BUG Should the previous Book Cover photo be deleted from AWS?
+
+  // Delete previous Book Cover photo in AWS
+  await deleteSingleS3Object(bookCoverPhotoByCurrentUser.cover_photo);
+
   res.status(200).json({
     status: 'success',
     updatedBook
@@ -310,6 +402,21 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
   const issueCoverPhoto = req.file.location;
 
+  const issueToUpdate = await new QueryPG(pool).find(
+    'cover_photo',
+    'issues WHERE book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
+    [bookId, issueNumber, res.locals.user.id]
+  );
+
+  if (!issueToUpdate) {
+    return next(
+      new AppError(
+        `Existing issue cannot be found. Issue could not be updated.`,
+        401
+      )
+    );
+  }
+
   // update cover photo of issue
   const updatedIssue = await new QueryPG(pool).update(
     'issues',
@@ -318,16 +425,8 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
     [issueCoverPhoto, bookId, issueNumber, res.locals.user.id]
   );
 
-  if (!updatedIssue) {
-    return next(
-      new AppError(
-        `Existing Issue not found. Issue cover photo cannot be updated.`,
-        401
-      )
-    );
-  }
-
-  // BUG Should the previous Issue Cover photo be deleted from AWS
+  // Delete previous Issue Cover photo in AWS
+  await deleteSingleS3Object(issueToUpdate.cover_photo);
 
   res.status(200).json({
     status: 'success',
@@ -577,8 +676,8 @@ exports.updateIssue = catchAsync(async (req, res, next) => {
 
   const issueToUpdate = await new QueryPG(pool).find(
     'id',
-    'issues WHERE issue_number = ($1) AND publisher_id = ($2)',
-    [issueNumber, res.locals.user.id]
+    'issues WHERE book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
+    [bookId, issueNumber, res.locals.user.id]
   );
 
   const updatedIssue = await new QueryPG(pool).update(

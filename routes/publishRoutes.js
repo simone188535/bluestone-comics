@@ -29,7 +29,9 @@ router.route('/').post(
 
 router
   .route('/:urlSlug/book/:bookId')
-  .get(publishController.getBookAndIssues)
+  // .get(publishController.getBookAndIssues)
+  .get(publishController.getBook)
+  // .get(publishController.getIssues)
   .post(
     // publishController.getBookAndIssueImagePrefix,
     uploadS3.fields([
@@ -38,25 +40,6 @@ router
     ]),
     publishController.createIssue
   )
-  // .post(
-  //   publishController.getBookAndIssues(true),
-  //   catchAsync(async (req, res, next) => {
-  //     // https://stackoverflow.com/questions/35847293/uploading-a-file-and-passing-a-additional-parameter-with-multer
-
-  //     const issueUploadTest = promisify(
-  //       AmazonSDKS3.uploadS3(
-  //         res.locals.bookImagePrefix,
-  //         res.locals.issueImagePrefix
-  //       ).fields([
-  //         { name: 'issueCoverPhoto', maxCount: 1 },
-  //         { name: 'issueAssets' }
-  //       ])
-  //     );
-  //     await issueUploadTest();
-  //     next();
-  //   }),
-  //   publishController.createIssue
-  // )
   .patch(
     // upload.none() is for text-only multipart form data
     upload.none(),
