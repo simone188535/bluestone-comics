@@ -126,42 +126,6 @@ const deleteSingleS3Object = async (fileRef, config = {}) => {
   await AmazonSDKS3.deleteObject(keys.AWS_S3_BUCKET_NAME, bucketKey, config);
 };
 
-// THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
-// exports.getBookAndIssues = catchAsync(async (req, res, next) => {
-//   const { bookId } = req.params;
-//   // BUG ADD SKIP LIMIT ect to this route because issues
-//   const bookByUser = await new QueryPG(pool).find(
-//     '*',
-//     'books WHERE id = $1 AND publisher_id = $2',
-//     [bookId, res.locals.user.id]
-//   );
-
-//   const issuesOfBookByUser = await new QueryPG(pool).find(
-//     '*',
-//     'issues WHERE book_id = ($1) AND publisher_id = ($2)',
-//     [bookId, res.locals.user.id],
-//     true
-//   );
-
-//   // Get the book cover photo file in AWS associated with this book
-//   const AWSFileLocation = bookByUser.cover_photo.split('/').reverse();
-
-//   const bucketKey = `${AWSFileLocation[2]}/${AWSFileLocation[1]}/${AWSFileLocation[0]}`;
-
-//   const bookCoverPhoto = await AmazonSDKS3.getObject(
-//     keys.AWS_S3_BUCKET_NAME,
-//     bucketKey
-//   );
-
-//   // Get book and issues.
-//   res.status(200).json({
-//     status: 'success',
-//     book: bookByUser,
-//     issues: issuesOfBookByUser,
-//     bookCoverPhoto
-//   });
-// });
-
 exports.getBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const bookByUser = await new QueryPG(pool).find(
@@ -626,36 +590,6 @@ exports.createIssue = catchAsync(async (req, res, next) => {
     bookId,
     newIssue.id
   );
-
-  // const existingBookByCurrentUser = await Book.findOne({
-  //   _id: bookId,
-  //   publisher: res.locals.user.id
-  // });
-  // if (!existingBookByCurrentUser) {
-  //   next(
-  //     new AppError(`Existing book not found. Cannot create new issue.`, 401)
-  //   );
-  // }
-  // existingBookByCurrentUser.adjustTotalIssue('increment');
-  // await existingBookByCurrentUser.save();
-
-  // // calculates the total pages of assets provided
-  // let totalPages = 0;
-  // issueAssets.forEach(() => {
-  //   totalPages += 1;
-  // });
-
-  // const newIssue = await Issue.create({
-  //   publisher: res.locals.user.id,
-  //   book: existingBookByCurrentUser.id,
-  //   title: issueTitle,
-  //   coverPhoto: issueCoverPhoto,
-  //   issueAssets,
-  //   // This makes totalIssues (from Book Model) and the current issueNumber(from Issue Model) consistent
-  //   issueNumber: existingBookByCurrentUser.totalIssues,
-  //   totalPages,
-  //   workCredits
-  // });
 
   res.status(201).json({
     status: 'success',
