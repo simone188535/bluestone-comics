@@ -99,16 +99,31 @@ const S3FilePath = (fileURL) => {
   return `${AWSFileLocation[2]}/${AWSFileLocation[1]}/${AWSFileLocation[0]}`;
 };
 
-const getSingleS3Object = async (fileRef) => {
-  const bucketKey = S3FilePath(fileRef);
+const listS3Objects = async (fileRef, maxKey, config = {}) => {
+  // const bucketKey = S3FilePath(fileRef);
+  const AWSFileLocation = fileRef.split('/').reverse();
 
-  return await AmazonSDKS3.getObject(keys.AWS_S3_BUCKET_NAME, bucketKey);
+  const folderPrefix = `${AWSFileLocation[2]}/${AWSFileLocation[1]}/`;
+
+  Object.assign(config, { Prefix: folderPrefix });
+
+  return await AmazonSDKS3.listObjects(keys.AWS_S3_BUCKET_NAME, maxKey, config);
 };
 
-const deleteSingleS3Object = async (fileRef) => {
+const getSingleS3Object = async (fileRef, config = {}) => {
   const bucketKey = S3FilePath(fileRef);
 
-  await AmazonSDKS3.deleteObject(keys.AWS_S3_BUCKET_NAME, bucketKey);
+  return await AmazonSDKS3.getObject(
+    keys.AWS_S3_BUCKET_NAME,
+    bucketKey,
+    config
+  );
+};
+
+const deleteSingleS3Object = async (fileRef, config = {}) => {
+  const bucketKey = S3FilePath(fileRef);
+
+  await AmazonSDKS3.deleteObject(keys.AWS_S3_BUCKET_NAME, bucketKey, config);
 };
 
 // THESE CONTROLLERS ARE FOR A USER WHO CREATES BOOKS OR ARTICLES
@@ -463,6 +478,10 @@ exports.getIssue = catchAsync(async (req, res, next) => {
     'issues WHERE book_id = ($1) AND publisher_id = ($2) AND issue_number = ($3)',
     [bookId, res.locals.user.id, issueNumber]
   );
+
+  if (!issueOfBookByUser) {
+    return next(new AppError(`Existing Issue not found. `, 401));
+  }
   const issueAssets = await new QueryPG(pool).find(
     '*',
     'issue_assets WHERE book_id = ($1) AND publisher_id = ($2) AND issue_id = ($3) ORDER BY page_number ASC',
@@ -470,12 +489,18 @@ exports.getIssue = catchAsync(async (req, res, next) => {
     true
   );
 
-  // BUG GET AWS FILES
+  // Get all AWS Objects for issue assets
+  const issueAssetFiles = await Promise.all(
+    issueAssets.map(
+      async (issueAsset) => await getSingleS3Object(issueAsset.photo_url)
+    )
+  );
 
   res.status(200).json({
     status: 'success',
     issue: issueOfBookByUser,
-    issueAssets
+    issueAssets,
+    issueAssetFiles
   });
 });
 
