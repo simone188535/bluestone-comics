@@ -573,9 +573,16 @@ exports.createIssue = catchAsync(async (req, res, next) => {
     'books WHERE id = $1 AND publisher_id = $2',
     [bookId, res.locals.user.id]
   );
-  if (!existingBookByCurrentUser) {
-    // BUG Should the previous Book Cover photo be deleted from AWS?
 
+  if (!existingBookByCurrentUser) {
+    // deleted Issue Cover photo and Issue Assets from AWS because the issue cannot be added
+    await deleteSingleS3Object(req.files.issueCoverPhoto[0].location);
+
+    await Promise.all(
+      req.files.issueAssets.map(async (issueAsset) => {
+        await deleteSingleS3Object(issueAsset.location);
+      })
+    );
     return next(
       new AppError(`Existing book not found. Cannot create new issue.`, 401)
     );
