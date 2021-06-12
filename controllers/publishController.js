@@ -529,9 +529,6 @@ exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
       [bookId, res.locals.user.id]
     );
 
-    // bookImagePrefixRef = bookImagePrefix
-    //   ? bookImagePrefix.image_prefix_reference
-    //   : randomString();
     bookImagePrefixRef = bookImagePrefix.image_prefix_reference;
   } else {
     bookImagePrefixRef = randomString();
@@ -553,23 +550,11 @@ exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
       [bookId, issueNumber, res.locals.user.id]
     );
 
-    // issueImagePrefixRef = issueImagePrefix
-    //   ? issueImagePrefix.image_prefix_reference
-    //   : randomString();
     issueImagePrefixRef = issueImagePrefix.image_prefix_reference;
   } else {
     issueImagePrefixRef = randomString();
   }
 
-  // Get book and issues.
-  // console.log('req.body', req.body);
-  // req.body.bookImagePrefixRef = bookImagePrefixRef;
-  // req.body.issueImagePrefixRef = issueImagePrefixRef;
-  // req.body = {'a': 1, ...req.body};
-  // console.log('req.body', req);
-  // form.append('bookImagePrefixRef', 'my value');
-  // return;
-  // next();
   res.status(200).json({
     status: 'success',
     bookImagePrefixRef,
@@ -590,6 +575,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   );
   if (!existingBookByCurrentUser) {
     // BUG Should the previous Book Cover photo be deleted from AWS?
+
     return next(
       new AppError(`Existing book not found. Cannot create new issue.`, 401)
     );
@@ -675,7 +661,6 @@ exports.createIssue = catchAsync(async (req, res, next) => {
 // This deletes an existing issue
 // Remember only the most recent issue should be deleted to uphold the sequential order of issues within a book
 exports.deleteIssue = catchAsync(async (req, res, next) => {
-  // const { urlSlug, bookId } = req.params;
   const { bookId, issueNumber } = req.params;
 
   const deletedIssue = await new QueryPG(pool).delete(
@@ -685,11 +670,13 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
   );
 
   if (!deletedIssue) {
-    // BUG Should the previous Issue Cover photo be deleted from AWS
     return next(
       new AppError(`Existing Issue not found. Cannot delete issue.`, 401)
     );
   }
+
+  // deleted Issue Cover photo from AWS
+  await deleteSingleS3Object(deletedIssue.cover_photo);
 
   // all issues are deleted remove book
   const remainingIssues = await new QueryPG(pool).find(
