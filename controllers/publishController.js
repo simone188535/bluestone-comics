@@ -99,16 +99,16 @@ const S3FilePath = (fileURL) => {
   return `${AWSFileLocation[2]}/${AWSFileLocation[1]}/${AWSFileLocation[0]}`;
 };
 
-const listS3Objects = async (fileRef, maxKey, config = {}) => {
-  // const bucketKey = S3FilePath(fileRef);
-  const AWSFileLocation = fileRef.split('/').reverse();
+// const listS3Objects = async (fileRef, maxKey, config = {}) => {
+//   // const bucketKey = S3FilePath(fileRef);
+//   const AWSFileLocation = fileRef.split('/').reverse();
 
-  const folderPrefix = `${AWSFileLocation[2]}/${AWSFileLocation[1]}/`;
+//   const folderPrefix = `${AWSFileLocation[2]}/${AWSFileLocation[1]}/`;
 
-  Object.assign(config, { Prefix: folderPrefix });
+//   Object.assign(config, { Prefix: folderPrefix });
 
-  return await AmazonSDKS3.listObjects(keys.AWS_S3_BUCKET_NAME, maxKey, config);
-};
+//   return await AmazonSDKS3.listObjects(keys.AWS_S3_BUCKET_NAME, maxKey, config);
+// };
 
 const getSingleS3Object = async (fileRef, config = {}) => {
   const bucketKey = S3FilePath(fileRef);
@@ -124,6 +124,10 @@ const deleteSingleS3Object = async (fileRef, config = {}) => {
   const bucketKey = S3FilePath(fileRef);
 
   await AmazonSDKS3.deleteObject(keys.AWS_S3_BUCKET_NAME, bucketKey, config);
+};
+
+const deleteMultipleS3Objects = async (deleteItems, config = {}) => {
+  await AmazonSDKS3.deleteObjects(keys.AWS_S3_BUCKET_NAME, deleteItems, config);
 };
 
 exports.getBook = catchAsync(async (req, res, next) => {
@@ -179,10 +183,6 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   // grab AWS file path (where the file is saved in aws) and save it to the db (each of these files should share path/location in aws)
   const AWSPrefixArray = req.files.bookCoverPhoto[0].key.split('/');
-
-  // console.log('bookCoverPhoto:', req.files.bookCoverPhoto);
-  // console.log('issueCoverPhoto:', req.files.issueCoverPhoto);
-  // console.log('issueAssets:', req.files.issueAssets);
 
   // create new Book
   const newBook = await new QueryPG(pool).insert(
@@ -253,40 +253,65 @@ exports.createBook = catchAsync(async (req, res, next) => {
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
-  const existingBookByCurrentUser = await new QueryPG(pool).find(
-    '*',
-    'books WHERE id = $1 AND publisher_id = $2',
-    [bookId, res.locals.user.id]
-  );
-  // const existingBookByCurrentUser = await Book.findOne({
-  //   _id: bookId,
-  //   publisher: res.locals.user.id
-  // });
+  const existingBookByCurrentUser = await new QueryPG(
+    pool
+  ).find('id, cover_photo', 'books WHERE id = $1 AND publisher_id = $2', [
+    bookId,
+    res.locals.user.id
+  ]);
+
   if (!existingBookByCurrentUser) {
     return next(new AppError(`Existing book cannot be found.`, 401));
   }
+
+  const existingIssueCount = await new QueryPG(pool).find(
+    'COUNT(*)',
+    'issues WHERE book_id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
+
+  // recursively delete Issue Assets and Issue Covers from AWS
+  const DeleteAllIssuesAndIssueCovers = async (remainingIssues) => {
+    const issue = await new QueryPG(pool).find(
+      'id, cover_photo',
+      'issues WHERE book_id = ($1) AND publisher_id = ($2) AND issue_number = ($3)',
+      [bookId, res.locals.user.id, remainingIssues]
+    );
+
+    const issueAssets = await new QueryPG(pool).find(
+      'photo_url',
+      'issue_assets WHERE book_id = ($1) AND publisher_id = ($2) AND issue_id = ($3)',
+      [bookId, res.locals.user.id, issue.id],
+      true
+    );
+
+    const issueAssetsToDelete = issueAssets.map((issueAsset) => {
+      return { Key: S3FilePath(issueAsset.photo_url) };
+    });
+
+    // delete issue assets
+    await deleteMultipleS3Objects(issueAssetsToDelete);
+
+    // delete issue cover photo
+    await deleteSingleS3Object(issue.cover_photo);
+
+    remainingIssues -= 1;
+
+    if (remainingIssues > 0) {
+      await DeleteAllIssuesAndIssueCovers(remainingIssues);
+    }
+  };
+
+  await DeleteAllIssuesAndIssueCovers(Number(existingIssueCount.count));
+
+  // delete book cover photo
+  await deleteSingleS3Object(existingBookByCurrentUser.cover_photo);
+
   // delete existing Books by user. issues, issues assets ect will be deleted as well because of cascading in PG
   await new QueryPG(pool).delete('books', 'id = $1 AND publisher_id = $2', [
     bookId,
     res.locals.user.id
   ]);
-
-  // deleteObjects will be needed: paths for book cover photo, issue cover photos and issue assets will need to be deleted here
-  // be mindful that only 1000 objects can be deleted at a time with a single api call
-
-  // const AWSFileLocation = existingBookByCurrentUser.cover_photo
-  //   .split('/')
-  //   .reverse();
-
-  // const bucketKey = `${AWSFileLocation[2]}/`;
-
-  // console.log
-  // const bookCoverPhoto = await AmazonSDKS3.deleteObject(
-  //   keys.AWS_S3_BUCKET_NAME,
-  //   bucketKey
-  // );
-
-  // console.log('deleted bookCoverPhoto: ', bookCoverPhoto);
 
   res.status(204).json({
     status: 'success',
