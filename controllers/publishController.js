@@ -230,15 +230,23 @@ exports.createBook = catchAsync(async (req, res, next) => {
   // create Genres
   const newGenres = await addGenres(genres, newBook.id);
 
-  // Change user role to creator
-  const updatedUser = await new QueryPG(pool).update(
-    'users',
-    'role = ($1), last_updated = ($2)',
-    'id = ($3)',
-    ['creator', new Date(), res.locals.user.id]
+  // Change user role to creator if it isn't already
+  const currentUser = await new QueryPG(pool).find(
+    '*',
+    'users WHERE id = ($1)',
+    [res.locals.user.id]
   );
 
-  res.locals.user = updatedUser;
+  if (currentUser.role === 'user') {
+    const updatedUser = await new QueryPG(pool).update(
+      'users',
+      'role = ($1), last_updated = ($2)',
+      'id = ($3)',
+      ['creator', new Date(), res.locals.user.id]
+    );
+
+    res.locals.user = updatedUser;
+  }
 
   res.status(201).json({
     status: 'success',
