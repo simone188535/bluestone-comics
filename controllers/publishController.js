@@ -342,9 +342,18 @@ exports.updateBook = catchAsync(async (req, res, next) => {
   // update book values
   const updatedBook = await new QueryPG(pool).update(
     'books',
-    'title = ($1), description = ($2), url_slug = ($3), status = ($4), removed = ($5)',
-    'id = ($6) AND publisher_id = ($7)',
-    [title, description, urlSlug, status, removed, bookId, res.locals.user.id]
+    'title = ($1), description = ($2), url_slug = ($3), status = ($4), removed = ($5), last_updated = ($6)',
+    'id = ($7) AND publisher_id = ($8)',
+    [
+      title,
+      description,
+      urlSlug,
+      status,
+      removed,
+      new Date(),
+      bookId,
+      res.locals.user.id
+    ]
   );
 
   // delete existing genres
@@ -383,9 +392,9 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   // update cover photo of book
   const updatedBook = await new QueryPG(pool).update(
     'books',
-    'cover_photo = ($1)',
-    'id = ($2) AND publisher_id = ($3)',
-    [bookCoverPhoto, bookId, res.locals.user.id]
+    'cover_photo = ($1), last_updated = ($2)',
+    'id = ($3) AND publisher_id = ($4)',
+    [bookCoverPhoto, new Date(), bookId, res.locals.user.id]
   );
   if (!updatedBook) {
     return next(
@@ -427,9 +436,9 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
   // update cover photo of issue
   const updatedIssue = await new QueryPG(pool).update(
     'issues',
-    'cover_photo = ($1)',
-    'book_id = ($2) AND issue_number = ($3) AND publisher_id = ($4)',
-    [issueCoverPhoto, bookId, issueNumber, res.locals.user.id]
+    'cover_photo = ($1), last_updated = ($2)',
+    'book_id = ($3) AND issue_number = ($4) AND publisher_id = ($5)',
+    [issueCoverPhoto, new Date(), bookId, issueNumber, res.locals.user.id]
   );
 
   // Delete previous Issue Cover photo in AWS
@@ -446,6 +455,7 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
   // const issueCoverPhoto = req.file.location;
 
   // // update cover photo of issue
+  // dont forget date field
   // const updatedIssue = await new QueryPG(pool).update(
   //   'issues',
   //   'cover_photo = ($1)',
@@ -680,9 +690,9 @@ exports.updateIssue = catchAsync(async (req, res, next) => {
 
   const updatedIssue = await new QueryPG(pool).update(
     'issues',
-    'title = ($1)',
-    'book_id = ($2) AND issue_number = ($3) AND publisher_id = ($4)',
-    [title, bookId, issueNumber, res.locals.user.id]
+    'title = ($1), last_updated = ($2)',
+    'book_id = ($3) AND issue_number = ($4) AND publisher_id = ($5)',
+    [title, new Date(), bookId, issueNumber, res.locals.user.id]
   );
 
   if (!updatedIssue) {
