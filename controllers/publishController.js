@@ -233,9 +233,9 @@ exports.createBook = catchAsync(async (req, res, next) => {
   // Change user role to creator
   const updatedUser = await new QueryPG(pool).update(
     'users',
-    'role = ($1)',
-    'id = ($2)',
-    ['creator', res.locals.user.id]
+    'role = ($1), last_updated = ($2)',
+    'id = ($3)',
+    ['creator', new Date(), res.locals.user.id]
   );
 
   res.locals.user = updatedUser;

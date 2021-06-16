@@ -217,9 +217,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   await new QueryPG(pool).update(
     'users',
-    `password_reset_token = ($1), password_reset_token_expires = ($2)`,
-    'email = ($3)',
-    [passwordResetToken, passwordResetTokenExpires, email]
+    `password_reset_token = ($1), password_reset_token_expires = ($2), last_updated = ($3)`,
+    'email = ($4)',
+    [passwordResetToken, passwordResetTokenExpires, new Date(), email]
   );
 
   // 3) Send it to user's email
@@ -248,9 +248,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     // unset password_reset_token and password_reset_token_expires if there is an issue sending the email
     await new QueryPG(pool).update(
       'users',
-      `password_reset_token = ($1), password_reset_token_expires = ($2)`,
-      'email = ($3)',
-      [undefined, undefined, user.email]
+      `password_reset_token = ($1), password_reset_token_expires = ($2), last_updated = ($3)`,
+      'email = ($4)',
+      [undefined, undefined, new Date(), user.email]
     );
 
     return next(
@@ -288,9 +288,9 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   const updatedUser = await new QueryPG(pool).update(
     'users',
-    `password = ($1), password_reset_token = ($2) ,password_reset_token_expires = ($3)`,
-    'email = ($4)',
-    [encryptedPassword, undefined, undefined, user.email]
+    `password = ($1), password_reset_token = ($2), password_reset_token_expires = ($3), last_updated = ($4)`,
+    'email = ($5)',
+    [encryptedPassword, undefined, undefined, new Date(), user.email]
   );
 
   // 4) Log the user in, send JWT
@@ -299,6 +299,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password, passwordConfirm } = req.body;
+  const currentDateTimestamp = new Date();
 
   if (password !== passwordConfirm) {
     return next(new AppError('Passwords do not match. Try again!', 406));
@@ -332,9 +333,14 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // 3) If so, update password
   const updatedUser = await new QueryPG(pool).update(
     'users',
-    'password = ($1), password_changed_at = ($2)',
-    'id = ($3)',
-    [encryptedPassword, new Date(), res.locals.user.id]
+    'password = ($1), password_changed_at = ($2), last_updated = ($3)',
+    'id = ($4)',
+    [
+      encryptedPassword,
+      currentDateTimestamp,
+      currentDateTimestamp,
+      res.locals.user.id
+    ]
   );
 
   // user.password = password;
