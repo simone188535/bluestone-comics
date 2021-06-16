@@ -261,7 +261,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
   ]);
 
   if (!existingBookByCurrentUser) {
-    return next(new AppError(`Existing book cannot be found.`, 401));
+    return next(new AppError(`Existing book cannot be found.`, 404));
   }
 
   const existingIssueCount = await new QueryPG(pool).find(
@@ -334,7 +334,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Existing book cannot be found. Book Could not be updated.`,
-        401
+        404
       )
     );
   }
@@ -375,7 +375,7 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Existing book cannot be found. Book Could not be updated.`,
-        401
+        404
       )
     );
   }
@@ -391,7 +391,7 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Existing book not found. Book photo cannot be updated.`,
-        401
+        404
       )
     );
   }
@@ -419,7 +419,7 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         `Existing issue cannot be found. Issue could not be updated.`,
-        401
+        404
       )
     );
   }
@@ -469,7 +469,7 @@ exports.getIssue = catchAsync(async (req, res, next) => {
   );
 
   if (!issueOfBookByUser) {
-    return next(new AppError(`Existing Issue not found. `, 401));
+    return next(new AppError(`Existing Issue not found. `, 404));
   }
   const issueAssets = await new QueryPG(pool).find(
     '*',
@@ -573,7 +573,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
       })
     );
     return next(
-      new AppError(`Existing book not found. Cannot create new issue.`, 401)
+      new AppError(`Existing book not found. Cannot create new issue.`, 404)
     );
   }
 
@@ -637,7 +637,7 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
 
   if (!deletedIssue) {
     return next(
-      new AppError(`Existing Issue not found. Cannot delete issue.`, 401)
+      new AppError(`Existing Issue not found. Cannot delete issue.`, 404)
     );
   }
 
@@ -687,7 +687,7 @@ exports.updateIssue = catchAsync(async (req, res, next) => {
 
   if (!updatedIssue) {
     return next(
-      new AppError(`Existing Issue not found. Cannot update issue.`, 401)
+      new AppError(`Existing Issue not found. Cannot update issue.`, 404)
     );
   }
 

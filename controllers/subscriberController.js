@@ -1,21 +1,34 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Subscriber = require('../models/subscriberModel');
+const QueryPG = require('../utils/QueryPGFeature');
+const pool = require('../db');
 
 exports.checkSubscription = (onlyCheckSubscription = false) =>
   catchAsync(async (req, res, next) => {
-    const currentUserIsSubscribedToPublisher = await Subscriber.findOne({
-      publisher: req.body.publisher,
-      subscriber: res.locals.user.id
-    });
+    // const currentUserSubscribedToPublisher = await Subscriber.findOne({
+    //   publisher: req.body.publisher,
+    //   subscriber: res.locals.user.id
+    // });
+    const currentUserSubscribedToPublisher = await new QueryPG(pool).find(
+      '*',
+      'subscribers WHERE publisher_id = ($1) AND subscriber_id',
+      [req.body.publisher, res.locals.user.id]
+    );
+
+    if (!currentUserSubscribedToPublisher) {
+      return next(
+        new AppError(`User is not subscribed to this publisher.`, 404)
+      );
+    }
 
     if (!onlyCheckSubscription) {
-      res.locals.subscriber = currentUserIsSubscribedToPublisher;
+      res.locals.subscriber = currentUserSubscribedToPublisher;
       return next();
     }
 
     res.status(200).json({
-      subscribed: currentUserIsSubscribedToPublisher,
+      subscribed: currentUserSubscribedToPublisher,
       status: 'success'
     });
   });
