@@ -5,17 +5,23 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const subscriberController = require('../controllers/subscriberController');
 
+router
+  .route('/get-all-subscribers')
+  .get(subscriberController.getAllSubscribers);
+
+router.route('/get-all-subscribed').get(subscriberController.getAllSubscribedTo);
+
 router.use(authController.protect);
 router
   .route('/add')
-  .get(
-    subscriberController.checkSubscription(false),
+  .post(
+    subscriberController.checkSubscription(),
     subscriberController.subscribe
   );
 router
   .route('/remove')
-  .get(
-    subscriberController.checkSubscription(false),
+  .post(
+    subscriberController.checkSubscription(),
     subscriberController.unsubscribe
   );
 router

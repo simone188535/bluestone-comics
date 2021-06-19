@@ -11,6 +11,7 @@ const keys = require('../config/keys.js');
 const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
+const pageOffset = require('../utils/offset');
 const pool = require('../db');
 
 /*
@@ -153,8 +154,7 @@ exports.getIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const { page } = req.query;
 
-  let offset = page - 1;
-  if (offset < 1) offset = 0;
+  const offset = pageOffset(page);
 
   const issuesOfBookByUser = await new QueryPG(pool).find(
     '*',
