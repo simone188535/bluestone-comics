@@ -5,7 +5,7 @@ const filterObj = require('../utils/filterObj');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const QueryPG = require('../utils/QueryPGFeature');
-const pageOffset = require('../utils/offset');
+// const pageOffset = require('../utils/offset');
 const pool = require('../db');
 
 exports.getUser = catchAsync(async (req, res, next) => {
@@ -117,7 +117,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
   // User is never really deleted. Just deactivated as a safety precaution
-  // BUG should all user accounts be unsearchable if the account is not active?
   // await User.findByIdAndUpdate(
   //   res.locals.user.id,
   //   { $set: { active: false } },

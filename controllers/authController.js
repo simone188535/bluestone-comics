@@ -70,6 +70,7 @@ const wasPasswordChangedAfterJWTIssued = (JWTTimestamp, passwordChangedAt) => {
   return JWTTimestampConverted < passwordChangedAt;
 };
 
+// BUG account reactivation, if account email is currently in the DB and is disabled, throw an error and tell user to go to login page
 exports.signup = catchAsync(async (req, res, next) => {
   const {
     firstName,
@@ -104,6 +105,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   createSendToken(newUser, 200, res);
 });
 
+// BUG account reactivation, send message to client if account is reactivated, change account status to enabled if it is disabled
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
