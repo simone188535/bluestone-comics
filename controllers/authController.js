@@ -3,11 +3,11 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
-const pool = require('../db');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const sendEmail = require('../utils/email');
+const pool = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 
 const keys = require('../config/keys.js');

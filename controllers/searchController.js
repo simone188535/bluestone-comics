@@ -4,6 +4,8 @@ const catchAsync = require('../utils/catchAsync');
 const User = require('../models/userModel');
 const Book = require('../models/bookModel');
 const Issue = require('../models/issueModel');
+const pool = require('../db');
+const QueryPG = require('../utils/QueryPGFeature');
 const SearchFeatures = require('../utils/SearchFeatures');
 
 exports.searchBooks = catchAsync(async (req, res, next) => {
@@ -112,7 +114,6 @@ exports.searchIssues = catchAsync(async (req, res) => {
     status: 'success'
   });
 });
-
 
 exports.search = catchAsync(async (req, res) => {
   // THIS IS NOT IN USE.
@@ -263,8 +264,18 @@ exports.search = catchAsync(async (req, res) => {
 exports.searchUsers = catchAsync(async (req, res) => {
   const usernameQuery = req.query.q;
 
-  const users = await User.find({
-    username: { $regex: usernameQuery, $options: 'i' }
+  // const users = await User.find({
+  //   username: { $regex: usernameQuery, $options: 'i' }
+  // });
+  const users = await new QueryPG(pool).find(
+    '*',
+    'users WHERE username LIKE ($1)',
+    [`${usernameQuery}%`],
+    true
+  );
+
+  users.forEach((user) => {
+    user.password = undefined;
   });
 
   // Send Response
