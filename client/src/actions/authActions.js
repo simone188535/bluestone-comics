@@ -6,8 +6,8 @@ const loginRequest = () => {
   return { type: LOGIN_REQUEST }
 }
 
-const loginSuccess = (user) => {
-  return { type: LOGIN_SUCCESS, user }
+const loginSuccess = (user, reactivated) => {
+  return { type: LOGIN_SUCCESS, user, reactivated}
 }
 
 const loginFailure = (error) => {
@@ -23,7 +23,7 @@ const login = (email, password) => async (dispatch) => {
 
     localStorage.setItem('jwtToken', res.data.token);
 
-    dispatch(loginSuccess(res.data.data.user));
+    dispatch(loginSuccess(res.data.data.user, res.data.reactivated));
   } catch (err) {
     dispatch(loginFailure());
     dispatch(errorActions.setError(err.response.data.message));

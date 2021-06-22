@@ -11,13 +11,18 @@ function LoginForm() {
     const history = useHistory();
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const {isAuthenticated, isReactivated} = useSelector(state => ({
+        isAuthenticated: state.auth.isAuthenticated,
+        isReactivated: state.auth.isReactivated,
+      }));
     const hasError = useSelector(state => state.error.hasError);
     const errorMessage = useSelector(state => state.error.errorMessage);
 
     const authMessage = () => {
         if (isAuthenticated) {
-            return <span className="success-text-color"> Login successful!</span>;
+            const successMessage = isReactivated ? 'Your account has been reactivated!': 'Login successful!';
+    
+            return <span className="success-text-color"> {successMessage}</span>;
         } else if (hasError) {
             return <span className="error-text-color">{errorMessage} </span>;
         } else {

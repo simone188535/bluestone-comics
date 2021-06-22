@@ -26,7 +26,7 @@ const signToken = (user) => {
 /* 
   This method send the jwt token to the client/browser
 */
-const createSendToken = (user, status, res, reactivated = undefined) => {
+const createSendToken = (user, status, res, reactivated = false) => {
   if (!user.id) {
     throw new AppError('id field is missing, token is invalid', 500);
   }
@@ -125,7 +125,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 // BUG account reactivation, send message to client if account is reactivated, change account status to enabled if it is disabled
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  let reactivated;
+  let reactivated = false;
 
   if (!email || !password) {
     return next(new AppError(`Email or Password has not been provided!`, 400));
