@@ -11,12 +11,14 @@ function LoginForm() {
     const history = useHistory();
     const dispatch = useDispatch();
     const [enableMessage, setEnableMessage] = useState(false);
-    const {isAuthenticated, isReactivated} = useSelector(state => ({
+    const { isAuthenticated, isReactivated } = useSelector(state => ({
         isAuthenticated: state.auth.isAuthenticated,
         isReactivated: state.auth.isReactivated,
       }));
-    const hasError = useSelector(state => state.error.hasError);
-    const errorMessage = useSelector(state => state.error.errorMessage);
+    const { hasError, errorMessage } = useSelector(state => ({
+        hasError: state.error.hasError,
+        errorMessage: state.error.errorMessage,
+      }))
 
     const authMessage = () => {
         if (isAuthenticated) {
