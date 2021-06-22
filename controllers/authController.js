@@ -26,7 +26,7 @@ const signToken = (user) => {
 /* 
   This method send the jwt token to the client/browser
 */
-const createSendToken = (user, status, res) => {
+const createSendToken = (user, status, res, reactivated = undefined) => {
   if (!user.id) {
     throw new AppError('id field is missing, token is invalid', 500);
   }
@@ -39,6 +39,7 @@ const createSendToken = (user, status, res) => {
 
   res.status(status).json({
     status: 'success',
+    reactivated,
     token,
     data: {
       user
@@ -70,7 +71,6 @@ const wasPasswordChangedAfterJWTIssued = (JWTTimestamp, passwordChangedAt) => {
   return JWTTimestampConverted < passwordChangedAt;
 };
 
-// BUG account reactivation, if account email is currently in the DB and is disabled, throw an error and tell user to go to login page
 exports.signup = catchAsync(async (req, res, next) => {
   const {
     firstName,
@@ -89,6 +89,22 @@ exports.signup = catchAsync(async (req, res, next) => {
     return next(new AppError('Passwords do not match. Try again!', 406));
   }
 
+  // Check if user/email already exists in the DB
+  const existingUser = await new QueryPG(pool).find(
+    '*',
+    'users WHERE email = $1',
+    [email]
+  );
+
+  if (existingUser) {
+    return next(
+      new AppError(
+        'An account already exists for this user. Please login.',
+        403
+      )
+    );
+  }
+
   const encryptedPassword = await bcryptPasswordEncryption(password);
 
   const insertTable = 'users(first_name, last_name, username, email, password)';
@@ -96,6 +112,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const values = [firstName, lastName, username, email, encryptedPassword];
 
+  // Create new account
   const newUser = await new QueryPG(pool).insert(
     insertTable,
     preparedStatement,
@@ -108,6 +125,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 // BUG account reactivation, send message to client if account is reactivated, change account status to enabled if it is disabled
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
+  let reactivated;
 
   if (!email || !password) {
     return next(new AppError(`Email or Password has not been provided!`, 400));
@@ -123,6 +141,18 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError(`User not found. Please Sign Up.`, 401));
   }
 
+  // Reactivate the account if the user has previously deleted it
+  if (existingUser.active === false) {
+    await new QueryPG(pool).update(
+      'users',
+      'active = ($1), last_updated = ($2)',
+      'email = ($3)',
+      [true, new Date(), email]
+    );
+
+    reactivated = true;
+  }
+
   const passedPasswordVerification = await bcryptPasswordCompare(
     password,
     existingUser.password
@@ -132,7 +162,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Password is incorrect.', 406));
   }
 
-  createSendToken(existingUser, 200, res);
+  createSendToken(existingUser, 200, res, reactivated);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
