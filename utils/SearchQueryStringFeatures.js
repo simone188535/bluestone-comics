@@ -12,15 +12,37 @@ class SearchFeatures {
   }
 
   filter() {
-    // count how many $ are in the given query expression so that the correct Parameterized query value 
+    // count how many $ are in the given query expression so that the correct Parameterized query value
     // can be added if needed ie ($3) or ($1)
-    let parameterizedIndex = this.query.match(/\$/g).length;
+    // let parameterizedIndex = this.query.match(/\$/g).length;
     // status
     // q?
     // comic type: oneshot, graphic novel, comic
 
+    let whereClause = '';
+    // if a text search/q is present
+    if (this.queryString.q) {
+      whereClause += `title ILIKE ($${this.parameterizedIndexInc()}) OR  description ILIKE ($${this.parameterizedIndexInc()}) `;
+      // append where clause values for title and description
+      this.parameterizedValues.push(
+        `${this.queryString.q}%`,
+        `${this.queryString.q}%`
+      );
+    }
+
     if (this.queryString.status) {
-      
+      // if the where clause is not empty, add an AND clause to the beginning of the string
+      whereClause += `${this.appendAndOrClause(
+        whereClause,
+        'AND'
+      )} status = ($${this.parameterizedIndexInc()})`;
+      // append where clause values for status
+      this.parameterizedValues.push(`${this.queryString.status}`);
+    }
+
+    // if whereClause string is populated, add WHERE in the beginning of the string
+    if (whereClause !== '') {
+      whereClause = `WHERE ${whereClause}`;
     }
 
     return this;
@@ -57,16 +79,17 @@ class SearchFeatures {
     return this;
   }
 
-  // appendWhereAndClause() {
-  //   // BUG for WHERE/AND clause add function that checks if the current query string is empty. if not add and
-  //   // Only filter needs AND?????
-  //   return false;
-  // }
+  appendAndOrClause(stringToCheck, pgKeywordToAppend) {
+    // BUG for WHERE/AND clause add function that checks if the current query string is empty. if not add and
+    // Only filter needs AND?????
+    return stringToCheck !== '' ? pgKeywordToAppend : '';
+  }
 
-  // addParameterizedQueryAndValues() {
-  //   // BUG add function that dynamically adds Parameterized query and Parameterized values
-  //   return false;
-  // }
+  parameterizedIndexInc() {
+    // BUG add function that dynamically adds Parameterized query and Parameterized values
+    this.parameterizedIndex += 1;
+    return this.parameterizedIndex;
+  }
 }
 
 module.exports = SearchFeatures;
