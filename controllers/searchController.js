@@ -54,26 +54,32 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   }
 
   // const parameterizedQuery = `books ${joinClause} ${whereClause}`;
-  const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id) ${whereClause}`;
-
+  // const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id) ${whereClause}`;
+  const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id)`;
   const parameterizedQueryString = new SearchQueryStringFeatures(
     parameterizedQuery,
-    req.query
+    req.query,
+    []
   )
+    .filter()
     .sort('books.')
     .paginate(20);
-  console.log('parameterizedQuery ', parameterizedQuery);
-  console.log('parameterizedValues ', parameterizedValues);
+  console.log('parameterizedQueryString', parameterizedQueryString);
+  // console.log('parameterizedQuery ', parameterizedQueryString.query);
+  // console.log(
+  //   'parameterizedValues ',
+  //   parameterizedValues
+  // );
   // const doc = await new QueryPG(pool).find(
   //   '*',
-  //   'books WHERE id = ($1)',
-  //   ['*'],
+  //   pparameterizedQuery,
+  //   parameterizedQueryString.parameterizedValues,
   //   true
   // );
   const doc = await new QueryPG(pool).find(
     '*',
-    parameterizedQuery,
-    parameterizedValues,
+    parameterizedQueryString.query,
+    parameterizedQueryString.parameterizedValues,
     true
   );
 

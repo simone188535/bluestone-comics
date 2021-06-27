@@ -45,6 +45,8 @@ class SearchFeatures {
       whereClause = `WHERE ${whereClause}`;
     }
 
+    this.query = `${this.query} ${whereClause}`;
+
     return this;
   }
 
@@ -80,13 +82,16 @@ class SearchFeatures {
   }
 
   appendAndOrClause(stringToCheck, pgKeywordToAppend) {
-    // BUG for WHERE/AND clause add function that checks if the current query string is empty. if not add and
-    // Only filter needs AND?????
+    // If the provided string empty, add the pgKeywordToAppend ie AND or OR, else return an empty string
     return stringToCheck !== '' ? pgKeywordToAppend : '';
   }
 
   parameterizedIndexInc() {
     // BUG add function that dynamically adds Parameterized query and Parameterized values
+    // count how many $ are in the given query expression so that the correct Parameterized query value
+    // can be added if needed ie ($3) or ($1)
+    // let parameterizedIndex = this.query.match(/\$/g).length;
+
     this.parameterizedIndex += 1;
     return this.parameterizedIndex;
   }
