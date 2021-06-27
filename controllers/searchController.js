@@ -18,21 +18,43 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 
   // Execute Query
   // const doc = await searchResults.query;
-  let joinClause = '';
+  const joinClause = '';
   let whereClause = '';
-  let parameterizedValues = null;
+  const parameterizedValues = [];
+  let parameterizedIndex = 0;
+
+  const parameterizedIndexInc = () => {
+    parameterizedIndex += 1;
+    return parameterizedIndex;
+  };
+
+  const appendAndOrClause = (stringToCheck, pgKeywordToAppend) => {
+    return stringToCheck !== '' ? pgKeywordToAppend : '';
+  };
 
   // if a text search is in place
   if (req.query.q) {
-    joinClause = 'INNER JOIN users ON (users.id = books.publisher_id)';
-    whereClause = 'WHERE title ILIKE ($1) OR  description ILIKE ($2)';
-    parameterizedValues = [`${req.query.q}%`, `${req.query.q}%`];
+    // joinClause = 'INNER JOIN users ON (users.id = books.publisher_id) ';
+    whereClause += `title ILIKE ($${parameterizedIndexInc()}) OR  description ILIKE ($${parameterizedIndexInc()}) `;
+    parameterizedValues.push(`${req.query.q}%`, `${req.query.q}%`);
     // Maybe try using this: https://stackoverflow.com/a/7005332/6195136
     // whereClause = 'WHERE title = ($1) OR description = ($2) ';
     // parameterizedValues = [req.query.q, req.query.q];
   }
+  if (req.query.status) {
+    whereClause += `${appendAndOrClause(
+      whereClause,
+      'AND'
+    )} status = ($${parameterizedIndexInc()})`;
+    parameterizedValues.push(`${req.query.status}`);
+  }
+  // if whereClause string is populated, add WHERE in the beginning of the String
+  if (whereClause !== '') {
+    whereClause = `WHERE ${whereClause}`;
+  }
 
-  const parameterizedQuery = `books ${joinClause} ${whereClause}`;
+  // const parameterizedQuery = `books ${joinClause} ${whereClause}`;
+  const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id) ${whereClause}`;
 
   const parameterizedQueryString = new SearchQueryStringFeatures(
     parameterizedQuery,
@@ -40,7 +62,8 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   )
     .sort('books.')
     .paginate(20);
-  console.log('parameterizedQueryString ', parameterizedQueryString);
+  console.log('parameterizedQuery ', parameterizedQuery);
+  console.log('parameterizedValues ', parameterizedValues);
   // const doc = await new QueryPG(pool).find(
   //   '*',
   //   'books WHERE id = ($1)',

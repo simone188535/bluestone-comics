@@ -1,19 +1,29 @@
 class SearchFeatures {
   // constructor(query, queryString, textSearch = false) {
-  constructor(query, queryString) {
+  constructor(query, queryString, parameterizedValues = []) {
     // these are the query values passed in from node AKA req.query
     this.query = query;
     this.queryString = queryString;
+    this.parameterizedValues = parameterizedValues;
 
-    // this.parameterizedIndex = 0;
+    this.parameterizedIndex = 0;
     // this.parameterizedQuery = `${tableName} `;
     // this.parameterizedValues = [];
   }
 
   filter() {
+    // count how many $ are in the given query expression so that the correct Parameterized query value 
+    // can be added if needed ie ($3) or ($1)
+    let parameterizedIndex = this.query.match(/\$/g).length;
     // status
     // q?
     // comic type: oneshot, graphic novel, comic
+
+    if (this.queryString.status) {
+      
+    }
+
+    return this;
   }
 
   sort(tableColumnPrefix = '') {
