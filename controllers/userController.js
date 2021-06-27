@@ -9,20 +9,7 @@ const QueryPG = require('../utils/QueryPGFeature');
 const pool = require('../db');
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { id, username, email } = req.body;
-
-  // const queryObject = {
-  //   id: id || 'IS NOT NULL',
-  //   username: username || 'IS NOT NULL',
-  //   email: email || 'IS NOT NULL'
-  // };
-
-  // Check if each key-value pair has a value, if not loop through and remove the empty values
-  // Object.keys(queryObject).forEach((key) => {
-  //   if (!queryObject[key]) {
-  //     delete queryObject[key];
-  //   }
-  // });
+  const { id, username, email } = req.query;
 
   let findVal;
   let preparedStatementVal;

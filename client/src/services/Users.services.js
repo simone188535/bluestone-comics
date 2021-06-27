@@ -4,11 +4,31 @@ export const UserServices = {
     getUser
 }
 // may turn this into an object
-function getUser(_id = '', email = '', username = '') {
+function getUser(queryValue) {
+
+    const target = {
+        id: '',
+        email: '',
+        username: ''
+    };
+
+    const reqObj = Object.assign(target, queryValue);
+
     return axios.get(`/api/v1/users/get-user`, {
-        _id,
-        email,
-        username
+        params: {
+           ...reqObj
+        }
     });
 }
+
+// function getBooks() {
+
+    // const reqObj = Object.assign(target, queryValue);
+
+    // return axios.get(`/api/v1/publish/test-slug/book/`, {
+    //     params: {
+    //        ...reqObj
+    //     }
+    // });
+// }
 

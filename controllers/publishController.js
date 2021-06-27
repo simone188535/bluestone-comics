@@ -459,7 +459,7 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
 });
 
 exports.updateIssueAssets = catchAsync(async (req, res, next) => {
-  // const { bookId, issueNumber } = req.params;
+  // const { bookId, issueNumber } = req.;
   // const issueCoverPhoto = req.file.location;
 
   // // update cover photo of issue

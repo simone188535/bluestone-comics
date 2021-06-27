@@ -7,86 +7,52 @@ const Issue = require('../models/issueModel');
 const pool = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 const SearchFeatures = require('../utils/SearchFeatures');
+const SearchQueryStringFeatures = require('../utils/SearchQueryStringFeatures');
 
 exports.searchBooks = catchAsync(async (req, res, next) => {
-  // // 1) Filtering
-  // const queryObj = { ...req.query };
-  // // const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  // // excludedFields.forEach((el) => delete queryObj[el]);
-
-  // // 1A) Advanced Filtering
-  // // console.log('queryObj', queryObj);
-  // let queryStr = JSON.stringify(queryObj);
-
-  // // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
-  // queryStr = queryStr.replace(
-  //   /\b(gt|gte|lt|lte|eq|ne)\b/g,
-  //   (match) => `$${match}`
-  // );
-
-  // // console.log('queryStr', queryStr);
-
-  // // 2) Sorting
-  // const sort = {};
-
-  // if (req.query.q) {
-  //   sort.score = { $meta: 'textScore' };
-  // }
-
-  // if (req.query.sort) {
-  //   if (req.query.sort === 'newest') {
-  //     // Latest/Newest entry
-  //     sort.lastUpdate = 1;
-  //   } else if (req.query.sort === 'popular') {
-  //     // Most Popular
-  //     sort.popular = 1;
-  //   } else if (req.query.sort === 'views') {
-  //     // Most Views
-  //     sort.views = 1;
-  //   } else if (req.query.sort === 'likes') {
-  //     // Most Likes
-  //     sort.likes = 1;
-  //   }
-  // } else {
-  //   // sort by Latest/Newest entry
-  //   sort.lastUpdate = 1;
-  // }
-
-  // // console.log('sort', sort);
-
-  // // 4) Text Search
-  // queryStr = JSON.parse(queryStr);
-  // if (req.query.q) {
-  //   queryStr.$text = { $search: `${req.query.q}` };
-  // }
-
-  // // removes unneeded value from queryStr object
-  // delete queryStr.q;
-  // delete queryStr.sort;
-
-  // console.log('queryStr', queryStr);
-  // //console.log(JSON.parse(queryStr));
-
-  // // may need to query populated publisher field for given author
-  // // https://mongoosejs.com/docs/populate.html
-  // // Maybe search users collection seperately as well
-  // const books = await Book.find(
-  //   queryStr,
-  //   // helps sort text results by relevance
-  //   { score: { $meta: 'textScore' } }
-  // ).sort(sort);
-  // // .sort({ score: { $meta: 'textScore' } });
-  // // console.log('query', query);
-  const searchResults = new SearchFeatures(Book.find(), req.query, true)
-    .filter()
-    .sort('lastUpdate')
-    .limitFields()
-    .paginate();
+  // const searchResults = new SearchFeatures(Book.find(), req.query, true)
+  //   .filter()
+  //   .sort('lastUpdate')
+  //   .limitFields()
+  //   .paginate();
 
   // Execute Query
-  const doc = await searchResults.query;
-  // const books = await query;
-  // await search.populate('publisher');
+  // const doc = await searchResults.query;
+  let joinClause = '';
+  let whereClause = '';
+  let parameterizedValues = null;
+
+  // if a text search is in place
+  if (req.query.q) {
+    joinClause = 'INNER JOIN users ON (users.id = books.publisher_id)';
+    whereClause = 'WHERE title ILIKE ($1) OR  description ILIKE ($2)';
+    parameterizedValues = [`${req.query.q}%`, `${req.query.q}%`];
+    // Maybe try using this: https://stackoverflow.com/a/7005332/6195136
+    // whereClause = 'WHERE title = ($1) OR description = ($2) ';
+    // parameterizedValues = [req.query.q, req.query.q];
+  }
+
+  const parameterizedQuery = `books ${joinClause} ${whereClause}`;
+
+  const parameterizedQueryString = new SearchQueryStringFeatures(
+    parameterizedQuery,
+    req.query
+  )
+    .sort('books.')
+    .paginate(20);
+  console.log('parameterizedQueryString ', parameterizedQueryString);
+  // const doc = await new QueryPG(pool).find(
+  //   '*',
+  //   'books WHERE id = ($1)',
+  //   ['*'],
+  //   true
+  // );
+  const doc = await new QueryPG(pool).find(
+    '*',
+    parameterizedQuery,
+    parameterizedValues,
+    true
+  );
 
   // Send Response
   res.status(200).json({

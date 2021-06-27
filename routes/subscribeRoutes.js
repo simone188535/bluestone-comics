@@ -9,7 +9,9 @@ router
   .route('/get-all-subscribers')
   .get(subscriberController.getAllSubscribers);
 
-router.route('/get-all-subscribed').get(subscriberController.getAllSubscribedTo);
+router
+  .route('/get-all-subscribed')
+  .get(subscriberController.getAllSubscribedTo);
 
 router.use(authController.protect);
 router

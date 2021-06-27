@@ -26,7 +26,7 @@ const Profile = () => {
 
     const fetchProfileUser = async () => {
         try {
-            const res = await UserServices.getUser('', '', username);
+            const res = await UserServices.getUser({username});
 
             if (errorMessage) {
                 setErrorMessage('');
