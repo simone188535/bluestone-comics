@@ -7,17 +7,10 @@ class SearchFeatures {
     this.parameterizedValues = parameterizedValues;
 
     this.parameterizedIndex = 0;
-    // this.parameterizedQuery = `${tableName} `;
-    // this.parameterizedValues = [];
   }
 
   filter() {
-    // count how many $ are in the given query expression so that the correct Parameterized query value
-    // can be added if needed ie ($3) or ($1)
-    // let parameterizedIndex = this.query.match(/\$/g).length;
-    // status
-    // q?
-    // comic type: oneshot, graphic novel, comic
+    // add comic type: oneshot, graphic novel, comic still needs to be added here
 
     let whereClause = '';
     // if a text search/q is present
@@ -87,9 +80,8 @@ class SearchFeatures {
   }
 
   parameterizedIndexInc() {
-    // BUG add function that dynamically adds Parameterized query and Parameterized values
-    // count how many $ are in the given query expression so that the correct Parameterized query value
-    // can be added if needed ie ($3) or ($1)
+    // This increments parameterizedIndex so that Parameterized query statements can be added dynamically ie ($3) or ($1)
+    // later a function may need to be added that counts how many $ are in the given query expression so that the correct Parameterized query value can be added
     // let parameterizedIndex = this.query.match(/\$/g).length;
 
     this.parameterizedIndex += 1;

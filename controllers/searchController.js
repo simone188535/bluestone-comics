@@ -10,51 +10,6 @@ const SearchFeatures = require('../utils/SearchFeatures');
 const SearchQueryStringFeatures = require('../utils/SearchQueryStringFeatures');
 
 exports.searchBooks = catchAsync(async (req, res, next) => {
-  // const searchResults = new SearchFeatures(Book.find(), req.query, true)
-  //   .filter()
-  //   .sort('lastUpdate')
-  //   .limitFields()
-  //   .paginate();
-
-  // Execute Query
-  // const doc = await searchResults.query;
-  const joinClause = '';
-  let whereClause = '';
-  const parameterizedValues = [];
-  let parameterizedIndex = 0;
-
-  const parameterizedIndexInc = () => {
-    parameterizedIndex += 1;
-    return parameterizedIndex;
-  };
-
-  const appendAndOrClause = (stringToCheck, pgKeywordToAppend) => {
-    return stringToCheck !== '' ? pgKeywordToAppend : '';
-  };
-
-  // if a text search is in place
-  if (req.query.q) {
-    // joinClause = 'INNER JOIN users ON (users.id = books.publisher_id) ';
-    whereClause += `title ILIKE ($${parameterizedIndexInc()}) OR  description ILIKE ($${parameterizedIndexInc()}) `;
-    parameterizedValues.push(`${req.query.q}%`, `${req.query.q}%`);
-    // Maybe try using this: https://stackoverflow.com/a/7005332/6195136
-    // whereClause = 'WHERE title = ($1) OR description = ($2) ';
-    // parameterizedValues = [req.query.q, req.query.q];
-  }
-  if (req.query.status) {
-    whereClause += `${appendAndOrClause(
-      whereClause,
-      'AND'
-    )} status = ($${parameterizedIndexInc()})`;
-    parameterizedValues.push(`${req.query.status}`);
-  }
-  // if whereClause string is populated, add WHERE in the beginning of the String
-  if (whereClause !== '') {
-    whereClause = `WHERE ${whereClause}`;
-  }
-
-  // const parameterizedQuery = `books ${joinClause} ${whereClause}`;
-  // const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id) ${whereClause}`;
   const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id)`;
   const parameterizedQueryString = new SearchQueryStringFeatures(
     parameterizedQuery,
@@ -64,18 +19,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     .filter()
     .sort('books.')
     .paginate(20);
-  console.log('parameterizedQueryString', parameterizedQueryString);
-  // console.log('parameterizedQuery ', parameterizedQueryString.query);
-  // console.log(
-  //   'parameterizedValues ',
-  //   parameterizedValues
-  // );
-  // const doc = await new QueryPG(pool).find(
-  //   '*',
-  //   pparameterizedQuery,
-  //   parameterizedQueryString.parameterizedValues,
-  //   true
-  // );
+
   const doc = await new QueryPG(pool).find(
     '*',
     parameterizedQueryString.query,
