@@ -15,12 +15,9 @@ class SearchFeatures {
     let whereClause = '';
     // if a text search/q is present
     if (this.queryString.q) {
-      whereClause += `title ILIKE ($${this.parameterizedIndexInc()}) OR  description ILIKE ($${this.parameterizedIndexInc()}) `;
+      whereClause += `to_tsvector('english', coalesce(title, '') || ' ' || coalesce(description, '')) @@ to_tsquery('english', $${this.parameterizedIndexInc()}) `;
       // append where clause values for title and description
-      this.parameterizedValues.push(
-        `${this.queryString.q}%`,
-        `${this.queryString.q}%`
-      );
+      this.parameterizedValues.push(this.queryString.q);
     }
 
     if (this.queryString.status) {
