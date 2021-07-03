@@ -27,6 +27,11 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     true
   );
 
+  // hide users password
+  doc.forEach((bookData) => {
+    bookData.password = undefined;
+  });
+
   // Send Response
   res.status(200).json({
     results: doc.length,
@@ -55,149 +60,6 @@ exports.searchIssues = catchAsync(async (req, res) => {
 });
 
 exports.search = catchAsync(async (req, res) => {
-  // THIS IS NOT IN USE.
-  // search for provided query (q) or return everything
-  const textSearchQuery = req.query.q
-    ? { $text: { $search: req.query.q } }
-    : { _id: { $exists: true } };
-
-  // $match $or example https://stackoverflow.com/questions/38359622/mongoose-aggregation-match-or-between-dates
-  const aggregate = await Issue.aggregate([
-    // {
-    //   $match: textSearchQuery
-    // },
-    {
-      $facet: {
-        // Text search Issue
-        // searchIssue: [
-        //   {
-        //     $match: textSearchQuery
-        //   },
-        //   // {
-        //   //   $project: {
-        //   //     _id: 0,
-        //   //     score: {
-        //   //       $meta: 'textScore'
-        //   //     }
-        //   //   }
-        //   // }
-        // ],
-
-        // Search publishers
-        searchPublishers: [
-          {
-            $lookup: {
-              from: 'users',
-              let: { publisher: '$publisher' },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $eq: ['$_id', '$$publisher']
-                    },
-                    $text: {
-                      $search: req.query.q
-                    }
-                  }
-                }
-              ],
-              as: 'publisher!!!!'
-            }
-          },
-          {
-            $project: {
-              _id: 0,
-              coverPhoto: 0,
-              issueNumber: 0,
-              totalPages: 0,
-              publisher: 0,
-              book: 0,
-              title: 0,
-              issueAssets: 0,
-              dateCreated: 0,
-              workCredits: 0,
-              imagePrefixReference: 0,
-              __v: 0
-            }
-          },
-          {
-            $group: {
-              _id: '$publisher!!!!',
-              count: { $sum: 1 }
-            }
-          }
-        ],
-
-        // Search book
-        searchBooks: [
-          {
-            $lookup: {
-              from: 'books',
-              let: { book: '$book' },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $eq: ['$_id', '$$book']
-                    },
-                    $text: {
-                      $search: req.query.q
-                    }
-                  }
-                }
-              ],
-              as: 'book!!!!'
-            }
-          },
-          {
-            $project: {
-              _id: 0,
-              coverPhoto: 0,
-              issueNumber: 0,
-              totalPages: 0,
-              publisher: 0,
-              book: 0,
-              title: 0,
-              issueAssets: 0,
-              dateCreated: 0,
-              workCredits: 0,
-              imagePrefixReference: 0,
-              __v: 0
-            }
-          },
-          {
-            $group: {
-              _id: '$book!!!!',
-              count: { $sum: 1 }
-            }
-          }
-        ]
-      }
-    }
-  ]);
-  // {
-  //   $lookup: {
-  //     from: 'users',
-  //     localField: 'publisher',
-  //     foreignField: '_id',
-  //     as: 'publisher!!!!',
-  //   }
-  // },
-  // {
-  //   $lookup: {
-  //     from: 'books',
-  //     localField: 'book',
-  //     foreignField: '_id',
-  //     as: 'book!!!!!',
-  //   }
-  // }
-
-  // need to add a facet, combine them in an array and sort by text value: https://stackoverflow.com/a/51348446/6195136
-  res.status(200).json({
-    results: aggregate.length,
-    aggregate,
-    status: 'success'
-  });
 });
 
 exports.searchUsers = catchAsync(async (req, res) => {
