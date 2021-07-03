@@ -11,7 +11,7 @@ const SearchQueryStringFeatures = require('../utils/SearchQueryStringFeatures');
 
 exports.searchBooks = catchAsync(async (req, res, next) => {
   const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id)`;
-  const parameterizedQueryString = new SearchQueryStringFeatures(
+  const { query, parameterizedValues } = new SearchQueryStringFeatures(
     parameterizedQuery,
     req.query,
     []
@@ -20,25 +20,31 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     .sort('books.')
     .paginate(20);
 
-  const doc = await new QueryPG(pool).find(
-    '*',
-    parameterizedQueryString.query,
-    parameterizedQueryString.parameterizedValues,
+  const books = await new QueryPG(pool).find(
+    `users.id,
+    users.username,
+    users.user_photo,
+    books.title, 
+    books.url_slug, 
+    books.cover_photo, 
+    books.description, 
+    books.status, 
+    books.last_updated, 
+    books.date_created
+   `,
+    query,
+    parameterizedValues,
     true
   );
 
-  // hide users password
-  doc.forEach((bookData) => {
-    bookData.password = undefined;
-  });
-
   // Send Response
   res.status(200).json({
-    results: doc.length,
-    books: doc,
+    results: books.length,
+    books,
     status: 'success'
   });
 });
+
 exports.searchIssues = catchAsync(async (req, res) => {
   const searchResults = new SearchFeatures(Issue.find(), req.query, true)
     .filter()
@@ -59,8 +65,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
   });
 });
 
-exports.search = catchAsync(async (req, res) => {
-});
+exports.search = catchAsync(async (req, res) => {});
 
 exports.searchUsers = catchAsync(async (req, res) => {
   const usernameQuery = req.query.q;

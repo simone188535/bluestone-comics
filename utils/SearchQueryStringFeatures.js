@@ -1,5 +1,4 @@
 class SearchFeatures {
-  // constructor(query, queryString, textSearch = false) {
   constructor(query, queryString, parameterizedValues = []) {
     // these are the query values passed in from node AKA req.query
     this.query = query;
