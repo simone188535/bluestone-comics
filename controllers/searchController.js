@@ -19,6 +19,8 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     .filter()
     .sort('books.')
     .paginate(20);
+  // BUG dont for get coalesce to ts rank
+  // BUG dont forget to add an index for this text search
 
   const books = await new QueryPG(pool).find(
     `users.id,
