@@ -22,6 +22,8 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   // BUG dont for get coalesce to ts rank
   // BUG dont forget to add an index for this text search
 
+  // example of ts rank cd shown here: https://linuxgazette.net/164/sephton.html
+  // ts_rank_cd( to_tsvector('english', coalesce(title, '') || ' ' || coalesce(description, '')), plainto_tsquery('english', '${req.query.q}')) as rank
   const books = await new QueryPG(pool).find(
     `users.id,
     users.username,
@@ -33,7 +35,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.status, 
     books.last_updated, 
     books.date_created,
-    ts_rank_cd(to_tsvector('english', coalesce(title, '') || ' ' || coalesce(description, '')), plainto_tsquery('english', '${req.query.q}')) as rank
+    ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(title,'')), 'A') || setweight(to_tsvector('english', coalesce(description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) as rank
    `,
     query,
     parameterizedValues,
