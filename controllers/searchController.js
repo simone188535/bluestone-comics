@@ -33,7 +33,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.status, 
     books.last_updated, 
     books.date_created,
-    ts_rank_cd(to_tsvector('english', title), to_tsquery('english', '${req.query.q}')) as rank
+    ts_rank_cd(to_tsvector('english', title), plainto_tsquery('english', '${req.query.q}')) as rank
    `,
     query,
     parameterizedValues,
