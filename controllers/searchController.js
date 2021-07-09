@@ -16,13 +16,12 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     req.query,
     []
   )
-    .filter()
+    .filter('books')
     .sort('books.')
     .paginate(20);
-  // BUG dont for get coalesce to ts rank
-  // BUG dont forget to add an index for this text search
 
   // example of ts rank cd shown here: https://linuxgazette.net/164/sephton.html
+  // https://stackoverflow.com/questions/32903988/postgres-ts-rank-cd-different-result-for-same-tsvector
   // ts_rank_cd( to_tsvector('english', coalesce(title, '') || ' ' || coalesce(description, '')), plainto_tsquery('english', '${req.query.q}')) as rank
   const books = await new QueryPG(pool).find(
     `users.id,
@@ -35,7 +34,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.status, 
     books.last_updated, 
     books.date_created,
-    ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(title,'')), 'A') || setweight(to_tsvector('english', coalesce(description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) as rank
+    ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce( books.title,'')), 'A') || setweight(to_tsvector('english', coalesce(books.description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) as rank
    `,
     query,
     parameterizedValues,
@@ -51,21 +50,33 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 });
 
 exports.searchIssues = catchAsync(async (req, res) => {
-  const searchResults = new SearchFeatures(Issue.find(), req.query, true)
-    .filter()
-    .sort('lastUpdate')
-    .limitFields()
-    .paginate();
+  const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id)`;
+  const { query, parameterizedValues } = new SearchQueryStringFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  )
+    .filter('issues')
+    .sort('issues.')
+    .paginate(20);
 
-  // Execute Query
-  const doc = await searchResults.query;
-  // const books = await query;
-  // await search.populate('publisher');
+  const issues = await new QueryPG(pool).find(
+    `issues.title,
+    issues.issue_number,
+    issues.date_created,
+    users.username,
+    users.email,
+    users.user_photo,
+    ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) as rank`,
+    query,
+    parameterizedValues,
+    true
+  );
 
   // Send Response
   res.status(200).json({
-    results: doc.length,
-    issues: doc,
+    results: issues.length,
+    issues,
     status: 'success'
   });
 });

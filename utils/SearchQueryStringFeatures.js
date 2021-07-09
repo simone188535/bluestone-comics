@@ -8,13 +8,21 @@ class SearchFeatures {
     this.parameterizedIndex = 0;
   }
 
-  filter() {
+  filter(tableToSearch) {
     // add comic type: oneshot, graphic novel, comic still needs to be added here
 
     let whereClause = '';
     // if a text search/q is present
     if (this.queryString.q) {
-      whereClause += `to_tsvector('english', coalesce(title, '') || ' ' || coalesce(description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+      if (tableToSearch === 'books') {
+        whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+      } else if (tableToSearch === 'issues') {
+        whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+      } else if (tableToSearch === 'users') {
+        // BUG partial text search for users
+        // https://stackoverflow.com/questions/2513501/postgresql-full-text-search-how-to-search-partial-words/13481854
+        // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+      }
       // append where clause values for title and description
       this.parameterizedValues.push(this.queryString.q);
     }
@@ -44,6 +52,10 @@ class SearchFeatures {
     let sort;
     let ascOrDesc;
 
+    // if text search has been added, SORT results by text search relevancy (must be named rank)
+    const sortByTextRelevancy = this.queryString.q ? 'rank, ' : '';
+
+    // if a specific sort has been added, sort by those results
     switch (this.queryString.sort) {
       case 'oldest':
         sort = 'date_created';
@@ -55,7 +67,7 @@ class SearchFeatures {
         ascOrDesc = 'ASC';
     }
 
-    this.query = `${this.query} ORDER BY ${tableColumnPrefix}${sort} ${ascOrDesc}`;
+    this.query = `${this.query} ORDER BY ${sortByTextRelevancy} ${tableColumnPrefix}${sort} ${ascOrDesc}`;
 
     return this;
   }
