@@ -16,15 +16,18 @@ class SearchFeatures {
     if (this.queryString.q) {
       if (tableToSearch === 'books') {
         whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+        // append where clause text search value
+        this.parameterizedValues.push(this.queryString.q);
       } else if (tableToSearch === 'issues') {
         whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+        // append where clause text search value
+        this.parameterizedValues.push(this.queryString.q);
       } else if (tableToSearch === 'users') {
-        // BUG partial text search for users
-        // https://stackoverflow.com/questions/2513501/postgresql-full-text-search-how-to-search-partial-words/13481854
-        // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+        // partial text search by username
+        whereClause += `to_tsvector('english', coalesce(${tableToSearch}.username, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+        // append where clause text search value
+        this.parameterizedValues.push(`${this.queryString.q}:*`);
       }
-      // append where clause values for title and description
-      this.parameterizedValues.push(this.queryString.q);
     }
 
     if (this.queryString.status) {

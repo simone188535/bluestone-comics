@@ -81,24 +81,37 @@ exports.searchIssues = catchAsync(async (req, res) => {
   });
 });
 
-exports.search = catchAsync(async (req, res) => {});
+exports.search = catchAsync(async (req, res) => { });
 
 exports.searchUsers = catchAsync(async (req, res) => {
-  const usernameQuery = req.query.q;
+  // const usernameQuery = req.query.q;
 
   // const users = await User.find({
   //   username: { $regex: usernameQuery, $options: 'i' }
   // });
+  const parameterizedQuery = `users `;
+  const { query, parameterizedValues } = new SearchQueryStringFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  )
+    .filter('users')
+    .sort('users.')
+    .paginate(20);
+
+    console.log('query ', query);
+    console.log('parameterizedValues ', parameterizedValues);
   const users = await new QueryPG(pool).find(
-    '*',
-    'users WHERE username LIKE ($1)',
-    [`${usernameQuery}%`],
+    `*, ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(users.username, '')), 'A'), plainto_tsquery('english', '${req.query.q}')) as rank`,
+    query,
+    parameterizedValues,
     true
   );
 
-  users.forEach((user) => {
-    user.password = undefined;
-  });
+  // [`${usernameQuery}%`]
+  // users.forEach((user) => {
+  //   user.password = undefined;
+  // });
 
   // Send Response
   res.status(200).json({
