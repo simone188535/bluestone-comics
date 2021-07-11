@@ -28,6 +28,10 @@ class SearchFeatures {
         whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) `;
         // append where clause values for title and description
         this.parameterizedValues.push(`${this.queryString.q}%`);
+      } else if (tableToSearch === 'users') {
+        whereClause += `${tableToSearch}.username ILIKE ($${this.parameterizedIndexInc()}) `;
+        // append where clause values for title and description
+        this.parameterizedValues.push(`${this.queryString.q}%`);
       }
     }
 
