@@ -109,7 +109,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
 
   const users = await new QueryPG(pool).find(
     'id, username, user_photo, date_created',
-    'users WHERE username LIKE ($1)',
+    'users WHERE username ILIKE ($1)',
     [`${usernameQuery}%`],
     true
   );
