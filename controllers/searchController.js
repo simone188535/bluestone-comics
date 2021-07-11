@@ -22,7 +22,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 
   // example of ts rank cd shown here: https://linuxgazette.net/164/sephton.html
   // https://stackoverflow.com/questions/32903988/postgres-ts-rank-cd-different-result-for-same-tsvector
-  // ts_rank_cd( to_tsvector('english', coalesce(title, '') || ' ' || coalesce(description, '')), plainto_tsquery('english', '${req.query.q}')) as rank
+  // ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce( books.title,'')), 'A') || setweight(to_tsvector('english', coalesce(books.description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const books = await new QueryPG(pool).find(
     `users.id,
     users.username,
@@ -33,8 +33,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.description, 
     books.status, 
     books.last_updated, 
-    books.date_created,
-    ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce( books.title,'')), 'A') || setweight(to_tsvector('english', coalesce(books.description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) as rank
+    books.date_created
    `,
     query,
     parameterizedValues,
@@ -60,14 +59,14 @@ exports.searchIssues = catchAsync(async (req, res) => {
     .sort('issues.')
     .paginate(20);
 
+  //  ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const issues = await new QueryPG(pool).find(
     `issues.title,
     issues.issue_number,
     issues.date_created,
     users.username,
     users.email,
-    users.user_photo,
-    ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) as rank`,
+    users.user_photo`,
     query,
     parameterizedValues,
     true
@@ -84,34 +83,36 @@ exports.searchIssues = catchAsync(async (req, res) => {
 exports.search = catchAsync(async (req, res) => { });
 
 exports.searchUsers = catchAsync(async (req, res) => {
-  // const usernameQuery = req.query.q;
+  const usernameQuery = req.query.q;
 
   // const users = await User.find({
   //   username: { $regex: usernameQuery, $options: 'i' }
   // });
-  const parameterizedQuery = `users `;
-  const { query, parameterizedValues } = new SearchQueryStringFeatures(
-    parameterizedQuery,
-    req.query,
-    []
-  )
-    .filter('users')
-    .sort('users.')
-    .paginate(20);
+  // const parameterizedQuery = `users`;
+  // const { query, parameterizedValues } = new SearchQueryStringFeatures(
+  //   parameterizedQuery,
+  //   req.query,
+  //   []
+  // )
+  //   .filter('users')
+  //   .sort('users.')
+  //   .paginate(20);
 
-    console.log('query ', query);
-    console.log('parameterizedValues ', parameterizedValues);
+  //   console.log('query ', query);
+  //   console.log('parameterizedValues ', parameterizedValues);
+  // const users = await new QueryPG(pool).find(
+  //   `*,  similarity(username, '${req.query.q}') AS rank`,
+  //   query,
+  //   parameterizedValues,
+  //   true
+  // );
+
   const users = await new QueryPG(pool).find(
-    `*, ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(users.username, '')), 'A'), plainto_tsquery('english', '${req.query.q}')) as rank`,
-    query,
-    parameterizedValues,
+    'id, username, user_photo, date_created',
+    'users WHERE username LIKE ($1)',
+    [`${usernameQuery}%`],
     true
   );
-
-  // [`${usernameQuery}%`]
-  // users.forEach((user) => {
-  //   user.password = undefined;
-  // });
 
   // Send Response
   res.status(200).json({

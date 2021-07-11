@@ -17,17 +17,11 @@ class SearchFeatures {
       if (tableToSearch === 'books') {
         whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
         // append where clause text search value
-        this.parameterizedValues.push(this.queryString.q);
       } else if (tableToSearch === 'issues') {
         whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
         // append where clause text search value
-        this.parameterizedValues.push(this.queryString.q);
-      } else if (tableToSearch === 'users') {
-        // partial text search by username
-        whereClause += `to_tsvector('english', coalesce(${tableToSearch}.username, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
-        // append where clause text search value
-        this.parameterizedValues.push(`${this.queryString.q}:*`);
       }
+      this.parameterizedValues.push(this.queryString.q);
     }
 
     if (this.queryString.status) {
@@ -55,9 +49,6 @@ class SearchFeatures {
     let sort;
     let ascOrDesc;
 
-    // if text search has been added, SORT results by text search relevancy (must be named rank)
-    const sortByTextRelevancy = this.queryString.q ? 'rank, ' : '';
-
     // if a specific sort has been added, sort by those results
     switch (this.queryString.sort) {
       case 'oldest':
@@ -70,7 +61,7 @@ class SearchFeatures {
         ascOrDesc = 'ASC';
     }
 
-    this.query = `${this.query} ORDER BY ${sortByTextRelevancy} ${tableColumnPrefix}${sort} ${ascOrDesc}`;
+    this.query = `${this.query} ORDER BY ${tableColumnPrefix}${sort} ${ascOrDesc}`;
 
     return this;
   }
