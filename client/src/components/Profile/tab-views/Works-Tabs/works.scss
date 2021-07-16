@@ -2,19 +2,29 @@
 
 .works-tab {
     &-tri-buttons-container {
-        display: block;
+        // display: block;
+        overflow: hidden;
+
+        .works-tab-tri-button {
+            display: block;
+            float: left;
+            width: 30%;
+            margin: 0px 1.6%;
+
+            &:hover {
+                color: $pure-white;
+                background: $violet-blue;
+                border: 1px solid $pure-black;
+            }
+        }
+
     }
-    &-tri-button {
-        display: block;
-        float: left;
-    }
+
     .filtered-results {
         clear: left;
     }
 }
 
 @media only screen and (min-width: $medium) {
-    .works-tab {
-       
-    }
+    .works-tab {}
 }
