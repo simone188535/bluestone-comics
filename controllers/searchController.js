@@ -1,17 +1,18 @@
 // const express = require('express');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
-const User = require('../models/userModel');
-const Book = require('../models/bookModel');
-const Issue = require('../models/issueModel');
 const pool = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 const SearchFeatures = require('../utils/SearchFeatures');
-const SearchQueryStringFeatures = require('../utils/SearchQueryStringFeatures');
 
 exports.searchBooks = catchAsync(async (req, res, next) => {
   const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id)`;
-  const { query, parameterizedValues } = new SearchQueryStringFeatures(
+
+  // if (req.query.displayCredits) {
+  //   parameterizedQuery = `${parameterizedQuery} INNER JOIN work_credits ON (work_credits.book_id = books.id)`;
+  // }
+
+  const { query, parameterizedValues } = new SearchFeatures(
     parameterizedQuery,
     req.query,
     []
@@ -50,7 +51,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 
 exports.searchIssues = catchAsync(async (req, res) => {
   const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id)`;
-  const { query, parameterizedValues } = new SearchQueryStringFeatures(
+  const { query, parameterizedValues } = new SearchFeatures(
     parameterizedQuery,
     req.query,
     []
@@ -80,7 +81,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
   });
 });
 
-exports.search = catchAsync(async (req, res) => { });
+exports.search = catchAsync(async (req, res) => {});
 
 exports.searchUsers = catchAsync(async (req, res) => {
   const usernameQuery = req.query.q;
@@ -89,7 +90,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
   //   username: { $regex: usernameQuery, $options: 'i' }
   // });
   // const parameterizedQuery = `users`;
-  // const { query, parameterizedValues } = new SearchQueryStringFeatures(
+  // const { query, parameterizedValues } = new SearchFeatures(
   //   parameterizedQuery,
   //   req.query,
   //   []
@@ -108,7 +109,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
   // );
 
   const parameterizedQuery = `users`;
-  const { query, parameterizedValues } = new SearchQueryStringFeatures(
+  const { query, parameterizedValues } = new SearchFeatures(
     parameterizedQuery,
     req.query,
     []
@@ -131,3 +132,5 @@ exports.searchUsers = catchAsync(async (req, res) => {
     status: 'success'
   });
 });
+
+exports.searchAccreditedWorks = catchAsync(async (req, res) => {});

@@ -3,7 +3,7 @@ import axios from "axios";
 export const UserServices = {
     getUser
 }
-// may turn this into an object
+
 function getUser(queryValue) {
 
     const target = {

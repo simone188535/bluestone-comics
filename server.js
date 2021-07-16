@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const keys = require('./config/keys');
+// const mongoose = require('mongoose');
+// const keys = require('./config/keys');
 const Pool = require('./db');
 // This enables ENV Variables
 dotenv.config({ path: './config.env' });
@@ -12,14 +12,14 @@ Pool.connect()
     Pool.end();
   });
 
-mongoose
-  .connect(keys.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
-  })
-  .then(() => console.log('MongoDB connection successful!'))
-  .catch((err) => console.log('MongoDB connection failed!', err));
+// mongoose
+//   .connect(keys.MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     useCreateIndex: true
+//   })
+//   .then(() => console.log('MongoDB connection successful!'))
+//   .catch((err) => console.log('MongoDB connection failed!', err));
 
 const app = require('./app');
 

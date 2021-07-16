@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { UserServices } from '../../services';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import Works from './tab-views/Works';
+import Bookmarks from './tab-views/Bookmarks';
+import Subscribed from './tab-views/Subscribed';
+import Subscribers from './tab-views/Subscribers';
 import './profile.scss';
 
 // https://www.google.com/search?q=profile+page+examples&tbm=isch&ved=2ahUKEwiHqYjq8pfuAhUWGs0KHX0JDK8Q2-cCegQIABAA&oq=profile+page+ex&gs_lcp=CgNpbWcQARgAMgIIADIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAgQHjoECAAQQ1CjxxZYquUWYLTuFmgAcAB4AIABeIgBrQKSAQMyLjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=iV_-X8fAB5a0tAb9krD4Cg&bih=610&biw=1191&rlz=1C5CHFA_enUS873US873#imgrc=H1KWibQNaM5UGM
@@ -50,7 +54,7 @@ const Profile = () => {
         <div className="container-fluid profile-page">
             <div className="profile-page-header">
                 <div className="background-overlay">
-                    <img className="profile-pic" src={profilePageUser.userPhoto} />
+                    <img className="profile-pic" src={profilePageUser.user_photo} />
                     <h2 className="username-header">{profilePageUser.username}</h2>
                     <p className="role">{profilePageUser.role}</p>
                     <div className="general-info">
@@ -85,16 +89,16 @@ const Profile = () => {
                         </TabList>
 
                         <TabPanel>
-                            <h2>Any content 1</h2>
+                            <Works />
                         </TabPanel>
                         <TabPanel>
-                            <h2>Any content 2</h2>
+                            <Bookmarks />
                         </TabPanel>
                         <TabPanel>
-                            <h2>Any content 3</h2>
+                            <Subscribers />
                         </TabPanel>
                         <TabPanel>
-                            <h2>Any content 4</h2>
+                            <Subscribed />
                         </TabPanel>
                     </Tabs>
                 </section>

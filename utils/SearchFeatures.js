@@ -1,113 +1,88 @@
 class SearchFeatures {
-  constructor(query, queryString, textSearch = false) {
+  constructor(query, queryString, parameterizedValues = []) {
+    // these are the query values passed in from node AKA req.query
     this.query = query;
     this.queryString = queryString;
-    this.textSearch = textSearch;
+    this.parameterizedValues = parameterizedValues;
+
+    this.parameterizedIndex = 0;
   }
 
-  filter() {
-    const queryObj = { ...this.queryString };
+  filter(tableToSearch) {
+    // add comic type: oneshot, graphic novel, comic still needs to be added here
 
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(
-      /\b(gt|gte|lt|lte|eq|ne)\b/g,
-      (match) => `$${match}`
-    );
-
-    let searchQuery = {};
-
-    if (this.textSearch) {
-      if (this.queryString.q) {
-        // if queryString.q /text search is present, do a text search and add queryProjection for assist sorting
-
-        searchQuery = Object.assign(searchQuery, {
-          $text: { $search: this.queryString.q }
-        });
-      } else {
-        // if queryString.q is present but, is empty, Show all results, do not add queryProjection
-
-        searchQuery = Object.assign(searchQuery, { _id: { $exists: true } });
+    let whereClause = '';
+    // if a text search/q is present
+    if (this.queryString.q) {
+      if (tableToSearch === 'books') {
+        // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+        whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) OR  ${tableToSearch}.description ILIKE ($${this.parameterizedIndexInc()}) `;
+        // append where clause values for title and description
+        this.parameterizedValues.push(
+          `${this.queryString.q}%`,
+          `${this.queryString.q}%`
+        );
+        // append where clause text search value
+      } else if (tableToSearch === 'issues') {
+        // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+        whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) `;
+        // append where clause values for title and description
+        this.parameterizedValues.push(`${this.queryString.q}%`);
+      } else if (tableToSearch === 'users') {
+        whereClause += `${tableToSearch}.username ILIKE ($${this.parameterizedIndexInc()}) `;
+        // append where clause values for title and description
+        this.parameterizedValues.push(`${this.queryString.q}%`);
       }
-    } else {
-      // search altered query string and parse, do not add queryProjection
-
-      searchQuery = JSON.parse(queryStr);
     }
 
-    this.query = this.query.find(searchQuery);
-    return this;
-  }
-
-  sort(defaultValue) {
-    const sortQuery = {};
-
-    if (this.queryString.q) {
-      Object.assign(sortQuery, {
-        score: { $meta: 'textScore' }
-      });
+    if (this.queryString.status) {
+      // if the where clause is not empty, add an AND clause to the beginning of the string
+      whereClause += `${this.appendAndOrClause(
+        whereClause,
+        'AND'
+      )} status = ($${this.parameterizedIndexInc()})`;
+      // append where clause values for status
+      this.parameterizedValues.push(`${this.queryString.status}`);
     }
 
-    if (this.queryString.sort) {
-      // sort when values are provided
+    if (this.queryString.username) {
+      whereClause += `${this.appendAndOrClause(
+        whereClause,
+        'AND'
+      )} username = ($${this.parameterizedIndexInc()})`;
 
-      // make an array of the sort values
-      const sortBy = this.queryString.sort.split(',');
-
-      sortBy.forEach((sortByValue) => {
-        /*
-          If you ever decide to use Descending sorts add a conditional which checks if theres a - (i.g. -test) 
-          in the value (by using .includes()). Then use .split() to seperate by the - sign. then assign the value 
-          to this. const sortByObject = { [sortBy[index]]: -1 };
-          */
-        const sortByObject = { [sortByValue]: 1 };
-        Object.assign(sortQuery, sortByObject);
-      });
-
-      this.query = this.query.sort(sortQuery);
-    } else {
-      // sort when no values are provided
-      const defaultSort = defaultValue || 'dateCreated';
-
-      Object.assign(sortQuery, {
-        [defaultSort]: 1
-      });
-
-      this.query = this.query.sort(sortQuery);
+      // append where clause values for username
+      this.parameterizedValues.push(`${this.queryString.username}`);
     }
+
+    // if whereClause string is populated, add WHERE in the beginning of the string
+    if (whereClause !== '') {
+      whereClause = `WHERE ${whereClause}`;
+    }
+
+    this.query = `${this.query} ${whereClause}`;
 
     return this;
   }
 
-  limitFields() {
-    // Removes or shows certain fields
-    // This field needs to be enabled if this.queryString.q / text search
-    const limitQuery = {};
+  sort(tableColumnPrefix = '') {
+    // most popular, most viewed, most likes still need to be added
+    let sort;
+    let ascOrDesc;
 
-    if (this.queryString.q) {
-      Object.assign(limitQuery, {
-        score: { $meta: 'textScore' }
-      });
+    // if a specific sort has been added, sort by those results
+    switch (this.queryString.sort) {
+      case 'oldest':
+        sort = 'date_created';
+        ascOrDesc = 'DESC';
+        break;
+      default:
+        // by default, sort by newest/most recently added case
+        sort = 'date_created';
+        ascOrDesc = 'ASC';
     }
 
-    // DO NOT DELETE, MAY NEED EVETUALLY
-    // if (this.queryString.fields) {
-    //   const fields = this.queryString.fields.split(',');
-    //   console.log('fields', fields);
-    //   fields.forEach((fieldValue) => {
-    //     /*
-    //     If you ever decide to use Descending sorts add a conditional which checks if theres a - (i.g. -test)
-    //     in the value (by using .includes()). Then use .split() to seperate by the - sign. then assign the value
-    //     to this. const sortByObject = { [sortBy[index]]: -1 };
-    //     */
-    //     const sortByObject = { [fieldValue]: 1 };
-    //     Object.assign(limitQuery, sortByObject);
-    //   });
-
-    //   this.query = this.query.select(limitQuery);
-    // } else {
-    //   this.query = this.query.select(limitQuery);
-    // }
-    this.query = this.query.select(limitQuery);
+    this.query = `${this.query} ORDER BY ${tableColumnPrefix}${sort} ${ascOrDesc}`;
 
     return this;
   }
@@ -117,9 +92,24 @@ class SearchFeatures {
     const limit = (this.queryString.limit || defaultLimit) * 1 || 100;
     const skip = (page - 1) * limit;
 
-    this.query = this.query.skip(skip).limit(limit);
+    this.query = `${this.query} LIMIT ${limit} OFFSET ${skip}`;
 
     return this;
   }
+
+  appendAndOrClause(stringToCheck, pgKeywordToAppend) {
+    // If the provided string empty, add the pgKeywordToAppend ie AND or OR, else return an empty string
+    return stringToCheck !== '' ? pgKeywordToAppend : '';
+  }
+
+  parameterizedIndexInc() {
+    // This increments parameterizedIndex so that Parameterized query statements can be added dynamically ie ($3) or ($1)
+    // later a function may need to be added that counts how many $ are in the given query expression so that the correct Parameterized query value can be added
+    // let parameterizedIndex = this.query.match(/\$/g).length;
+
+    this.parameterizedIndex += 1;
+    return this.parameterizedIndex;
+  }
 }
+
 module.exports = SearchFeatures;
