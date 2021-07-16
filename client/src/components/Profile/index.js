@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { UserServices } from '../../services';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import Works from './tab-views/Works';
+import Works from './tab-views/Works-Tabs/Works';
 import Bookmarks from './tab-views/Bookmarks';
 import Subscribed from './tab-views/Subscribed';
 import Subscribers from './tab-views/Subscribers';
@@ -89,16 +89,16 @@ const Profile = () => {
                         </TabList>
 
                         <TabPanel>
-                            <Works />
+                            <Works profilePageUser={profilePageUser}/>
                         </TabPanel>
                         <TabPanel>
-                            <Bookmarks />
+                            <Bookmarks profilePageUser={profilePageUser}/>
                         </TabPanel>
                         <TabPanel>
-                            <Subscribers />
+                            <Subscribers profilePageUser={profilePageUser}/>
                         </TabPanel>
                         <TabPanel>
-                            <Subscribed />
+                            <Subscribed profilePageUser={profilePageUser}/>
                         </TabPanel>
                     </Tabs>
                 </section>

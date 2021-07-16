@@ -1,0 +1,20 @@
+@import '../../../../styles/abstracts/variables.scss';
+
+.works-tab {
+    &-tri-buttons-container {
+        display: block;
+    }
+    &-tri-button {
+        display: block;
+        float: left;
+    }
+    .filtered-results {
+        clear: left;
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .works-tab {
+       
+    }
+}

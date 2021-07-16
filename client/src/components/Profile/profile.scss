@@ -99,11 +99,10 @@
 
                     li {
                         width: 150px;
+                        &.react-tabs__tab--selected{
+                            border-color: $violet-blue;
+                        }
                     }
-                }
-
-                .react-tabs__tab-panel {
-                    width: 150px;
                 }
             }
         }
