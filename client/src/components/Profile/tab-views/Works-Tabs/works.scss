@@ -2,16 +2,14 @@
 
 .works-tab {
     &-tri-buttons-container {
-        // display: block;
         overflow: hidden;
 
         .works-tab-tri-button {
             display: block;
-            float: left;
-            width: 30%;
-            margin: 0px 1.6%;
+            width: 80%;
+            margin: 20px auto;
 
-            &:hover {
+            &:hover, &.active {
                 color: $pure-white;
                 background: $violet-blue;
                 border: 1px solid $pure-black;
@@ -26,5 +24,14 @@
 }
 
 @media only screen and (min-width: $medium) {
-    .works-tab {}
+    .works-tab {
+
+        .works-tab-tri-button {
+            // display: block;
+            float: left;
+            width: 30%;
+            margin: 0px 1.6%;
+
+        }
+    }
 }

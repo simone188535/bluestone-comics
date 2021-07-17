@@ -45,9 +45,9 @@ const Profile = () => {
         fetchProfileUser();
     }, []);
 
-    useEffect(() => {
-        console.log('profilePageUser', profilePageUser);
-    }, [profilePageUser]);
+    // useEffect(() => {
+    //     console.log('profilePageUser', profilePageUser);
+    // }, [profilePageUser]);
 
 
     return (

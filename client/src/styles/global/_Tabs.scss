@@ -15,7 +15,7 @@
         text-align: center;
 
         &.react-tabs__tab--selected {
-            border-bottom: 5px #0088dd solid;
+            border-bottom: 5px $violet-blue solid;
             color: $off-black;
         }
     }

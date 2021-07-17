@@ -3,6 +3,7 @@
     font-weight: $normal;
     font-size: $small-font;
     padding: 15px 30px;
+    font-family: $Roboto, $base-font;
 
     &.primary {
         background: $violet-blue;
@@ -10,7 +11,7 @@
         border-radius: 5px;
 
         &:hover,
-        .active {
+        &.active {
             background: $dark-violet-blue;
         }
     }
@@ -22,7 +23,7 @@
         border: 1px solid $pure-black;
 
         &:hover,
-        .active {
+        &.active {
             color: $violet-blue;
             border-color: $violet-blue;
         }
