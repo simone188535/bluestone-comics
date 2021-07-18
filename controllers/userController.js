@@ -33,8 +33,10 @@ exports.getUser = catchAsync(async (req, res, next) => {
   }
 
   // const user = await User.findOne(queryObject);
-  const user = await new QueryPG(pool).find(
-    '*',
+  const user = await new QueryPG(
+    pool
+  ).find(
+    'email, username, user_photo, background_user_photo, role, bio, date_created',
     `users WHERE ${findVal} = ($1)`,
     [preparedStatementVal]
   );

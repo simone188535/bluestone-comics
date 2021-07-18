@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SearchServices } from '../../../../services';
 import './works.scss';
 
-const Works = ({ profilePageUser }) => {
+const Works = ({ profilePageUsername }) => {
      // This may be passed as a props later from the profile page
     const buttonValues = ['Books', 'Issues', 'Accredited'];
     
@@ -15,19 +15,21 @@ const Works = ({ profilePageUser }) => {
         try {
             switch (filterType) {
                 case 'Books':
-                    const booksByProfileUser = SearchServices.searchBooks({});
+                    const booksByProfileUser = await SearchServices.searchBooks({username: profilePageUsername});
+                    const { books } = booksByProfileUser.data;
 
-                    setFilteredResults(booksByProfileUser);
+                    setFilteredResults(books);
                     break;
                 case 'Issues':
-                    const issuesByProfileUser = SearchServices.searchIssues({});
+                    const issuesByProfileUser = await SearchServices.searchIssues({username: profilePageUsername});
+                    const { issues } = issuesByProfileUser.data;
 
-                    setFilteredResults(issuesByProfileUser);
+                    setFilteredResults(issues);
                     break;
                 case 'Accredited':
-                    const AccreditedWorksByProfileUser = SearchServices.searchIssues({});
-
-                    setFilteredResults(AccreditedWorksByProfileUser);
+                    //const AccreditedWorksByProfileUser = await SearchServices.searchIssues({username: profilePageUsername});
+                    // const { issues } = AccreditedWorksByProfileUser.data;
+                    // setFilteredResults(issues);
                     break;
                 default:
                     return;
@@ -41,6 +43,9 @@ const Works = ({ profilePageUser }) => {
         fetchSearchType();
     }, [filterType])
 
+    useEffect(() => {
+        console.log('filteredResults: ', filteredResults)
+    }, [filteredResults])
 
     const filterButtons = () => {
         return buttonValues.map((element, index) => {
