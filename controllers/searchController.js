@@ -63,6 +63,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
   //  ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const issues = await new QueryPG(pool).find(
     `issues.title,
+    issues.cover_photo,
     issues.issue_number,
     issues.date_created,
     users.username,

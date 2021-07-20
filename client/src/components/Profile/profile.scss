@@ -72,7 +72,7 @@
         padding-top: 70px;
 
         .user-bio {
-            margin: 50px 0 80px;
+            margin: 50px auto 80px;
 
             .title {
                 text-align: center;
@@ -91,16 +91,14 @@
         }
 
         .user-info {
-            .tab-navigation {
-                ul {
-                    display: flex;
-                    justify-content: center;
-                    flex-wrap: wrap;
-                    margin-bottom: 20px;
+            .tab-navigation ul.react-tabs__tab-list {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
 
-                    li {
-                        width: 150px;
-                    }
+                li {
+                    width: 150px;
                 }
             }
         }
@@ -134,15 +132,11 @@
         }
 
         .profile-page-body {
-            .user-info {
-                .tab-navigation {
-                    ul {
-                        margin-bottom: 60px;
+            .user-info .tab-navigation ul.react-tabs__tab-list {
+                margin-bottom: 60px;
 
-                        li {
-                            width: 25%;
-                        }
-                    }
+                li {
+                    width: 25%;
                 }
             }
         }
@@ -165,12 +159,8 @@
         }
 
         .profile-page-body {
-            .user-info {
-                .tab-navigation {
-                    ul {
-                        justify-content: space-between;
-                    }
-                }
+            .user-info .tab-navigation ul.react-tabs__tab-list {
+                justify-content: space-between;
             }
         }
     }

@@ -30,7 +30,7 @@ const Profile = () => {
 
     const fetchProfileUser = async () => {
         try {
-            const res = await UserServices.getUser({username});
+            const res = await UserServices.getUser({ username });
 
             if (errorMessage) {
                 setErrorMessage('');
@@ -73,33 +73,37 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            <div className="container profile-page-body">
-                <section className="user-bio">
+            <div className="profile-page-body">
+                {/* <div className="container"></div> */}
+                <section className="container user-bio">
                     <h2 className="title">Bio</h2>
                     <p className="description">{profilePageUser.bio}</p>
                 </section>
                 <section className="user-info">
                     <Tabs className="tab-navigation">
-                        <TabList>
-                            <Tab>Works</Tab>
-                            <Tab>Bookmarks</Tab>
-                            <Tab>Subscribers</Tab>
-                            <Tab>Subscribed</Tab>
-                            {/* <Tab>Achievements</Tab> */}
-                        </TabList>
-
-                        <TabPanel>
-                            <Works profilePageUsername={profilePageUser.username}/>
-                        </TabPanel>
-                        <TabPanel>
-                            <Bookmarks profilePageUser={profilePageUser}/>
-                        </TabPanel>
-                        <TabPanel>
-                            <Subscribers profilePageUser={profilePageUser}/>
-                        </TabPanel>
-                        <TabPanel>
-                            <Subscribed profilePageUser={profilePageUser}/>
-                        </TabPanel>
+                        <div className="container">
+                            <TabList>
+                                <Tab>Works</Tab>
+                                <Tab>Bookmarks</Tab>
+                                <Tab>Subscribers</Tab>
+                                <Tab>Subscribed</Tab>
+                                {/* <Tab>Achievements</Tab> */}
+                            </TabList>
+                        </div>
+                        <div className="container-fluid">
+                            <TabPanel>
+                                <Works profilePageUsername={profilePageUser.username} />
+                            </TabPanel>
+                            <TabPanel>
+                                <Bookmarks profilePageUser={profilePageUser} />
+                            </TabPanel>
+                            <TabPanel>
+                                <Subscribers profilePageUser={profilePageUser} />
+                            </TabPanel>
+                            <TabPanel>
+                                <Subscribed profilePageUser={profilePageUser} />
+                            </TabPanel>
+                        </div>
                     </Tabs>
                 </section>
             </div>

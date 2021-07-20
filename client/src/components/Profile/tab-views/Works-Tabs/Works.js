@@ -10,6 +10,7 @@ const Works = ({ profilePageUsername }) => {
     const [filterType, setFilterType] = useState(buttonValues[0]);
     const [filteredResults, setFilteredResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    // BUG Dont forget error message
 
     const fetchSearchType = async () => {
         try {
@@ -51,7 +52,7 @@ const Works = ({ profilePageUsername }) => {
         return buttonValues.map((element, index) => {
             const activeClassToggle = index === activeButton ? 'active' : '';
 
-            return <button key={index} className={`bsc-button transparent works-tab-tri-button ${activeClassToggle}`} onClick={() => toggleActiveElement(index, element)}>{element}</button>
+            return <button key={`filter-button${index}`} className={`bsc-button transparent works-tab-tri-button ${activeClassToggle}`} onClick={() => toggleActiveElement(index, element)}>{element}</button>
         })
     }
 
@@ -60,13 +61,28 @@ const Works = ({ profilePageUsername }) => {
         setFilterType(activeButtonValue);
     }
 
+    const DisplayfilteredResults = () => {
+        
+        if (!filteredResults) {
+            return <span>This user has not created this yet.</span>
+        }
+
+        const results = filteredResults.map((filteredResult, index) => {
+            return <li className="grid-list-item" key={`filtered-result${index}`}>
+                <img className="grid-image" src={filteredResult.cover_photo} alt={`${filteredResult.title}-cover-photo`} />
+            </li>
+        });
+
+        return <ul className="display-grid">{results}</ul>;
+    }
+
     return (
         <div className="works-tab">
             <div className="works-tab-tri-buttons-container">
                 {filterButtons()}
             </div>
             <div className="filtered-results">
-
+                {DisplayfilteredResults()}
             </div>
         </div>
     );
