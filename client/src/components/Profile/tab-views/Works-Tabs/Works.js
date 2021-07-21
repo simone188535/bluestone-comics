@@ -3,9 +3,9 @@ import { SearchServices } from '../../../../services';
 import './works.scss';
 
 const Works = ({ profilePageUsername }) => {
-     // This may be passed as a props later from the profile page
+    // This may be passed as a props later from the profile page
     const buttonValues = ['Books', 'Issues', 'Accredited'];
-    
+
     const [activeButton, setActiveButton] = useState(0);
     const [filterType, setFilterType] = useState(buttonValues[0]);
     const [filteredResults, setFilteredResults] = useState([]);
@@ -16,13 +16,13 @@ const Works = ({ profilePageUsername }) => {
         try {
             switch (filterType) {
                 case 'Books':
-                    const booksByProfileUser = await SearchServices.searchBooks({username: profilePageUsername});
+                    const booksByProfileUser = await SearchServices.searchBooks({ username: profilePageUsername });
                     const { books } = booksByProfileUser.data;
 
                     setFilteredResults(books);
                     break;
                 case 'Issues':
-                    const issuesByProfileUser = await SearchServices.searchIssues({username: profilePageUsername});
+                    const issuesByProfileUser = await SearchServices.searchIssues({ username: profilePageUsername });
                     const { issues } = issuesByProfileUser.data;
 
                     setFilteredResults(issues);
@@ -52,7 +52,7 @@ const Works = ({ profilePageUsername }) => {
         return buttonValues.map((element, index) => {
             const activeClassToggle = index === activeButton ? 'active' : '';
 
-            return <button key={`filter-button${index}`} className={`bsc-button transparent works-tab-tri-button ${activeClassToggle}`} onClick={() => toggleActiveElement(index, element)}>{element}</button>
+            return <button key={`filter-button-${index}`} className={`bsc-button transparent works-tab-tri-button ${activeClassToggle}`} onClick={() => toggleActiveElement(index, element)}>{element}</button>
         })
     }
 
@@ -62,18 +62,36 @@ const Works = ({ profilePageUsername }) => {
     }
 
     const DisplayfilteredResults = () => {
-        
+
         if (!filteredResults) {
             return <span>This user has not created this yet.</span>
         }
 
         const results = filteredResults.map((filteredResult, index) => {
-            return <li className="grid-list-item" key={`filtered-result${index}`}>
-                <img className="grid-image" src={filteredResult.cover_photo} alt={`${filteredResult.title}-cover-photo`} />
-            </li>
+            return (
+                <li className="grid-list-item" key={`filtered-result-${index}`}>
+                    <div className="grid-image-container">
+                        <a href="#">
+                        <img className="grid-image" src={filteredResult.cover_photo} alt={`${filteredResult.title} cover photo`} />
+                        </a>
+                    </div>
+                    <div className="grid-info-box">
+                        <h3>{filteredResult.title}</h3>
+                        <div>
+                            {filteredResult.description}
+                        </div>
+                        <div>
+                            {new Date(filteredResult.date_created).toString()}
+                        </div>
+                        <div className="grid-footer">
+
+                        </div>
+                    </div>
+                </li>
+            );
         });
 
-        return <ul className="display-grid">{results}</ul>;
+        return <ul className="display-work-grid col-3">{results}</ul>;
     }
 
     return (

@@ -1,0 +1,45 @@
+.display-work-grid {
+    // background-color: teal;
+    display: grid;
+    grid-template-columns: auto;
+    list-style: none;
+    justify-content: space-evenly;
+    max-width: 80%;
+    margin: 0 auto;
+    align-items: start;
+    // grid-gap: 10%;
+    
+    
+    // mimics bootstrap column sizes
+    &.col-xs-2 {
+        grid-template-columns: auto auto;
+    }
+    &.col-xs-3 {
+        grid-template-columns: auto auto auto;
+    }
+
+    li.grid-list-item {
+
+        img.grid-image {
+            display: block;
+            width: 100%;
+        }
+
+        .grid-footer {
+
+        }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+
+    .display-work-grid {
+        max-width: 80%;
+        &.col-2 {
+            grid-template-columns: auto auto;
+        }
+        &.col-3 {
+            grid-template-columns: auto auto auto;
+        }
+    }
+}
