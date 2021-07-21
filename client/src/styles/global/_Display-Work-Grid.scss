@@ -23,6 +23,8 @@
         img.grid-image {
             display: block;
             width: 100%;
+            object-fit: contain;
+            height: 350px;
         }
 
         .grid-footer {
