@@ -63,8 +63,8 @@ const Works = ({ profilePageUsername }) => {
     }
 
 
-    const DisplayfilteredResults = () => {
-
+    const displayFilteredResults = () => {
+        // BUG May need to clear filtered result when changing filterType
         if (!filteredResults) {
             return <span>This user has not created this yet.</span>
         }
@@ -96,8 +96,8 @@ const Works = ({ profilePageUsername }) => {
         return <ul className="display-work-grid col-3">{results}</ul>;
     }
     // useEffect(() => {
-    //     DisplayfilteredResults();
-    // }, [DisplayfilteredResults, filterType]);
+    //     displayFilteredResults();
+    // }, [displayFilteredResults, filterType]);
 
     return (
         <div className="works-tab">
@@ -105,7 +105,7 @@ const Works = ({ profilePageUsername }) => {
                 {filterButtons()}
             </div>
             <div className="filtered-results">
-                {DisplayfilteredResults()}
+                {displayFilteredResults()}
             </div>
         </div>
     );
