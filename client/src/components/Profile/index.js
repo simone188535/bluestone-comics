@@ -28,22 +28,22 @@ const Profile = () => {
 
     // a helper function will be needed to format profile numbers: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900
 
-    const fetchProfileUser = async () => {
-        try {
-            const res = await UserServices.getUser({ username });
-
-            if (errorMessage) {
-                setErrorMessage('');
-            }
-            setProfilePageUser(res.data.user);
-        } catch (err) {
-            setErrorMessage(err.response.data.message);
-        }
-    }
-
     useEffect(() => {
+        const fetchProfileUser = async () => {
+            try {
+                const res = await UserServices.getUser({ username });
+    
+                if (errorMessage) {
+                    setErrorMessage('');
+                }
+                
+                setProfilePageUser(res.data.user);
+            } catch (err) {
+                setErrorMessage(err.response.data.message);
+            }
+        }
         fetchProfileUser();
-    }, []);
+    }, [errorMessage, username]);
 
     useEffect(() => {
         console.log('profilePageUser', profilePageUser);
