@@ -3,17 +3,18 @@
 .works-tab {
     &-tri-buttons-container {
         overflow: hidden;
+        margin: 0px 10% 10%;
 
         .works-tab-tri-button {
             display: block;
             width: 80%;
             margin: 20px auto;
 
-            &:hover, &.active {
-                color: $pure-white;
-                background: $violet-blue;
-                border: 1px solid $pure-black;
-            }
+            // &:hover, &.active {
+            //     color: $pure-white;
+            //     background: $violet-blue;
+            //     border: 1px solid $pure-black;
+            // }
         }
 
     }

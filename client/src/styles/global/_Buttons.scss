@@ -28,4 +28,18 @@
             border-color: $violet-blue;
         }
     }
+
+    &.primary-link {
+        border: unset;
+        color: $violet-blue;
+        background: transparent;
+        padding:  unset;
+        line-height: 1.5;
+        letter-spacing: 1px;
+        font-size: 15px;
+        &:hover,
+        &.active {
+            color: $dark-violet-blue;
+        }
+    }
 }

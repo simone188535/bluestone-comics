@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SearchServices } from '../../../../services';
+import ReadMore from '../../../CommonUI/ReadMore';
 import './works.scss';
 
 const Works = ({ profilePageUsername }) => {
@@ -44,15 +45,15 @@ const Works = ({ profilePageUsername }) => {
         fetchSearchType();
     }, [filterType])
 
-    useEffect(() => {
-        console.log('filteredResults: ', filteredResults)
-    }, [filteredResults])
+    // useEffect(() => {
+    //     console.log('filteredResults: ', filteredResults)
+    // }, [filteredResults])
 
     const filterButtons = () => {
         return buttonValues.map((element, index) => {
             const activeClassToggle = index === activeButton ? 'active' : '';
 
-            return <button key={`filter-button-${index}`} className={`bsc-button transparent works-tab-tri-button ${activeClassToggle}`} onClick={() => toggleActiveElement(index, element)}>{element}</button>
+            return <button key={`filter-button-${index}`} className={`bsc-button primary works-tab-tri-button ${activeClassToggle}`} onClick={() => toggleActiveElement(index, element)}>{element}</button>
         })
     }
 
@@ -60,6 +61,7 @@ const Works = ({ profilePageUsername }) => {
         setActiveButton(activeButtonIndex);
         setFilterType(activeButtonValue);
     }
+
 
     const DisplayfilteredResults = () => {
 
@@ -72,16 +74,16 @@ const Works = ({ profilePageUsername }) => {
                 <li className="grid-list-item" key={`filtered-result-${index}`}>
                     <div className="grid-image-container">
                         <a href="#">
-                        <img className="grid-image" src={filteredResult.cover_photo} alt={`${filteredResult.title} cover photo`} />
+                            <img className="grid-image" src={filteredResult.cover_photo} alt={`${filteredResult.title} cover photo`} />
                         </a>
                     </div>
                     <div className="grid-info-box">
-                        <h3>{filteredResult.title}</h3>
-                        <div>
-                            {filteredResult.description}
-                        </div>
-                        <div>
-                            {new Date(filteredResult.date_created).toString()}
+                        <h3 className="grid-info-box-header">{filteredResult.title}</h3>
+                        <div className="grid-info-box-body">
+                            <ReadMore content={filteredResult.description} maxStringLengthShown={150}/>
+                            <div>
+                                {new Date(filteredResult.date_created).toString()}
+                            </div>
                         </div>
                         <div className="grid-footer">
 
@@ -93,6 +95,9 @@ const Works = ({ profilePageUsername }) => {
 
         return <ul className="display-work-grid col-3">{results}</ul>;
     }
+    // useEffect(() => {
+    //     DisplayfilteredResults();
+    // }, [DisplayfilteredResults, filterType]);
 
     return (
         <div className="works-tab">
