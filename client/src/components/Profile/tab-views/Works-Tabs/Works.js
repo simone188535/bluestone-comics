@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SearchServices } from '../../../../services';
 import ReadMore from '../../../CommonUI/ReadMore';
+import moment from 'moment';
 import './works.scss';
 
 const Works = ({ profilePageUsername }) => {
@@ -80,10 +81,10 @@ const Works = ({ profilePageUsername }) => {
                     <div className="grid-info-box">
                         <h3 className="grid-info-box-header">{filteredResult.title}</h3>
                         <div className="grid-info-box-body">
-                            <ReadMore content={filteredResult.description} maxStringLengthShown={150}/>
-                            <div>
-                                {new Date(filteredResult.date_created).toString()}
-                            </div>
+                            <ReadMore content={filteredResult.description} maxStringLengthShown={150} />
+                        </div>
+                        <div className="grid-info-box-date-created">
+                            {moment(filteredResult.date_created).format('MMMM D, YYYY')}
                         </div>
                         <div className="grid-footer">
 
