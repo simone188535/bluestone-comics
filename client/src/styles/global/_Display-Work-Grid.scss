@@ -9,28 +9,44 @@
     grid-gap: 35px;
     // align-items: start;
     // grid-gap: 10%;
-    
-    
+
+
     // mimics bootstrap column sizes
     &.col-xs-2 {
         grid-template-columns: auto auto;
     }
+
     &.col-xs-3 {
         grid-template-columns: auto auto auto;
     }
 
     li.grid-list-item {
         background-color: $pure-white;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
 
-        img.grid-image {
-            display: block;
-            width: 100%;
-            object-fit: contain;
-            // height: 350px;
+        .grid-image-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+
+            img.grid-image {
+                display: block;
+                width: 100%;
+                object-fit: contain;
+                // height: 350px;
+            }
         }
 
         .grid-info-box {
-            &-header, &-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        
+            &-header,
+            &-body {
                 line-height: 1.5;
                 letter-spacing: 1px;
                 font-size: 15px;
@@ -40,15 +56,15 @@
                 font-weight: 400;
                 margin-bottom: 5px;
             }
+
             &-body {
                 font-weight: 300;
             }
+
             padding: 20px;
         }
 
-        .grid-footer {
-
-        }
+        .grid-footer {}
     }
 }
 
@@ -56,9 +72,25 @@
 
     .display-work-grid {
         max-width: 88%;
+
         &.col-2 {
             grid-template-columns: auto auto;
         }
+
+        &.col-3 {
+            grid-template-columns: auto auto;
+        }
+    }
+}
+
+@media only screen and (min-width: $large) {
+
+    .display-work-grid {
+
+        &.col-2 {
+            grid-template-columns: auto auto;
+        }
+
         &.col-3 {
             grid-template-columns: auto auto auto;
         }

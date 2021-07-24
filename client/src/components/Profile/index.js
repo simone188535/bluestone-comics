@@ -33,9 +33,9 @@ const Profile = () => {
             try {
                 const res = await UserServices.getUser({ username });
     
-                if (errorMessage) {
+                // if (errorMessage) {
                     setErrorMessage('');
-                }
+                // }
                 
                 setProfilePageUser(res.data.user);
             } catch (err) {
@@ -43,7 +43,7 @@ const Profile = () => {
             }
         }
         fetchProfileUser();
-    }, [errorMessage, username]);
+    }, [username]);
 
     useEffect(() => {
         console.log('profilePageUser', profilePageUser);
