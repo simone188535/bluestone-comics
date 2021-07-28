@@ -4,6 +4,7 @@ import './read-more.scss'
 const ReadMore = ({ content, maxStringLengthShown }) => {
     const [hidden, setHidden] = useState(true);
 
+    // My be able to remove this: related to this bug: May need to clear filtered result when changing filterType
     if (!content) return <></>;
     
     const previewText = content.slice(0, maxStringLengthShown);
