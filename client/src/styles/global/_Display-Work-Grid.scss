@@ -25,11 +25,12 @@
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
+        height: max-content;
 
         .grid-image-container {
             flex: 1;
-            display: flex;
-            flex-direction: column;
+            // display: flex;
+            // flex-direction: column;
 
             img.grid-image {
                 display: block;
@@ -43,7 +44,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            // justify-content: flex-end;
+            min-height: 200px;
+            // position: relative;
         
             &-header,
             &-body {
@@ -67,7 +69,8 @@
                 font-weight: $normal;
                 text-align: right;
                 font-size: 14px;
-                margin-top: 15px;
+                // margin-top: 15px;
+                margin-top: auto;
             }
 
             padding: 20px;
