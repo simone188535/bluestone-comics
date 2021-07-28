@@ -4,7 +4,7 @@
     grid-template-columns: auto;
     list-style: none;
     justify-content: space-evenly;
-    max-width: 80%;
+    max-width: 90%;
     margin: 0 auto;
     grid-gap: 35px;
     // align-items: start;
@@ -83,7 +83,7 @@
 @media only screen and (min-width: $medium) {
 
     .display-work-grid {
-        max-width: 88%;
+        // max-width: 88%;
 
         &.col-2 {
             grid-template-columns: auto auto;
