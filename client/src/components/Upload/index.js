@@ -56,7 +56,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
 
-                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
+                <FileInputSingleUpload identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookCoverPhoto" />
 
                 <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
@@ -69,7 +69,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" />
 
-                <FileInputSingleUpload setFieldValue={setFieldValue} identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo" />
+                <FileInputSingleUpload identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
 
                 <div className="form-header-text">Select the applicable <strong>genres</strong>:</div>

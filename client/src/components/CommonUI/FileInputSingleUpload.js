@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import { useFormikContext } from 'formik';
 
 /*
     This component is designed to be used with formik. Out of the box, formik does not support file inputs. so `setFieldValue` is needed
     to assign values for validation. Search here for more details: https://stackoverflow.com/questions/56149756/reactjs-how-to-handle-image-file-upload-with-formik
 */
 
-const FileInputSingleUpload = ({ setFieldValue, identifier, triggerText, className }) => {
-    const providedClassNames = className ? className : '';
+const FileInputSingleUpload = ({ identifier, triggerText, className }) => {
     const [file, setFile] = useState(null);
-
+    const { setFieldValue } = useFormikContext();
+    const providedClassNames = className ? className : '';
+    
     const fileInputOnChange = (event) => {
         const uploadedFile = event.currentTarget.files[0];
 
@@ -33,6 +35,6 @@ export default FileInputSingleUpload;
     EXAMPLE OF HOW THIS WORKS:
     setFieldValue is a formik value.
 
-    <FileInputSingleUpload setFieldValue={setFieldValue} identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
+    <FileInputSingleUpload identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
 
 */
