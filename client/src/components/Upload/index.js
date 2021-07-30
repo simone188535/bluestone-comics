@@ -11,10 +11,11 @@ import Checkboxes from '../CommonUI/Checkboxes.js';
 import Modal from '../CommonUI/Modal';
 import ProgressBar from '../CommonUI/ProgressBar';
 import WorkCredits from './WorkCredits';
+import imageWidthHeightCheck from '../../utils/Yup/yupCustomMethods.js';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
-const UrlSlugifedField = ( props ) => {
+const UrlSlugifedField = (props) => {
     /* 
         The default value of this field is dependent on the value of the book title field. The user is 
         still able to customize it though.
@@ -26,7 +27,7 @@ const UrlSlugifedField = ( props ) => {
     const [field] = useField(props);
 
     React.useEffect(() => {
-        
+
         setFieldValue(props.name, slugify(bookTitle));
 
     }, [bookTitle, setFieldValue, props.name]);
@@ -62,7 +63,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
 
-                <UrlSlugifedField className="form-input form-item slug-field" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on"/>
+                <UrlSlugifedField className="form-input form-item slug-field" name="urlSlug" type="text" placeholder="URL Slug" autoComplete="on" />
                 <div className="form-header-subtext"><strong>Your Comic URL will be similar to this: </strong> https://bluestonecomics.com/api/v1/read/<strong>{values.urlSlug ? values.urlSlug : '<URL Slug>'}</strong>/book/1234</div>
                 <ErrorMessage className="error-message error-text-color" component="div" name="urlSlug" />
 
@@ -141,39 +142,40 @@ const Upload = () => {
         seperately because node/multer will not populate req.files. 
         check here for more info: https://laracasts.com/index.php/discuss/channels/vue/axios-post-multipart-formdata-object-attribute?page=1
         */
-    try {
-    const imagePrefixesRes = await PublishServices.getBookAndIssueImagePrefix();
-    const { bookImagePrefixRef, issueImagePrefixRef } =  imagePrefixesRes.data;
-        // console.log('res', res);
-        let formData = new FormData();
+        try {
+            const imagePrefixesRes = await PublishServices.getBookAndIssueImagePrefix();
+            const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;
+            // console.log('res', res);
+            let formData = new FormData();
 
-        formData.append('bookTitle', values.bookTitle);
-        formData.append('bookDescription', values.bookDescription);
-        formData.append('urlSlug', values.urlSlug);
-        formData.append('issueTitle', values.issueTitle);
-        // formData cannot contain plain objects, so it must be stringified
-        // values.workCredits.forEach((formValue) => formData.append('workCredits', console.log(JSON.stringify(formValue))));
-        formData.append('workCredits', JSON.stringify(values.workCredits));
-        // formData.append('workCredits', [
-        //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
-        //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
-        // ]);
+            formData.append('bookTitle', values.bookTitle);
+            formData.append('bookDescription', values.bookDescription);
+            formData.append('urlSlug', values.urlSlug);
+            formData.append('issueTitle', values.issueTitle);
+            // formData cannot contain plain objects, so it must be stringified
+            // values.workCredits.forEach((formValue) => formData.append('workCredits', console.log(JSON.stringify(formValue))));
+            formData.append('workCredits', JSON.stringify(values.workCredits));
+            // formData.append('workCredits', [
+            //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
+            //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
+            // ]);
 
-        
-        formData.append('bookImagePrefixRef', bookImagePrefixRef);
-        formData.append('issueImagePrefixRef', issueImagePrefixRef);
-        // stringify genres
-        // values.genres.forEach((formValue) => formData.append('genres', formValue));
-        formData.append('genres', JSON.stringify(values.genres));
-        // All Files must be moved to the bottom so that multer reads them last
-        formData.append('bookCoverPhoto', values.bookCoverPhoto);
-        formData.append('issueCoverPhoto', values.issueCoverPhoto);
-        // push all issueAssets to formData
-        values.issueAssets.forEach((formValue) => formData.append('issueAssets', formValue));
-    
 
-        console.log('triggered', values);
-       
+            formData.append('bookImagePrefixRef', bookImagePrefixRef);
+            formData.append('issueImagePrefixRef', issueImagePrefixRef);
+            // stringify genres
+            // values.genres.forEach((formValue) => formData.append('genres', formValue));
+            formData.append('genres', JSON.stringify(values.genres));
+            // All Files must be moved to the bottom so that multer reads them last
+            formData.append('bookCoverPhoto', values.bookCoverPhoto);
+            formData.append('issueCoverPhoto', values.issueCoverPhoto);
+            // push all issueAssets to formData
+            values.issueAssets.forEach((formValue) => formData.append('issueAssets', formValue));
+
+
+            console.log('triggered', values);
+
+            return;
             // open modal
             toggleModal();
 
@@ -198,9 +200,9 @@ const Upload = () => {
             setUploadPercentage(100);
 
             setTimeout(() => {
-            // after a couple of seconds close modal and redirect to new page
-            toggleModal();
-            history.push("/");
+                // after a couple of seconds close modal and redirect to new page
+                toggleModal();
+                history.push("/");
             }, 3000);
 
             console.log('success', createBookRes);
@@ -234,7 +236,8 @@ const Upload = () => {
                             bookTitle: Yup.string()
                                 .required('Book Title required!'),
                             bookCoverPhoto: Yup.mixed()
-                                .required('You need to provide a file'),
+                                .required('You need to provide a file')
+                                .imageWidthHeightCheck('test'),
                             bookDescription: Yup.string()
                                 .required('Book Description required!'),
                             urlSlug: Yup.string()
@@ -244,14 +247,15 @@ const Upload = () => {
                                     'This URL Slug Invalid!',
                                     value => {
                                         const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
-                                        
+
                                         return regexForValidURLSlug.test(value);
                                     }
-                                  ),
+                                ),
                             issueTitle: Yup.string()
                                 .required('Issue Title required!'),
                             issueCoverPhoto: Yup.mixed()
-                                .required('A Issue Cover Photo is required!'),
+                                .required('A Issue Cover Photo is required!')
+                                .imageWidthHeightCheck('test'),
                             issueAssets: Yup.array()
                                 .required('A Issue Assets are required!'),
                             genres: Yup.array()
