@@ -1,7 +1,7 @@
 
 import * as Yup from "yup";
 
-const imageWidthHeight = (provideFile) => {
+const imageWidthAndHeight = (provideFile) => {
     // take the given file (which should be an image) and return the width and height
     const imgDimensions = { width: null, height: null };
 
@@ -31,7 +31,7 @@ export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck
             return;
         }
 
-        const imgDimensions = await imageWidthHeight(value);
+        const imgDimensions = await imageWidthAndHeight(value);
 
         console.log('! ', imgDimensions);
         if (imgDimensions.width !== requiredWidth) {
