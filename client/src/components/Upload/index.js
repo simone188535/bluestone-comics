@@ -11,7 +11,7 @@ import Checkboxes from '../CommonUI/Checkboxes.js';
 import Modal from '../CommonUI/Modal';
 import ProgressBar from '../CommonUI/ProgressBar';
 import WorkCredits from './WorkCredits';
-import imageWidthHeightCheck from '../../utils/Yup/yupCustomMethods.js';
+import imageDimensionCheck from '../../utils/Yup/yupCustomMethods.js';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
@@ -237,7 +237,7 @@ const Upload = () => {
                                 .required('Book Title required!'),
                             bookCoverPhoto: Yup.mixed()
                                 .required('You need to provide a file')
-                                .imageWidthHeightCheck('test'),
+                                .imageDimensionCheck('test', 1988, 3056),
                             bookDescription: Yup.string()
                                 .required('Book Description required!'),
                             urlSlug: Yup.string()
@@ -255,7 +255,7 @@ const Upload = () => {
                                 .required('Issue Title required!'),
                             issueCoverPhoto: Yup.mixed()
                                 .required('A Issue Cover Photo is required!')
-                                .imageWidthHeightCheck('test'),
+                                .imageDimensionCheck('test'),
                             issueAssets: Yup.array()
                                 .required('A Issue Assets are required!'),
                             genres: Yup.array()
