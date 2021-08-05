@@ -20,6 +20,10 @@
         grid-template-columns: auto auto auto;
     }
 
+    &.col-xs-4 {
+        grid-template-columns: auto auto auto auto;
+    }
+
     li.grid-list-item {
         background-color: $pure-white;
         display: flex;
@@ -92,6 +96,10 @@
         &.col-3 {
             grid-template-columns: auto auto;
         }
+
+        &.col-4 {
+            grid-template-columns: auto auto auto;
+        }
     }
 }
 
@@ -105,6 +113,10 @@
 
         &.col-3 {
             grid-template-columns: auto auto auto;
+        }
+
+        &.col-4 {
+            grid-template-columns: auto auto auto auto;
         }
     }
 }

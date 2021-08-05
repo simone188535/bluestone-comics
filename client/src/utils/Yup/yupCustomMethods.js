@@ -23,7 +23,7 @@ const imageWidthAndHeight = (provideFile) => {
     });
 }
 
-export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck', function (message = null, requiredWidth, requiredHeight) {
+export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck', function (requiredWidth, requiredHeight, message = null) {
     // inspired by : https://codesandbox.io/s/yup-custom-methods-rj9x6?file=/src/App.js:842-846
     // https://stackoverflow.com/questions/60525429/how-to-write-a-custom-schema-validation-using-yup-addmethod-for-country-name-a
     // https://stackoverflow.com/questions/63769152/how-to-get-yup-to-perform-more-than-one-custom-validation
