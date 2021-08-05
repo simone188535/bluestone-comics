@@ -258,6 +258,7 @@ const Upload = () => {
                                 .imageDimensionCheck(1988, 3056),
                             issueAssets: Yup.array()
                                 .required('A Issue Assets are required!')
+                                // try .test and await validation?
                                 // .imageDimensionCheck(1988, 3056)
                                 ,
                             genres: Yup.array()
