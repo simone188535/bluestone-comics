@@ -23,7 +23,10 @@ const imageWidthAndHeight = (provideFile) => {
     });
 }
 
-export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck', function (message, requiredWidth, requiredHeight) {
+export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck', function (message = null, requiredWidth, requiredHeight) {
+    // inspired by : https://codesandbox.io/s/yup-custom-methods-rj9x6?file=/src/App.js:842-846
+    // https://stackoverflow.com/questions/60525429/how-to-write-a-custom-schema-validation-using-yup-addmethod-for-country-name-a
+    // https://stackoverflow.com/questions/63769152/how-to-get-yup-to-perform-more-than-one-custom-validation
     return this.test("image-width-height-check", message, async function (value) {
         const { path, createError } = this;
 
@@ -33,23 +36,21 @@ export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck
 
         const imgDimensions = await imageWidthAndHeight(value);
 
-        console.log('! ', imgDimensions);
         if (imgDimensions.width !== requiredWidth) {
             return createError({
                 path,
-                message: `The file width needs to be the ${requiredWidth}px!`
+                message: message ?? `The file width needs to be the ${requiredWidth} px!`
               });
         }
 
         if (imgDimensions.height !== requiredHeight) {
             return createError({
                 path,
-                message: `The file height needs to be the ${requiredHeight}px!`
+                message: message ?? `The file height needs to be the ${requiredHeight} px!`
               });
         }
 
         return true;
-        // return console.log('addMethod: ', value);
     });
 });
 
