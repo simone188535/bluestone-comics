@@ -57,27 +57,27 @@ export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck
         }
 
         // if array of values has been provided
-        if (Array.isArray(value)) {
-            /*
-            REMEMBER this conditional statement can be removed when the FileInputMultipleUpload 
-             component utilizes ITERATIVE ERROR DISPLAYING FOR imageDimensionCheck yup validation
-            */
+        // if (Array.isArray(value)) {
+        //     /*
+        //     REMEMBER this conditional statement can be removed when the FileInputMultipleUpload 
+        //      component utilizes ITERATIVE ERROR DISPLAYING FOR imageDimensionCheck yup validation
+        //     */
 
-             // If error exists, return it, else return nothing
-            const mappedValResults = await Promise.all(value.map(async (file) => {
-                const imageDimensionValidationRes = await imageDimensionValidation(file);
-                console.log('imageDimensionValidationRes', imageDimensionValidationRes.name);
-                if (imageDimensionValidationRes.name === 'ValidationError') {
-                    return imageDimensionValidationRes;
-                }
-            }));
-            console.log('mappedValResults ', mappedValResults);
-            return mappedValResults;
-            // return await imageDimensionValidation(value[0]);
-        } else {
+        //      // If error exists, return it, else return nothing
+        //     const mappedValResults = await Promise.all(value.map(async (file) => {
+        //         const imageDimensionValidationRes = await imageDimensionValidation(file);
+        //         console.log('imageDimensionValidationRes', imageDimensionValidationRes.name);
+        //         if (imageDimensionValidationRes.name === 'ValidationError') {
+        //             return imageDimensionValidationRes;
+        //         }
+        //     }));
+        //     console.log('mappedValResults ', mappedValResults);
+        //     return mappedValResults;
+        //     // return await imageDimensionValidation(value[0]);
+        // } else {
             // if a single file is provided
             return await imageDimensionValidation(value);
-        }
+        // }
 
 
         return true;
