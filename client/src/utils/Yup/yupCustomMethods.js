@@ -66,9 +66,9 @@ export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck
              // If error exists, return it, else return nothing
             const mappedValResults = await Promise.all(value.map(async (file) => {
                 const imageDimensionValidationRes = await imageDimensionValidation(file);
-        
-                if (imageDimensionValidationRes.ValidationError) {
-                    return;
+                console.log('imageDimensionValidationRes', imageDimensionValidationRes.name);
+                if (imageDimensionValidationRes.name === 'ValidationError') {
+                    return imageDimensionValidationRes;
                 }
             }));
             console.log('mappedValResults ', mappedValResults);
