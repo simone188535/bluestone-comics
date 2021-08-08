@@ -4,6 +4,11 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
+/* 
+    REMEMBER TO ADD ITERATIVE ERROR DISPLAYING FOR imageDimensionCheck yup validation.
+    USE THIS: https://formik.org/docs/api/fieldarray
+    https://stackoverflow.com/a/57939006/6195136 
+*/
 const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier, className }) => {
     const [files, setFiles] = useState([]);
     const providedClassNames = className ? className : '';
