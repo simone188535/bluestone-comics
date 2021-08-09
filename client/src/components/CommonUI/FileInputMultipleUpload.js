@@ -19,6 +19,7 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
             https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
        */
 
+        // REJECT FILES THAT ARE NOT THE CORRECT SIZE
         acceptedFiles.forEach((acceptedFile) => {
           // rename inserted files (to avoid duplicate keys in list item): https://github.com/react-dropzone/react-dropzone/issues/583#issuecomment-496458314
         const renamedAcceptedFile = new File([acceptedFile], `${new Date()}_${acceptedFile.name}`, { type: acceptedFile.type });

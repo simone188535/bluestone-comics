@@ -50,6 +50,25 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
         return (typeof errors.workCredits === 'string' ? <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" /> : null);
     }
 
+    const multiFileUploadErrorMessage = errors => {
+
+        /* 
+            This has been added so that only a single message will be shown in FileInputMultipleUpload at all times.
+            Even when an array of error are show (when a multiple uploaded files fail validation)
+        */
+        let FileInputMultipleUploadErrorMsg;
+
+        if (typeof errors.issueAssets === 'string') {
+            FileInputMultipleUploadErrorMsg = <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />;
+        } else if (Array.isArray(errors.issueAssets)) {
+            FileInputMultipleUploadErrorMsg = <div className="error-message error-text-color">{errors?.issueAssets[0]}</div>;
+        } else {
+            FileInputMultipleUploadErrorMsg = null;
+        }
+        return FileInputMultipleUploadErrorMsg;
+    }
+
+
     return (
         <Form className="bsc-form upload-form" encType="multipart/form-data" method="post">
             <h1 className="form-header-text">Upload a <strong>New Book</strong> along with its <strong>First Issue</strong> </h1>
@@ -84,7 +103,8 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
 
                 <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
-                <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" />
+                {/* <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" /> */}
+                {multiFileUploadErrorMessage(errors)}
 
                 {/* <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div> */}
                 <div className="form-header-text">Give <strong>Credits</strong> to yourself and any other existing users by selecting the role(s) they fulfilled while helping to create this Book/Issue: </div>
@@ -94,11 +114,11 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice. It may overcomplicate the search for any of your other works.</strong></div>
             </div>
             <button type="submit" className="form-submit form-item">Submit</button>
-            {/*             
-            This is being left for testing purposes. Example found in this video: https://www.youtube.com/watch?v=Dm0TXbGvgvo&t=142s
+
+            {/* This is being left for testing purposes. Example found in this video: https://www.youtube.com/watch?v=Dm0TXbGvgvo&t=142s
             <pre>{JSON.stringify(errors, null, 2)}</pre>
-            <pre>{JSON.stringify(values, null, 2)}</pre>  
-            */}
+            <pre>{JSON.stringify(values, null, 2)}</pre> */}
+
 
         </Form>
     )
@@ -142,6 +162,7 @@ const Upload = () => {
         seperately because node/multer will not populate req.files. 
         check here for more info: https://laracasts.com/index.php/discuss/channels/vue/axios-post-multipart-formdata-object-attribute?page=1
         */
+
         try {
             const imagePrefixesRes = await PublishServices.getBookAndIssueImagePrefix();
             const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;

@@ -100,7 +100,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
                                     name={`workCredits[${index}].user`}
                                     value={p.user}
                                 />
-                                <ErrorMessage className="error-message error-text-color" component="div" name={`workCredits[${index}].user`} />
+                                <ErrorMessage className="error-message error-text-color wc-error" component="div" name={`workCredits[${index}].user`} />
                                  <div className="info-head">
                                     While creating this work, this user fulfilled the role(s) of: 
                                 </div>
@@ -120,7 +120,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
                                             { name: 'Cover Artist' }
                                         ]} />
                                     </ul>
-                                <ErrorMessage className="error-message error-text-color" component="div" name={`workCredits[${index}].credits`} />
+                                <ErrorMessage className="error-message error-text-color wc-error" component="div" name={`workCredits[${index}].credits`} />
 
                                 <button type="button" onClick={() => removeSelectedUser(remove, index)} className="delete-work-credits-button">
                                     <FontAwesomeIcon
