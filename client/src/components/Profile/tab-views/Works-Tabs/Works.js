@@ -94,7 +94,7 @@ const Works = ({ profilePageUsername }) => {
             );
         });
 
-        return <ul className="display-work-grid col-3">{results}</ul>;
+        return <ul className="display-work-grid col-4">{results}</ul>;
     }
     // useEffect(() => {
     //     displayFilteredResults();
