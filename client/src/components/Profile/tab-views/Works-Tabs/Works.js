@@ -50,13 +50,11 @@ const Works = ({ profilePageUsername }) => {
     //     console.log('filteredResults: ', filteredResults)
     // }, [filteredResults])
 
-    const filterButtons = () => {
-        return buttonValues.map((element, index) => {
-            const activeClassToggle = index === activeButton ? 'active' : '';
+    const filterButtons = buttonValues.map((element, index) => {
+        const activeClassToggle = index === activeButton ? 'active' : '';
 
-            return <button key={`filter-button-${index}`} className={`bsc-button primary works-tab-tri-button ${activeClassToggle}`} onClick={() => toggleActiveElement(index, element)}>{element}</button>
-        })
-    }
+        return <button key={`filter-button-${index}`} className={`bsc-button primary works-tab-tri-button ${activeClassToggle}`} onClick={() => toggleActiveElement(index, element)}>{element}</button>
+    })
 
     const toggleActiveElement = (activeButtonIndex, activeButtonValue) => {
         setActiveButton(activeButtonIndex);
@@ -64,38 +62,33 @@ const Works = ({ profilePageUsername }) => {
     }
 
 
-    const displayFilteredResults = () => {
-        // BUG May need to clear filtered result when changing filterType
-        if (!filteredResults) {
-            return <span>This user has not created this yet.</span>
-        }
+    // BUG May need to clear filtered result when changing filterType
+    const results = filteredResults.map((filteredResult, index) => (
+        <li className="grid-list-item" key={`filtered-result-${index}`}>
+            <div className="grid-image-container">
+                <a href="#">
+                    <img className="grid-image" src={filteredResult.cover_photo} alt={`${filteredResult.title} cover photo`} />
+                </a>
+            </div>
+            <div className="grid-info-box">
+                <h3 className="grid-info-box-header">{filteredResult.title}</h3>
+                <div className="grid-info-box-body">
+                    <ReadMore content={filteredResult.description} maxStringLengthShown={150} />
+                </div>
+                <div className="grid-info-box-date-created">
+                    {moment(filteredResult.date_created).format('MMMM D, YYYY')}
+                </div>
+                <div className="grid-footer">
 
-        const results = filteredResults.map((filteredResult, index) => {
-            return (
-                <li className="grid-list-item" key={`filtered-result-${index}`}>
-                    <div className="grid-image-container">
-                        <a href="#">
-                            <img className="grid-image" src={filteredResult.cover_photo} alt={`${filteredResult.title} cover photo`} />
-                        </a>
-                    </div>
-                    <div className="grid-info-box">
-                        <h3 className="grid-info-box-header">{filteredResult.title}</h3>
-                        <div className="grid-info-box-body">
-                            <ReadMore content={filteredResult.description} maxStringLengthShown={150} />
-                        </div>
-                        <div className="grid-info-box-date-created">
-                            {moment(filteredResult.date_created).format('MMMM D, YYYY')}
-                        </div>
-                        <div className="grid-footer">
+                </div>
+            </div>
+        </li>
+    ));
 
-                        </div>
-                    </div>
-                </li>
-            );
-        });
+    const displayFilteredResults = (filteredResults) ? (<ul className="display-work-grid col-4">{results}</ul>) : (<span>This user has not created this yet.</span>);
 
-        return <ul className="display-work-grid col-4">{results}</ul>;
-    }
+
+    // const displayFilteredResults ;
     // useEffect(() => {
     //     displayFilteredResults();
     // }, [displayFilteredResults, filterType]);
@@ -103,10 +96,10 @@ const Works = ({ profilePageUsername }) => {
     return (
         <div className="works-tab">
             <div className="works-tab-tri-buttons-container">
-                {filterButtons()}
+                {filterButtons}
             </div>
             <div className="filtered-results">
-                {displayFilteredResults()}
+                {displayFilteredResults}
             </div>
         </div>
     );
