@@ -14,30 +14,15 @@ const ReadMore = ({ content, maxStringLengthShown }) => {
         setHidden(!hidden);
     }
 
-    const showReadMore = () => {
-        if (overflowText) {
-            return (<span className={`dots ${(hidden) ? `reveal` : `hide`}`}>...<button className="bsc-button primary-link read-button " onClick={()=> ToggleHidden()}>Read More</button></span>);
-        }
-
-        return '';
-    }
-
-    const showReadLess = () => {
-        if (!hidden) {
-            return (<button className="bsc-button primary-link read-button" onClick={()=> ToggleHidden()}>Read Less</button>);
-        }
-
-        return '';
-    }
+    const showReadMore = overflowText ? (<span className={`dots ${(hidden) ? `reveal` : `hide`}`}>...<button className="bsc-button primary-link read-button " onClick={()=> ToggleHidden()}>Read More</button></span>) : '';
+    const showReadLess = !hidden ? (<button className="bsc-button primary-link read-button" onClick={()=> ToggleHidden()}>Read Less</button>) : '';
 
     return (
         <span className="read-more">
             {previewText}
-            
-            {showReadMore()}
+            {showReadMore}
             <span className={`text-overflow ${(hidden) ? `hide` : `reveal`}`}>{overflowText}</span>
-            
-            {showReadLess()}
+            {showReadLess}
         </span>
     );
 }
