@@ -6,7 +6,7 @@ import { Formik, Field, Form, ErrorMessage, useField, useFormikContext } from 'f
 import * as Yup from 'yup';
 import { PublishServices } from '../../services';
 import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload.js';
-import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload.js';
+import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload';
 import Checkboxes from '../CommonUI/Checkboxes.js';
 import Modal from '../CommonUI/Modal';
 import ProgressBar from '../CommonUI/ProgressBar';
