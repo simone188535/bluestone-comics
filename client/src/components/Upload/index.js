@@ -277,9 +277,11 @@ const Upload = () => {
                             issueCoverPhoto: Yup.mixed()
                                 .required('A Issue Cover Photo is required!')
                                 .imageDimensionCheck(),
-                            issueAssets: Yup.array().of(
-                                Yup.mixed().imageDimensionCheck()
-                            )
+                            // issueAssets: Yup.array().of(
+                            //     Yup.mixed().imageDimensionCheck()
+                            // )
+                            //     .required('A Issue Assets are required!'),
+                            issueAssets: Yup.array()
                                 .required('A Issue Assets are required!'),
                             genres: Yup.array()
                                 .required('You must select a genre!'),
