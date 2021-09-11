@@ -11,21 +11,48 @@ import { imageWidthAndHeight } from '../../../utils/FileReaderValidations';
     https://stackoverflow.com/a/57939006/6195136 
 */
 
+// const fileDimensionValidation = (providedFile) => {
+
+//     return new Promise(() => {
+//         const reader = new FileReader();
+
+//         reader.readAsDataURL(providedFile);
+//         reader.onload = function () {
+//             const img = new Image();
+//             img.src = reader.result;
+
+//             img.onload = function () {
+
+//                 if (img.width > 1 || img.height > 1) {
+//                     return {
+//                         code: "file-too-large",
+//                         message: `The file dimensions are to large`
+//                     };
+//                 }
+//                 return null
+//             }
+
+//         }
+//     }
+//     )
+// }
+
 const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier, className }) => {
     const [files, setFiles] = useState([]);
     const providedClassNames = className ? className : '';
 
-    const validator = async (providedFile) => {
+    const validator = (providedFile) => {
 
-        const imageDimensions = await imageWidthAndHeight(providedFile);
-        if (imageDimensions.width > 1 || imageDimensions.height > 1) {
-            return {
-                code: "file-too-large",
-                message: `The file dimensions are too large`
-            };
-        }
-        return null
-
+        const imageDimensions =  imageWidthAndHeight(providedFile);
+        // use then, catch promise rather than async await
+        // const imageDimensions = await imageWidthAndHeight(providedFile);
+        // if (imageDimensions.width > 1 || imageDimensions.height > 1) {
+        //     return {
+        //         code: "file-too-large",
+        //         message: `The file dimensions are too large`
+        //     };
+        // }
+        // return null;
     }
     const onDrop = useCallback(acceptedFiles => {
         /* 
@@ -59,16 +86,20 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
         fileRejections
     } = useDropzone({ accept: 'image/*', onDrop, validator })
 
-    const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-        <li key={file.path}>
-            {file.path} - {file.size} bytes
-            <ul>
-                {errors.map(e => (
-                    <li key={e.code} className="error-text-color">{e.message}</li>
-                ))}
-            </ul>
-        </li>
-    ));
+    const fileRejectionItems = fileRejections.map(({ file, errors }) => {
+        // await errors;
+        console.log('errors ', errors);
+        return (
+            <li key={file.path}>
+                {file.path} - {file.size} bytes
+                <ul>
+                    {errors.map(e => (
+                        <li key={e.code} className="error-text-color">{e.message}</li>
+                    ))}
+                </ul>
+            </li>
+        )
+    });
 
     const onDragEnd = (result) => {
         /*
