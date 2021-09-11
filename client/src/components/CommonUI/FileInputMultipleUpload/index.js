@@ -3,16 +3,30 @@ import { useDropzone } from "react-dropzone";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { imageWidthAndHeight } from '../../../utils/FileReaderValidations';
 
 /* 
     REMEMBER TO ADD ITERATIVE ERROR DISPLAYING FOR imageDimensionCheck yup validation.
     USE THIS: https://formik.org/docs/api/fieldarray
     https://stackoverflow.com/a/57939006/6195136 
 */
+
 const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier, className }) => {
     const [files, setFiles] = useState([]);
     const providedClassNames = className ? className : '';
 
+    const validator = async (providedFile) => {
+
+        const imageDimensions = await imageWidthAndHeight(providedFile);
+        if (imageDimensions.width > 1 || imageDimensions.height > 1) {
+            return {
+                code: "file-too-large",
+                message: `The file dimensions are too large`
+            };
+        }
+        return null
+
+    }
     const onDrop = useCallback(acceptedFiles => {
         /* 
             the drag and drop functionality is modeled after this article: 
@@ -21,16 +35,16 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
 
         // REJECT FILES THAT ARE NOT THE CORRECT SIZE
         acceptedFiles.forEach((acceptedFile) => {
-          // rename inserted files (to avoid duplicate keys in list item): https://github.com/react-dropzone/react-dropzone/issues/583#issuecomment-496458314
-        const renamedAcceptedFile = new File([acceptedFile], `${new Date()}_${acceptedFile.name}`, { type: acceptedFile.type });
-        
-        Object.assign(renamedAcceptedFile, {
-            preview: URL.createObjectURL(renamedAcceptedFile)
-        });
+            // rename inserted files (to avoid duplicate keys in list item): https://github.com/react-dropzone/react-dropzone/issues/583#issuecomment-496458314
+            const renamedAcceptedFile = new File([acceptedFile], `${new Date()}_${acceptedFile.name}`, { type: acceptedFile.type });
 
-        // this prevents the new files from overriding/erasing the old ones. Instead, new files are concatinated to the old ones in the hook
-        setFiles(prevState => [renamedAcceptedFile, ...prevState]);
-      });
+            Object.assign(renamedAcceptedFile, {
+                preview: URL.createObjectURL(renamedAcceptedFile)
+            });
+
+            // this prevents the new files from overriding/erasing the old ones. Instead, new files are concatinated to the old ones in the hook
+            setFiles(prevState => [renamedAcceptedFile, ...prevState]);
+        });
 
     }, [])
 
@@ -43,7 +57,7 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
         getRootProps,
         getInputProps,
         fileRejections
-    } = useDropzone({ accept: 'image/*', onDrop })
+    } = useDropzone({ accept: 'image/*', onDrop, validator })
 
     const fileRejectionItems = fileRejections.map(({ file, errors }) => (
         <li key={file.path}>
@@ -93,9 +107,9 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
     return (
         <>
             <div {...getRootProps()} className={`file-input-multiple-upload-container ${providedClassNames}`}>
-                <input {...getInputProps()} name={identifier}/>
+                <input {...getInputProps()} name={identifier} />
 
-                <p dangerouslySetInnerHTML={{ __html: dropzoneInnerText }}/>
+                <p dangerouslySetInnerHTML={{ __html: dropzoneInnerText }} />
 
             </div>
             <div className="file-input-multiple-upload-preview-container">
@@ -134,7 +148,7 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
                                                                     />
                                                                 </button>
                                                                 <p className="thumb-nail-caption">Page {index + 1}</p>
-                                                                <img className="thumb-nail-img" 
+                                                                <img className="thumb-nail-img"
                                                                     alt={uploadedFile.name}
                                                                     src={uploadedFile.preview}
                                                                 />
@@ -159,7 +173,7 @@ export default FileInputMultipleUpload;
 /*
     EXAMPLES OF HOW THIS WORKS:
     setFieldValue is a formik value.
-    
+
     <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
 
 

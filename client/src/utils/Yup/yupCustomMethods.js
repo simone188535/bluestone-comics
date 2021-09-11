@@ -1,27 +1,7 @@
-
+import { imageWidthAndHeight } from '../FileReaderValidations';
 import * as Yup from "yup";
 
-const imageWidthAndHeight = (provideFile) => {
-    // take the given file (which should be an image) and return the width and height
-    const imgDimensions = { width: null, height: null };
 
-    return new Promise(resolve => {
-        const reader = new FileReader();
-
-        reader.readAsDataURL(provideFile);
-        reader.onload = function () {
-            const img = new Image();
-            img.src = reader.result;
-
-            img.onload = function () {
-                imgDimensions.width = img.width;
-                imgDimensions.height = img.height;
-
-                resolve(imgDimensions);
-            }
-        };
-    });
-}
 
 export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck', function (message = null, requiredWidth = 19, requiredHeight = 3) {
     // 1988, 3056
