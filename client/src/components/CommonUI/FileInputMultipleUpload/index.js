@@ -82,6 +82,14 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
         </li>
     ));
 
+    const fileRejection = fileRejectionItems.length > 0 ? (
+     // if there are any rejected files, show them
+    <>
+        <h4>Rejected files:</h4>
+        <ul>{fileRejectionItems}</ul>
+    </>
+    ): null;
+
     const onDragEnd = (result) => {
         /*
         This will allow for drag and dropping capabilities in the preview section. 
@@ -126,13 +134,7 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
             </div>
             <div className="file-input-multiple-upload-preview-container">
 
-                {   // if there are any rejected files, show them
-                    fileRejectionItems.length > 0 &&
-                    (<>
-                        <h4>Rejected files:</h4>
-                        <ul>{fileRejectionItems}</ul>
-                    </>)
-                }
+                {fileRejection}
 
                 {
                     // if there are any files uploaded, show them
