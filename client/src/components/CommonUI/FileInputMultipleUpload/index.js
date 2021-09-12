@@ -5,54 +5,39 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { imageWidthAndHeight } from '../../../utils/FileReaderValidations';
 
-/* 
-    REMEMBER TO ADD ITERATIVE ERROR DISPLAYING FOR imageDimensionCheck yup validation.
-    USE THIS: https://formik.org/docs/api/fieldarray
-    https://stackoverflow.com/a/57939006/6195136 
-*/
-
-// const fileDimensionValidation = (providedFile) => {
-
-//     return new Promise(() => {
-//         const reader = new FileReader();
-
-//         reader.readAsDataURL(providedFile);
-//         reader.onload = function () {
-//             const img = new Image();
-//             img.src = reader.result;
-
-//             img.onload = function () {
-
-//                 if (img.width > 1 || img.height > 1) {
-//                     return {
-//                         code: "file-too-large",
-//                         message: `The file dimensions are to large`
-//                     };
-//                 }
-//                 return null
-//             }
-
-//         }
-//     }
-//     )
-// }
-
 const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier, className }) => {
     const [files, setFiles] = useState([]);
     const providedClassNames = className ? className : '';
 
+    const getFilesFromEvent = async (event) => {
+
+
+        let allFiles = [];
+        const fileList = event.target.files;
+
+        for (var i = 0; i < fileList.length; i++) {
+            const file = fileList.item(i);
+            // add width, and height properties to the current file
+            if (file.width && file.height) return;
+
+            const imageDimensions = await imageWidthAndHeight(file);
+            file.width = imageDimensions.width;
+            file.height = imageDimensions.height;
+
+            allFiles.push(file);
+        }
+
+        return allFiles;
+    }
     const validator = (providedFile) => {
 
-        const imageDimensions =  imageWidthAndHeight(providedFile);
-        // use then, catch promise rather than async await
-        // const imageDimensions = await imageWidthAndHeight(providedFile);
-        // if (imageDimensions.width > 1 || imageDimensions.height > 1) {
-        //     return {
-        //         code: "file-too-large",
-        //         message: `The file dimensions are too large`
-        //     };
-        // }
-        // return null;
+        if (providedFile.width > 1 || providedFile.height > 1) {
+            return {
+                code: "file-too-large",
+                message: `The file dimensions are too large`
+            };
+        }
+        return null;
     }
     const onDrop = useCallback(acceptedFiles => {
         /* 
@@ -84,22 +69,18 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
         getRootProps,
         getInputProps,
         fileRejections
-    } = useDropzone({ accept: 'image/*', onDrop, validator })
+    } = useDropzone({ accept: 'image/*', onDrop, validator, getFilesFromEvent })
 
-    const fileRejectionItems = fileRejections.map(({ file, errors }) => {
-        // await errors;
-        console.log('errors ', errors);
-        return (
-            <li key={file.path}>
-                {file.path} - {file.size} bytes
-                <ul>
-                    {errors.map(e => (
-                        <li key={e.code} className="error-text-color">{e.message}</li>
-                    ))}
-                </ul>
-            </li>
-        )
-    });
+    const fileRejectionItems = fileRejections.map(({ file, errors, index }) => (
+        <li key={`${file.path}-${index}`}>
+            {file.path} - {file.size} bytes
+            <ul>
+                {errors.map(e => (
+                    <li key={`${e.code}-${index}`} className="error-text-color">{e.message}</li>
+                ))}
+            </ul>
+        </li>
+    ));
 
     const onDragEnd = (result) => {
         /*
