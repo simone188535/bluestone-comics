@@ -5,6 +5,53 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { imageWidthAndHeight } from '../../../utils/FileReaderValidations';
 
+const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
+
+    // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order
+    const draggableImageThumbnails = files.map((uploadedFile, index) => (
+        <Draggable key={uploadedFile.name} draggableId={uploadedFile.name} index={index}>
+            {(provided) => (
+                <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+
+                    <button
+                        className="thumb-nail-remove-icon"
+                        onClick={(e) => removalOnClick(e, index)}
+                    >
+                        <FontAwesomeIcon
+                            icon={faTimes}
+                            size="sm"
+                        />
+                    </button>
+                    <p className="thumb-nail-caption">Page {index + 1}</p>
+                    <img className="thumb-nail-img"
+                        alt={uploadedFile.name}
+                        src={uploadedFile.preview}
+                    />
+
+                </li>
+            )}
+        </Draggable>
+    ))
+
+    if (!files) return;
+
+    return (
+        <>
+            <h4>Preview Issue Assets: </h4>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="thumb-nails">
+                    {(provided) => (
+                        <ul className="thumb-nails" {...provided.droppableProps} ref={provided.innerRef}>
+                            {draggableImageThumbnails}
+                            {provided.placeholder}
+                        </ul>
+                    )}
+                </Droppable>
+            </DragDropContext>
+        </>
+    );
+}
+
 const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier, className }) => {
     const [files, setFiles] = useState([]);
     const providedClassNames = className ? className : '';
@@ -31,7 +78,7 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
     }
     const validator = (providedFile) => {
 
-        if (providedFile.width > 1 || providedFile.height > 1) {
+        if (providedFile.width > 3000 || providedFile.height > 3000) {
             return {
                 code: "file-too-large",
                 message: `The file dimensions are too large`
@@ -83,12 +130,12 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
     ));
 
     const fileRejection = fileRejectionItems.length > 0 ? (
-     // if there are any rejected files, show them
-    <>
-        <h4>Rejected files:</h4>
-        <ul>{fileRejectionItems}</ul>
-    </>
-    ): null;
+        // if there are any rejected files, show them
+        <>
+            <h4>Rejected files:</h4>
+            <ul>{fileRejectionItems}</ul>
+        </>
+    ) : null;
 
     const onDragEnd = (result) => {
         /*
@@ -128,56 +175,11 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
         <>
             <div {...getRootProps()} className={`file-input-multiple-upload-container ${providedClassNames}`}>
                 <input {...getInputProps()} name={identifier} />
-
                 <p dangerouslySetInnerHTML={{ __html: dropzoneInnerText }} />
-
             </div>
             <div className="file-input-multiple-upload-preview-container">
-
                 {fileRejection}
-
-                {
-                    // if there are any files uploaded, show them
-                    files.length > 0 && (
-                        <>
-                            <h4>Preview Issue Assets: </h4>
-                            <DragDropContext onDragEnd={onDragEnd}>
-                                <Droppable droppableId="thumb-nails">
-                                    {(provided) => (
-                                        <ul className="thumb-nails" {...provided.droppableProps} ref={provided.innerRef}>
-                                            {
-                                                // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order
-                                                files.map((uploadedFile, index) => (
-                                                    <Draggable key={uploadedFile.name} draggableId={uploadedFile.name} index={index}>
-                                                        {(provided) => (
-                                                            <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-
-                                                                <button
-                                                                    className="thumb-nail-remove-icon"
-                                                                    onClick={(e) => removalOnClick(e, index)}
-                                                                >
-                                                                    <FontAwesomeIcon
-                                                                        icon={faTimes}
-                                                                        size="sm"
-                                                                    />
-                                                                </button>
-                                                                <p className="thumb-nail-caption">Page {index + 1}</p>
-                                                                <img className="thumb-nail-img"
-                                                                    alt={uploadedFile.name}
-                                                                    src={uploadedFile.preview}
-                                                                />
-
-                                                            </li>
-                                                        )}
-                                                    </Draggable>
-                                                ))}
-                                            {provided.placeholder}
-                                        </ul>
-                                    )}
-                                </Droppable>
-                            </DragDropContext>
-                        </>
-                    )}
+                <DragnDrop files={files} onDragEnd={onDragEnd} removalOnClick={removalOnClick} />
             </div>
         </>
     )
