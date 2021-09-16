@@ -1,5 +1,5 @@
 // Upload
-const IMAGE_UPLOAD_DIMENSIONS = {
+export const IMAGE_UPLOAD_DIMENSIONS = {
     THUMBNAIL: {
         WIDTH: 260,
         HEIGHT: 400,

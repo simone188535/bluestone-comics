@@ -11,7 +11,9 @@ import Checkboxes from '../CommonUI/Checkboxes.js';
 import Modal from '../CommonUI/Modal';
 import ProgressBar from '../CommonUI/ProgressBar';
 import WorkCredits from './WorkCredits';
-import imageDimensionCheck from '../../utils/Yup/yupCustomMethods.js';
+// eslint-disable-next-line
+import imageDimensionCheck from '../../utils/Yup/yupCustomMethods';
+import { IMAGE_UPLOAD_DIMENSIONS } from '../../utils/Constants';
 import './upload.scss';
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
@@ -76,8 +78,9 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <Field className="form-input form-item" name="bookTitle" type="text" placeholder="Book Title" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookTitle" />
 
-                <FileInputSingleUpload identifier="bookCoverPhoto" triggerText="Select Book Cover Photo" />
+                <FileInputSingleUpload identifier="bookCoverPhoto" triggerText="Select Book Cover Photo Thumbnail" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookCoverPhoto" />
+                <div className="form-header-subtext">Thumbnail size must be: <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong></div>
 
                 <Field className="form-input form-textarea" name="bookDescription" as="textarea" placeholder="Book Description" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="bookDescription" />
@@ -89,8 +92,9 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 <Field className="form-input form-item" name="issueTitle" type="text" placeholder="Issue Title" autoComplete="on" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueTitle" />
 
-                <FileInputSingleUpload identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo" />
+                <FileInputSingleUpload identifier="issueCoverPhoto" triggerText="Select Issue Cover Photo Thumbnail" />
                 <ErrorMessage className="error-message error-text-color" component="div" name="issueCoverPhoto" />
+                <div className="form-header-subtext">Thumbnail size must be: <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong></div>
 
                 <div className="form-header-text">Select the applicable <strong>genres</strong>:</div>
                 <ul className="checkbox-group upload-checkboxes">
@@ -102,7 +106,7 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 </ul>
                 <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
 
-                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
+                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.HEIGHT})<div>`} />
                 {/* <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" /> */}
                 {multiFileUploadErrorMessage(errors)}
 

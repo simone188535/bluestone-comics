@@ -4,6 +4,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { imageWidthAndHeight } from '../../../utils/FileReaderValidations';
+import { IMAGE_UPLOAD_DIMENSIONS } from '../../../utils/Constants'
 
 const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
 
@@ -33,7 +34,7 @@ const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
         </Draggable>
     ))
 
-    if (!files) return;
+    if (!files.length) return <></>;
 
     return (
         <>
@@ -78,10 +79,10 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
     }
     const validator = (providedFile) => {
 
-        if (providedFile.width > 3000 || providedFile.height > 3000) {
+        if (providedFile.width > IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.WIDTH || providedFile.height > IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.HEIGHT) {
             return {
                 code: "file-too-large",
-                message: `The file dimensions are too large`
+                message: `This file is too large! The dimensions can not be larger than the recommended file size: ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.WIDTH} pixels x ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.HEIGHT} pixels`
             };
         }
         return null;

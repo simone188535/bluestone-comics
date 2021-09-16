@@ -1,16 +1,16 @@
 import { imageWidthAndHeight } from '../FileReaderValidations';
-import * as Yup from "yup";
+import { IMAGE_UPLOAD_DIMENSIONS } from '../Constants'
+import * as Yup from 'yup';
 
 
 
-export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck', function (message = null, requiredWidth = 19, requiredHeight = 3) {
-    // 1988, 3056
+export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck', function (message = null) {
+
     // this method works for an array of values and single values
     // inspired by : https://codesandbox.io/s/yup-custom-methods-rj9x6?file=/src/App.js:842-846
     // https://stackoverflow.com/questions/60525429/how-to-write-a-custom-schema-validation-using-yup-addmethod-for-country-name-a
     // https://stackoverflow.com/questions/63769152/how-to-get-yup-to-perform-more-than-one-custom-validation
-    // BUG Make this work with array for issue assets
-    // ADD try Catch
+
     return this.test("image-width-height-check", message, async function (value) {
         const { path, createError } = this;
 
@@ -18,19 +18,14 @@ export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck
             return;
         }
 
+        const requiredWidth = IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH;
+        const requiredHeight = IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT;
         const imgDimensions = await imageWidthAndHeight(value);
 
-            if (imgDimensions.width !== requiredWidth) {
+            if ((imgDimensions.width !== requiredWidth) ||  (imgDimensions.height !== requiredHeight)) {
                 return createError({
                     path,
-                    message: message ?? `The file width needs to be the ${requiredWidth} px!`
-                });
-            }
-
-            if (imgDimensions.height !== requiredHeight) {
-                return createError({
-                    path,
-                    message: message ?? `The file height needs to be the ${requiredHeight} px!`
+                    message: message ?? `This file must have a width of ${requiredWidth}px and a height of ${requiredHeight}px!`
                 });
             }
 
