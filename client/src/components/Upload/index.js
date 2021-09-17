@@ -41,7 +41,7 @@ const UrlSlugifedField = (props) => {
     );
 };
 
-const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUsernames }) => {
+const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
 
     const workCreditsErrorMessage = errors => {
         /* 
@@ -106,13 +106,13 @@ const UploadBookFields = ({ setFieldValue, values, errors, defaultSelectedUserna
                 </ul>
                 <ErrorMessage className="error-message error-text-color" component="div" name="genres" />
 
-                <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.HEIGHT})<div>`} />
+                <FileInputMultipleUpload identifier="issueAssets" dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.HEIGHT})<div>`} />
                 {/* <ErrorMessage className="error-message error-text-color" component="div" name="issueAssets" /> */}
                 {multiFileUploadErrorMessage(errors)}
 
                 {/* <div className="form-header-text">Assign <strong>Work Credits</strong> for yourself and any existing users who helped create this issue: </div> */}
                 <div className="form-header-text">Give <strong>Credits</strong> to yourself and any other existing users by selecting the role(s) they fulfilled while helping to create this Book/Issue: </div>
-                <WorkCredits identifier="workCredits" formikValues={values} defaultSelectedUsernames={defaultSelectedUsernames} />
+                <WorkCredits identifier="workCredits" defaultSelectedUsernames={defaultSelectedUsernames} />
                 {workCreditsErrorMessage(errors)}
 
                 <div className="form-header-subtext"><strong>*Tip: There is no need to select every available field if you are the only creator. Selecting writer and artist will suffice. It may overcomplicate the search for any of your other works.</strong></div>

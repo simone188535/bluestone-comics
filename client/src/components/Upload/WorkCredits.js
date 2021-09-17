@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { SearchServices } from '../../services';
 import Checkboxes from '../CommonUI/Checkboxes.js';
-import { FieldArray, Field, ErrorMessage } from 'formik';
+import { useFormikContext, FieldArray, Field, ErrorMessage } from 'formik';
 import './workCredits.scss';
 
 // THESE COMPONENTS WORKS WITH FORMIK. 
@@ -41,10 +41,10 @@ const SearchedUsers = ({ selectedListItem, push, addSelectedUsername, selectedUs
     return <li className="work-credit-search-list-item" onClick={() => addSelectedUser(selectedListItem, push)}>{selectedListItem.username}</li>;
 }
 
-const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelectedUsernames, clearTextInput }) => {
+const WorkCreditsFields = ({ identifier, apiResults, defaultSelectedUsernames, clearTextInput }) => {
 
     const [selectedUsernames, setSelectedUsernames] = useState([]);
-
+    const { values } = useFormikContext();
     useEffect(() => {
         /* 
             This adds an inital/default value to the work credits array. If the defaultSelectedUsernames prop is populated
@@ -88,7 +88,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
                             clearTextInput={clearTextInput}
                         />
                     </>
-                    {formikValues.workCredits.map((p, index) => {
+                    {values.workCredits.map((p, index) => {
                         // console.log('ppppppp', p);
                         return (
                             <div key={index} className="work-credit-selected-search-list-item">
@@ -141,7 +141,7 @@ const WorkCreditsFields = ({ identifier, apiResults, formikValues, defaultSelect
 // https://www.youtube.com/results?search_query=autocomplete+search+bar+react
 // https://codeytek.com/live-search-search-react-live-search-in-react-axios-autocomplete-pagination/
 // https://stackoverflow.com/questions/41074622/save-array-of-objects-in-state-reactjs
-const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => {
+const WorkCredits = ({ identifier, defaultSelectedUsernames }) => {
     const [textSearch, setTextSearch] = useState('');
     const [APIResults, setAPIResults] = useState([]);
 
@@ -192,7 +192,6 @@ const WorkCredits = ({ identifier, formikValues, defaultSelectedUsernames }) => 
                 <WorkCreditsFields 
                     identifier={identifier} 
                     apiResults={APIResults} 
-                    formikValues={formikValues} 
                     defaultSelectedUsernames={defaultSelectedUsernames} 
                     clearTextInput={clearTextInput}
                 />
@@ -214,7 +213,7 @@ export default memo(WorkCredits);
         initialValues={{
         workCredits: [{ user: '', credits: [] }]
     }})
-    <WorkCredits identifier="workCredits" formikValues={values}  />
+    <WorkCredits identifier="workCredits"  />
 
     2. This component also allows the user to have values provided by default using the defaultSelectedUsernames prop 
     (Which accepts a string or an array). 
@@ -224,7 +223,7 @@ export default memo(WorkCredits);
             workCredits: [{ user: USER_ID, credits: ['horror', 'comedy'] }]
         }}
     )
-    <WorkCredits identifier="workCredits" formikValues={values} defaultSelectedUsernames={defaultSelectedUsernames} />
+    <WorkCredits identifier="workCredits" defaultSelectedUsernames={defaultSelectedUsernames} />
 
     the defaultSelectedUsernames prop contains usernames and is typically connected to the state
     in the parent component. It is not added to the formik data 

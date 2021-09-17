@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { imageWidthAndHeight, isFileSizeTooLarge } from '../../../utils/FileReaderValidations';
 import { IMAGE_UPLOAD_DIMENSIONS } from '../../../utils/Constants'
+import { useFormikContext } from 'formik';
 
 const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
 
@@ -53,9 +54,10 @@ const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
     );
 }
 
-const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier, className }) => {
+const FileInputMultipleUpload = ({ dropzoneInnerText, identifier, className }) => {
     const [files, setFiles] = useState([]);
     const providedClassNames = className ? className : '';
+    const { setFieldValue } = useFormikContext();
 
     const getFilesFromEvent = async (event) => {
 
@@ -202,7 +204,7 @@ export default FileInputMultipleUpload;
     EXAMPLES OF HOW THIS WORKS:
     setFieldValue is a formik value.
 
-    <FileInputMultipleUpload setFieldValue={setFieldValue} identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
+    <FileInputMultipleUpload identifier="issueAssets" dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files" />
 
 
 */
