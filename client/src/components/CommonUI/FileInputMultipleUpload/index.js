@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { imageWidthAndHeight } from '../../../utils/FileReaderValidations';
+import { imageWidthAndHeight, isFileSizeTooLarge } from '../../../utils/FileReaderValidations';
 import { IMAGE_UPLOAD_DIMENSIONS } from '../../../utils/Constants'
 
 const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
@@ -79,10 +79,21 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
     }
     const validator = (providedFile) => {
 
-        if (providedFile.width > IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.WIDTH || providedFile.height > IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.HEIGHT) {
+        const { WIDTH, HEIGHT, MAX_FILE, MAX_FILE_IN_BYTES } = IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE;
+    
+        // validation 1. check width and height of file
+        if (providedFile.width > WIDTH || providedFile.height > HEIGHT) {
             return {
-                code: "file-too-large",
-                message: `This file is too large! The dimensions can not be larger than the recommended file size: ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.WIDTH} pixels x ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.HEIGHT} pixels`
+                code: "file-dimensions-too-large",
+                message: `This file is too large! The dimensions cannot be larger than the recommended file size: ${WIDTH} pixels x ${HEIGHT} pixels`
+            };
+        }
+        
+        // validation 2. check if file size is too large / above 2MB
+        if (isFileSizeTooLarge(providedFile, MAX_FILE)) {
+            return {
+                code: "file-size-too-large",
+                message: `This file is too large! The file size cannot be larger than: ${MAX_FILE_IN_BYTES}`
             };
         }
         return null;
@@ -119,9 +130,9 @@ const FileInputMultipleUpload = ({ setFieldValue, dropzoneInnerText, identifier,
         fileRejections
     } = useDropzone({ accept: 'image/*', onDrop, validator, getFilesFromEvent })
 
-    const fileRejectionItems = fileRejections.map(({ file, errors, index }) => (
-        <li key={`${file.path}-${index}`}>
-            {file.path} - {file.size} bytes
+    const fileRejectionItems = fileRejections.map(({ file, errors }, index) => (
+        <li key={`${file.name}-${index}`}>
+            {file.name} - {file.size} bytes
             <ul>
                 {errors.map(e => (
                     <li key={`${e.code}-${index}`} className="error-text-color">{e.message}</li>

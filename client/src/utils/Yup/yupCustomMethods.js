@@ -1,4 +1,4 @@
-import { imageWidthAndHeight } from '../FileReaderValidations';
+import { imageWidthAndHeight, isFileSizeTooLarge } from '../FileReaderValidations';
 import { IMAGE_UPLOAD_DIMENSIONS } from '../Constants'
 import * as Yup from 'yup';
 
@@ -18,14 +18,36 @@ export const imageDimensionCheck = Yup.addMethod(Yup.mixed, 'imageDimensionCheck
             return;
         }
 
-        const requiredWidth = IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH;
-        const requiredHeight = IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT;
+        const { WIDTH, HEIGHT } = IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL;
         const imgDimensions = await imageWidthAndHeight(value);
 
-            if ((imgDimensions.width !== requiredWidth) ||  (imgDimensions.height !== requiredHeight)) {
+            if ((imgDimensions.width !== WIDTH) ||  (imgDimensions.height !== HEIGHT)) {
                 return createError({
                     path,
-                    message: message ?? `This file must have a width of ${requiredWidth}px and a height of ${requiredHeight}px!`
+                    message: message ?? `This file must have a width of ${WIDTH}px and a height of ${HEIGHT}px!`
+                });
+            }
+
+        return true;
+    });
+});
+
+export const imageSizeCheck = Yup.addMethod(Yup.mixed, 'imageSizeCheck', function (message = null) {
+
+    return this.test("image-size-check", message, function (value) {
+        const { path, createError } = this;
+
+        if (!value || value.length === 0) {
+            return;
+        }
+
+        const { MAX_FILE, MAX_FILE_IN_BYTES} = IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL;
+        const isImageTooLarge = isFileSizeTooLarge(value, MAX_FILE);
+
+            if (isImageTooLarge) {
+                return createError({
+                    path,
+                    message: message ?? `This file size is too large. The max file size is ${MAX_FILE_IN_BYTES}`
                 });
             }
 

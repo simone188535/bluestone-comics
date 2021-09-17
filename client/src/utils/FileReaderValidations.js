@@ -1,11 +1,11 @@
-export const imageWidthAndHeight = (provideFile) => {
+export const imageWidthAndHeight = (providedFile) => {
     // take the given file (which should be an image) and return the width and height
     const imgDimensions = { width: null, height: null };
 
     return new Promise(resolve => {
         const reader = new FileReader();
 
-        reader.readAsDataURL(provideFile);
+        reader.readAsDataURL(providedFile);
         reader.onload = function () {
             const img = new Image();
             img.src = reader.result;
@@ -18,4 +18,8 @@ export const imageWidthAndHeight = (provideFile) => {
             }
         };
     });
+}
+
+export const isFileSizeTooLarge = (providedFile, restrictedFileSize) => {
+    return providedFile.size > restrictedFileSize;
 }

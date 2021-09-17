@@ -12,7 +12,7 @@ import Modal from '../CommonUI/Modal';
 import ProgressBar from '../CommonUI/ProgressBar';
 import WorkCredits from './WorkCredits';
 // eslint-disable-next-line
-import imageDimensionCheck from '../../utils/Yup/yupCustomMethods';
+import { imageDimensionCheck, imageSizeCheck } from '../../utils/Yup/yupCustomMethods';
 import { IMAGE_UPLOAD_DIMENSIONS } from '../../utils/Constants';
 import './upload.scss';
 
@@ -262,7 +262,8 @@ const Upload = () => {
                                 .required('Book Title required!'),
                             bookCoverPhoto: Yup.mixed()
                                 .required('You need to provide a file')
-                                .imageDimensionCheck(),
+                                .imageDimensionCheck()
+                                .imageSizeCheck(),
                             bookDescription: Yup.string()
                                 .required('Book Description required!'),
                             urlSlug: Yup.string()
@@ -280,7 +281,8 @@ const Upload = () => {
                                 .required('Issue Title required!'),
                             issueCoverPhoto: Yup.mixed()
                                 .required('A Issue Cover Photo is required!')
-                                .imageDimensionCheck(),
+                                .imageDimensionCheck()
+                                .imageSizeCheck(),
                             // issueAssets: Yup.array().of(
                             //     Yup.mixed().imageDimensionCheck()
                             // )
