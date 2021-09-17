@@ -73,13 +73,14 @@ const Works = ({ profilePageUsername }) => {
             <div className="grid-info-box">
                 <h3 className="grid-info-box-header">{filteredResult.title}</h3>
                 <div className="grid-info-box-body">
-                    <ReadMore content={filteredResult.description} maxStringLengthShown={150} />
+                    <ReadMore content={filteredResult.description} maxStringLengthShown={100} />
                 </div>
                 <div className="grid-info-box-date-created">
                     {moment(filteredResult.date_created).format('MMMM D, YYYY')}
                 </div>
                 <div className="grid-footer">
-
+                    <div className="grid-divider"></div>
+                    <button className="bsc-button transparent edit-button">Edit</button>
                 </div>
             </div>
         </li>
