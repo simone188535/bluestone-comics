@@ -45,9 +45,9 @@ const Profile = () => {
         fetchProfileUser();
     }, [username]);
 
-    useEffect(() => {
-        console.log('profilePageUser', profilePageUser);
-    }, [profilePageUser]);
+    // useEffect(() => {
+    //     console.log('profilePageUser', profilePageUser);
+    // }, [profilePageUser]);
 
 
     return (
@@ -92,7 +92,7 @@ const Profile = () => {
                         </div>
                         <div className="container-fluid">
                             <TabPanel>
-                                <Works profilePageUsername={profilePageUser.username} />
+                                <Works profilePageUsername={profilePageUser.username} profilePageUserId={profilePageUser.id}/>
                             </TabPanel>
                             <TabPanel>
                                 <Bookmarks profilePageUser={profilePageUser} />

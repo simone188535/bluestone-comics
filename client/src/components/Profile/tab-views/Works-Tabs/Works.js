@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { SearchServices } from '../../../../services';
 import ReadMore from '../../../CommonUI/ReadMore';
+import useBelongsToCurrentUser from '../../../../hooks/useBelongsToCurrentUser';
 import moment from 'moment';
 import './works.scss';
 
-const Works = ({ profilePageUsername }) => {
+const Works = ({ profilePageUsername, profilePageUserId }) => {
     // This may be passed as a props later from the profile page
     const buttonValues = ['Books', 'Issues', 'Accredited'];
 
@@ -12,8 +13,11 @@ const Works = ({ profilePageUsername }) => {
     const [filterType, setFilterType] = useState(buttonValues[0]);
     const [filteredResults, setFilteredResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
     // BUG Dont forget error message
 
+    console.log('Works ');
+    // console.log('belongsToCurrentUser ', belongsToCurrentUser);
     const fetchSearchType = async () => {
         try {
             switch (filterType) {
