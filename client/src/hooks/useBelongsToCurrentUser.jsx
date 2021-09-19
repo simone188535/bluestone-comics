@@ -7,7 +7,7 @@ function useBelongsToCurrentUser(providedUserId) {
 
   useEffect(() => {
     setBelongsToUser(currentUserId === providedUserId);
-  }, [providedUserId]);
+  }, [currentUserId, providedUserId]);
 
   return belongsToUser;
 }
