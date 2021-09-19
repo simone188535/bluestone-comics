@@ -27,7 +27,11 @@
         "prettier"
     ],
     "rules": {
-        "prettier/prettier": "error"
+        "prettier/prettier": ["error", {}],
+        "comma-dangle": ["error", "never"],
+       "operator-linebreak": ["error", "after"],
+       "implicit-arrow-linebreak": ["error", "below"],
+       "function-paren-newline": ["error", "never"]
     },
     "parser": "babel-eslint",
     "root":true
