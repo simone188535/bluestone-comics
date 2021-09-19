@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { SearchServices } from '../../services';
-import Checkboxes from '../CommonUI/Checkboxes.js';
+import Checkboxes from '../CommonUI/Checkboxes';
 import { useFormikContext, FieldArray, Field, ErrorMessage } from 'formik';
 import './workCredits.scss';
 
