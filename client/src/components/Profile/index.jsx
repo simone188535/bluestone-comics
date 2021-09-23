@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
- Tab, Tabs, TabList, TabPanel 
-} from 'react-tabs';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { UserServices } from '../../services';
 import Works from './tab-views/Works-Tabs/Works';
 import Bookmarks from './tab-views/Bookmarks';

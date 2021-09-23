@@ -1,16 +1,22 @@
 import React, { useState, useEffect, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useFormikContext, FieldArray, Field, ErrorMessage } from 'formik';
 import { SearchServices } from '../../services';
 import Checkboxes from '../CommonUI/Checkboxes';
-import { useFormikContext, FieldArray, Field, ErrorMessage } from 'formik';
 import './workCredits.scss';
 
-// THESE COMPONENTS WORKS WITH FORMIK. 
-const RenderSearchList = ({ push, apiResults, addSelectedUsername, selectedUsernames, clearTextInput }) => {
-    // Map though APIResults state and iteratively display list items if they exist OR return nothing
+// THESE COMPONENTS WORKS WITH FORMIK.
+const RenderSearchList = ({
+  push,
+  apiResults,
+  addSelectedUsername,
+  selectedUsernames,
+  clearTextInput
+}) => {
+  // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
-    if (apiResults.length > 0) {
+  if (apiResults.length > 0) {
         return (
             <ul className="work-credit-search-list">
                 { apiResults.map((item, index) => <SearchedUsers key={index} selectedListItem={item} push={push} addSelectedUsername={addSelectedUsername} selectedUsernames={selectedUsernames} clearTextInput={clearTextInput} />)}
