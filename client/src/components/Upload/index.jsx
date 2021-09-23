@@ -8,7 +8,7 @@ import {
   Form,
   ErrorMessage,
   useField,
-  useFormikContext,
+  useFormikContext
 } from 'formik';
 import * as Yup from 'yup';
 import { PublishServices } from '../../services';
@@ -37,6 +37,7 @@ const UrlSlugifedField = (props) => {
 
   React.useEffect(() => {
     setFieldValue(props.name, slugify(bookTitle));
+    // eslint-disable-next-line react/destructuring-assignment
   }, [bookTitle, setFieldValue, props.name]);
 
   return (
@@ -47,13 +48,13 @@ const UrlSlugifedField = (props) => {
 };
 
 const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
-  const workCreditsErrorMessage = (errors) =>
+  const workCreditsErrorMessage = (WCErrors) =>
     /*
             This has been added because we are using a Field Array Validation within the WorkCredits Component.
             In order to display the outer error message for this array of objects, this conditional is needed.
             More info here: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
         */
-    typeof errors.workCredits === 'string' ? (
+    typeof WCErrors.workCredits === 'string' ? (
       <ErrorMessage
         className="error-message error-text-color"
         component="div"
@@ -61,22 +62,14 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
       />
     ) : null;
 
-    // const workCreditsErrorMessage = errors => {
-    //     /* 
-    //         This has been added because we are using a Field Array Validation within the WorkCredits Component. 
-    //         In order to display the outer error message for this array of objects, this conditional is needed. 
-    //         More info here: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
-    //     */
-    //     return (typeof errors.workCredits === 'string' ? <ErrorMessage className="error-message error-text-color" component="div" name="workCredits" /> : null);
-    // }
-  const multiFileUploadErrorMessage = (errors) => {
+  const multiFileUploadErrorMessage = (MFErrors) => {
     /*
             This has been added so that only a single message will be shown in FileInputMultipleUpload at all times.
             Even when an array of error are show (when a multiple uploaded files fail validation)
         */
     let FileInputMultipleUploadErrorMsg;
 
-    if (typeof errors.issueAssets === 'string') {
+    if (typeof MFErrors.issueAssets === 'string') {
       FileInputMultipleUploadErrorMsg = (
         <ErrorMessage
           className="error-message error-text-color"
@@ -84,10 +77,10 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           name="issueAssets"
         />
       );
-    } else if (Array.isArray(errors.issueAssets)) {
+    } else if (Array.isArray(MFErrors.issueAssets)) {
       FileInputMultipleUploadErrorMsg = (
         <div className="error-message error-text-color">
-          {errors?.issueAssets[0]}
+          {MFErrors?.issueAssets[0]}
         </div>
       );
     } else {
@@ -104,9 +97,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
     >
       <h1 className="form-header-text">
         Upload a<strong>New Book</strong>
-{' '}
-        along with its
-        <strong>First Issue</strong>
+        along with its<strong>First Issue</strong>
       </h1>
       <div>
         <Field
@@ -131,7 +122,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           name="bookCoverPhoto"
         />
         <div className="form-header-subtext">
-          Thumbnail size must be:
+          Thumbnail size must be:{' '}
           <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong>
         </div>
         <Field
@@ -154,8 +145,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           autoComplete="on"
         />
         <div className="form-header-subtext">
-          <strong>Your Comic URL will be similar to this: </strong>
-{' '}
+          <strong>Your Comic URL will be similar to this: </strong>{' '}
           https://bluestonecomics.com/api/v1/read/
           <strong>{values.urlSlug ? values.urlSlug : '<URL Slug>'}</strong>
           /book/1234
@@ -187,12 +177,11 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           name="issueCoverPhoto"
         />
         <div className="form-header-subtext">
-          Thumbnail size must be:
+          Thumbnail size must be:{' '}
           <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong>
         </div>
         <div className="form-header-text">
-          Select the applicable
-          <strong>genres</strong>
+          Select the applicable <strong>genres</strong>
         </div>
         <ul className="checkbox-group upload-checkboxes">
           <Checkboxes
@@ -253,10 +242,9 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
         for yourself and any existing users who helped create this issue:
         </div> */}
         <div className="form-header-text">
-          Give
-          <strong>Credits</strong>
-          to yourself and any other existing users by selecting the role(s) they
-          fulfilled while helping to create this Book/Issue:
+          Give <strong>Credits</strong> to yourself and any other existing users
+          by selecting the role(s) they fulfilled while helping to create this
+          Book/Issue:
         </div>
         <WorkCredits
           identifier="workCredits"
@@ -425,7 +413,7 @@ const Upload = () => {
             issueCoverPhoto: null,
             genres: [],
             issueAssets: [],
-            workCredits: [{ user: currentUserId, credits: [] }],
+            workCredits: [{ user: currentUserId, credits: [] }]
           }}
           validationSchema={Yup.object().shape({
             bookTitle: Yup.string().required('Book Title required!'),
@@ -462,7 +450,7 @@ const Upload = () => {
                 })
               )
               .required('Must have at least one work credit')
-            // This represents an array of objects: [
+            // This workCredits validation represents an array of objects: [
             //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
             //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
             // ]
