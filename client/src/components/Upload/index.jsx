@@ -1,27 +1,27 @@
-import React, { useEffect, useState, memo } from 'react';
-import slugify from 'slugify';
-import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState, memo } from "react";
+import slugify from "slugify";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   Formik,
   Field,
   Form,
   ErrorMessage,
   useField,
-  useFormikContext
-} from 'formik';
-import * as Yup from 'yup';
-import { PublishServices } from '../../services';
-import FileInputSingleUpload from '../CommonUI/FileInputSingleUpload';
-import FileInputMultipleUpload from '../CommonUI/FileInputMultipleUpload';
-import Checkboxes from '../CommonUI/Checkboxes';
-import Modal from '../CommonUI/Modal';
-import ProgressBar from '../CommonUI/ProgressBar';
-import WorkCredits from './WorkCredits';
+  useFormikContext,
+} from "formik";
+import * as Yup from "yup";
+import { PublishServices } from "../../services";
+import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
+import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
+import Checkboxes from "../CommonUI/Checkboxes";
+import Modal from "../CommonUI/Modal";
+import ProgressBar from "../CommonUI/ProgressBar";
+import WorkCredits from "./WorkCredits";
 // eslint-disable-next-line
 import { imageDimensionCheck, imageSizeCheck } from '../../utils/Yup/yupCustomMethods';
-import { IMAGE_UPLOAD_DIMENSIONS } from '../../utils/Constants';
-import './upload.scss';
+import { IMAGE_UPLOAD_DIMENSIONS } from "../../utils/Constants";
+import "./upload.scss";
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
 const UrlSlugifedField = (props) => {
@@ -31,7 +31,7 @@ const UrlSlugifedField = (props) => {
     */
   const {
     values: { bookTitle },
-    setFieldValue
+    setFieldValue,
   } = useFormikContext();
   const [field] = useField(props);
 
@@ -54,7 +54,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
             In order to display the outer error message for this array of objects, this conditional is needed.
             More info here: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
         */
-    typeof WCErrors.workCredits === 'string' ? (
+    typeof WCErrors.workCredits === "string" ? (
       <ErrorMessage
         className="error-message error-text-color"
         component="div"
@@ -69,7 +69,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
         */
     let FileInputMultipleUploadErrorMsg;
 
-    if (typeof MFErrors.issueAssets === 'string') {
+    if (typeof MFErrors.issueAssets === "string") {
       FileInputMultipleUploadErrorMsg = (
         <ErrorMessage
           className="error-message error-text-color"
@@ -122,7 +122,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           name="bookCoverPhoto"
         />
         <div className="form-header-subtext">
-          Thumbnail size must be:{' '}
+          Thumbnail size must be:{" "}
           <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong>
         </div>
         <Field
@@ -145,9 +145,9 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           autoComplete="on"
         />
         <div className="form-header-subtext">
-          <strong>Your Comic URL will be similar to this: </strong>{' '}
+          <strong>Your Comic URL will be similar to this: </strong>{" "}
           https://bluestonecomics.com/api/v1/read/
-          <strong>{values.urlSlug ? values.urlSlug : '<URL Slug>'}</strong>
+          <strong>{values.urlSlug ? values.urlSlug : "<URL Slug>"}</strong>
           /book/1234
         </div>
         <ErrorMessage
@@ -177,7 +177,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           name="issueCoverPhoto"
         />
         <div className="form-header-subtext">
-          Thumbnail size must be:{' '}
+          Thumbnail size must be:{" "}
           <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong>
         </div>
         <div className="form-header-text">
@@ -189,34 +189,34 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
             type="multiple"
             wrapperElement="li"
             checkboxValue={[
-              { name: 'Action/Adventure' },
-              { name: 'Anthropomorphic' },
-              { name: 'Children' },
-              { name: 'Comedy' },
-              { name: 'Crime' },
-              { name: 'Drama' },
-              { name: 'Family' },
-              { name: 'Fantasy' },
-              { name: 'Graphic Novels' },
-              { name: 'Historical' },
-              { name: 'Horror' },
-              { name: 'LGBTQ' },
-              { name: 'Mature' },
-              { name: 'Music' },
-              { name: 'Mystery' },
-              { name: 'Mythology' },
-              { name: 'Psychological' },
-              { name: 'Romance' },
-              { name: 'School Life' },
-              { name: 'Sci-Fi' },
-              { name: 'Slice of Life' },
-              { name: 'Sport' },
-              { name: 'Superhero' },
-              { name: 'Supernatural' },
-              { name: 'Thriller' },
-              { name: 'War' },
-              { name: 'Western' },
-              { name: 'Zombies' }
+              { name: "Action/Adventure" },
+              { name: "Anthropomorphic" },
+              { name: "Children" },
+              { name: "Comedy" },
+              { name: "Crime" },
+              { name: "Drama" },
+              { name: "Family" },
+              { name: "Fantasy" },
+              { name: "Graphic Novels" },
+              { name: "Historical" },
+              { name: "Horror" },
+              { name: "LGBTQ" },
+              { name: "Mature" },
+              { name: "Music" },
+              { name: "Mystery" },
+              { name: "Mythology" },
+              { name: "Psychological" },
+              { name: "Romance" },
+              { name: "School Life" },
+              { name: "Sci-Fi" },
+              { name: "Slice of Life" },
+              { name: "Sport" },
+              { name: "Superhero" },
+              { name: "Supernatural" },
+              { name: "Thriller" },
+              { name: "War" },
+              { name: "Western" },
+              { name: "Zombies" },
             ]}
           />
         </ul>
@@ -275,11 +275,11 @@ const Upload = () => {
   const history = useHistory();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const currentUser = useSelector((state) => state.auth.user);
-  const [currentUsername, setCurrentUsername] = useState('');
-  const [currentUserId, setCurrentUserId] = useState('');
+  const [currentUsername, setCurrentUsername] = useState("");
+  const [currentUserId, setCurrentUserId] = useState("");
 
   // if currentUser is logged in/redux state is populated
   useEffect(() => {
@@ -302,8 +302,8 @@ const Upload = () => {
 
     const progressMessage =
       uploadPercentage === 100
-        ? 'Upload was successful!'
-        : 'Still loading... Please wait.';
+        ? "Upload was successful!"
+        : "Still loading... Please wait.";
 
     return (
       <div className="success-text-color modal-spacing-md-top">
@@ -326,34 +326,34 @@ const Upload = () => {
       // console.log('res', res);
       const formData = new FormData();
 
-      formData.append('bookTitle', values.bookTitle);
-      formData.append('bookDescription', values.bookDescription);
-      formData.append('urlSlug', values.urlSlug);
-      formData.append('issueTitle', values.issueTitle);
+      formData.append("bookTitle", values.bookTitle);
+      formData.append("bookDescription", values.bookDescription);
+      formData.append("urlSlug", values.urlSlug);
+      formData.append("issueTitle", values.issueTitle);
       // formData cannot contain plain objects, so it must be stringified
       /* values.workCredits.forEach((formValue) => formData.append('workCredits',
       console.log(JSON.stringify(formValue))));
       */
-      formData.append('workCredits', JSON.stringify(values.workCredits));
+      formData.append("workCredits", JSON.stringify(values.workCredits));
       // formData.append('workCredits', [
       //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
       //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
       // ]);
 
-      formData.append('bookImagePrefixRef', bookImagePrefixRef);
-      formData.append('issueImagePrefixRef', issueImagePrefixRef);
+      formData.append("bookImagePrefixRef", bookImagePrefixRef);
+      formData.append("issueImagePrefixRef", issueImagePrefixRef);
       // stringify genres
       // values.genres.forEach((formValue) => formData.append('genres', formValue));
-      formData.append('genres', JSON.stringify(values.genres));
+      formData.append("genres", JSON.stringify(values.genres));
       // All Files must be moved to the bottom so that multer reads them last
-      formData.append('bookCoverPhoto', values.bookCoverPhoto);
-      formData.append('issueCoverPhoto', values.issueCoverPhoto);
+      formData.append("bookCoverPhoto", values.bookCoverPhoto);
+      formData.append("issueCoverPhoto", values.issueCoverPhoto);
       // push all issueAssets to formData
       values.issueAssets.forEach((formValue) =>
-        formData.append('issueAssets', formValue)
+        formData.append("issueAssets", formValue)
       );
 
-      console.log('triggered', values);
+      console.log("triggered", values);
 
       //   return;
       // open modal
@@ -377,7 +377,7 @@ const Upload = () => {
           }
 
           setUploadPercentage(progress);
-        }
+        },
       };
 
       const createBookRes = await PublishServices.createBook(formData, config);
@@ -387,13 +387,13 @@ const Upload = () => {
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
-        history.push('/');
+        history.push("/");
       }, 3000);
 
-      console.log('success', createBookRes);
+      console.log("success", createBookRes);
     } catch (err) {
-      console.log('failed', err.response.data.message);
-      setErrorMessage('An Error occurred. Please try again Later.');
+      console.log("failed", err.response.data.message);
+      setErrorMessage("An Error occurred. Please try again Later.");
       setUploadPercentage(0);
     }
 
@@ -405,51 +405,51 @@ const Upload = () => {
       <div className="upload-form-container">
         <Formik
           initialValues={{
-            bookTitle: '',
+            bookTitle: "",
             bookCoverPhoto: null,
-            bookDescription: '',
-            urlSlug: '',
-            issueTitle: '',
+            bookDescription: "",
+            urlSlug: "",
+            issueTitle: "",
             issueCoverPhoto: null,
             genres: [],
             issueAssets: [],
-            workCredits: [{ user: currentUserId, credits: [] }]
+            workCredits: [{ user: currentUserId, credits: [] }],
           }}
           validationSchema={Yup.object().shape({
-            bookTitle: Yup.string().required('Book Title required!'),
+            bookTitle: Yup.string().required("Book Title required!"),
             bookCoverPhoto: Yup.mixed()
-              .required('You need to provide a file')
+              .required("You need to provide a file")
               .imageDimensionCheck()
               .imageSizeCheck(),
             bookDescription: Yup.string().required(
-              'Book Description required!'
+              "Book Description required!"
             ),
             urlSlug: Yup.string()
-              .required('URL Slug required!')
-              .test('urlSlug', 'This URL Slug Invalid!', (value) => {
+              .required("URL Slug required!")
+              .test("urlSlug", "This URL Slug Invalid!", (value) => {
                 const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
 
                 return regexForValidURLSlug.test(value);
               }),
-            issueTitle: Yup.string().required('Issue Title required!'),
+            issueTitle: Yup.string().required("Issue Title required!"),
             issueCoverPhoto: Yup.mixed()
-              .required('A Issue Cover Photo is required!')
+              .required("A Issue Cover Photo is required!")
               .imageDimensionCheck()
               .imageSizeCheck(),
             // issueAssets: Yup.array().of(
             //     Yup.mixed().imageDimensionCheck()
             // )
             //     .required('A Issue Assets are required!'),
-            issueAssets: Yup.array().required('A Issue Assets are required!'),
-            genres: Yup.array().required('You must select a genre!'),
+            issueAssets: Yup.array().required("A Issue Assets are required!"),
+            genres: Yup.array().required("You must select a genre!"),
             workCredits: Yup.array()
               .of(
                 Yup.object().shape({
-                  user: Yup.string().required('A User muct be selected'),
-                  credits: Yup.array().required('Please select credits')
+                  user: Yup.string().required("A User muct be selected"),
+                  credits: Yup.array().required("Please select credits"),
                 })
               )
-              .required('Must have at least one work credit')
+              .required("Must have at least one work credit"),
             // This workCredits validation represents an array of objects: [
             //     {"user": "5ef2ac98a9983fc4b33c63ac", "credits": ["Writer","Artist"]},
             //     {"user": "5f3b4020e1cdaeb34ec330f5", "credits": ["Editor"]}
