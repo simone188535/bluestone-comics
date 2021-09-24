@@ -1,0 +1,11 @@
+CREATE TABLE issues(
+	id SERIAL PRIMARY KEY,
+	publisher_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+	book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
+	title VARCHAR(50) NOT NULL CHECK (length(title) <= 50),
+	cover_photo VARCHAR NOT NULL DEFAULT 'default.jpg',
+	issue_number SMALLINT DEFAULT 1 NOT NULL,
+	image_prefix_reference VARCHAR NOT NULL,
+	last_updated TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+	date_created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

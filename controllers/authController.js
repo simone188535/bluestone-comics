@@ -1,39 +1,74 @@
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+const validator = require('validator');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const sendEmail = require('../utils/email');
+const pool = require('../db');
+const QueryPG = require('../utils/QueryPGFeature');
 
 const keys = require('../config/keys.js');
 
+/* 
+  This method creates a jwt Token for auth purposes in the front end to help identify
+  a user. This token is named JWTToken and is stored in local storage in the browser
+*/
 const signToken = (user) => {
-  return jwt.sign({ id: user._id }, keys.JWT_SECRET, {
+  return jwt.sign({ id: user.id }, keys.JWT_SECRET, {
     // expires in 7 days
     expiresIn: '7d'
   });
 };
 
-const createSendToken = (user, status, res) => {
-  const token = signToken(user);
+/* 
+  This method send the jwt token to the client/browser
+*/
+const createSendToken = (user, status, res, reactivated = false) => {
+  if (!user.id) {
+    throw new AppError('id field is missing, token is invalid', 500);
+  }
 
-  // res.cookie('jwtToken', token, {
-  //   // expires in 7 days
-  //   expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  //   httpOnly: true
-  // });
+  // this sends the new jwt token and updated user to the frontend
+  const token = signToken(user);
 
   // hides password in json response
   user.password = undefined;
 
   res.status(status).json({
     status: 'success',
+    reactivated,
     token,
     data: {
       user
     }
   });
+};
+
+/* 
+  This method encrypts a give users password and returns the encryption
+*/
+const bcryptPasswordEncryption = (password) => {
+  return bcrypt.hash(password, 12);
+};
+
+/* 
+  This method compares a user encrypted currentPassword(from the DB) to
+  the providedPassword(provided by the user which is not yet encrypted)
+  and returns true if they match. 
+*/
+const bcryptPasswordCompare = (providedPassword, currentPassword) => {
+  return bcrypt.compare(providedPassword, currentPassword);
+};
+
+/* 
+  Checks if the logged in user changed their password after jwt token was issued.
+*/
+const wasPasswordChangedAfterJWTIssued = (JWTTimestamp, passwordChangedAt) => {
+  const JWTTimestampConverted = new Date(JWTTimestamp).toISOString();
+  return JWTTimestampConverted < passwordChangedAt;
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -42,37 +77,83 @@ exports.signup = catchAsync(async (req, res, next) => {
     lastName,
     username,
     email,
-    photo,
     password,
     passwordConfirm
   } = req.body;
-  const newUser = await User.create({
-    firstName,
-    lastName,
-    username,
-    email,
-    photo,
-    password,
-    passwordConfirm
-  });
+
+  if (!validator.isEmail(email)) {
+    return next(new AppError('This is not a valid email!', 406));
+  }
+
+  if (password !== passwordConfirm) {
+    return next(new AppError('Passwords do not match. Try again!', 406));
+  }
+
+  // Check if user/email already exists in the DB
+  const existingUser = await new QueryPG(pool).find(
+    '*',
+    'users WHERE email = $1',
+    [email]
+  );
+
+  if (existingUser) {
+    return next(
+      new AppError(
+        'An account already exists for this user. Please login.',
+        403
+      )
+    );
+  }
+
+  const encryptedPassword = await bcryptPasswordEncryption(password);
+
+  const insertTable = 'users(first_name, last_name, username, email, password)';
+  const preparedStatement = '$1, $2, $3, $4, $5';
+
+  const values = [firstName, lastName, username, email, encryptedPassword];
+
+  // Create new account
+  const newUser = await new QueryPG(pool).insert(
+    insertTable,
+    preparedStatement,
+    values
+  );
 
   createSendToken(newUser, 200, res);
 });
 
+// BUG account reactivation, send message to client if account is reactivated, change account status to enabled if it is disabled
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
+  let reactivated = false;
 
   if (!email || !password) {
-    next(new AppError(`Email or Password has not been provided!`, 400));
+    return next(new AppError(`Email or Password has not been provided!`, 400));
   }
 
-  const existingUser = await User.findOne({ email }).select('+password');
+  const existingUser = await new QueryPG(pool).find(
+    '*',
+    'users WHERE email = $1',
+    [email]
+  );
 
   if (!existingUser) {
-    next(new AppError(`User not found. Please Sign Up.`, 401));
+    return next(new AppError(`User not found. Please Sign Up.`, 401));
   }
 
-  const passedPasswordVerification = await existingUser.passwordCompare(
+  // Reactivate the account if the user has previously deleted it
+  if (existingUser.active === false) {
+    await new QueryPG(pool).update(
+      'users',
+      'active = ($1), last_updated = ($2)',
+      'email = ($3)',
+      [true, new Date(), email]
+    );
+
+    reactivated = true;
+  }
+
+  const passedPasswordVerification = await bcryptPasswordCompare(
     password,
     existingUser.password
   );
@@ -81,7 +162,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Password is incorrect.', 406));
   }
 
-  createSendToken(existingUser, 200, res);
+  createSendToken(existingUser, 200, res, reactivated);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -100,32 +181,32 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  try {
-    // 2) Verification token
-    const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
+  // 2) Verification token
+  const decoded = await promisify(jwt.verify)(token, keys.JWT_SECRET);
 
-    // 3) Check if user still exists
-    const freshUser = await User.findById(decoded.id);
-    if (!freshUser) {
-      return next(
-        new AppError('The user belonging to the token no longer exists.', 401)
-      );
-    }
+  // 3) Check if user still exists
+  const freshUser = await new QueryPG(pool).find('*', 'users WHERE id = $1', [
+    decoded.id
+  ]);
 
-    // 4) Check if password was updated after the token was issued.
-    if (freshUser.changedPasswordAfter(decoded.iat)) {
-      return next(
-        new AppError('Password was recently changed. Login again.', 401)
-      );
-    }
-
-    // GRANT ACCESS TO PROTECTED ROUTE
-    res.locals.user = freshUser;
-    next();
-  } catch (err) {
-    // This will likely be an error presented by JWT
-    return next(new AppError(err.message, 500));
+  if (!freshUser) {
+    return next(
+      new AppError('The user belonging to the token no longer exists.', 401)
+    );
   }
+
+  // 4) Check if password was updated after the token was issued.
+  if (
+    wasPasswordChangedAfterJWTIssued(decoded.iat, freshUser.password_changed_at)
+  ) {
+    return next(
+      new AppError('Password was recently changed. Login again.', 401)
+    );
+  }
+
+  // GRANT ACCESS TO PROTECTED ROUTE
+  res.locals.user = freshUser;
+  next();
 });
 
 exports.restrictTo = (...role) => {
@@ -141,20 +222,43 @@ exports.restrictTo = (...role) => {
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on email
-  const user = await User.findOne({ email: req.body.email });
+  const { email } = req.body;
+  // const user = await User.findOne({ email: req.body.email });
+  const user = await new QueryPG(pool).find('*', 'users WHERE email = $1', [
+    email
+  ]);
+
+  // console.log('user', user, user.email);
 
   if (!user) {
     return next(new AppError('There is no user with that email.', 403));
   }
   // 2) Generate random reset token
-  const resetToken = user.createPasswordResetToken();
-  await user.save({ validateBeforeSave: false });
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  // encrypt reset token and save it to the password_reset_token field on the user table
+  const passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // create an expiration date/time for token to the password_reset_token_expires field on the user table
+  const passwordResetTokenExpires = new Date(
+    Date.now() + 30 * 60 * 1000
+  ).toISOString(); // Expires in 30 minutes
+
+  await new QueryPG(pool).update(
+    'users',
+    `password_reset_token = ($1), password_reset_token_expires = ($2), last_updated = ($3)`,
+    'email = ($4)',
+    [passwordResetToken, passwordResetTokenExpires, new Date(), email]
+  );
 
   // 3) Send it to user's email
   const host =
     process.env.NODE_ENV === 'production'
       ? req.get('host')
-      : process.env.FRONTEND_PORT;
+      : keys.FRONTEND_PORT;
 
   // const resetURL = `${req.protocol}://${host}/api/v1/users/reset-password/${resetToken}`;
   const resetURL = `${req.protocol}://${host}/reset-password/${resetToken}`;
@@ -164,7 +268,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: 'Your password reset token (valid for 10 minutes).',
+      subject: 'Your password reset token (valid for 30 minutes).',
       message
     });
 
@@ -173,9 +277,14 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'Token sent to email!'
     });
   } catch (err) {
-    user.passwordResetToken = undefined;
-    user.passwordResetTokenExpires = undefined;
-    await user.save({ validateBeforeSave: false });
+    // unset password_reset_token and password_reset_token_expires if there is an issue sending the email
+    await new QueryPG(pool).update(
+      'users',
+      `password_reset_token = ($1), password_reset_token_expires = ($2), last_updated = ($3)`,
+      'email = ($4)',
+      [undefined, undefined, new Date(), user.email]
+    );
+
     return next(
       new AppError('There was an error sending the email. Try again', 500)
     );
@@ -189,35 +298,60 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .update(req.params.resetToken)
     .digest('hex');
 
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetTokenExpires: { $gt: Date.now() }
-  });
+  // find user that contains hashedToken and password reset token is not expired (time of token is greater than current time)
+  const user = await new QueryPG(pool).find(
+    '*',
+    'users WHERE password_reset_token = ($1) AND password_reset_token_expires > ($2)',
+    [hashedToken, new Date()]
+  );
 
   // 2) If token has not expired, and there is a user, set the new password
   if (!user) {
     new AppError('Token is invalid or has expired.', 400);
   }
+
   const { password, passwordConfirm } = req.body;
-  user.password = password;
-  user.passwordConfirm = passwordConfirm;
-  user.passwordResetToken = undefined;
-  user.passwordResetTokenExpires = undefined;
-  await user.save();
+
+  if (password !== passwordConfirm) {
+    return next(new AppError('Passwords do not match. Try again!', 406));
+  }
+
+  const encryptedPassword = await bcryptPasswordEncryption(password);
+
+  const updatedUser = await new QueryPG(pool).update(
+    'users',
+    `password = ($1), password_reset_token = ($2), password_reset_token_expires = ($3), last_updated = ($4)`,
+    'email = ($5)',
+    [encryptedPassword, undefined, undefined, new Date(), user.email]
+  );
 
   // 4) Log the user in, send JWT
-  createSendToken(user, 200, res);
+  createSendToken(updatedUser, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, password, passwordConfirm } = req.body;
-  // 1) Get user from collection
-  const user = await User.findById(res.locals.user.id).select('+password');
-  if (!user) {
-    new AppError('User cannot be found. Login or Sign up', 401);
+  const currentDateTimestamp = new Date();
+
+  if (password !== passwordConfirm) {
+    return next(new AppError('Passwords do not match. Try again!', 406));
   }
+
+  // 1) Get user from DB
+  // const user = await User.findById(res.locals.user.id).select('+password');
+  const user = await new QueryPG(pool).find('*', 'users WHERE id = ($1)', [
+    res.locals.user.id
+  ]);
+  if (!user) {
+    return next(new AppError('User cannot be found. Login or Sign up', 401));
+  }
+
   // 2) Check if POSTed current password is correct
-  const passedPasswordVerification = await user.passwordCompare(
+  // const passedPasswordVerification = await user.passwordCompare(
+  //   currentPassword,
+  //   user.password
+  // );
+  const passedPasswordVerification = await bcryptPasswordCompare(
     currentPassword,
     user.password
   );
@@ -225,11 +359,29 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   if (!passedPasswordVerification) {
     return next(new AppError('Password is incorrect.', 406));
   }
+
+  const encryptedPassword = await bcryptPasswordEncryption(password);
+
   // 3) If so, update password
-  user.password = password;
-  user.passwordConfirm = passwordConfirm;
-  await user.save();
+  const updatedUser = await new QueryPG(pool).update(
+    'users',
+    'password = ($1), password_changed_at = ($2), last_updated = ($3)',
+    'id = ($4)',
+    [
+      encryptedPassword,
+      currentDateTimestamp,
+      currentDateTimestamp,
+      res.locals.user.id
+    ]
+  );
+
+  // user.password = password;
+  // user.passwordConfirm = passwordConfirm;
+  // await user.save();
 
   // 4) Log user in send jwt
-  createSendToken(user, 200, res);
+  createSendToken(updatedUser, 200, res);
+  // } catch (err) {
+  //   return next(new AppError(err.message, 500));
+  // }
 });

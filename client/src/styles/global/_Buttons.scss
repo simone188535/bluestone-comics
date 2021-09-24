@@ -1,3 +1,45 @@
 .bsc-button {
+    border: unset;
+    font-weight: $normal;
+    font-size: $small-font;
+    padding: 15px 30px;
+    font-family: $Roboto, $base-font;
 
+    &.primary {
+        background: $violet-blue;
+        color: $pure-white;
+        border-radius: 5px;
+
+        &:hover,
+        &.active {
+            background: $dark-violet-blue;
+        }
+    }
+
+    &.transparent {
+        background-color: transparent;
+        color: $pure-black;
+        border-radius: 35px;
+        border: 1px solid $pure-black;
+
+        &:hover,
+        &.active {
+            color: $violet-blue;
+            border-color: $violet-blue;
+        }
+    }
+
+    &.primary-link {
+        border: unset;
+        color: $violet-blue;
+        background: transparent;
+        padding:  unset;
+        line-height: 1.5;
+        letter-spacing: 1px;
+        font-size: 15px;
+        &:hover,
+        &.active {
+            color: $dark-violet-blue;
+        }
+    }
 }
