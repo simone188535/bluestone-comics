@@ -34,10 +34,21 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin', 'moderator', 'creator'],
     default: 'user'
   },
-  photo: {
+  userPhoto: {
     type: String,
     default:
       'https://bluestone-images.s3.us-east-2.amazonaws.com/default/profile-pic.jpeg'
+  },
+  backgroundUserPhoto: {
+    type: String,
+    default:
+      'https://bluestone-images.s3.us-east-2.amazonaws.com/default/plain-white-background.jpg'
+  },
+  bio: {
+    type: String,
+    default: 'This user has no bio.',
+    minlength: 1,
+    maxlength: 150
   },
   password: {
     type: String,

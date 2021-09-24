@@ -1,0 +1,15 @@
+@import '../../../styles/abstracts/variables';
+
+.read-more {
+    .read-button, .dots {
+        font-weight: $normal;
+    }
+    
+    .reveal {
+            display: inline-block;
+    }
+
+    .hide {
+            display: none;
+    }
+}

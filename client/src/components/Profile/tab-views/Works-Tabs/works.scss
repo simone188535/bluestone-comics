@@ -1,0 +1,39 @@
+@import '../../../../styles/abstracts/variables.scss';
+
+.works-tab {
+    &-tri-buttons-container {
+        overflow: hidden;
+        margin: 0px 10% 10%;
+
+        .works-tab-tri-button {
+            display: block;
+            width: 80%;
+            margin: 20px auto;
+
+            // &:hover, &.active {
+            //     color: $pure-white;
+            //     background: $violet-blue;
+            //     border: 1px solid $pure-black;
+            // }
+        }
+
+    }
+
+    .filtered-results {
+        // clear: left;
+        // display: ;
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .works-tab {
+
+        .works-tab-tri-button {
+            // display: block;
+            float: left;
+            width: 30%;
+            margin: 0px 1.6%;
+
+        }
+    }
+}

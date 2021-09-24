@@ -1,3 +1,172 @@
-.profile-page {
+@import '../../styles/abstracts/variables.scss';
 
+.profile-page {
+    .profile-page-header {
+        color: $pure-white;
+        min-height: 550px;
+        background-size: cover;
+        background-position: center center;
+        background-image: url("http://i.imgur.com/woUbg3p.jpg");
+        // background-image: url("https://bluestone-images.s3.us-east-2.amazonaws.com/default/buddhist.jpg");
+        // background-image: url("https://bluestone-images.s3.us-east-2.amazonaws.com/default/plain-white-background.jpg");
+
+        .background-overlay {
+            background-color: rgba(80, 80, 80, 0.35);
+            min-height: inherit;
+            overflow: auto;
+
+            .profile-pic {
+                display: block;
+                margin: 30px auto;
+                height: 150px;
+                border-radius: 50%;
+                box-shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.5);
+            }
+
+            .username-header {
+                text-align: center;
+            }
+
+            .role {
+                text-align: center;
+                font-weight: bold;
+                font-size: 1.2em;
+                opacity: .8;
+                margin: 10px 0px;
+
+            }
+
+            .general-info {
+                max-width: 450px;
+                display: block;
+                margin: 0 auto;
+                overflow: auto;
+
+                &-content {
+                    float: left;
+                    width: 100%;
+                    text-align: center;
+                    margin: 15px auto;
+
+                    h2 {
+                        margin-bottom: 15px;
+                        font-weight: $normal;
+                        font-size: 1.3em;
+                    }
+
+                    p {
+                        font-weight: $light;
+                        font-size: 18px;
+                    }
+
+                    &:last-child {
+                        margin-bottom: 30px;
+                    }
+                }
+            }
+        }
+    }
+
+    .profile-page-body {
+        overflow: auto;
+        padding-top: 70px;
+
+        .user-bio {
+            margin: 50px auto 80px;
+
+            .title {
+                text-align: center;
+                margin-top: 30px;
+            }
+
+            .description {
+                text-align: center;
+                margin-top: 30px;
+                color: $gray-black;
+                line-height: 1.9em;
+                font-weight: $light;
+                font-size: 1.1em;
+            }
+
+        }
+
+        .user-info {
+            .tab-navigation ul.react-tabs__tab-list {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
+
+                li {
+                    width: 150px;
+                }
+            }
+        }
+
+        .edit-button {
+            border-radius: 10px;
+            width: 100%;
+        }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .profile-page {
+        .profile-page-header .background-overlay {
+
+            .profile-pic {
+                margin: 60px auto;
+            }
+
+            .general-info {
+                &-content {
+                    float: left;
+                    width: 50%;
+                    text-align: center;
+                    margin: 30px auto;
+
+                    h2 {
+                        font-size: 1.4em;
+                    }
+
+                    &:last-child {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+
+        .profile-page-body {
+            .user-info .tab-navigation ul.react-tabs__tab-list {
+                margin-bottom: 60px;
+
+                li {
+                    width: 25%;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $large) {
+    .profile-page {
+        .profile-page-header .background-overlay .general-info {
+            &-content {
+                float: left;
+                width: 33.333%;
+                text-align: center;
+                margin-top: 30px;
+
+                &:last-child {
+                    width: 33.333%;
+                }
+            }
+        }
+
+        .profile-page-body {
+            .user-info .tab-navigation ul.react-tabs__tab-list {
+                justify-content: space-between;
+            }
+        }
+    }
 }

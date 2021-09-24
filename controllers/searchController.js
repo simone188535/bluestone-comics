@@ -1,271 +1,130 @@
 // const express = require('express');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
-const User = require('../models/userModel');
-const Book = require('../models/bookModel');
-const Issue = require('../models/issueModel');
+const pool = require('../db');
+const QueryPG = require('../utils/QueryPGFeature');
 const SearchFeatures = require('../utils/SearchFeatures');
 
 exports.searchBooks = catchAsync(async (req, res, next) => {
-  // // 1) Filtering
-  // const queryObj = { ...req.query };
-  // // const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  // // excludedFields.forEach((el) => delete queryObj[el]);
+  const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id)`;
 
-  // // 1A) Advanced Filtering
-  // // console.log('queryObj', queryObj);
-  // let queryStr = JSON.stringify(queryObj);
-
-  // // Where I found the code to filter comparison operator (gt,gte) ect: https://stackoverflow.com/questions/37709927/how-to-filter-a-query-string-with-comparison-operators-in-express
-  // queryStr = queryStr.replace(
-  //   /\b(gt|gte|lt|lte|eq|ne)\b/g,
-  //   (match) => `$${match}`
-  // );
-
-  // // console.log('queryStr', queryStr);
-
-  // // 2) Sorting
-  // const sort = {};
-
-  // if (req.query.q) {
-  //   sort.score = { $meta: 'textScore' };
+  // if (req.query.displayCredits) {
+  //   parameterizedQuery = `${parameterizedQuery} INNER JOIN work_credits ON (work_credits.book_id = books.id)`;
   // }
 
-  // if (req.query.sort) {
-  //   if (req.query.sort === 'newest') {
-  //     // Latest/Newest entry
-  //     sort.lastUpdate = 1;
-  //   } else if (req.query.sort === 'popular') {
-  //     // Most Popular
-  //     sort.popular = 1;
-  //   } else if (req.query.sort === 'views') {
-  //     // Most Views
-  //     sort.views = 1;
-  //   } else if (req.query.sort === 'likes') {
-  //     // Most Likes
-  //     sort.likes = 1;
-  //   }
-  // } else {
-  //   // sort by Latest/Newest entry
-  //   sort.lastUpdate = 1;
-  // }
+  const { query, parameterizedValues } = new SearchFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  )
+    .filter('books')
+    .sort('books.')
+    .paginate(20);
 
-  // // console.log('sort', sort);
-
-  // // 4) Text Search
-  // queryStr = JSON.parse(queryStr);
-  // if (req.query.q) {
-  //   queryStr.$text = { $search: `${req.query.q}` };
-  // }
-
-  // // removes unneeded value from queryStr object
-  // delete queryStr.q;
-  // delete queryStr.sort;
-
-  // console.log('queryStr', queryStr);
-  // //console.log(JSON.parse(queryStr));
-
-  // // may need to query populated publisher field for given author
-  // // https://mongoosejs.com/docs/populate.html
-  // // Maybe search users collection seperately as well
-  // const books = await Book.find(
-  //   queryStr,
-  //   // helps sort text results by relevance
-  //   { score: { $meta: 'textScore' } }
-  // ).sort(sort);
-  // // .sort({ score: { $meta: 'textScore' } });
-  // // console.log('query', query);
-  const searchResults = new SearchFeatures(Book.find(), req.query, true)
-    .filter()
-    .sort('lastUpdate')
-    .limitFields()
-    .paginate();
-
-  // Execute Query
-  const doc = await searchResults.query;
-  // const books = await query;
-  // await search.populate('publisher');
+  // example of ts rank cd shown here: https://linuxgazette.net/164/sephton.html
+  // https://stackoverflow.com/questions/32903988/postgres-ts-rank-cd-different-result-for-same-tsvector
+  // ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce( books.title,'')), 'A') || setweight(to_tsvector('english', coalesce(books.description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) AS rank
+  const books = await new QueryPG(pool).find(
+    `users.id,
+    users.username,
+    users.user_photo,
+    books.title, 
+    books.url_slug, 
+    books.cover_photo, 
+    books.description, 
+    books.status, 
+    books.last_updated, 
+    books.date_created
+   `,
+    query,
+    parameterizedValues,
+    true
+  );
 
   // Send Response
   res.status(200).json({
-    results: doc.length,
-    books: doc,
+    results: books.length,
+    books,
     status: 'success'
   });
 });
+
 exports.searchIssues = catchAsync(async (req, res) => {
-  const searchResults = new SearchFeatures(Issue.find(), req.query, true)
-    .filter()
-    .sort('lastUpdate')
-    .limitFields()
-    .paginate();
+  const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id)`;
+  const { query, parameterizedValues } = new SearchFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  )
+    .filter('issues')
+    .sort('issues.')
+    .paginate(20);
 
-  // Execute Query
-  const doc = await searchResults.query;
-  // const books = await query;
-  // await search.populate('publisher');
+  //  ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) AS rank
+  const issues = await new QueryPG(pool).find(
+    `issues.title,
+    issues.cover_photo,
+    issues.issue_number,
+    issues.date_created,
+    users.username,
+    users.email,
+    users.user_photo`,
+    query,
+    parameterizedValues,
+    true
+  );
 
   // Send Response
   res.status(200).json({
-    results: doc.length,
-    issues: doc,
+    results: issues.length,
+    issues,
     status: 'success'
   });
 });
 
-
-exports.search = catchAsync(async (req, res) => {
-  // THIS IS NOT IN USE.
-  // search for provided query (q) or return everything
-  const textSearchQuery = req.query.q
-    ? { $text: { $search: req.query.q } }
-    : { _id: { $exists: true } };
-
-  // $match $or example https://stackoverflow.com/questions/38359622/mongoose-aggregation-match-or-between-dates
-  const aggregate = await Issue.aggregate([
-    // {
-    //   $match: textSearchQuery
-    // },
-    {
-      $facet: {
-        // Text search Issue
-        // searchIssue: [
-        //   {
-        //     $match: textSearchQuery
-        //   },
-        //   // {
-        //   //   $project: {
-        //   //     _id: 0,
-        //   //     score: {
-        //   //       $meta: 'textScore'
-        //   //     }
-        //   //   }
-        //   // }
-        // ],
-
-        // Search publishers
-        searchPublishers: [
-          {
-            $lookup: {
-              from: 'users',
-              let: { publisher: '$publisher' },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $eq: ['$_id', '$$publisher']
-                    },
-                    $text: {
-                      $search: req.query.q
-                    }
-                  }
-                }
-              ],
-              as: 'publisher!!!!'
-            }
-          },
-          {
-            $project: {
-              _id: 0,
-              coverPhoto: 0,
-              issueNumber: 0,
-              totalPages: 0,
-              publisher: 0,
-              book: 0,
-              title: 0,
-              issueAssets: 0,
-              dateCreated: 0,
-              workCredits: 0,
-              imagePrefixReference: 0,
-              __v: 0
-            }
-          },
-          {
-            $group: {
-              _id: '$publisher!!!!',
-              count: { $sum: 1 }
-            }
-          }
-        ],
-
-        // Search book
-        searchBooks: [
-          {
-            $lookup: {
-              from: 'books',
-              let: { book: '$book' },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $eq: ['$_id', '$$book']
-                    },
-                    $text: {
-                      $search: req.query.q
-                    }
-                  }
-                }
-              ],
-              as: 'book!!!!'
-            }
-          },
-          {
-            $project: {
-              _id: 0,
-              coverPhoto: 0,
-              issueNumber: 0,
-              totalPages: 0,
-              publisher: 0,
-              book: 0,
-              title: 0,
-              issueAssets: 0,
-              dateCreated: 0,
-              workCredits: 0,
-              imagePrefixReference: 0,
-              __v: 0
-            }
-          },
-          {
-            $group: {
-              _id: '$book!!!!',
-              count: { $sum: 1 }
-            }
-          }
-        ]
-      }
-    }
-  ]);
-  // {
-  //   $lookup: {
-  //     from: 'users',
-  //     localField: 'publisher',
-  //     foreignField: '_id',
-  //     as: 'publisher!!!!',
-  //   }
-  // },
-  // {
-  //   $lookup: {
-  //     from: 'books',
-  //     localField: 'book',
-  //     foreignField: '_id',
-  //     as: 'book!!!!!',
-  //   }
-  // }
-
-  // need to add a facet, combine them in an array and sort by text value: https://stackoverflow.com/a/51348446/6195136
-  res.status(200).json({
-    results: aggregate.length,
-    aggregate,
-    status: 'success'
-  });
-});
+exports.search = catchAsync(async (req, res) => {});
 
 exports.searchUsers = catchAsync(async (req, res) => {
   const usernameQuery = req.query.q;
 
-  const users = await User.find({
-    username: { $regex: usernameQuery, $options: 'i' }
-  });
+  // const users = await User.find({
+  //   username: { $regex: usernameQuery, $options: 'i' }
+  // });
+  // const parameterizedQuery = `users`;
+  // const { query, parameterizedValues } = new SearchFeatures(
+  //   parameterizedQuery,
+  //   req.query,
+  //   []
+  // )
+  //   .filter('users')
+  //   .sort('users.')
+  //   .paginate(20);
+
+  //   console.log('query ', query);
+  //   console.log('parameterizedValues ', parameterizedValues);
+  // const users = await new QueryPG(pool).find(
+  //   `*,  similarity(username, '${req.query.q}') AS rank`,
+  //   query,
+  //   parameterizedValues,
+  //   true
+  // );
+
+  const parameterizedQuery = `users`;
+  const { query, parameterizedValues } = new SearchFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  )
+    .filter('users')
+    .sort('users.')
+    .paginate(20);
+
+  const users = await new QueryPG(pool).find(
+    'id, username, user_photo, date_created',
+    query,
+    parameterizedValues,
+    true
+  );
 
   // Send Response
   res.status(200).json({
@@ -274,3 +133,5 @@ exports.searchUsers = catchAsync(async (req, res) => {
     status: 'success'
   });
 });
+
+exports.searchAccreditedWorks = catchAsync(async (req, res) => {});

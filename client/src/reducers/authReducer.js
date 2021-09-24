@@ -3,7 +3,8 @@ import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS } from '../
 const initialState = {
     isFetching: false,
     isAuthenticated: null,
-    user: null
+    user: null,
+    reactivated: false
   }
 export default function(state = initialState, action) {
     switch (action.type) {
@@ -16,7 +17,8 @@ export default function(state = initialState, action) {
             return Object.assign({}, state, {
                 isFetching: false,
                 isAuthenticated: true,
-                user: action.user
+                user: action.user,
+                isReactivated: action.reactivated
             });
         case LOGIN_FAILURE: 
             return Object.assign({}, state, {
