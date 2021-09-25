@@ -81,7 +81,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   // BUG May need to clear filtered result when changing filterType
   const results = filteredResults.map((filteredResult) => (
     <li className="grid-list-item" key={`filtered-result-${filteredResult.id}`}>
-      {console.log('!!!!!!!! ', filteredResult)}
+      {/* {console.log('!!!!!!!! ', filteredResult)} */}
       <div className="grid-image-container">
         <a href="#">
           <img
@@ -92,7 +92,9 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         </a>
       </div>
       <div className="grid-info-box">
-        <h3 className="grid-info-box-header">{filteredResult.title}</h3>
+        <div className="grid-info-box-header-container">
+          <h3 className="grid-info-box-header">{filteredResult.title}</h3>
+        </div>
         <div className="grid-info-box-body">
           <ReadMore
             content={filteredResult.description}
