@@ -25,9 +25,10 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   // https://stackoverflow.com/questions/32903988/postgres-ts-rank-cd-different-result-for-same-tsvector
   // ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce( books.title,'')), 'A') || setweight(to_tsvector('english', coalesce(books.description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const books = await new QueryPG(pool).find(
-    `users.id,
+    `users.id AS user_id,
     users.username,
     users.user_photo,
+    books.id AS book_id,
     books.title, 
     books.url_slug, 
     books.cover_photo, 
@@ -62,13 +63,15 @@ exports.searchIssues = catchAsync(async (req, res) => {
 
   //  ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const issues = await new QueryPG(pool).find(
-    `issues.title,
-    issues.cover_photo,
-    issues.issue_number,
-    issues.date_created,
+    `users.id AS user_id,
     users.username,
     users.email,
-    users.user_photo`,
+    users.user_photo,
+    issues.id AS issue_id,
+    issues.title,
+    issues.cover_photo,
+    issues.issue_number,
+    issues.date_created`,
     query,
     parameterizedValues,
     true
@@ -85,30 +88,6 @@ exports.searchIssues = catchAsync(async (req, res) => {
 exports.search = catchAsync(async (req, res) => {});
 
 exports.searchUsers = catchAsync(async (req, res) => {
-  const usernameQuery = req.query.q;
-
-  // const users = await User.find({
-  //   username: { $regex: usernameQuery, $options: 'i' }
-  // });
-  // const parameterizedQuery = `users`;
-  // const { query, parameterizedValues } = new SearchFeatures(
-  //   parameterizedQuery,
-  //   req.query,
-  //   []
-  // )
-  //   .filter('users')
-  //   .sort('users.')
-  //   .paginate(20);
-
-  //   console.log('query ', query);
-  //   console.log('parameterizedValues ', parameterizedValues);
-  // const users = await new QueryPG(pool).find(
-  //   `*,  similarity(username, '${req.query.q}') AS rank`,
-  //   query,
-  //   parameterizedValues,
-  //   true
-  // );
-
   const parameterizedQuery = `users`;
   const { query, parameterizedValues } = new SearchFeatures(
     parameterizedQuery,
