@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { UserServices } from '../../services';
-import Works from './tab-views/Works-Tabs/Works';
-import Bookmarks from './tab-views/Bookmarks';
-import Subscribed from './tab-views/Subscribed';
-import Subscribers from './tab-views/Subscribers';
-import './profile.scss';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import { UserServices } from "../../services";
+import Works from "./tab-views/Works-Tabs/Works";
+import Bookmarks from "./tab-views/Bookmarks";
+import Subscribed from "./tab-views/Subscribed";
+import Subscribers from "./tab-views/Subscribers";
+import "./profile.scss";
 
 // https://www.google.com/search?q=profile+page+examples&tbm=isch&ved=2ahUKEwiHqYjq8pfuAhUWGs0KHX0JDK8Q2-cCegQIABAA&oq=profile+page+ex&gs_lcp=CgNpbWcQARgAMgIIADIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAgQHjoECAAQQ1CjxxZYquUWYLTuFmgAcAB4AIABeIgBrQKSAQMyLjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=iV_-X8fAB5a0tAb9krD4Cg&bih=610&biw=1191&rlz=1C5CHFA_enUS873US873#imgrc=H1KWibQNaM5UGM
 // https://codepen.io/Lima_Hammoud_/pen/WBYYQZ
@@ -18,7 +18,7 @@ const Profile = () => {
   const { username } = useParams();
   // Should be an object
   const [profilePageUser, setProfilePageUser] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   // const [currentUsername, setCurrentUsername] = useState('');
   // const { isAuthenticated, currentUser, isFetching } = useSelector(state => ({
   //     isAuthenticated: state.auth.isAuthenticated,
@@ -34,7 +34,7 @@ const Profile = () => {
         const res = await UserServices.getUser({ username });
 
         // if (errorMessage) {
-        setErrorMessage('');
+        setErrorMessage("");
         // }
 
         setProfilePageUser(res.data.user);
@@ -53,7 +53,11 @@ const Profile = () => {
     <div className="container-fluid profile-page">
       <div className="profile-page-header">
         <div className="background-overlay">
-          <img className="profile-pic" src={profilePageUser.user_photo} />
+          <img
+            className="profile-pic"
+            alt="profile"
+            src={profilePageUser.user_photo}
+          />
           <h2 className="username-header">{profilePageUser.username}</h2>
           <p className="role">{profilePageUser.role}</p>
           <div className="general-info">
@@ -94,7 +98,6 @@ const Profile = () => {
                 <Works
                   profilePageUsername={profilePageUser.username}
                   profilePageUserId={profilePageUser.id}
-                />
                 />
               </TabPanel>
               <TabPanel>

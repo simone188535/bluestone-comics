@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useFormikContext, FieldArray, Field, ErrorMessage } from 'formik';
-import { SearchServices } from '../../services';
+import { searchUser } from '../../services';
 import Checkboxes from '../CommonUI/Checkboxes';
 import './workCredits.scss';
 
@@ -174,7 +174,7 @@ const WorkCredits = ({ identifier, defaultSelectedUsernames }) => {
 
             } else {
 
-                const res = await SearchServices.searchUser(textSearch);
+                const res = await searchUser(textSearch);
 
                 // assign results to APIResults state
                 setAPIResults(res.data.users);

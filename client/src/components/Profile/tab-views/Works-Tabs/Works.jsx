@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { SearchServices } from "../../../../services";
+import { searchBooks, searchIssues } from "../../../../services";
 import ReadMore from "../../../CommonUI/ReadMore";
 import useBelongsToCurrentUser from "../../../../hooks/useBelongsToCurrentUser";
 import "./works.scss";
@@ -16,32 +16,33 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
   // BUG Dont forget error message
 
-  console.log("Works ");
-  // console.log('belongsToCurrentUser ', belongsToCurrentUser);
   const fetchSearchType = async () => {
     try {
       switch (filterType) {
-        case "Books":
-          const booksByProfileUser = await SearchServices.searchBooks({
+        case "Books": {
+          const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
           });
           const { books } = booksByProfileUser.data;
 
           setFilteredResults(books);
           break;
-        case "Issues":
-          const issuesByProfileUser = await SearchServices.searchIssues({
+        }
+        case "Issues": {
+          const issuesByProfileUser = await searchIssues({
             username: profilePageUsername,
           });
           const { issues } = issuesByProfileUser.data;
 
           setFilteredResults(issues);
           break;
-        case "Accredited":
+        }
+        case "Accredited": {
           // const AccreditedWorksByProfileUser = await SearchServices.searchIssues({username: profilePageUsername});
           // const { issues } = AccreditedWorksByProfileUser.data;
           // setFilteredResults(issues);
           break;
+        }
         default:
           return;
       }
@@ -57,12 +58,18 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   //     console.log('filteredResults: ', filteredResults)
   // }, [filteredResults])
 
+  const toggleActiveElement = (activeButtonIndex, activeButtonValue) => {
+    setActiveButton(activeButtonIndex);
+    setFilterType(activeButtonValue);
+  };
+
   const filterButtons = buttonValues.map((element, index) => {
     const activeClassToggle = index === activeButton ? "active" : "";
 
     return (
       <button
-        key={`filter-button-${index}`}
+        type="button"
+        key={`filter-button-${element}`}
         className={`bsc-button primary works-tab-tri-button ${activeClassToggle}`}
         onClick={() => toggleActiveElement(index, element)}
       >
@@ -71,21 +78,16 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     );
   });
 
-  const toggleActiveElement = (activeButtonIndex, activeButtonValue) => {
-    setActiveButton(activeButtonIndex);
-    setFilterType(activeButtonValue);
-  };
-
   // BUG May need to clear filtered result when changing filterType
-  const results = filteredResults.map((filteredResult, index) => (
-    <li className="grid-list-item" key={`filtered-result-${index}`}>
+  const results = filteredResults.map((filteredResult) => (
+    <li className="grid-list-item" key={`filtered-result-${filteredResult.id}`}>
+      {console.log('!!!!!!!! ', filteredResult)}
       <div className="grid-image-container">
         <a href="#">
           <img
             className="grid-image"
             src={filteredResult.cover_photo}
-            alt={`${filteredResult.title} cover photo`}
-          />
+            alt={`${filteredResult.title}`}
           />
         </a>
       </div>
@@ -96,14 +98,15 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
             content={filteredResult.description}
             maxStringLengthShown={100}
           />
-          />
         </div>
         <div className="grid-info-box-date-created">
           {moment(filteredResult.date_created).format("MMMM D, YYYY")}
         </div>
         <div className="grid-footer">
           <div className="grid-divider" />
-          <button className="bsc-button transparent edit-button">Edit</button>
+          <button type="button" className="bsc-button transparent edit-button">
+            Edit
+          </button>
         </div>
       </div>
     </li>
