@@ -78,7 +78,16 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     );
   });
 
+  const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
+    <button type="button" className="edit-button">
+      <a href="#">
+        <strong>Edit</strong>
+      </a>
+    </button>
+  ) : null;
+
   // BUG May need to clear filtered result when changing filterType
+  // BUG sort results by most recent
   const results = filteredResults.map((filteredResult) => (
     <li className="grid-list-item" key={`filtered-result-${filteredResult.id}`}>
       {/* {console.log('!!!!!!!! ', filteredResult)} */}
@@ -104,12 +113,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         <div className="grid-info-box-date-created">
           {moment(filteredResult.date_created).format("MMMM D, YYYY")}
         </div>
-        <div className="grid-footer">
-          <div className="grid-divider" />
-          <button type="button" className="bsc-button transparent edit-button">
-            Edit
-          </button>
-        </div>
+        <div className="grid-footer">{editButtonIfWorkBelongsToUser}</div>
       </div>
     </li>
   ));
