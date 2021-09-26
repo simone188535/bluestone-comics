@@ -67,7 +67,7 @@ class SearchFeatures {
 
     // if a specific sort has been added, sort by those results
     switch (this.queryString.sort) {
-      case 'oldest':
+      case 'desc':
         sort = 'date_created';
         ascOrDesc = 'DESC';
         break;

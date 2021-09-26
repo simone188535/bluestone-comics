@@ -22,6 +22,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         case "Books": {
           const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
+            sort: "desc",
           });
           const { books } = booksByProfileUser.data;
 
@@ -31,6 +32,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         case "Issues": {
           const issuesByProfileUser = await searchIssues({
             username: profilePageUsername,
+            sort: "desc",
           });
           const { issues } = issuesByProfileUser.data;
 
