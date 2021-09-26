@@ -27,9 +27,7 @@ const addWorkCredits = async (workCredits, publisherId, bookId, issueId) => {
     parsedWorkCredits.map(async (workCredit) => {
       await Promise.all(
         workCredit.credits.map(async (credit) => {
-          const addedWorkCredit = await new QueryPG(
-            pool
-          ).insert(
+          const addedWorkCredit = await new QueryPG(pool).insert(
             'work_credits(publisher_id, book_id, issue_id, creator_id, creator_credit)',
             '$1, $2, $3, $4, $5',
             [
@@ -58,9 +56,7 @@ const addIssueAssets = async (issueAssets, publisherId, bookId, issueId) => {
   await Promise.all(
     issueAssets.map(async (issueAsset, index) => {
       const pageNumber = index + 1;
-      const addedIssueAsset = await new QueryPG(
-        pool
-      ).insert(
+      const addedIssueAsset = await new QueryPG(pool).insert(
         'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
         '$1, $2, $3, $4, $5',
         [publisherId, bookId, issueId, pageNumber, issueAsset.location]
@@ -81,12 +77,11 @@ const addGenres = async (genres, bookId) => {
 
   await Promise.all(
     parsedGenres.map(async (genre) => {
-      const addedGenre = await new QueryPG(
-        pool
-      ).insert('genres(book_id, genre)', '$1, $2', [
-        bookId,
-        genre.toLowerCase()
-      ]);
+      const addedGenre = await new QueryPG(pool).insert(
+        'genres(book_id, genre)',
+        '$1, $2',
+        [bookId, genre.toLowerCase()]
+      );
 
       newGenres.push(addedGenre);
     })
@@ -178,6 +173,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
     bookDescription,
     genres,
     issueTitle,
+    issueDescription,
     workCredits
   } = req.body;
 
@@ -200,13 +196,14 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   // create Issue
   const newIssue = await new QueryPG(pool).insert(
-    'issues(publisher_id, book_id, title, cover_photo, image_prefix_reference)',
-    '$1, $2, $3, $4, $5',
+    'issues(publisher_id, book_id, title, cover_photo, description, image_prefix_reference)',
+    '$1, $2, $3, $4, $5, $6',
     [
       res.locals.user.id,
       newBook.id,
       issueTitle,
       req.files.issueCoverPhoto[0].location,
+      issueDescription,
       AWSPrefixArray[1] // issue path
     ]
   );
@@ -261,12 +258,11 @@ exports.createBook = catchAsync(async (req, res, next) => {
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
-  const existingBookByCurrentUser = await new QueryPG(
-    pool
-  ).find('id, cover_photo', 'books WHERE id = $1 AND publisher_id = $2', [
-    bookId,
-    res.locals.user.id
-  ]);
+  const existingBookByCurrentUser = await new QueryPG(pool).find(
+    'id, cover_photo',
+    'books WHERE id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
 
   if (!existingBookByCurrentUser) {
     return next(new AppError(`Existing book cannot be found.`, 404));
@@ -381,12 +377,11 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const bookCoverPhoto = req.file.location;
 
-  const bookCoverPhotoByCurrentUser = await new QueryPG(
-    pool
-  ).find('cover_photo', 'books WHERE id = $1 AND publisher_id = $2', [
-    bookId,
-    res.locals.user.id
-  ]);
+  const bookCoverPhotoByCurrentUser = await new QueryPG(pool).find(
+    'cover_photo',
+    'books WHERE id = $1 AND publisher_id = $2',
+    [bookId, res.locals.user.id]
+  );
 
   if (!bookCoverPhotoByCurrentUser) {
     return next(
@@ -528,9 +523,7 @@ exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
   let bookImagePrefixRef;
 
   if (bookId) {
-    const bookImagePrefix = await new QueryPG(
-      pool
-    ).find(
+    const bookImagePrefix = await new QueryPG(pool).find(
       'image_prefix_reference',
       'books WHERE id = $1 AND publisher_id = $2',
       [bookId, res.locals.user.id]
@@ -549,9 +542,7 @@ exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
   let issueImagePrefixRef;
 
   if (issueNumber) {
-    const issueImagePrefix = await new QueryPG(
-      pool
-    ).find(
+    const issueImagePrefix = await new QueryPG(pool).find(
       'image_prefix_reference',
       'issues WHERE book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
       [bookId, issueNumber, res.locals.user.id]
@@ -570,7 +561,7 @@ exports.getBookAndIssueImagePrefix = catchAsync(async (req, res, next) => {
 });
 
 exports.createIssue = catchAsync(async (req, res, next) => {
-  const { issueTitle, workCredits } = req.body;
+  const { issueTitle, workCredits, issueDescription } = req.body;
   const { bookId } = req.params;
 
   const AWSPrefixArray = req.files.issueCoverPhoto[0].key.split('/');
@@ -606,14 +597,15 @@ exports.createIssue = catchAsync(async (req, res, next) => {
 
   // create Issue
   const newIssue = await new QueryPG(pool).insert(
-    'issues(publisher_id, book_id, title, cover_photo, issue_number, image_prefix_reference)',
-    '$1, $2, $3, $4, $5, $6',
+    'issues(publisher_id, book_id, title, cover_photo, issue_number, description, image_prefix_reference)',
+    '$1, $2, $3, $4, $5, $6, $7',
     [
       res.locals.user.id,
       bookId,
       issueTitle,
       req.files.issueCoverPhoto[0].location,
       newIssueNumber,
+      issueDescription,
       AWSPrefixArray[1] // issue path
     ]
   );
@@ -688,7 +680,7 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
 
 exports.updateIssue = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
-  const { title, workCredits } = req.body;
+  const { title, workCredits, issueDescription } = req.body;
 
   const issueToUpdate = await new QueryPG(pool).find(
     'id',
@@ -698,9 +690,16 @@ exports.updateIssue = catchAsync(async (req, res, next) => {
 
   const updatedIssue = await new QueryPG(pool).update(
     'issues',
-    'title = ($1), last_updated = ($2)',
-    'book_id = ($3) AND issue_number = ($4) AND publisher_id = ($5)',
-    [title, new Date(), bookId, issueNumber, res.locals.user.id]
+    'title = ($1), description = ($2), last_updated = ($3)',
+    'book_id = ($4) AND issue_number = ($5) AND publisher_id = ($6)',
+    [
+      title,
+      issueDescription,
+      new Date(),
+      bookId,
+      issueNumber,
+      res.locals.user.id
+    ]
   );
 
   if (!updatedIssue) {

@@ -14,7 +14,7 @@ class SearchFeatures {
     let whereClause = '';
     // if a text search/q is present
     if (this.queryString.q) {
-      if (tableToSearch === 'books') {
+      if (tableToSearch === 'books' || tableToSearch === 'issues') {
         // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
         whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) OR  ${tableToSearch}.description ILIKE ($${this.parameterizedIndexInc()}) `;
         // append where clause values for title and description
@@ -23,11 +23,6 @@ class SearchFeatures {
           `${this.queryString.q}%`
         );
         // append where clause text search value
-      } else if (tableToSearch === 'issues') {
-        // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
-        whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) `;
-        // append where clause values for title and description
-        this.parameterizedValues.push(`${this.queryString.q}%`);
       } else if (tableToSearch === 'users') {
         whereClause += `${tableToSearch}.username ILIKE ($${this.parameterizedIndexInc()}) `;
         // append where clause values for title and description

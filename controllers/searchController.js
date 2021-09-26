@@ -69,6 +69,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     users.user_photo,
     issues.id AS issue_id,
     issues.title,
+    issues.description,
     issues.cover_photo,
     issues.issue_number,
     issues.date_created`,
