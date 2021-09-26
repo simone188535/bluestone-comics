@@ -89,7 +89,12 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   // BUG May need to clear filtered result when changing filterType
   // BUG sort results by most recent
   const results = filteredResults.map((filteredResult) => (
-    <li className="grid-list-item" key={`filtered-result-${filteredResult.id}`}>
+    <li
+      className="grid-list-item"
+      key={`filtered-result-${
+        filteredResult.book_id || filteredResult.issue_id
+      }`}
+    >
       {/* {console.log('!!!!!!!! ', filteredResult)} */}
       <div className="grid-image-container">
         <a href="#">
