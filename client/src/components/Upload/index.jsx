@@ -180,6 +180,18 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           Thumbnail size must be:{" "}
           <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong>
         </div>
+        <Field
+          className="form-input form-textarea"
+          name="issueDescription"
+          as="textarea"
+          placeholder="Issue Description"
+          autoComplete="on"
+        />
+        <ErrorMessage
+          className="error-message error-text-color"
+          component="div"
+          name="issueDescription"
+        />
         <div className="form-header-text">
           Select the applicable <strong>genres</strong>
         </div>
@@ -330,6 +342,7 @@ const Upload = () => {
       formData.append("bookDescription", values.bookDescription);
       formData.append("urlSlug", values.urlSlug);
       formData.append("issueTitle", values.issueTitle);
+      formData.append("issueDescription", values.issueDescription);
       // formData cannot contain plain objects, so it must be stringified
       /* values.workCredits.forEach((formValue) => formData.append('workCredits',
       console.log(JSON.stringify(formValue))));
@@ -411,6 +424,7 @@ const Upload = () => {
             urlSlug: "",
             issueTitle: "",
             issueCoverPhoto: null,
+            issueDescription: "",
             genres: [],
             issueAssets: [],
             workCredits: [{ user: currentUserId, credits: [] }],
@@ -436,6 +450,9 @@ const Upload = () => {
               .required("A Issue Cover Photo is required!")
               .imageDimensionCheck()
               .imageSizeCheck(),
+            issueDescription: Yup.string().required(
+              "Issue Description required!"
+            ),
             // issueAssets: Yup.array().of(
             //     Yup.mixed().imageDimensionCheck()
             // )
