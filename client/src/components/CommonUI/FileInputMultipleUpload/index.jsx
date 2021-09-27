@@ -75,21 +75,22 @@ const FileInputMultipleUpload = ({
   const { setFieldValue } = useFormikContext();
 
   const getFilesFromEvent = async (event) => {
-    let allFiles = [];
+    const allFiles = [];
     const fileList = event.target.files;
 
-    for (var i = 0; i < fileList.length; i++) {
+    for (let i = 0; i < fileList.length; i += 1) {
       const file = fileList.item(i);
       // add width, and height properties to the current file
-      if (file.width && file.height) return;
+      if (file.width && file.height) return false;
 
-      const imageDimensions = await imageWidthAndHeight(file);
+      const imageDimensions = imageWidthAndHeight(file);
       file.width = imageDimensions.width;
       file.height = imageDimensions.height;
 
       allFiles.push(file);
     }
 
+    await Promise.all(allFiles);
     return allFiles;
   };
   const validator = (providedFile) => {
@@ -149,12 +150,15 @@ const FileInputMultipleUpload = ({
     getFilesFromEvent,
   });
 
-  const fileRejectionItems = fileRejections.map(({ file, errors }, index) => (
-    <li key={`${file.name}-${index}`}>
+  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
+    <li key={`${file.name}-${file.lastModified}`}>
       {file.name} - {file.size} bytes
       <ul>
         {errors.map((e) => (
-          <li key={`${e.code}-${index}`} className="error-text-color">
+          <li
+            key={`${e.code}-${file.lastModified}`}
+            className="error-text-color"
+          >
             {e.message}
           </li>
         ))}
