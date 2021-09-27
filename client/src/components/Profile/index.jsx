@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { UserServices } from "../../services";
+import { getUser } from "../../services";
 import Works from "./tab-views/Works-Tabs/Works";
 import Bookmarks from "./tab-views/Bookmarks";
 import Subscribed from "./tab-views/Subscribed";
@@ -31,7 +31,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfileUser = async () => {
       try {
-        const res = await UserServices.getUser({ username });
+        const res = await getUser({ username });
 
         // if (errorMessage) {
         setErrorMessage("");

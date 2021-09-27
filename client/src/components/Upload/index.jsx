@@ -11,7 +11,7 @@ import {
   useFormikContext,
 } from "formik";
 import * as Yup from "yup";
-import { PublishServices } from "../../services";
+import { createBook, getBookAndIssueImagePrefix } from "../../services";
 import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
 import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
 import Checkboxes from "../CommonUI/Checkboxes";
@@ -20,7 +20,7 @@ import ProgressBar from "../CommonUI/ProgressBar";
 import WorkCredits from "./WorkCredits";
 // eslint-disable-next-line
 import { imageDimensionCheck, imageSizeCheck } from '../../utils/Yup/yupCustomMethods';
-import { IMAGE_UPLOAD_DIMENSIONS } from "../../utils/Constants";
+import IMAGE_UPLOAD_DIMENSIONS from "../../utils/Constants";
 import "./upload.scss";
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
@@ -332,8 +332,7 @@ const Upload = () => {
      */
 
     try {
-      const imagePrefixesRes =
-        await PublishServices.getBookAndIssueImagePrefix();
+      const imagePrefixesRes = await getBookAndIssueImagePrefix();
       const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;
       // console.log('res', res);
       const formData = new FormData();
@@ -393,7 +392,7 @@ const Upload = () => {
         },
       };
 
-      const createBookRes = await PublishServices.createBook(formData, config);
+      const createBookRes = await createBook(formData, config);
       // Set progress bar to 100 percent upon returned promise
       setUploadPercentage(100);
 
