@@ -96,8 +96,8 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
       method="post"
     >
       <h1 className="form-header-text">
-        Upload a<strong>New Book</strong>
-        along with its<strong>First Issue</strong>
+        Upload a <strong>New Book</strong> along with its{" "}
+        <strong>First Issue</strong>
       </h1>
       <div>
         <Field
@@ -114,7 +114,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
         />
         <FileInputSingleUpload
           identifier="bookCoverPhoto"
-          triggerText="Select Book Cover Photo Thumbnail"
+          triggerText="Select Book Thumbnail Photo"
         />
         <ErrorMessage
           className="error-message error-text-color"
@@ -169,7 +169,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
         />
         <FileInputSingleUpload
           identifier="issueCoverPhoto"
-          triggerText="Select Issue Cover Photo Thumbnail"
+          triggerText="Select Issue Thumbnail Photo"
         />
         <ErrorMessage
           className="error-message error-text-color"
