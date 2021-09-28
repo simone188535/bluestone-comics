@@ -15,12 +15,12 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
   // BUG Dont forget error message
-  console.log(
-    "profilePageUserId ",
-    profilePageUserId,
-    "belongsToCurrentUser ",
-    belongsToCurrentUser
-  );
+  // console.log(
+  //   "profilePageUserId ",
+  //   profilePageUserId,
+  //   "belongsToCurrentUser ",
+  //   belongsToCurrentUser
+  // );
   const fetchSearchType = async () => {
     try {
       switch (filterType) {
