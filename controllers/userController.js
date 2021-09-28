@@ -33,10 +33,8 @@ exports.getUser = catchAsync(async (req, res, next) => {
   }
 
   // const user = await User.findOne(queryObject);
-  const user = await new QueryPG(
-    pool
-  ).find(
-    'email, username, user_photo, background_user_photo, role, bio, date_created',
+  const user = await new QueryPG(pool).find(
+    'id, email, username, user_photo, background_user_photo, role, bio, date_created',
     `users WHERE ${findVal} = ($1)`,
     [preparedStatementVal]
   );
@@ -62,14 +60,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    username,
-    password,
-    passwordConfirm
-  } = req.body;
+  const { firstName, lastName, email, username, password, passwordConfirm } =
+    req.body;
 
   // 1) THIS ROUTE IS NOT FOR PASSWORD UPDATES. PLEASE USE /update-password
   if (password || passwordConfirm) {
