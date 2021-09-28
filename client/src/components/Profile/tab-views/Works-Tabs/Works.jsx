@@ -3,6 +3,7 @@ import moment from "moment";
 import { searchBooks, searchIssues } from "../../../../services";
 import ReadMore from "../../../CommonUI/ReadMore";
 import useBelongsToCurrentUser from "../../../../hooks/useBelongsToCurrentUser";
+import Pagination from "../../../CommonUI/Pagination";
 import "./works.scss";
 
 const Works = ({ profilePageUsername, profilePageUserId }) => {
@@ -142,10 +143,13 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   // }, [displayFilteredResults, filterType]);
 
   return (
-    <div className="works-tab">
-      <div className="works-tab-tri-buttons-container">{filterButtons}</div>
-      <div className="filtered-results">{displayFilteredResults}</div>
-    </div>
+    <>
+      <div className="works-tab">
+        <div className="works-tab-tri-buttons-container">{filterButtons}</div>
+        <div className="filtered-results">{displayFilteredResults}</div>
+      </div>
+      <Pagination />
+    </>
   );
 };
 
