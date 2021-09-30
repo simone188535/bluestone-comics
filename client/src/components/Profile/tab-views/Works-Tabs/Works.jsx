@@ -16,7 +16,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
 
-  const PageSize = 10;
+  const PageSize = 12;
   const [currentPage, setCurrentPage] = useState(1);
   // BUG Dont forget error message
   // console.log(
