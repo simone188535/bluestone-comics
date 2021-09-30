@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import moment from "moment";
 import { searchBooks, searchIssues } from "../../../../services";
 import ReadMore from "../../../CommonUI/ReadMore";
@@ -15,6 +15,9 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const [filteredResults, setFilteredResults] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
+
+  const PageSize = 10;
+  const [currentPage, setCurrentPage] = useState(1);
   // BUG Dont forget error message
   // console.log(
   //   "profilePageUserId ",
@@ -94,37 +97,41 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     </button>
   ) : null;
 
+
+  const currentResultsDisplayed = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * PageSize;
+    const lastPageIndex = firstPageIndex + PageSize;
+    return filteredResults.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage, filteredResults]);
   // BUG May need to clear filtered result when changing filterType
   // BUG sort results by most recent
-  const results = filteredResults.map((filteredResult) => (
+  const searchResults = currentResultsDisplayed.map((currentResult) => (
     <li
       className="grid-list-item"
-      key={`filtered-result-${
-        filteredResult.book_id || filteredResult.issue_id
-      }`}
+      key={`filtered-result-${currentResult.book_id || currentResult.issue_id}`}
     >
-      {/* {console.log('!!!!!!!! ', filteredResult)} */}
+      {/* {console.log('!!!!!!!! ', currentResult)} */}
       <div className="grid-image-container">
         <a href="#">
           <img
             className="grid-image"
-            src={filteredResult.cover_photo}
-            alt={`${filteredResult.title}`}
+            src={currentResult.cover_photo}
+            alt={`${currentResult.title}`}
           />
         </a>
       </div>
       <div className="grid-info-box">
         <div className="grid-info-box-header-container">
-          <h3 className="grid-info-box-header">{filteredResult.title}</h3>
+          <h3 className="grid-info-box-header">{currentResult.title}</h3>
         </div>
         <div className="grid-info-box-body">
           <ReadMore
-            content={filteredResult.description}
+            content={currentResult.description}
             maxStringLengthShown={100}
           />
         </div>
         <div className="grid-info-box-date-created">
-          {moment(filteredResult.date_created).format("MMMM D, YYYY")}
+          {moment(currentResult.date_created).format("MMMM D, YYYY")}
         </div>
         <div className="grid-footer">{editButtonIfWorkBelongsToUser}</div>
       </div>
@@ -132,7 +139,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   ));
 
   const displayFilteredResults = filteredResults ? (
-    <ul className="display-work-grid col-4">{results}</ul>
+    <ul className="display-work-grid col-4">{searchResults}</ul>
   ) : (
     <span>This user has not created this yet.</span>
   );
@@ -148,7 +155,13 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         <div className="works-tab-tri-buttons-container">{filterButtons}</div>
         <div className="filtered-results">{displayFilteredResults}</div>
       </div>
-      <Pagination />
+      <Pagination
+        className="pagination-bar"
+        currentPage={currentPage}
+        totalCount={filteredResults.length}
+        pageSize={PageSize}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
     </>
   );
 };
