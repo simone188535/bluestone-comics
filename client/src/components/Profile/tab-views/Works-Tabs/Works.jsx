@@ -97,7 +97,6 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     </button>
   ) : null;
 
-
   const currentResultsDisplayed = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * PageSize;
     const lastPageIndex = firstPageIndex + PageSize;
