@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+// This code was inspired by this article: https://www.freecodecamp.org/news/build-a-custom-pagination-component-in-react/
 const range = (start, end) => {
   const length = end - start + 1;
   /*
