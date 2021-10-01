@@ -3,6 +3,7 @@ import moment from "moment";
 import { searchBooks, searchIssues } from "../../../../services";
 import ReadMore from "../../../CommonUI/ReadMore";
 import useBelongsToCurrentUser from "../../../../hooks/useBelongsToCurrentUser";
+import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
 import "./works.scss";
 
@@ -97,11 +98,12 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     </button>
   ) : null;
 
-  const currentResultsDisplayed = useMemo(() => {
-    const firstPageIndex = (currentPage - 1) * PageSize;
-    const lastPageIndex = firstPageIndex + PageSize;
-    return filteredResults.slice(firstPageIndex, lastPageIndex);
-  }, [currentPage, filteredResults]);
+  const currentResultsDisplayed = useCurrentPageResults(
+    currentPage,
+    filteredResults,
+    PageSize
+  );
+
   // BUG May need to clear filtered result when changing filterType
   // BUG sort results by most recent
   const searchResults = currentResultsDisplayed.map((currentResult) => (
