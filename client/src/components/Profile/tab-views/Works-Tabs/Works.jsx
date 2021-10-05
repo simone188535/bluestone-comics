@@ -7,12 +7,7 @@ import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
 import "./works.scss";
 
-// const DisplaySelectedWorks = (Component) => {
-
-//   return Component;
-// }
-
-const Accredited = (filteredResults) => {
+const Accredited = ({ filteredResults }) => {
   return <div>Accredited</div>;
 };
 
@@ -20,6 +15,12 @@ const BooksOrIssues = ({ profilePageUserId, filteredResults }) => {
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
   const [currentPage, setCurrentPage] = useState(1);
   const PageSize = 12;
+
+  const currentResultsDisplayed = useCurrentPageResults(
+    currentPage,
+    filteredResults,
+    PageSize
+  );
 
   const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
     <button type="button" className="edit-button">
@@ -29,14 +30,7 @@ const BooksOrIssues = ({ profilePageUserId, filteredResults }) => {
     </button>
   ) : null;
 
-  const currentResultsDisplayed = useCurrentPageResults(
-    currentPage,
-    filteredResults,
-    PageSize
-  );
-
   // BUG May need to clear filtered result when changing filterType
-  // BUG sort results by most recent
   const searchResults = currentResultsDisplayed?.map((currentResult) => (
     <li
       className="grid-list-item"
@@ -89,6 +83,23 @@ const BooksOrIssues = ({ profilePageUserId, filteredResults }) => {
     </>
   );
 };
+
+const DisplaySelectedWorks = ({
+  filterType,
+  filteredResults,
+  profilePageUserId,
+}) => {
+  if (filterType === "Accredited") {
+    return <Accredited filteredResults={filteredResults} />;
+  }
+  return (
+    <BooksOrIssues
+      profilePageUserId={profilePageUserId}
+      filteredResults={filteredResults}
+    />
+  );
+};
+
 const Works = ({ profilePageUsername, profilePageUserId }) => {
   // This may be passed as a props later from the profile page
   const buttonValues = ["Books", "Issues", "Accredited"];
@@ -97,7 +108,6 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const [filterType, setFilterType] = useState(buttonValues[0]);
   const [filteredResults, setFilteredResults] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  // const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
 
   // BUG Dont forget error message
   const fetchSearchType = async () => {
@@ -165,20 +175,14 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     );
   });
 
-  // const displayFilteredResults ;
-  // useEffect(() => {
-  //     displayFilteredResults();
-  // }, [displayFilteredResults, filterType]);
-
   return (
     <>
       <div className="works-tab">
         <div className="works-tab-tri-buttons-container">{filterButtons}</div>
-        {/* HOC OR COMPONNENT CONDITIONAL GO HERE */}
-        {/* <Accredited /> */}
-        <BooksOrIssues
-          profilePageUserId={profilePageUserId}
+        <DisplaySelectedWorks
+          filterType={filterType}
           filteredResults={filteredResults}
+          profilePageUserId={profilePageUserId}
         />
       </div>
     </>
