@@ -31,6 +31,7 @@ const BooksOrIssues = ({ profilePageUserId, filteredResults }) => {
   ) : null;
 
   // BUG May need to clear filtered result when changing filterType
+  // BUG clear filteredResults and reset pagination when a new button is clicked
   const searchResults = currentResultsDisplayed?.map((currentResult) => (
     <li
       className="grid-list-item"
