@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const Subscriber = require('../models/subscriberModel');
+// const Subscriber = require('../models/subscriberModel');
 const QueryPG = require('../utils/QueryPGFeature');
 const pageOffset = require('../utils/offset');
 const pool = require('../db');
@@ -11,9 +11,7 @@ exports.checkSubscription = (onlyCheckSubscription = false) =>
     //   publisher: req.body.publisher,
     //   subscriber: res.locals.user.id
     // });
-    const currentUserSubscribedToPublisher = await new QueryPG(
-      pool
-    ).find(
+    const currentUserSubscribedToPublisher = await new QueryPG(pool).find(
       'publisher_id, subscriber_id',
       'subscribers WHERE publisher_id = ($1) AND subscriber_id = ($2)',
       [req.body.publisher, res.locals.user.id]
@@ -50,12 +48,11 @@ exports.subscribe = catchAsync(async (req, res, next) => {
     return next(new AppError('A user cannot subscribe to themselves.', 400));
   }
 
-  const subscribeToPublisher = await new QueryPG(
-    pool
-  ).insert('subscribers (publisher_id, subscriber_id)', '$1, $2', [
-    publisher,
-    res.locals.user.id
-  ]);
+  const subscribeToPublisher = await new QueryPG(pool).insert(
+    'subscribers (publisher_id, subscriber_id)',
+    '$1, $2',
+    [publisher, res.locals.user.id]
+  );
 
   res.status(201).json({
     subscribed: subscribeToPublisher,

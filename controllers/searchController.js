@@ -44,7 +44,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 
   // Send Response
   res.status(200).json({
-    results: books.length,
+    resultCount: books.length,
     books,
     status: 'success'
   });
@@ -80,7 +80,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
 
   // Send Response
   res.status(200).json({
-    results: issues.length,
+    resultCount: issues.length,
     issues,
     status: 'success'
   });
@@ -108,7 +108,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
 
   // Send Response
   res.status(200).json({
-    results: users.length,
+    resultCount: users.length,
     users,
     status: 'success'
   });

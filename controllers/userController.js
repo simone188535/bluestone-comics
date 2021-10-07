@@ -1,9 +1,9 @@
 // const express = require('express');
 const validator = require('validator');
 const catchAsync = require('../utils/catchAsync');
-const filterObj = require('../utils/filterObj');
+// const filterObj = require('../utils/filterObj');
 const AppError = require('../utils/appError');
-const User = require('../models/userModel');
+// const User = require('../models/userModel');
 const QueryPG = require('../utils/QueryPGFeature');
 // const pageOffset = require('../utils/offset');
 const pool = require('../db');

@@ -7,19 +7,26 @@ import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
 import "./works.scss";
 
+const PAGINATION_LIMIT = 4;
+
 const Accredited = ({ filteredResults }) => {
   return <div>Accredited</div>;
 };
 
-const BooksOrIssues = ({ profilePageUserId, filteredResults }) => {
+const BooksOrIssues = ({
+  profilePageUserId,
+  filteredResults,
+  currentPage,
+  setPage,
+}) => {
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
-  const [currentPage, setCurrentPage] = useState(1);
-  const PageSize = 12;
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const PageSize = 12;
 
   const currentResultsDisplayed = useCurrentPageResults(
     currentPage,
     filteredResults,
-    PageSize
+    PAGINATION_LIMIT
   );
 
   const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
@@ -30,8 +37,6 @@ const BooksOrIssues = ({ profilePageUserId, filteredResults }) => {
     </button>
   ) : null;
 
-  // BUG May need to clear filtered result when changing filterType
-  // BUG clear filteredResults and reset pagination when a new button is clicked
   const searchResults = currentResultsDisplayed?.map((currentResult) => (
     <li
       className="grid-list-item"
@@ -71,35 +76,46 @@ const BooksOrIssues = ({ profilePageUserId, filteredResults }) => {
     <span>This user has not created this yet.</span>
   );
 
+  console.log('filteredResults.length ', filteredResults.length);
   return (
     <>
       <div className="filtered-results">{displayFilteredResults}</div>
       <Pagination
         className="pagination-bar"
         currentPage={currentPage}
+        // BUG total results needs to be passed here (memoizing might help):
+        // I might not have to do any of thats at all since I commented out limit and page in fetchSearchType ?
+        // https://cloudnweb.dev/2021/04/pagination-nodejs-mongoose/
+        // https://www.youtube.com/watch?v=yY1n0sDZPtI
         totalCount={filteredResults.length}
-        pageSize={PageSize}
-        onPageChange={(page) => setCurrentPage(page)}
+        pageSize={PAGINATION_LIMIT}
+        onPageChange={setPage}
       />
     </>
   );
 };
 
-const DisplaySelectedWorks = ({
-  filterType,
-  filteredResults,
-  profilePageUserId,
-}) => {
-  if (filterType === "Accredited") {
-    return <Accredited filteredResults={filteredResults} />;
+const DisplaySelectedWorks = React.memo(
+  ({
+    filterType,
+    filteredResults,
+    profilePageUserId,
+    currentPage,
+    setPage,
+  }) => {
+    if (filterType === "Accredited") {
+      return <Accredited filteredResults={filteredResults} />;
+    }
+    return (
+      <BooksOrIssues
+        profilePageUserId={profilePageUserId}
+        filteredResults={filteredResults}
+        currentPage={currentPage}
+        setPage={setPage}
+      />
+    );
   }
-  return (
-    <BooksOrIssues
-      profilePageUserId={profilePageUserId}
-      filteredResults={filteredResults}
-    />
-  );
-};
+);
 
 const Works = ({ profilePageUsername, profilePageUserId }) => {
   // This may be passed as a props later from the profile page
@@ -109,8 +125,10 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const [filterType, setFilterType] = useState(buttonValues[0]);
   const [filteredResults, setFilteredResults] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   // BUG Dont forget error message
+  // loading state can be set here too
   const fetchSearchType = async () => {
     try {
       switch (filterType) {
@@ -118,9 +136,11 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
             sort: "desc",
+            // page: currentPage,
+            // limit: PAGINATION_LIMIT,
           });
-          const { books } = booksByProfileUser.data;
-
+          const { books, resultCount } = booksByProfileUser.data;
+          console.log('resultCount ', resultCount);
           setFilteredResults(books);
           break;
         }
@@ -128,9 +148,11 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           const issuesByProfileUser = await searchIssues({
             username: profilePageUsername,
             sort: "desc",
+            // page: currentPage,
+            // limit: PAGINATION_LIMIT,
           });
-          const { issues } = issuesByProfileUser.data;
-
+          const { issues, resultCount } = issuesByProfileUser.data;
+          console.log('resultCount ', resultCount);
           setFilteredResults(issues);
           break;
         }
@@ -151,12 +173,16 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     fetchSearchType();
   }, [filterType]);
 
-  // useEffect(() => {
-  //     console.log('filteredResults: ', filteredResults)
-  // }, [filteredResults])
+  const setPage = (page) => setCurrentPage(page);
+
+  useEffect(() => {
+      console.log('filteredResults: ', filteredResults)
+  }, [filteredResults]);
 
   const toggleActiveElement = (activeButtonIndex, activeButtonValue) => {
     setActiveButton(activeButtonIndex);
+    // reset pagination when a new button is clicked
+    setCurrentPage(1);
     setFilterType(activeButtonValue);
   };
 
@@ -184,6 +210,8 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           filterType={filterType}
           filteredResults={filteredResults}
           profilePageUserId={profilePageUserId}
+          currentPage={currentPage}
+          setPage={setPage}
         />
       </div>
     </>

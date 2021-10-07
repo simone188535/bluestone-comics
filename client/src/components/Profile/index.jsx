@@ -39,7 +39,8 @@ const Profile = () => {
 
         setProfilePageUser(res.data.user);
       } catch (err) {
-        setErrorMessage(err.response.data.message);
+        // setErrorMessage(err.response.data.message);
+        setErrorMessage("An error occurred. Please try again later.");
       }
     };
     fetchProfileUser();
