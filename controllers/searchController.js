@@ -5,6 +5,7 @@ const pool = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 const SearchFeatures = require('../utils/SearchFeatures');
 
+// TODO: may implement this in our pagination later: https://ivopereira.net/efficient-pagination-dont-use-offset-limit , https://medium.com/swlh/how-to-implement-cursor-pagination-like-a-pro-513140b65f32
 exports.searchBooks = catchAsync(async (req, res, next) => {
   const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id)`;
 
@@ -12,11 +13,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   //   parameterizedQuery = `${parameterizedQuery} INNER JOIN work_credits ON (work_credits.book_id = books.id)`;
   // }
 
-  const { query, parameterizedValues } = new SearchFeatures(
-    parameterizedQuery,
-    req.query,
-    []
-  )
+  const searchedBooks = new SearchFeatures(parameterizedQuery, req.query, [])
     .filter('books')
     .sort('books.')
     .paginate(20);
@@ -37,13 +34,27 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.last_updated, 
     books.date_created
    `,
-    query,
-    parameterizedValues,
+    searchedBooks.query,
+    searchedBooks.parameterizedValues,
     true
   );
 
+  // const searchedBookstotalCount = new SearchFeatures(
+  //   parameterizedQuery,
+  //   req.query,
+  //   []
+  // ).filter('books');
+
+  // const totalBooksSearched = await new QueryPG(pool).find(
+  //   `COUNT(*)`,
+  //   searchedBookstotalCount.query,
+  //   searchedBookstotalCount.parameterizedValues,
+  //   false
+  // );
+
   // Send Response
   res.status(200).json({
+    // totalResultCount: Number(totalBooksSearched.count),
     resultCount: books.length,
     books,
     status: 'success'

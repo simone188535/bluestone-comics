@@ -7,7 +7,7 @@ import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
 import "./works.scss";
 
-const PAGINATION_LIMIT = 4;
+const PAGINATION_LIMIT = 12;
 
 const Accredited = ({ filteredResults }) => {
   return <div>Accredited</div>;
@@ -140,7 +140,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
             // limit: PAGINATION_LIMIT,
           });
           const { books, resultCount } = booksByProfileUser.data;
-          console.log('resultCount ', resultCount);
+          console.log("resultCount ", resultCount);
           setFilteredResults(books);
           break;
         }
@@ -181,6 +181,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
 
   const toggleActiveElement = (activeButtonIndex, activeButtonValue) => {
     setActiveButton(activeButtonIndex);
+
     // reset pagination when a new button is clicked
     setCurrentPage(1);
     setFilterType(activeButtonValue);
