@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { searchBooks, searchIssues } from "../../../../services";
 import ReadMore from "../../../CommonUI/ReadMore";
 import useBelongsToCurrentUser from "../../../../hooks/useBelongsToCurrentUser";
 import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
+import LoadingSpinner from "../../../CommonUI/LoadingSpinner";
 import "./works.scss";
 
 const PAGINATION_LIMIT = 12;
@@ -70,16 +71,17 @@ const BooksOrIssues = ({
     </li>
   ));
 
-  const displayFilteredResults = filteredResults ? (
+  const showCurrentSearchPageDataIfPresent = filteredResults ? (
     <ul className="display-work-grid col-4">{searchResults}</ul>
   ) : (
     <span>This user has not created this yet.</span>
   );
 
-  console.log('filteredResults.length ', filteredResults.length);
   return (
     <>
-      <div className="filtered-results">{displayFilteredResults}</div>
+      <div className="filtered-results">
+        {showCurrentSearchPageDataIfPresent}
+      </div>
       <Pagination
         className="pagination-bar"
         currentPage={currentPage}
@@ -136,11 +138,8 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
             sort: "desc",
-            // page: currentPage,
-            // limit: PAGINATION_LIMIT,
           });
-          const { books, resultCount } = booksByProfileUser.data;
-          console.log("resultCount ", resultCount);
+          const { books } = booksByProfileUser.data;
           setFilteredResults(books);
           break;
         }
@@ -148,11 +147,8 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           const issuesByProfileUser = await searchIssues({
             username: profilePageUsername,
             sort: "desc",
-            // page: currentPage,
-            // limit: PAGINATION_LIMIT,
           });
-          const { issues, resultCount } = issuesByProfileUser.data;
-          console.log('resultCount ', resultCount);
+          const { issues } = issuesByProfileUser.data;
           setFilteredResults(issues);
           break;
         }
@@ -174,10 +170,6 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   }, [filterType]);
 
   const setPage = (page) => setCurrentPage(page);
-
-  useEffect(() => {
-      console.log('filteredResults: ', filteredResults)
-  }, [filteredResults]);
 
   const toggleActiveElement = (activeButtonIndex, activeButtonValue) => {
     setActiveButton(activeButtonIndex);
@@ -207,6 +199,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     <>
       <div className="works-tab">
         <div className="works-tab-tri-buttons-container">{filterButtons}</div>
+        <LoadingSpinner />
         <DisplaySelectedWorks
           filterType={filterType}
           filteredResults={filteredResults}
