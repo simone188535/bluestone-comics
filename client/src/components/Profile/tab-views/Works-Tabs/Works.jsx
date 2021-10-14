@@ -128,6 +128,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const [filteredResults, setFilteredResults] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   // BUG Dont forget error message
   // loading state can be set here too
@@ -135,26 +136,38 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     try {
       switch (filterType) {
         case "Books": {
+          setLoadingStatus(true);
+
           const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
             sort: "desc",
           });
           const { books } = booksByProfileUser.data;
+
+          setLoadingStatus(false);
           setFilteredResults(books);
           break;
         }
         case "Issues": {
+          setLoadingStatus(true);
+
           const issuesByProfileUser = await searchIssues({
             username: profilePageUsername,
             sort: "desc",
           });
           const { issues } = issuesByProfileUser.data;
+
+          setLoadingStatus(false);
           setFilteredResults(issues);
           break;
         }
         case "Accredited": {
+          // setLoadingStatus(true);
+
           // const AccreditedWorksByProfileUser = await SearchServices.searchIssues({username: profilePageUsername});
           // const { issues } = AccreditedWorksByProfileUser.data;
+
+          // setLoadingStatus(false);
           // setFilteredResults(issues);
           break;
         }
@@ -199,7 +212,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     <>
       <div className="works-tab">
         <div className="works-tab-tri-buttons-container">{filterButtons}</div>
-        <LoadingSpinner />
+        <LoadingSpinner loadingStatus={loadingStatus} />
         <DisplaySelectedWorks
           filterType={filterType}
           filteredResults={filteredResults}
