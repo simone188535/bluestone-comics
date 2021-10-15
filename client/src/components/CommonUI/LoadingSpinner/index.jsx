@@ -4,6 +4,7 @@ import "./loading-spinner.scss";
 // Inspired By this loading spinner: https://codepen.io/lucascalazans/pen/rerKwE
 const LoadingSpinner = ({
   loadingStatus,
+  className = "",
   // spinnerType
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,15 +15,15 @@ const LoadingSpinner = ({
     setIsLoading(loadingStatus);
   }, [loadingStatus]);
 
-  if (!isLoading) return <></>;
-
   return (
-    <div className="loading-spinner">
-      <div className="loading-content">
-        <div className="loading-circle" />
-        <span className="loading-name">LOADING</span>
+    isLoading && (
+      <div className={`loading-spinner ${className}`}>
+        <div className="loading-content">
+          <div className="loading-circle" />
+          <span className="loading-name">LOADING</span>
+        </div>
       </div>
-    </div>
+    )
   );
 };
 export default LoadingSpinner;
