@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./error-message.scss";
 
 const ErrorMessage = ({ errorStatus, MessageText, className = "" }) => {
-  const [hasError, setHasError] = useState(false);
+  const [hasError, setHasError] = useState(errorStatus);
 
   useEffect(() => {
     setHasError(errorStatus);

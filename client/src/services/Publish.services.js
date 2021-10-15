@@ -9,7 +9,9 @@ function createBook(formData, config = {}) {
     Authorization: `Bearer ${jwtToken}`,
   };
 
-  return axios.post("/api/v1/publish", formData, config);
+  return axios.post("/api/v1/publish", formData, config).catch((error) => {
+    console.log(error);
+  });
 }
 
 function getBookAndIssueImagePrefix(
@@ -34,10 +36,14 @@ function getBookAndIssueImagePrefix(
     }
   }
 
-  return axios.get(
-    `/api/v1/publish/get-book-and-issue-image-prefix${optionalBookIssue}`,
-    config
-  );
+  return axios
+    .get(
+      `/api/v1/publish/get-book-and-issue-image-prefix${optionalBookIssue}`,
+      config
+    )
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 export { createBook, getBookAndIssueImagePrefix };

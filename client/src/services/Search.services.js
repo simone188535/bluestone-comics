@@ -16,19 +16,31 @@ const reqObj = (queryValues) => {
 function searchUser(queryUser) {
   const userToSearch = reqObj(queryUser);
 
-  return axios.get(`/api/v1/search/users`, { params: { ...userToSearch } });
+  return axios
+    .get(`/api/v1/search/users`, { params: { ...userToSearch } })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 function searchBooks(queryBooks) {
   const bookToSearch = reqObj(queryBooks);
 
-  return axios.get(`/api/v1/search/books`, { params: { ...bookToSearch } });
+  return axios
+    .get(`/api/v1/search/books`, { params: { ...bookToSearch } })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 function searchIssues(queryIssues) {
   const issueToSearch = reqObj(queryIssues);
 
-  return axios.get(`/api/v1/search/issues`, { params: { ...issueToSearch } });
+  return axios
+    .get(`/api/v1/search/issues`, { params: { ...issueToSearch } })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 export { searchUser, searchBooks, searchIssues };

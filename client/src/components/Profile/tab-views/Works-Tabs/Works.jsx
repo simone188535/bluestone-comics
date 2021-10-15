@@ -6,6 +6,7 @@ import useBelongsToCurrentUser from "../../../../hooks/useBelongsToCurrentUser";
 import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
 import LoadingSpinner from "../../../CommonUI/LoadingSpinner";
+import ErrorMessage from "../../../CommonUI/ErrorMessage";
 import "./works.scss";
 
 const PAGINATION_LIMIT = 12;
@@ -126,11 +127,10 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const [activeButton, setActiveButton] = useState(0);
   const [filterType, setFilterType] = useState(buttonValues[0]);
   const [filteredResults, setFilteredResults] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessageStatus, setErrorMessageStatus] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [loadingStatus, setLoadingStatus] = useState(false);
 
-  // BUG Dont forget error message
   // loading state can be set here too
   const fetchSearchType = async () => {
     try {
@@ -138,10 +138,12 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         case "Books": {
           setLoadingStatus(true);
 
+          // throw new Error("problem");
           const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
             sort: "desc",
           });
+
           const { books } = booksByProfileUser.data;
 
           setLoadingStatus(false);
@@ -175,7 +177,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           return;
       }
     } catch (err) {
-      setErrorMessage("An error occurred. Please try again later.");
+      setErrorMessageStatus(true);
     }
   };
   useEffect(() => {
@@ -208,11 +210,25 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     );
   });
 
-  return (
-    <>
-      <div className="works-tab">
-        <div className="works-tab-tri-buttons-container">{filterButtons}</div>
+  const statusOfDataRetrieval = () => {
+    let renderStatusOfDataRetrieval;
+
+    if (errorMessageStatus) {
+      // when an error occurs during data fetching
+      renderStatusOfDataRetrieval = (
+        <ErrorMessage
+          errorStatus={errorMessageStatus}
+          MessageText="An error occurred. Please try again later."
+        />
+      );
+    } else if (loadingStatus) {
+      //  while data fetching is occuring
+      renderStatusOfDataRetrieval = (
         <LoadingSpinner loadingStatus={loadingStatus} />
+      );
+    } else if (filteredResults.length) {
+      // when data fetching is completed
+      renderStatusOfDataRetrieval = (
         <DisplaySelectedWorks
           filterType={filterType}
           filteredResults={filteredResults}
@@ -220,6 +236,17 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           currentPage={currentPage}
           setPage={setPage}
         />
+      );
+    }
+
+    return renderStatusOfDataRetrieval;
+  };
+
+  return (
+    <>
+      <div className="works-tab">
+        <div className="works-tab-tri-buttons-container">{filterButtons}</div>
+        {statusOfDataRetrieval()}
       </div>
     </>
   );
