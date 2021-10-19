@@ -128,58 +128,65 @@ exports.searchUsers = catchAsync(async (req, res) => {
 exports.searchAccreditedWorks = catchAsync(async (req, res) => {
   const { userId } = req.query;
 
+  // issue_id, creator_credit
+  const accreditedWorksQuery =
+    'work_credits INNER JOIN issues ON work_credits.issue_id = issues.id WHERE creator_id = ($1) AND creator_credit = ($2)';
+
+  const accreditedWorksSelectedData =
+    'issues.book_id, issues.date_created, issues.issue_number, issues.title, work_credits.issue_id, work_credits.creator_credit';
+
   const writer = await new QueryPG(pool).find(
-    '*',
-    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
     [userId, 'writer'],
     true
   );
 
   const artist = await new QueryPG(pool).find(
-    '*',
-    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
     [userId, 'artist'],
     true
   );
 
   const editor = await new QueryPG(pool).find(
-    '*',
-    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
     [userId, 'editor'],
     true
   );
 
   const inker = await new QueryPG(pool).find(
-    '*',
-    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
     [userId, 'inker'],
     true
   );
 
   const letterer = await new QueryPG(pool).find(
-    '*',
-    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
     [userId, 'letterer'],
     true
   );
 
   const penciller = await new QueryPG(pool).find(
-    '*',
-    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
     [userId, 'penciller'],
     true
   );
 
   const colorist = await new QueryPG(pool).find(
-    '*',
-    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
     [userId, 'colorist'],
     true
   );
 
   const coverArtist = await new QueryPG(pool).find(
-    '*',
-    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
     [userId, 'cover artist'],
     true
   );

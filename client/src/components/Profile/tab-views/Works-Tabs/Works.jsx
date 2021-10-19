@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { searchBooks, searchIssues } from "../../../../services";
+import {
+  searchBooks,
+  searchIssues,
+  searchAccreditedWorks,
+} from "../../../../services";
 import ReadMore from "../../../CommonUI/ReadMore";
 import useBelongsToCurrentUser from "../../../../hooks/useBelongsToCurrentUser";
 import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
@@ -12,6 +16,7 @@ import "./works.scss";
 const PAGINATION_LIMIT = 12;
 
 const Accredited = ({ filteredResults }) => {
+  console.log('filteredResults', filteredResults);
   return <div>Accredited</div>;
 };
 
@@ -164,12 +169,14 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           break;
         }
         case "Accredited": {
-          // setLoadingStatus(true);
+          setLoadingStatus(true);
 
-          // const AccreditedWorksByProfileUser = await SearchServices.searchIssues({username: profilePageUsername});
+          const AccreditedWorksByProfileUser = await searchAccreditedWorks(
+            profilePageUserId
+          );
           // const { issues } = AccreditedWorksByProfileUser.data;
 
-          // setLoadingStatus(false);
+          setLoadingStatus(false);
           // setFilteredResults(issues);
           break;
         }

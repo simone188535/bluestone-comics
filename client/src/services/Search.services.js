@@ -43,4 +43,12 @@ function searchIssues(queryIssues) {
     });
 }
 
-export { searchUser, searchBooks, searchIssues };
+function searchAccreditedWorks(userId) {
+  return axios
+    .get(`/api/v1/search/accredited-works`, { params: { userId } })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+export { searchUser, searchBooks, searchIssues, searchAccreditedWorks };
