@@ -125,4 +125,73 @@ exports.searchUsers = catchAsync(async (req, res) => {
   });
 });
 
-exports.searchAccreditedWorks = catchAsync(async (req, res) => {});
+exports.searchAccreditedWorks = catchAsync(async (req, res) => {
+  const { userId } = req.query;
+
+  const writer = await new QueryPG(pool).find(
+    '*',
+    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    [userId, 'writer'],
+    true
+  );
+
+  const artist = await new QueryPG(pool).find(
+    '*',
+    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    [userId, 'artist'],
+    true
+  );
+
+  const editor = await new QueryPG(pool).find(
+    '*',
+    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    [userId, 'editor'],
+    true
+  );
+
+  const inker = await new QueryPG(pool).find(
+    '*',
+    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    [userId, 'inker'],
+    true
+  );
+
+  const letterer = await new QueryPG(pool).find(
+    '*',
+    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    [userId, 'letterer'],
+    true
+  );
+
+  const penciller = await new QueryPG(pool).find(
+    '*',
+    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    [userId, 'penciller'],
+    true
+  );
+
+  const colorist = await new QueryPG(pool).find(
+    '*',
+    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    [userId, 'colorist'],
+    true
+  );
+
+  const coverArtist = await new QueryPG(pool).find(
+    '*',
+    'work_credits WHERE creator_id = ($1) AND creator_credit = ($2)',
+    [userId, 'cover artist'],
+    true
+  );
+  res.status(200).json({
+    writer,
+    artist,
+    editor,
+    inker,
+    letterer,
+    penciller,
+    colorist,
+    coverArtist,
+    status: 'success'
+  });
+});
