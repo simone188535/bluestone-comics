@@ -11,13 +11,21 @@ import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
 import LoadingSpinner from "../../../CommonUI/LoadingSpinner";
 import ErrorMessage from "../../../CommonUI/ErrorMessage";
+import Accordion from "../../../CommonUI/Accordion";
 import "./works.scss";
 
 const PAGINATION_LIMIT = 12;
 
 const Accredited = ({ filteredResults }) => {
-  console.log('filteredResults', filteredResults);
-  return <div>Accredited</div>;
+  console.log("filteredResults", filteredResults);
+  return (
+    <>
+      <div>Accredited</div>
+      <div>
+        <Accordion />
+      </div>
+    </>
+  );
 };
 
 const BooksOrIssues = ({
