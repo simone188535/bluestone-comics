@@ -20,7 +20,7 @@ const Accredited = ({ filteredResults }) => {
   console.log("filteredResults", filteredResults);
   return (
     <>
-      <div>Accredited</div>
+      {/* <div>Accredited</div> */}
       <div>
         <Accordion />
       </div>

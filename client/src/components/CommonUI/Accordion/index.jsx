@@ -19,39 +19,35 @@ const Accordian = () => {
   };
 
   return (
-    <div className="accordian">
-      <div className="accordian-section">
-        <div className="container">
-          {Data.map((items, index) => {
-            const accordianIcon = currentAccordianSelected(index) ? (
-              <FontAwesomeIcon icon={faMinus} size="lg" />
-            ) : (
-              <FontAwesomeIcon icon={faPlus} size="lg" />
-            );
+    <section className="accordian">
+      {Data.map((items, index) => {
+        const accordianIcon = currentAccordianSelected(index) ? (
+          <FontAwesomeIcon icon={faMinus} size="lg" />
+        ) : (
+          <FontAwesomeIcon icon={faPlus} size="lg" />
+        );
 
-            const revealAnwsers = currentAccordianSelected(index) ? (
-              <div className="dropdown">
-                <p>{items.answer}</p>
-              </div>
-            ) : null;
+        const revealAnwsers = currentAccordianSelected(index) ? (
+          <div className="dropdown">
+            <p>{items.answer}</p>
+          </div>
+        ) : null;
 
-            return (
-              <>
-                <button
-                  className="wrap"
-                  type="button"
-                  onClick={() => toggle(index)}
-                >
-                  <h1>{items.question}</h1>
-                  <span>{accordianIcon}</span>
-                </button>
-                {revealAnwsers}
-              </>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+        return (
+          <>
+            <button
+              className="accordian-trigger"
+              type="button"
+              onClick={() => toggle(index)}
+            >
+              <h3 className="accordian-header">{items.question}</h3>
+              <span className="accordian-icon">{accordianIcon}</span>
+            </button>
+            {revealAnwsers}
+          </>
+        );
+      })}
+    </section>
   );
 };
 export default Accordian;

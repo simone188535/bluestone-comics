@@ -1,56 +1,53 @@
 @import '../../../styles/abstracts/variables';
 
-.accordian {
-    .accordian-section {
+    .accordian {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         position: relative;
-        height: 100vh;
-        background: #fff;
 
-        .container {
-            position: absolute;
-            top: 30%;
-            box-shadow: 2px 10px 35px 1px rbga(153, 153, 153, .3);
-
-            .wrap {
-                background: #272727;
-                color: flex;
+            .accordian-trigger {
+                display: flex;
                 justify-content: space-between;
                 align-items: center;
                 width: 100%;
                 text-align: center;
                 cursor: pointer;
+                border: 1px solid $mid-gray;
+                // color: #325191;
+                // color: #273586;
+                color: #3143A8;
+                background-color: $white-light-grey;
+                // #fcfcfc;
+                &:not(:last-child) {
+                    border-bottom: 0;
+                } 
 
-                h1 {
+                .accordian-header {
                     padding : 2rem;
-                    font-size: 2rem;
-                    color: white;
+                    font-size: 1.2rem;
                 }
 
-                span {
+                .accordian-icon {
                     margin-right: 1.5rem;
+                    color: #8CACEB;
+                    // color: #7299e7;
+                    // color: #80A3E9;
+                    // color: #8EADEB;
                 }
             }
 
             .dropdown {
-               background: #1c1c1c;
-               color: #00ffb9;
                width: 100%;
                height:100%;
                display: flex;
                flex-direction: column;
                justify-content: center;
                align-items: center;
-               border-bottom: 1px solid #00ffb9;
 
                p {
                   font-size: 2rem; 
                }
             }
-        }
     }
-
-}
