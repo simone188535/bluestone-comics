@@ -4,7 +4,7 @@ import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { Data } from "./Data";
 import "./accordian.scss";
 
-const Accordian = () => {
+const Accordian = ({ className }) => {
   const [clicked, setClicked] = useState(false);
 
   const currentAccordianSelected = (index) => clicked === index;
@@ -19,7 +19,7 @@ const Accordian = () => {
   };
 
   return (
-    <section className="accordian">
+    <section className={`accordian ${className || ""}`}>
       {Data.map((items, index) => {
         const accordianIcon = currentAccordianSelected(index) ? (
           <FontAwesomeIcon icon={faMinus} size="lg" />
@@ -27,23 +27,25 @@ const Accordian = () => {
           <FontAwesomeIcon icon={faPlus} size="lg" />
         );
 
-        const revealAnwsers = currentAccordianSelected(index) ? (
+        const revealDescription = currentAccordianSelected(index) ? (
           <div className="dropdown">
-            <p>{items.answer}</p>
+            <p>{items.description}</p>
           </div>
         ) : null;
+
+        const activeClass = currentAccordianSelected(index) ? "active" : "";
 
         return (
           <>
             <button
-              className="accordian-trigger"
+              className={`accordian-trigger ${activeClass}`}
               type="button"
               onClick={() => toggle(index)}
             >
-              <h3 className="accordian-header">{items.question}</h3>
+              <h3 className="accordian-header">{items.header}</h3>
               <span className="accordian-icon">{accordianIcon}</span>
             </button>
-            {revealAnwsers}
+            {revealDescription}
           </>
         );
       })}
