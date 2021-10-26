@@ -27,16 +27,25 @@ const Accordian = ({ className }) => {
           <FontAwesomeIcon icon={faPlus} size="lg" />
         );
 
-        const revealDescription = currentAccordianSelected(index) ? (
-          <div className="dropdown">
-            <p>{items.description}</p>
-          </div>
-        ) : null;
-
         const activeClass = currentAccordianSelected(index) ? "active" : "";
 
+        // this allows the item description to be <li> or <p> depending on whether the item description is an array or a string
+        const checkDescriptionType = Array.isArray(items.description) ? (
+          <ul className="accordian-list">
+            {items.description.map((item) => (
+              <li key={`accordian-list-item-${item.id}`}>{item.listItem}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>{items.description}</p>
+        );
+
+        const revealDescription = currentAccordianSelected(index) ? (
+          <div className="dropdown">{checkDescriptionType}</div>
+        ) : null;
+
         return (
-          <>
+          <React.Fragment key={`accordian-trigger-${items.id}`}>
             <button
               className={`accordian-trigger ${activeClass}`}
               type="button"
@@ -46,7 +55,7 @@ const Accordian = ({ className }) => {
               <span className="accordian-icon">{accordianIcon}</span>
             </button>
             {revealDescription}
-          </>
+          </React.Fragment>
         );
       })}
     </section>

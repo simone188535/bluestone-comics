@@ -45,8 +45,16 @@
         font-weight: 300;
         font-size: 1rem;
 
+        ul.accordian-list {
+            list-style-position: inside;
+            
+            li {
+                margin-bottom: .5rem;
+            }
+        }
+
         p {
-            font-size: 1rem;
+            // font-size: 1rem;
         }
     }
 }
