@@ -29,15 +29,23 @@ const Accordian = ({ className }) => {
 
         const activeClass = currentAccordianSelected(index) ? "active" : "";
 
+        // the reason this is needed is to allow optional html tags ie A tags to be used in the rendered description
+        const createMarkup = (contentToInsert) => {
+          return { __html: contentToInsert };
+        };
+
         // this allows the item description to be <li> or <p> depending on whether the item description is an array or a string
         const checkDescriptionType = Array.isArray(items.description) ? (
           <ul className="accordian-list">
             {items.description.map((item) => (
-              <li key={`accordian-list-item-${item.id}`}>{item.listItem}</li>
+              <li
+                key={`accordian-list-item-${item.id}`}
+                dangerouslySetInnerHTML={createMarkup(item.listItem)}
+              />
             ))}
           </ul>
         ) : (
-          <p>{items.description}</p>
+          <p dangerouslySetInnerHTML={createMarkup(items.description)} />
         );
 
         const revealDescription = currentAccordianSelected(index) ? (
