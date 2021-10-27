@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
-import { Data } from "./Data";
+// test data to test this component
+// import { Data } from "./Data";
 import "./accordian.scss";
 
-const Accordian = ({ className }) => {
+const Accordian = ({ AccordianData = [], className }) => {
   const [clicked, setClicked] = useState(false);
 
   const currentAccordianSelected = (index) => clicked === index;
@@ -20,7 +21,7 @@ const Accordian = ({ className }) => {
 
   return (
     <section className={`accordian ${className || ""}`}>
-      {Data.map((items, index) => {
+      {AccordianData.map((items, index) => {
         const accordianIcon = currentAccordianSelected(index) ? (
           <FontAwesomeIcon icon={faMinus} size="lg" />
         ) : (
