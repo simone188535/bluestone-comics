@@ -220,8 +220,9 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const toggleActiveElement = (activeButtonIndex, activeButtonValue) => {
     setActiveButton(activeButtonIndex);
 
-    // reset pagination when a new button is clicked
+    // reset pagination and clear filtered search results when a new button is clicked
     setCurrentPage(1);
+    setFilteredResults([]);
     setFilterType(activeButtonValue);
   };
 
