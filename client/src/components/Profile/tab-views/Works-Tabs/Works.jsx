@@ -17,7 +17,30 @@ import "./works.scss";
 const PAGINATION_LIMIT = 12;
 
 const Accredited = ({ filteredResults }) => {
-  console.log("filteredResults", filteredResults);
+  // console.log("filteredResults", filteredResults);
+
+  // if object key contains _ remove it, make name uppercase and then add it to the array data
+  const accreditedData = filteredResults.map((accreditedWork, index) => {
+    const accreditedWorkKey = Object.keys(accreditedWork);
+    const accreditedWorkKeyAsString = accreditedWorkKey[0];
+    const allAccreditedWorkValues = accreditedWork[accreditedWorkKey].length;
+
+    console.log("accreditedWork Key", Object.keys(accreditedWork));
+
+    // BUG capitalize first letter of each work for header
+    const header = `${accreditedWorkKeyAsString
+      .replace("_", " ")
+      .toUpperCase()} (${allAccreditedWorkValues})`;
+
+    // console.log('header ', header);
+
+    // return { id: index, header, description: []}
+  });
+
+  // useEffect(() => {
+
+  // }, [filteredResults]);
+
   return (
     <>
       <h1>Accredited</h1>
@@ -181,19 +204,28 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           const searchAccreditedWorksRes = await searchAccreditedWorks(
             profilePageUserId
           );
-          // const {
-          //   artist,
-          //   colorist,
-          //   coverArtist,
-          //   editor,
-          //   inker,
-          //   letterer,
-          //   penciller,
-          //   writer,
-          // } = searchAccreditedWorksRes.data;
+          const {
+            artist,
+            colorist,
+            coverArtist,
+            editor,
+            inker,
+            letterer,
+            penciller,
+            writer,
+          } = searchAccreditedWorksRes.data;
 
           // BUG Put add other array values here. maybe with a spread operator
-          setFilteredResults([searchAccreditedWorksRes.data]);
+          setFilteredResults([
+            { artist },
+            { colorist },
+            { cover_Artist: coverArtist },
+            { editor },
+            { inker },
+            { letterer },
+            { penciller },
+            { writer },
+          ]);
           setLoadingStatus(false);
 
           break;
