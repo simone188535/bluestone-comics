@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import moment from "moment";
 import {
   searchBooks,
@@ -20,9 +20,9 @@ const Accredited = ({ filteredResults }) => {
   console.log("filteredResults", filteredResults);
   return (
     <>
-      {/* <div>Accredited</div> */}
+      <h1>Accredited</h1>
       <div>
-        <Accordion />
+        <Accordion AccordianData={[]} />
       </div>
     </>
   );
@@ -57,7 +57,6 @@ const BooksOrIssues = ({
       className="grid-list-item"
       key={`filtered-result-${currentResult.book_id || currentResult.issue_id}`}
     >
-      {/* {console.log('!!!!!!!! ', currentResult)} */}
       <div className="grid-image-container">
         <a href="#">
           <img
@@ -145,13 +144,12 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   const [loadingStatus, setLoadingStatus] = useState(false);
 
   // loading state can be set here too
-  const fetchSearchType = async () => {
+  const fetchSearchType = useCallback(async () => {
     try {
       switch (filterType) {
         case "Books": {
           setLoadingStatus(true);
 
-          // throw new Error("problem");
           const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
             sort: "desc",
@@ -170,6 +168,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
             username: profilePageUsername,
             sort: "desc",
           });
+
           const { issues } = issuesByProfileUser.data;
 
           setLoadingStatus(false);
@@ -179,25 +178,42 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         case "Accredited": {
           setLoadingStatus(true);
 
-          const AccreditedWorksByProfileUser = await searchAccreditedWorks(
+          const searchAccreditedWorksRes = await searchAccreditedWorks(
             profilePageUserId
           );
-          // const { issues } = AccreditedWorksByProfileUser.data;
+          // const {
+          //   artist,
+          //   colorist,
+          //   coverArtist,
+          //   editor,
+          //   inker,
+          //   letterer,
+          //   penciller,
+          //   writer,
+          // } = searchAccreditedWorksRes.data;
 
+          // BUG Put add other array values here. maybe with a spread operator
+          setFilteredResults([searchAccreditedWorksRes.data]);
           setLoadingStatus(false);
-          // setFilteredResults(issues);
+
           break;
         }
-        default:
+        default: {
           return;
+        }
       }
     } catch (err) {
       setErrorMessageStatus(true);
     }
-  };
+  }, [filterType, profilePageUserId, profilePageUsername]);
+
   useEffect(() => {
     fetchSearchType();
-  }, [filterType]);
+  }, [fetchSearchType, filterType]);
+
+  // useEffect(() => {
+  //   console.log("filteredResults useEffect: ", filteredResults);
+  // }, [filteredResults]);
 
   const setPage = (page) => setCurrentPage(page);
 

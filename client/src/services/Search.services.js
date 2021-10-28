@@ -19,6 +19,7 @@ function searchUser(queryUser) {
   return axios
     .get(`/api/v1/search/users`, { params: { ...userToSearch } })
     .catch((error) => {
+      // eslint-disable-next-line no-console
       console.log(error);
     });
 }
@@ -29,6 +30,7 @@ function searchBooks(queryBooks) {
   return axios
     .get(`/api/v1/search/books`, { params: { ...bookToSearch } })
     .catch((error) => {
+      // eslint-disable-next-line no-console
       console.log(error);
     });
 }
@@ -39,6 +41,7 @@ function searchIssues(queryIssues) {
   return axios
     .get(`/api/v1/search/issues`, { params: { ...issueToSearch } })
     .catch((error) => {
+      // eslint-disable-next-line no-console
       console.log(error);
     });
 }
@@ -47,6 +50,7 @@ function searchAccreditedWorks(userId) {
   return axios
     .get(`/api/v1/search/accredited-works`, { params: { userId } })
     .catch((error) => {
+      // eslint-disable-next-line no-console
       console.log(error);
     });
 }
