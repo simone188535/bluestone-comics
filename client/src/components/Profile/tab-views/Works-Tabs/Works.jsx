@@ -40,7 +40,7 @@ const Accredited = ({ filteredResults }) => {
       (worksUserParticipatedIn) => {
         return {
           id: `${accreditedWorkKeyAsString}-${worksUserParticipatedIn.book_id}-${worksUserParticipatedIn.issue_id}`,
-          listItem: `<div class="accredited-work-group">Issue: <a href="#">${worksUserParticipatedIn.title}</a> <br/>Issue # : ${worksUserParticipatedIn.issue_number}<br/> Book: <a href="#">${worksUserParticipatedIn.book_id}</a></div>`,
+          listItem: `<ul class="accredited-work-group"><li class="accredited-work-group-item">Issue: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.title}</a></li> <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> <li class="accredited-work-group-item">Book: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_id}</a></li></ul>`,
         };
       }
     );

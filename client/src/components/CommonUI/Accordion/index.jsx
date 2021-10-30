@@ -41,6 +41,7 @@ const Accordian = ({ AccordianData = [], className }) => {
           <ul className="accordian-list">
             {items.description.map((item) => (
               <li
+                className="accordian-list-item"
                 key={`accordian-list-item-${item.id}`}
                 dangerouslySetInnerHTML={createMarkup(item.listItem)}
               />
