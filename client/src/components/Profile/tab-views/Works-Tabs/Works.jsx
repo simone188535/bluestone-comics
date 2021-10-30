@@ -23,29 +23,39 @@ const Accredited = ({ filteredResults }) => {
   const accreditedData = filteredResults.map((accreditedWork, index) => {
     const accreditedWorkKey = Object.keys(accreditedWork);
     const accreditedWorkKeyAsString = accreditedWorkKey[0];
-    const allAccreditedWorkValues = accreditedWork[accreditedWorkKey].length;
+    const allAccreditedWorkValues = accreditedWork[accreditedWorkKey];
 
-    console.log("accreditedWork Key", Object.keys(accreditedWork));
+    // BUG if the user has not works in the given a comic role, return nothing
+    // if (allAccreditedWorkValues.length === 0) {
+    //   return false;
+    // }
 
-    // BUG capitalize first letter of each work for header
-    const header = `${accreditedWorkKeyAsString
-      .replace("_", " ")
-      .toUpperCase()} (${allAccreditedWorkValues})`;
+    console.log('allAccreditedWorkValues ', allAccreditedWorkValues);
+    const header = `${accreditedWorkKeyAsString.replace("_", " ")} (${
+      allAccreditedWorkValues.length
+    })`;
 
-    // console.log('header ', header);
+    // map through allAccreditedWorkValues in order
+    const description = allAccreditedWorkValues.map(
+      (worksUserParticipatedIn) => {
+        return {
+          id: `${accreditedWorkKeyAsString}-${worksUserParticipatedIn.book_id}-${worksUserParticipatedIn.issue_id}`,
+          listItem: `<div class="accredited-work-group">Issue: <a href="#">${worksUserParticipatedIn.title}</a> <br/>Issue # : ${worksUserParticipatedIn.issue_number}<br/> Book: <a href="#">${worksUserParticipatedIn.book_id}</a></div>`,
+        };
+      }
+    );
 
-    // return { id: index, header, description: []}
+    return { id: `${accreditedWorkKeyAsString}-${index}`, header, description };
   });
-
-  // useEffect(() => {
-
-  // }, [filteredResults]);
 
   return (
     <>
-      <h1>Accredited</h1>
+      <h3>this creator has fulfilled the following roles:</h3>
       <div>
-        <Accordion AccordianData={[]} />
+        <Accordion
+          AccordianData={accreditedData}
+          className="accredited-works-accordian"
+        />
       </div>
     </>
   );

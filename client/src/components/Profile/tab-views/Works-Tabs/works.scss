@@ -9,19 +9,54 @@
             display: block;
             width: 80%;
             margin: 20px auto;
-
-            // &:hover, &.active {
-            //     color: $pure-white;
-            //     background: $violet-blue;
-            //     border: 1px solid $pure-black;
-            // }
         }
 
     }
 
-    .filtered-results {
-        // clear: left;
-        // display: ;
+    .accredited-works-accordian {
+
+
+        .accordian-header {
+            text-transform: capitalize;
+        }
+
+        .dropdown {
+            justify-content: center;
+
+
+            .accordian-list {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 2rem 0rem;
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+
+                li {
+                    max-width: 150px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $small) {
+    .works-tab {
+
+        .accredited-works-accordian {
+
+            .dropdown {
+                .accordian-list {
+                    grid-template-columns: repeat(2, 1fr);
+
+                    li {
+                        max-width: none;
+                        width: 240px;
+                        padding-left: 1rem;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -29,11 +64,37 @@
     .works-tab {
 
         .works-tab-tri-button {
-            // display: block;
             float: left;
             width: 30%;
             margin: 0px 1.6%;
 
+        }
+
+        .accredited-works-accordian {
+
+            .dropdown {
+                .accordian-list {
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 1.5rem 0rem;
+
+                    li {
+                        width: 250px;
+                        padding-left: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $large) {
+    .works-tab {
+
+        .accredited-works-accordian {
+
+            .dropdown .accordian-list li {
+                width: 290px;
+            }
         }
     }
 }
