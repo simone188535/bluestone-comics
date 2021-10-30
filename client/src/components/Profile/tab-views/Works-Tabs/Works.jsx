@@ -20,37 +20,54 @@ const Accredited = ({ filteredResults }) => {
   // console.log("filteredResults", filteredResults);
 
   // if object key contains _ remove it, make name uppercase and then add it to the array data
-  const accreditedData = filteredResults.map((accreditedWork, index) => {
-    const accreditedWorkKey = Object.keys(accreditedWork);
-    const accreditedWorkKeyAsString = accreditedWorkKey[0];
-    const allAccreditedWorkValues = accreditedWork[accreditedWorkKey];
+  const accreditedData = filteredResults
+    // .filter((accreditedWork) => {
+    //   console.log(
+    //     "accreditedWork ",
+    //     accreditedWork,
+    //     Object.values(accreditedWork).length
+    //   );
+    //   return Object.values(accreditedWork).length > 0;
+    //   // if (Object.keys(accreditedWork).length > 0) return false;
+    // })
+    .map((accreditedWork, index) => {
+      const accreditedWorkKey = Object.keys(accreditedWork);
+      const accreditedWorkKeyAsString = accreditedWorkKey[0];
+      const allAccreditedWorkValues = accreditedWork[accreditedWorkKey];
 
-    // BUG if the user has not works in the given a comic role, return nothing
-    // if (allAccreditedWorkValues.length === 0) {
-    //   return false;
-    // }
+      // BUG if the user has not works in the given a comic role, return nothing
+      // console.log('accreditedWorkKey ', accreditedWorkKey);
+      // console.log('allAccreditedWorkValues ', allAccreditedWorkValues);
+      // if (allAccreditedWorkValues.length === 0) {
+      //   debugger;
+      //   return false;
+      // }
 
-    console.log('allAccreditedWorkValues ', allAccreditedWorkValues);
-    const header = `${accreditedWorkKeyAsString.replace("_", " ")} (${
-      allAccreditedWorkValues.length
-    })`;
+      const header = `${accreditedWorkKeyAsString.replace("_", " ")} (${
+        allAccreditedWorkValues.length
+      })`;
 
-    // map through allAccreditedWorkValues in order
-    const description = allAccreditedWorkValues.map(
-      (worksUserParticipatedIn) => {
-        return {
-          id: `${accreditedWorkKeyAsString}-${worksUserParticipatedIn.book_id}-${worksUserParticipatedIn.issue_id}`,
-          listItem: `<ul class="accredited-work-group"><li class="accredited-work-group-item">Issue: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.title}</a></li> <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> <li class="accredited-work-group-item">Book: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_id}</a></li></ul>`,
-        };
-      }
-    );
+      // map through allAccreditedWorkValues in order
+      const description = allAccreditedWorkValues.map(
+        (worksUserParticipatedIn) => {
+          return {
+            id: `${accreditedWorkKeyAsString}-${worksUserParticipatedIn.book_id}-${worksUserParticipatedIn.issue_id}`,
+            listItem: `<ul class="accredited-work-group"><li class="accredited-work-group-item">Issue: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.title}</a></li> <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> <li class="accredited-work-group-item">Book: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_id}</a></li></ul>`,
+          };
+        }
+      );
 
-    return { id: `${accreditedWorkKeyAsString}-${index}`, header, description };
-  });
+      return {
+        id: `${accreditedWorkKeyAsString}-${index}`,
+        header,
+        description,
+      };
+    });
 
   return (
     <>
       <h3>this creator has fulfilled the following roles:</h3>
+      {console.log("accreditedData ", accreditedData)}
       <div>
         <Accordion
           AccordianData={accreditedData}
