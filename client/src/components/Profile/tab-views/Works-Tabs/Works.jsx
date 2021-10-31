@@ -20,9 +20,9 @@ const Accredited = ({ filteredResults }) => {
   // TODO: reduce the time complexity of this function, it is 0(n) + 0(n^2). It can be more efficient
   const accreditedData = filteredResults
     // if the user has not works in the given a comic role, do not return the array
-    .filter((accreditedWork) => {
-      return accreditedWork[Object.keys(accreditedWork)].length > 0;
-    })
+    .filter(
+      (accreditedWork) => accreditedWork[Object.keys(accreditedWork)].length > 0
+    )
     .map((accreditedWork, index) => {
       const accreditedWorkKey = Object.keys(accreditedWork);
       const accreditedWorkKeyAsString = accreditedWorkKey[0];
