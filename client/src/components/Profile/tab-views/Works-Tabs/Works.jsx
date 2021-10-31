@@ -19,7 +19,7 @@ const PAGINATION_LIMIT = 12;
 const Accredited = ({ filteredResults }) => {
   // console.log("filteredResults", filteredResults);
 
-  // TODO: reduce the time complexity of this function, it is 0(n^3). It can be more efficient
+  // TODO: reduce the time complexity of this function, it is 0(n) + 0(n^2). It can be more efficient
   const accreditedData = filteredResults
     // BUG if the user has not works in the given a comic role, return nothing
     // .filter((accreditedWork) => {
