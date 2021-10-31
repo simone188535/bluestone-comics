@@ -262,14 +262,15 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
 
   const setPage = (page) => setCurrentPage(page);
 
-  const toggleActiveElement = (activeButtonIndex, activeButtonValue) => {
-    setActiveButton(activeButtonIndex);
+  const toggleActiveElement = (currentButtonIndex, currentButtonValue) => {
+    // if the active button is already clicked, do nothing;
+    if (currentButtonIndex === activeButton) return;
 
+    setActiveButton(currentButtonIndex);
     // reset pagination and clear filtered search results when a new button is clicked
     setCurrentPage(1);
-    // BUG: When the accredited button is clicked twice, this causes a bug
     setFilteredResults([]);
-    setFilterType(activeButtonValue);
+    setFilterType(currentButtonValue);
   };
 
   // Select the current/active button and update the state
