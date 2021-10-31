@@ -17,31 +17,16 @@ import "./works.scss";
 const PAGINATION_LIMIT = 12;
 
 const Accredited = ({ filteredResults }) => {
-  // console.log("filteredResults", filteredResults);
-
   // TODO: reduce the time complexity of this function, it is 0(n) + 0(n^2). It can be more efficient
   const accreditedData = filteredResults
-    // BUG if the user has not works in the given a comic role, return nothing
-    // .filter((accreditedWork) => {
-    //   console.log(
-    //     "accreditedWork ",
-    //     accreditedWork,
-    //     Object.values(accreditedWork).length
-    //   );
-    //   return Object.values(accreditedWork).length > 0;
-    //   // if (Object.keys(accreditedWork).length > 0) return false;
-    // })
+    // if the user has not works in the given a comic role, do not return the array
+    .filter((accreditedWork) => {
+      return accreditedWork[Object.keys(accreditedWork)].length > 0;
+    })
     .map((accreditedWork, index) => {
       const accreditedWorkKey = Object.keys(accreditedWork);
       const accreditedWorkKeyAsString = accreditedWorkKey[0];
       const allAccreditedWorkValues = accreditedWork[accreditedWorkKey];
-
-      // console.log('accreditedWorkKey ', accreditedWorkKey);
-      // console.log('allAccreditedWorkValues ', allAccreditedWorkValues);
-      // if (allAccreditedWorkValues.length === 0) {
-      //   debugger;
-      //   return false;
-      // }
 
       // if object key contains _ remove it, make name uppercase and then add it to the array data
       const header = `${accreditedWorkKeyAsString.replace("_", " ")} (${
