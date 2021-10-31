@@ -267,6 +267,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
 
     // reset pagination and clear filtered search results when a new button is clicked
     setCurrentPage(1);
+    // BUG: When the accredited button is clicked twice, this causes a bug
     setFilteredResults([]);
     setFilterType(activeButtonValue);
   };
