@@ -19,8 +19,9 @@ const PAGINATION_LIMIT = 12;
 const Accredited = ({ filteredResults }) => {
   // console.log("filteredResults", filteredResults);
 
-  // if object key contains _ remove it, make name uppercase and then add it to the array data
+  // TODO: reduce the time complexity of this function, it is 0(n^3). It can be more efficient
   const accreditedData = filteredResults
+    // BUG if the user has not works in the given a comic role, return nothing
     // .filter((accreditedWork) => {
     //   console.log(
     //     "accreditedWork ",
@@ -35,7 +36,6 @@ const Accredited = ({ filteredResults }) => {
       const accreditedWorkKeyAsString = accreditedWorkKey[0];
       const allAccreditedWorkValues = accreditedWork[accreditedWorkKey];
 
-      // BUG if the user has not works in the given a comic role, return nothing
       // console.log('accreditedWorkKey ', accreditedWorkKey);
       // console.log('allAccreditedWorkValues ', allAccreditedWorkValues);
       // if (allAccreditedWorkValues.length === 0) {
@@ -43,11 +43,12 @@ const Accredited = ({ filteredResults }) => {
       //   return false;
       // }
 
+      // if object key contains _ remove it, make name uppercase and then add it to the array data
       const header = `${accreditedWorkKeyAsString.replace("_", " ")} (${
         allAccreditedWorkValues.length
       })`;
 
-      // map through allAccreditedWorkValues in order
+      // map through current allAccreditedWorkValues and return the html containing all the work details for this specific role
       const description = allAccreditedWorkValues.map(
         (worksUserParticipatedIn) => {
           return {
@@ -66,8 +67,8 @@ const Accredited = ({ filteredResults }) => {
 
   return (
     <>
-      <h3>this creator has fulfilled the following roles:</h3>
-      {console.log("accreditedData ", accreditedData)}
+      {/* <h3>this creator has fulfilled the following roles:</h3> */}
+      {/* {console.log("accreditedData ", accreditedData)} */}
       <div>
         <Accordion
           AccordianData={accreditedData}
