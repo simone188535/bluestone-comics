@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import {
   searchBooks,
@@ -82,9 +83,9 @@ const BooksOrIssues = ({
 
   const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
     <button type="button" className="edit-button">
-      <a href="#">
+      <Link to="#">
         <strong>Edit</strong>
-      </a>
+      </Link>
     </button>
   ) : null;
 
@@ -94,13 +95,13 @@ const BooksOrIssues = ({
       key={`filtered-result-${currentResult.book_id || currentResult.issue_id}`}
     >
       <div className="grid-image-container">
-        <a href="#">
+        <Link to="#">
           <img
             className="grid-image"
             src={currentResult.cover_photo}
             alt={`${currentResult.title}`}
           />
-        </a>
+        </Link>
       </div>
       <div className="grid-info-box">
         <div className="grid-info-box-header-container">
@@ -228,7 +229,6 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
             writer,
           } = searchAccreditedWorksRes.data;
 
-          // BUG Put add other array values here. maybe with a spread operator
           setFilteredResults([
             { artist },
             { colorist },
