@@ -106,17 +106,21 @@ const BooksOrIssues = ({
       <div className="grid-info-box">
         <div className="grid-info-box-header-container">
           <h3 className="grid-info-box-header">{currentResult.title}</h3>
+          <h4 className="grid-info-box-header">Book: {currentResult.title}</h4>
+          <div className="grid-info-box-date-created">
+            {moment(currentResult.date_created).format("MMMM D, YYYY")}
+          </div>
         </div>
-        <div className="grid-info-box-body">
+        {/* <div className="grid-info-box-body">
           <ReadMore
             content={currentResult.description}
             maxStringLengthShown={100}
           />
-        </div>
-        <div className="grid-info-box-date-created">
+        </div> */}
+        {/* <div className="grid-info-box-date-created">
           {moment(currentResult.date_created).format("MMMM D, YYYY")}
-        </div>
-        <div className="grid-footer">{editButtonIfWorkBelongsToUser}</div>
+        </div> */}
+        {/* <div className="grid-footer">{editButtonIfWorkBelongsToUser}</div> */}
       </div>
     </li>
   ));
