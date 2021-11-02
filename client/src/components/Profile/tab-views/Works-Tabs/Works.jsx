@@ -39,7 +39,7 @@ const Accredited = ({ filteredResults }) => {
         (worksUserParticipatedIn) => {
           return {
             id: `${accreditedWorkKeyAsString}-${worksUserParticipatedIn.book_id}-${worksUserParticipatedIn.issue_id}`,
-            listItem: `<ul class="accredited-work-group"><li class="accredited-work-group-item">Issue: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.title}</a></li> <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> <li class="accredited-work-group-item">Book: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_id}</a></li></ul>`,
+            listItem: `<ul class="accredited-work-group"><li class="accredited-work-group-item">Issue: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.issue_title}</a></li> <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> <li class="accredited-work-group-item">Book: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_title}</a></li></ul>`,
           };
         }
       );
@@ -68,9 +68,15 @@ const Accredited = ({ filteredResults }) => {
 const BooksOrIssues = ({
   profilePageUserId,
   filteredResults,
+  filterType,
   currentPage,
   setPage,
 }) => {
+
+  useEffect(() => {
+    console.log("filterType useEffect: ", filterType);
+  }, [filterType]);
+  
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
   // const [currentPage, setCurrentPage] = useState(1);
   // const PageSize = 12;
@@ -105,8 +111,14 @@ const BooksOrIssues = ({
       </div>
       <div className="grid-info-box">
         <div className="grid-info-box-header-container">
-          <h3 className="grid-info-box-header">{currentResult.title}</h3>
-          <h4 className="grid-info-box-header">Book: {currentResult.title}</h4>
+          <h3 className="grid-info-box-header">
+            {/* {filterType === "Books"
+              ? currentResult.book_title
+              : currentResult.issue_title} */}
+          </h3>
+          <h4 className="grid-info-box-header">
+            {/* Book: {currentResult.book_title} */}
+          </h4>
           <div className="grid-info-box-date-created">
             {moment(currentResult.date_created).format("MMMM D, YYYY")}
           </div>
@@ -166,6 +178,7 @@ const DisplaySelectedWorks = React.memo(
       <BooksOrIssues
         profilePageUserId={profilePageUserId}
         filteredResults={filteredResults}
+        filterType={filterType}
         currentPage={currentPage}
         setPage={setPage}
       />

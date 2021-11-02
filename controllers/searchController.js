@@ -79,11 +79,13 @@ exports.searchIssues = catchAsync(async (req, res) => {
     users.email,
     users.user_photo,
     issues.id AS issue_id,
-    issues.title,
+    issues.title AS issue_title,
     issues.description,
     issues.cover_photo,
     issues.issue_number,
-    issues.date_created`,
+    issues.date_created,
+    books.title AS book_title
+    `,
     query,
     parameterizedValues,
     true
@@ -130,10 +132,10 @@ exports.searchAccreditedWorks = catchAsync(async (req, res) => {
 
   // issue_id, creator_credit
   const accreditedWorksQuery =
-    'work_credits INNER JOIN issues ON work_credits.issue_id = issues.id WHERE creator_id = ($1) AND creator_credit = ($2)';
+    'work_credits INNER JOIN issues ON (work_credits.issue_id = issues.id) INNER JOIN books ON (work_credits.book_id = books.id) WHERE creator_id = ($1) AND creator_credit = ($2)';
 
   const accreditedWorksSelectedData =
-    'issues.book_id, issues.date_created, issues.issue_number, issues.title, work_credits.issue_id, work_credits.creator_credit';
+    'issues.book_id, issues.date_created, issues.issue_number, issues.title AS issue_title, work_credits.issue_id, work_credits.creator_credit, books.id, books.title AS book_title';
 
   const writer = await new QueryPG(pool).find(
     accreditedWorksSelectedData,
