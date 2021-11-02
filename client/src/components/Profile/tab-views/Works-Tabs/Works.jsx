@@ -6,7 +6,7 @@ import {
   searchIssues,
   searchAccreditedWorks,
 } from "../../../../services";
-import ReadMore from "../../../CommonUI/ReadMore";
+// import ReadMore from "../../../CommonUI/ReadMore";
 import useBelongsToCurrentUser from "../../../../hooks/useBelongsToCurrentUser";
 import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
@@ -66,20 +66,15 @@ const Accredited = ({ filteredResults }) => {
 };
 
 const BooksOrIssues = ({
-  profilePageUserId,
+  // profilePageUserId,
   filteredResults,
   filterType,
   currentPage,
   setPage,
 }) => {
-
-  useEffect(() => {
-    console.log("filterType useEffect: ", filterType);
-  }, [filterType]);
-  
-  const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const PageSize = 12;
+  // useEffect(() => {
+  //   console.log("filterType useEffect: ", filterType);
+  // }, [filterType]);
 
   const currentResultsDisplayed = useCurrentPageResults(
     currentPage,
@@ -87,55 +82,67 @@ const BooksOrIssues = ({
     PAGINATION_LIMIT
   );
 
-  const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
-    <button type="button" className="edit-button">
-      <Link to="#">
-        <strong>Edit</strong>
-      </Link>
-    </button>
-  ) : null;
+  // TODO: save this for details page
+  // const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
 
-  const searchResults = currentResultsDisplayed?.map((currentResult) => (
-    <li
-      className="grid-list-item"
-      key={`filtered-result-${currentResult.book_id || currentResult.issue_id}`}
-    >
-      <div className="grid-image-container">
-        <Link to="#">
-          <img
-            className="grid-image"
-            src={currentResult.cover_photo}
-            alt={`${currentResult.title}`}
-          />
-        </Link>
-      </div>
-      <div className="grid-info-box">
-        <div className="grid-info-box-header-container">
-          <h3 className="grid-info-box-header">
-            {/* {filterType === "Books"
-              ? currentResult.book_title
-              : currentResult.issue_title} */}
-          </h3>
-          <h4 className="grid-info-box-header">
-            {/* Book: {currentResult.book_title} */}
-          </h4>
-          <div className="grid-info-box-date-created">
-            {moment(currentResult.date_created).format("MMMM D, YYYY")}
-          </div>
+  // const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
+  //   <button type="button" className="edit-button">
+  //     <Link to="#">
+  //       <strong>Edit</strong>
+  //     </Link>
+  //   </button>
+  // ) : null;
+
+  const searchResults = currentResultsDisplayed?.map((currentResult) => {
+    const showFirstHeaderWithBooksorIssueTitle =
+      filterType === "Books" ? (
+        <h3 className="grid-info-box-header">{currentResult.book_title}</h3>
+      ) : (
+        <h3 className="grid-info-box-header">{currentResult.issue_title}</h3>
+      );
+
+    const showSecondHeaderWithBookTitle =
+      filterType === "Issues" ? (
+        <h4 className="grid-info-box-header">{currentResult.book_title}</h4>
+      ) : null;
+    return (
+      <li
+        className="grid-list-item"
+        key={`filtered-result-${
+          currentResult.book_id || currentResult.issue_id
+        }`}
+      >
+        <div className="grid-image-container">
+          <Link to="#">
+            <img
+              className="grid-image"
+              src={currentResult.cover_photo}
+              alt={`${currentResult.title}`}
+            />
+          </Link>
         </div>
-        {/* <div className="grid-info-box-body">
+        <div className="grid-info-box">
+          <div className="grid-info-box-header-container">
+            {showFirstHeaderWithBooksorIssueTitle}
+            {showSecondHeaderWithBookTitle}
+            <div className="grid-info-box-date-created">
+              {moment(currentResult.date_created).format("MMMM D, YYYY")}
+            </div>
+          </div>
+          {/* <div className="grid-info-box-body">
           <ReadMore
             content={currentResult.description}
             maxStringLengthShown={100}
           />
         </div> */}
-        {/* <div className="grid-info-box-date-created">
+          {/* <div className="grid-info-box-date-created">
           {moment(currentResult.date_created).format("MMMM D, YYYY")}
         </div> */}
-        {/* <div className="grid-footer">{editButtonIfWorkBelongsToUser}</div> */}
-      </div>
-    </li>
-  ));
+          {/* <div className="grid-footer">{editButtonIfWorkBelongsToUser}</div> */}
+        </div>
+      </li>
+    );
+  });
 
   const showCurrentSearchPageDataIfPresent = filteredResults ? (
     <ul className="display-work-grid col-4">{searchResults}</ul>

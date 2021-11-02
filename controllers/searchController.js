@@ -26,7 +26,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     users.username,
     users.user_photo,
     books.id AS book_id,
-    books.title, 
+    books.title AS book_title, 
     books.url_slug, 
     books.cover_photo, 
     books.description, 
