@@ -6,7 +6,7 @@
     justify-content: space-evenly;
     max-width: 90%;
     margin: 0 auto;
-    grid-gap: 35px;
+    grid-gap: 50px;
     // align-items: start;
     // grid-gap: 10%;
 
@@ -122,6 +122,7 @@
 
     .display-work-grid {
         // max-width: 88%;
+        grid-gap: 35px;
 
         &.col-2 {
             grid-template-columns: 1fr 1fr;
