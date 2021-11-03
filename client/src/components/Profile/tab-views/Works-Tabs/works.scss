@@ -41,6 +41,7 @@
                         &-item-link {
                             color: $dark-violet-blue;
                             text-decoration: none;
+                            word-break: break-word;
 
                             &:hover {
                                 color: $violet-blue;
@@ -51,6 +52,9 @@
                 }
             }
         }
+    }
+    .pagination-bar {
+        margin-top: 1.7rem;
     }
 }
 

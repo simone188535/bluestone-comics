@@ -96,14 +96,26 @@ const BooksOrIssues = ({
   const searchResults = currentResultsDisplayed?.map((currentResult) => {
     const showFirstHeaderWithBooksorIssueTitle =
       filterType === "Books" ? (
-        <h3 className="grid-info-box-header">{currentResult.book_title}</h3>
+        <h3 className="grid-info-box-header">
+          <Link to="#" className="grid-info-box-header-link">
+            {currentResult.book_title}
+          </Link>
+        </h3>
       ) : (
-        <h3 className="grid-info-box-header">{currentResult.issue_title}</h3>
+        <h3 className="grid-info-box-header">
+          <Link to="#" className="grid-info-box-header-link">
+            {currentResult.issue_title}
+          </Link>
+        </h3>
       );
 
     const showSecondHeaderWithBookTitle =
       filterType === "Issues" ? (
-        <h4 className="grid-info-box-header">{currentResult.book_title}</h4>
+        <h4 className="grid-info-box-header">
+          <Link to="#" className="grid-info-box-header-link">
+            {currentResult.book_title}
+          </Link>
+        </h4>
       ) : null;
     return (
       <li
