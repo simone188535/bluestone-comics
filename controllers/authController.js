@@ -10,7 +10,7 @@ const sendEmail = require('../utils/email');
 const pool = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 
-const keys = require('../config/keys.js');
+const keys = require('../config/keys');
 
 /* 
   This method creates a jwt Token for auth purposes in the front end to help identify

@@ -7,7 +7,6 @@ import {
   searchAccreditedWorks,
 } from "../../../../services";
 // import ReadMore from "../../../CommonUI/ReadMore";
-import useBelongsToCurrentUser from "../../../../hooks/useBelongsToCurrentUser";
 import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
 import LoadingSpinner from "../../../CommonUI/LoadingSpinner";
@@ -72,26 +71,11 @@ const BooksOrIssues = ({
   currentPage,
   setPage,
 }) => {
-  // useEffect(() => {
-  //   console.log("filterType useEffect: ", filterType);
-  // }, [filterType]);
-
   const currentResultsDisplayed = useCurrentPageResults(
     currentPage,
     filteredResults,
     PAGINATION_LIMIT
   );
-
-  // TODO: save this for details page
-  // const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUserId);
-
-  // const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
-  //   <button type="button" className="edit-button">
-  //     <Link to="#">
-  //       <strong>Edit</strong>
-  //     </Link>
-  //   </button>
-  // ) : null;
 
   const searchResults = currentResultsDisplayed?.map((currentResult) => {
     const showFirstHeaderWithBooksorIssueTitle =

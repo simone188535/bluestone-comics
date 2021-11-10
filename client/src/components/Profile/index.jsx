@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { getUser } from "../../services";
+import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
 import Works from "./tab-views/Works-Tabs/Works";
 import Bookmarks from "./tab-views/Bookmarks";
 import Subscribed from "./tab-views/Subscribed";
@@ -50,6 +51,16 @@ const Profile = () => {
   //     console.log('profilePageUser', profilePageUser);
   // }, [profilePageUser]);
 
+  const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUser.id);
+  // Maybe use ternary https://medium.com/javascript-scene/nested-ternaries-are-great-361bddd0f340
+  const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
+    <button type="button" className="edit-button">
+      <Link to="#">
+        <strong>Edit</strong>
+      </Link>
+    </button>
+  ) : null;
+
   return (
     <div className="container-fluid profile-page">
       <div className="profile-page-header">
@@ -78,7 +89,9 @@ const Profile = () => {
         </div>
       </div>
       <div className="profile-page-body">
-        {/* <div className="container"></div> */}
+        <section className="container subscribe-edit">
+          {editButtonIfWorkBelongsToUser}
+        </section>
         <section className="container user-bio">
           <h2 className="title">Bio</h2>
           <p className="description">{profilePageUser.bio}</p>

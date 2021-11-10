@@ -13,7 +13,9 @@ router
   .route('/get-all-subscribed')
   .get(subscriberController.getAllSubscribedTo);
 
+// Protect all routes after this middleware
 router.use(authController.protect);
+
 router
   .route('/add')
   .post(
