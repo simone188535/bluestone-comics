@@ -54,11 +54,29 @@ const Profile = () => {
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUser.id);
   // Maybe use ternary https://medium.com/javascript-scene/nested-ternaries-are-great-361bddd0f340
   const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
-    <button type="button" className="edit-button">
+    <>
       <Link to="#">
-        <strong>Edit</strong>
+        <button
+          type="button"
+          className="bsc-button transparent transparent-blue"
+        >
+          Edit
+        </button>
       </Link>
-    </button>
+      <Link to="#">
+        <button type="button" className="bsc-button primary primary-round primary-glow">
+          Subscribe
+        </button>
+      </Link>
+      <Link to="#">
+        <button
+          type="button"
+          className="bsc-button transparent transparent-red"
+        >
+          Unsubscribe
+        </button>
+      </Link>
+    </>
   ) : null;
 
   return (

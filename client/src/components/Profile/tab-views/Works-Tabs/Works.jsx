@@ -125,16 +125,6 @@ const BooksOrIssues = ({
               {moment(currentResult.date_created).format("MMMM D, YYYY")}
             </div>
           </div>
-          {/* <div className="grid-info-box-body">
-          <ReadMore
-            content={currentResult.description}
-            maxStringLengthShown={100}
-          />
-        </div> */}
-          {/* <div className="grid-info-box-date-created">
-          {moment(currentResult.date_created).format("MMMM D, YYYY")}
-        </div> */}
-          {/* <div className="grid-footer">{editButtonIfWorkBelongsToUser}</div> */}
         </div>
       </li>
     );
