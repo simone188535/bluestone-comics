@@ -1,5 +1,4 @@
 .display-work-grid {
-    // background-color: teal;
     display: grid;
     grid-template-columns: 1fr;
     list-style: none;
@@ -7,8 +6,6 @@
     max-width: 90%;
     margin: 0 auto;
     grid-gap: 50px;
-    // align-items: start;
-    // grid-gap: 10%;
 
 
     // mimics bootstrap column sizes
@@ -25,46 +22,28 @@
     }
 
     li.grid-list-item {
-        // background-color: $pure-white;
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
         height: max-content;
 
         .grid-image-container {
-            // flex: 1;
-            // display: flex;
-            // flex-direction: column;
-
             img.grid-image {
                 display: block;
                 width: 100%;
                 object-fit: contain;
-                // height: 350px;
             }
-
-            // height: 400px;
-            // width: 260px;
         }
 
         .grid-info-box {
-            // flex: 1;
-            // display: flex;
-            // flex-direction: column;
-            // min-height: 200px;
-            // position: relative;
-            // font-size: .8rem;
             padding-top: 1rem;
 
-            &-header,
-            &-body {
+            &-header {
                 line-height: 1.5;
                 letter-spacing: 1px;
-                // font-size: 15px;
             }
 
             &-header-container {
-                // display: flex;
                 min-height: 45px;
                 align-items: center;
                 font-size: 1rem;
@@ -73,7 +52,6 @@
             &-header {
                 margin-bottom: 5px;
                 font-weight: $normal;
-                // word-break: break-all;
                 word-break: break-word;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
@@ -95,26 +73,12 @@
                 }
             }
 
-
-            &-body {
-                font-weight: $light;
-                margin-bottom: 20px;
-                min-height: 110px;
-            }
-
             &-date-created {
                 font-weight: $light;
-                // text-align: right;
                 color: $dark-violet-blue;
                 font-size: .9em;
-                // margin-bottom: 10px;
-
             }
-
-            // padding: 20px;
         }
-
-        .grid-footer {}
     }
 }
 
