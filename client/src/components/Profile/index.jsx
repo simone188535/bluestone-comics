@@ -58,20 +58,23 @@ const Profile = () => {
       <Link to="#">
         <button
           type="button"
-          className="bsc-button transparent transparent-blue"
+          className="sub-edit-unsub-btn bsc-button transparent transparent-blue "
         >
           Edit
         </button>
       </Link>
       <Link to="#">
-        <button type="button" className="bsc-button primary primary-round primary-glow">
+        <button
+          type="button"
+          className="sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
+        >
           Subscribe
         </button>
       </Link>
       <Link to="#">
         <button
           type="button"
-          className="bsc-button transparent transparent-red"
+          className="sub-edit-unsub-btn bsc-button transparent transparent-red"
         >
           Unsubscribe
         </button>

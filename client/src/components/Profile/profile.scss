@@ -103,21 +103,9 @@
             }
         }
 
-        .edit-button {
-            border-radius: 10px;
-            width: 100%;
-            border: 0;
-            background: none;
-            font-size: 15px;
-
-            a {
-                text-decoration: none;
-                color: $error-red;
-
-                &:hover {
-                    color: $dark-red;
-                }
-            }
+        .sub-edit-unsub-btn {
+            width: 200px;
+            font-size: 1rem;
         }
     }
 }
@@ -155,6 +143,10 @@
                 li {
                     width: 25%;
                 }
+            }
+
+            .sub-edit-unsub-btn {
+                width: 250px;
             }
         }
     }
