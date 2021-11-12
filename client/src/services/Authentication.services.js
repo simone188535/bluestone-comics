@@ -25,14 +25,10 @@ async function ReAuthUser(jwtToken) {
 
 function login(email, password) {
   // send request to login
-  return axios
-    .post("/api/v1/users/login", {
-      email,
-      password,
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  return axios.post("/api/v1/users/login", {
+    email,
+    password,
+  });
 }
 
 function signUp(
@@ -44,18 +40,14 @@ function signUp(
   passwordConfirm
 ) {
   // send request to sign up
-  return axios
-    .post("/api/v1/users/signup", {
-      firstName,
-      lastName,
-      email,
-      username,
-      password,
-      passwordConfirm,
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  return axios.post("/api/v1/users/signup", {
+    firstName,
+    lastName,
+    email,
+    username,
+    password,
+    passwordConfirm,
+  });
 }
 
 function logout() {
@@ -64,23 +56,15 @@ function logout() {
 
 function forgotPassword(email) {
   // send request to forgotPassword
-  return axios
-    .post("/api/v1/users/forgot-password", {
-      email,
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  return axios.post("/api/v1/users/forgot-password", {
+    email,
+  });
 }
 
 function resetPassword(resetToken, password, passwordConfirm) {
   // send request to resetPassword
-  return axios
-    .patch(`/api/v1/users/reset-password/${resetToken}`, {
-      password,
-      passwordConfirm,
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  return axios.patch(`/api/v1/users/reset-password/${resetToken}`, {
+    password,
+    passwordConfirm,
+  });
 }

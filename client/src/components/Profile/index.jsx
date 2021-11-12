@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { getUser } from "../../services";
 import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
+import useIsUserSubscribed from "../../hooks/useIsUserSubscribed";
 import Works from "./tab-views/Works-Tabs/Works";
 import Bookmarks from "./tab-views/Bookmarks";
 import Subscribed from "./tab-views/Subscribed";
@@ -50,7 +51,7 @@ const Profile = () => {
   // useEffect(() => {
   //     console.log('profilePageUser', profilePageUser);
   // }, [profilePageUser]);
-
+  useIsUserSubscribed(profilePageUser.id);
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUser.id);
   // Maybe use ternary https://medium.com/javascript-scene/nested-ternaries-are-great-361bddd0f340
   const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (

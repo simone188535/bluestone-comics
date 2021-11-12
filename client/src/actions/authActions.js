@@ -26,6 +26,8 @@ const login = (email, password) => async (dispatch) => {
     dispatch(loginSuccess(res.data.data.user, res.data.reactivated));
   } catch (err) {
     dispatch(loginFailure());
+    console.log('err ', err);
+    debugger;
     dispatch(errorActions.setError(err.response.data.message));
   
   }
