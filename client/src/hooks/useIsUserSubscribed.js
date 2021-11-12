@@ -3,26 +3,26 @@ import { useSelector } from "react-redux";
 import { checkSubscription } from "../services";
 
 function useIsUserSubscribed(providedUserId) {
-  const [userIsSubscribed, setuserIsSubscribed] = useState(false);
+  const [userIsSubscribed, setUserIsSubscribed] = useState(null);
   const currentUserId = useSelector((state) => state.auth.user?.id);
 
   useEffect(() => {
     if (!currentUserId || !providedUserId) return;
 
     async function fetchCheckSubscriptionData() {
-      // const res = await checkSubscription(providedUserId);
-      // add try catch!!!!
-      console.log("res ", await checkSubscription(providedUserId));
-      // if an error is returned
-      // if (!res) return;
-
-      // if
+      try {
+        const res = await checkSubscription(providedUserId);
+        console.log("res ", res);
+        setUserIsSubscribed(true);
+      } catch (err) {
+        setUserIsSubscribed(false);
+      }
     }
 
     fetchCheckSubscriptionData();
     // setBelongsToUser(currentUserId === providedUserId);
   }, [providedUserId, currentUserId]);
-  // return belongsToUser;
+  return userIsSubscribed;
 }
 
 export default useIsUserSubscribed;

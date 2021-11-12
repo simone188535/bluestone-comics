@@ -7,14 +7,12 @@ const pool = require('../db');
 
 exports.checkSubscription = (onlyCheckSubscription = false) =>
   catchAsync(async (req, res, next) => {
-    // const currentUserSubscribedToPublisher = await Subscriber.findOne({
-    //   publisher: req.body.publisher,
-    //   subscriber: res.locals.user.id
-    // });
+    const { publisherId } = req.params;
+
     const currentUserSubscribedToPublisher = await new QueryPG(pool).find(
       'publisher_id, subscriber_id',
       'subscribers WHERE publisher_id = ($1) AND subscriber_id = ($2)',
-      [req.body.publisher, res.locals.user.id]
+      [publisherId, res.locals.user.id]
     );
 
     if (onlyCheckSubscription) {
@@ -36,7 +34,7 @@ exports.checkSubscription = (onlyCheckSubscription = false) =>
   });
 
 exports.subscribe = catchAsync(async (req, res, next) => {
-  const { publisher } = req.body;
+  const { publisherId } = req.params;
 
   if (res.locals.subscribed) {
     return next(
@@ -44,14 +42,14 @@ exports.subscribe = catchAsync(async (req, res, next) => {
     );
   }
   // prevent user from subscribing to themselves
-  if (Number(publisher) === Number(res.locals.user.id)) {
+  if (Number(publisherId) === Number(res.locals.user.id)) {
     return next(new AppError('A user cannot subscribe to themselves.', 400));
   }
 
   const subscribeToPublisher = await new QueryPG(pool).insert(
     'subscribers (publisher_id, subscriber_id)',
     '$1, $2',
-    [publisher, res.locals.user.id]
+    [publisherId, res.locals.user.id]
   );
 
   res.status(201).json({
@@ -61,7 +59,7 @@ exports.subscribe = catchAsync(async (req, res, next) => {
 });
 
 exports.unsubscribe = catchAsync(async (req, res, next) => {
-  const { publisher } = req.body;
+  const { publisherId } = req.params;
   if (!res.locals.subscribed) {
     return next(
       new AppError('This user is not subscribed to this publisher.', 404)
@@ -71,7 +69,7 @@ exports.unsubscribe = catchAsync(async (req, res, next) => {
   await new QueryPG(pool).delete(
     'subscribers',
     'publisher_id = ($1) AND subscriber_id = ($2) ',
-    [publisher, res.locals.user.id]
+    [publisherId, res.locals.user.id]
   );
 
   res.status(204).json({
@@ -82,14 +80,14 @@ exports.unsubscribe = catchAsync(async (req, res, next) => {
 // all subscribers to a specific user
 exports.getAllSubscribers = catchAsync(async (req, res, next) => {
   const { page } = req.query;
-  const { publisher } = req.body;
+  const { publisherId } = req.params;
 
   const offset = pageOffset(page);
 
   const allSubscribers = await new QueryPG(pool).find(
     'subscriber_id, username, user_photo',
     'subscribers INNER JOIN users ON (users.id = subscribers.publisher_id) WHERE publisher_id = ($1) LIMIT 20 OFFSET ($2)',
-    [publisher, offset],
+    [publisherId, offset],
     true
   );
 
@@ -107,14 +105,14 @@ exports.getAllSubscribers = catchAsync(async (req, res, next) => {
 // All publishers this user is subscribed to
 exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
   const { page } = req.query;
-  const { subscriber } = req.body;
+  const { subscriberId } = req.params;
 
   const offset = pageOffset(page);
 
   const allSubscribedTo = await new QueryPG(pool).find(
     'publisher_id, username, user_photo',
     'subscribers INNER JOIN users ON (users.id = subscribers.subscriber_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)',
-    [subscriber, offset],
+    [subscriberId, offset],
     true
   );
 

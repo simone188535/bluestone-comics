@@ -6,30 +6,30 @@ const authController = require('../controllers/authController');
 const subscriberController = require('../controllers/subscriberController');
 
 router
-  .route('/get-all-subscribers')
+  .route('/get-all-subscribers/publisher/:publisherId')
   .get(subscriberController.getAllSubscribers);
 
 router
-  .route('/get-all-subscribed')
+  .route('/get-all-subscribed/subscriber/:subscriberId')
   .get(subscriberController.getAllSubscribedTo);
 
 // Protect all routes after this middleware
 router.use(authController.protect);
 
 router
-  .route('/add')
+  .route('/add/publisher/:publisherId')
   .post(
     subscriberController.checkSubscription(),
     subscriberController.subscribe
   );
 router
-  .route('/remove')
+  .route('/remove/publisher/:publisherId')
   .post(
     subscriberController.checkSubscription(),
     subscriberController.unsubscribe
   );
 router
-  .route('/check-subscription')
+  .route('/check-subscription/publisher/:publisherId')
   .get(subscriberController.checkSubscription(true));
 
 module.exports = router;

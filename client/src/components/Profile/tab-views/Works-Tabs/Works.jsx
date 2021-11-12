@@ -50,6 +50,11 @@ const Accredited = ({ filteredResults }) => {
       };
     });
 
+  // if there is no accreditedData after filtering
+  if (accreditedData.length === 0) {
+    return <p className="description">No works to display yet.</p>;
+  }
+
   return (
     <>
       {/* <h3>this creator has fulfilled the following roles:</h3> */}
@@ -76,6 +81,11 @@ const BooksOrIssues = ({
     filteredResults,
     PAGINATION_LIMIT
   );
+
+  console.log("filteredResults.length === 0", filteredResults);
+  // if (filteredResults.length === 0) {
+  //   return <p className="description">No works to display yet.</p>;
+  // }
 
   const searchResults = currentResultsDisplayed?.map((currentResult) => {
     const showFirstHeaderWithBooksorIssueTitle =
@@ -182,7 +192,7 @@ const DisplaySelectedWorks = React.memo(
 const Works = ({ profilePageUsername, profilePageUserId }) => {
   // This may be passed as a props later from the profile page
   const buttonValues = ["Books", "Issues", "Accredited"];
-
+  
   const [activeButton, setActiveButton] = useState(0);
   const [filterType, setFilterType] = useState(buttonValues[0]);
   const [filteredResults, setFilteredResults] = useState([]);
@@ -197,6 +207,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         case "Books": {
           setLoadingStatus(true);
 
+          console.log('profilePageUsername ', profilePageUsername);
           const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
             sort: "desc",
