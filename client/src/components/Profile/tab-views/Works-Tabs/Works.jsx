@@ -6,7 +6,6 @@ import {
   searchIssues,
   searchAccreditedWorks,
 } from "../../../../services";
-// import ReadMore from "../../../CommonUI/ReadMore";
 import useCurrentPageResults from "../../../../hooks/useCurrentPageResults";
 import Pagination from "../../../CommonUI/Pagination";
 import LoadingSpinner from "../../../CommonUI/LoadingSpinner";
@@ -50,20 +49,21 @@ const Accredited = ({ filteredResults }) => {
       };
     });
 
-  // if there is no accreditedData after filtering
-  if (accreditedData.length === 0) {
-    return <p className="description">No works to display yet.</p>;
-  }
-
   return (
     <>
       {/* <h3>this creator has fulfilled the following roles:</h3> */}
-      {/* {console.log("accreditedData ", accreditedData)} */}
       <div>
-        <Accordion
-          AccordianData={accreditedData}
-          className="accredited-works-accordian"
-        />
+        {
+          //  if the user has accreditedData results in the section, return this message else return accordian
+          accreditedData.length === 0 ? (
+            <p className="description">No works to display yet.</p>
+          ) : (
+            <Accordion
+              AccordianData={accreditedData}
+              className="accredited-works-accordian"
+            />
+          )
+        }
       </div>
     </>
   );
@@ -81,11 +81,6 @@ const BooksOrIssues = ({
     filteredResults,
     PAGINATION_LIMIT
   );
-
-  console.log("filteredResults.length === 0", filteredResults);
-  // if (filteredResults.length === 0) {
-  //   return <p className="description">No works to display yet.</p>;
-  // }
 
   const searchResults = currentResultsDisplayed?.map((currentResult) => {
     const showFirstHeaderWithBooksorIssueTitle =
@@ -148,20 +143,25 @@ const BooksOrIssues = ({
 
   return (
     <>
-      <div className="filtered-results">
-        {showCurrentSearchPageDataIfPresent}
-      </div>
-      <Pagination
-        className="pagination-bar"
-        currentPage={currentPage}
-        // BUG total results needs to be passed here (memoizing might help):
-        // I might not have to do any of thats at all since I commented out limit and page in fetchSearchType ?
-        // https://cloudnweb.dev/2021/04/pagination-nodejs-mongoose/
-        // https://www.youtube.com/watch?v=yY1n0sDZPtI
-        totalCount={filteredResults.length}
-        pageSize={PAGINATION_LIMIT}
-        onPageChange={setPage}
-      />
+      {
+        // if the user has no results in the section, return this message, else return filtered results and pagination
+        filteredResults.length === 0 ? (
+          <p className="description">No works to display yet.</p>
+        ) : (
+          <>
+            <div className="filtered-results">
+              {showCurrentSearchPageDataIfPresent}
+            </div>
+            <Pagination
+              className="pagination-bar"
+              currentPage={currentPage}
+              totalCount={filteredResults.length}
+              pageSize={PAGINATION_LIMIT}
+              onPageChange={setPage}
+            />
+          </>
+        )
+      }
     </>
   );
 };
@@ -190,9 +190,9 @@ const DisplaySelectedWorks = React.memo(
 );
 
 const Works = ({ profilePageUsername, profilePageUserId }) => {
-  // This may be passed as a props later from the profile page
+  // TODO: This can be made a constant
   const buttonValues = ["Books", "Issues", "Accredited"];
-  
+
   const [activeButton, setActiveButton] = useState(0);
   const [filterType, setFilterType] = useState(buttonValues[0]);
   const [filteredResults, setFilteredResults] = useState([]);
@@ -207,7 +207,6 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         case "Books": {
           setLoadingStatus(true);
 
-          console.log('profilePageUsername ', profilePageUsername);
           const booksByProfileUser = await searchBooks({
             username: profilePageUsername,
             sort: "desc",
@@ -274,8 +273,10 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
   }, [filterType, profilePageUserId, profilePageUsername]);
 
   useEffect(() => {
-    fetchSearchType();
-  }, [fetchSearchType, filterType]);
+    if (profilePageUsername && profilePageUserId) {
+      fetchSearchType();
+    }
+  }, [fetchSearchType, filterType, profilePageUserId, profilePageUsername]);
 
   // useEffect(() => {
   //   console.log("filteredResults useEffect: ", filteredResults);
@@ -326,7 +327,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
       renderStatusOfDataRetrieval = (
         <LoadingSpinner loadingStatus={loadingStatus} />
       );
-    } else if (filteredResults.length) {
+    } else {
       // when data fetching is completed
       renderStatusOfDataRetrieval = (
         <DisplaySelectedWorks
