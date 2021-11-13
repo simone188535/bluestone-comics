@@ -70,7 +70,7 @@ const Accredited = ({ filteredResults }) => {
 };
 
 const BooksOrIssues = ({
-  // profilePageUserId,
+  // id,
   filteredResults,
   filterType,
   currentPage,
@@ -167,19 +167,13 @@ const BooksOrIssues = ({
 };
 
 const DisplaySelectedWorks = React.memo(
-  ({
-    filterType,
-    filteredResults,
-    profilePageUserId,
-    currentPage,
-    setPage,
-  }) => {
+  ({ filterType, filteredResults, id, currentPage, setPage }) => {
     if (filterType === "Accredited") {
       return <Accredited filteredResults={filteredResults} />;
     }
     return (
       <BooksOrIssues
-        profilePageUserId={profilePageUserId}
+        id={id}
         filteredResults={filteredResults}
         filterType={filterType}
         currentPage={currentPage}
@@ -189,9 +183,10 @@ const DisplaySelectedWorks = React.memo(
   }
 );
 
-const Works = ({ profilePageUsername, profilePageUserId }) => {
+const Works = ({ profilePageUser }) => {
   // TODO: This can be made a constant
   const buttonValues = ["Books", "Issues", "Accredited"];
+  const { username, id } = profilePageUser;
 
   const [activeButton, setActiveButton] = useState(0);
   const [filterType, setFilterType] = useState(buttonValues[0]);
@@ -208,7 +203,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           setLoadingStatus(true);
 
           const booksByProfileUser = await searchBooks({
-            username: profilePageUsername,
+            username,
             sort: "desc",
           });
 
@@ -222,7 +217,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
           setLoadingStatus(true);
 
           const issuesByProfileUser = await searchIssues({
-            username: profilePageUsername,
+            username,
             sort: "desc",
           });
 
@@ -235,9 +230,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         case "Accredited": {
           setLoadingStatus(true);
 
-          const searchAccreditedWorksRes = await searchAccreditedWorks(
-            profilePageUserId
-          );
+          const searchAccreditedWorksRes = await searchAccreditedWorks(id);
           const {
             artist,
             colorist,
@@ -270,13 +263,13 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
     } catch (err) {
       setErrorMessageStatus(true);
     }
-  }, [filterType, profilePageUserId, profilePageUsername]);
+  }, [filterType, id, username]);
 
   useEffect(() => {
-    if (profilePageUsername && profilePageUserId) {
+    if (username && id) {
       fetchSearchType();
     }
-  }, [fetchSearchType, filterType, profilePageUserId, profilePageUsername]);
+  }, [fetchSearchType, filterType, id, username]);
 
   // useEffect(() => {
   //   console.log("filteredResults useEffect: ", filteredResults);
@@ -335,7 +328,7 @@ const Works = ({ profilePageUsername, profilePageUserId }) => {
         <DisplaySelectedWorks
           filterType={filterType}
           filteredResults={filteredResults}
-          profilePageUserId={profilePageUserId}
+          id={id}
           currentPage={currentPage}
           setPage={setPage}
         />

@@ -148,10 +148,7 @@ const Profile = () => {
             </div>
             <div className="container-fluid">
               <TabPanel>
-                <Works
-                  profilePageUsername={profilePageUser.username}
-                  profilePageUserId={profilePageUser.id}
-                />
+                <Works profilePageUser={profilePageUser} />
               </TabPanel>
               <TabPanel>
                 <Bookmarks profilePageUser={profilePageUser} />
