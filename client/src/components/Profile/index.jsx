@@ -59,74 +59,46 @@ const Profile = () => {
   const showEditSubOrUnsubBtn = () => {
     if (!profilePageUser) return null;
 
+    let index = null;
+    const editSubUnsubBtnVal = [
+      {
+        btnClass: "transparent transparent-blue",
+        btnVal: " Edit",
+      },
+      {
+        btnClass: "transparent transparent-red",
+        btnVal: "Unsubscribe",
+      },
+      {
+        btnClass: "primary-round primary-glow",
+        btnVal: "Subscribe",
+      },
+    ];
+
     if (belongsToCurrentUser) {
-      return (
-        <Link to="#">
-          <button
-            type="button"
-            className="sub-edit-unsub-btn bsc-button transparent transparent-blue "
-          >
-            Edit
-          </button>
-        </Link>
-      );
+      index = 0;
     }
     if (isUserSubscribedToProfilePageUser) {
-      return (
-        <Link to="#">
-          <button
-            type="button"
-            className="sub-edit-unsub-btn bsc-button transparent transparent-red"
-          >
-            Unsubscribe
-          </button>
-        </Link>
-      );
+      index = 1;
     }
-
     if (isUserSubscribedToProfilePageUser === false) {
-      return (
-        <Link to="#">
-          <button
-            type="button"
-            className="sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
-          >
-            Subscribe
-          </button>
-        </Link>
-      );
+      index = 2;
     }
 
-    return <></>;
+    const showBtnOrNull =
+      index !== null ? (
+        <button
+          type="button"
+          className={`sub-edit-unsub-btn bsc-button ${editSubUnsubBtnVal[index].btnClass}`}
+        >
+          {editSubUnsubBtnVal[index].btnVal}
+        </button>
+      ) : (
+        <></>
+      );
+
+    return showBtnOrNull;
   };
-  // const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
-  //   <>
-  //     <Link to="#">
-  //       <button
-  //         type="button"
-  //         className="sub-edit-unsub-btn bsc-button transparent transparent-blue "
-  //       >
-  //         Edit
-  //       </button>
-  //     </Link>
-  //     <Link to="#">
-  //       <button
-  //         type="button"
-  //         className="sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
-  //       >
-  //         Subscribe
-  //       </button>
-  //     </Link>
-  //     <Link to="#">
-  //       <button
-  //         type="button"
-  //         className="sub-edit-unsub-btn bsc-button transparent transparent-red"
-  //       >
-  //         Unsubscribe
-  //       </button>
-  //     </Link>
-  //   </>
-  // ) : null;
 
   return (
     <div className="container-fluid profile-page">
