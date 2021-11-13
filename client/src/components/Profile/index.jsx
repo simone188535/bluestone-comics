@@ -51,19 +51,38 @@ const Profile = () => {
   // useEffect(() => {
   //     console.log('profilePageUser', profilePageUser);
   // }, [profilePageUser]);
-  useIsUserSubscribed(profilePageUser.id);
   const belongsToCurrentUser = useBelongsToCurrentUser(profilePageUser.id);
+  const isUserSubscribedToProfilePageUser = useIsUserSubscribed(
+    profilePageUser.id
+  );
   // Maybe use ternary https://medium.com/javascript-scene/nested-ternaries-are-great-361bddd0f340
-  const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
-    <>
-      <Link to="#">
-        <button
-          type="button"
-          className="sub-edit-unsub-btn bsc-button transparent transparent-blue "
-        >
-          Edit
-        </button>
-      </Link>
+  const showEditSubOrUnsubBtn = () => {
+    if (!profilePageUser) return;
+    if (belongsToCurrentUser) {
+      return (
+        <Link to="#">
+          <button
+            type="button"
+            className="sub-edit-unsub-btn bsc-button transparent transparent-blue "
+          >
+            Edit
+          </button>
+        </Link>
+      );
+    }
+    if (isUserSubscribedToProfilePageUser) {
+      return (
+        <Link to="#">
+          <button
+            type="button"
+            className="sub-edit-unsub-btn bsc-button transparent transparent-red"
+          >
+            Unsubscribe
+          </button>
+        </Link>
+      );
+    }
+    return (
       <Link to="#">
         <button
           type="button"
@@ -72,16 +91,36 @@ const Profile = () => {
           Subscribe
         </button>
       </Link>
-      <Link to="#">
-        <button
-          type="button"
-          className="sub-edit-unsub-btn bsc-button transparent transparent-red"
-        >
-          Unsubscribe
-        </button>
-      </Link>
-    </>
-  ) : null;
+    );
+  };
+  // const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
+  //   <>
+  //     <Link to="#">
+  //       <button
+  //         type="button"
+  //         className="sub-edit-unsub-btn bsc-button transparent transparent-blue "
+  //       >
+  //         Edit
+  //       </button>
+  //     </Link>
+  //     <Link to="#">
+  //       <button
+  //         type="button"
+  //         className="sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
+  //       >
+  //         Subscribe
+  //       </button>
+  //     </Link>
+  //     <Link to="#">
+  //       <button
+  //         type="button"
+  //         className="sub-edit-unsub-btn bsc-button transparent transparent-red"
+  //       >
+  //         Unsubscribe
+  //       </button>
+  //     </Link>
+  //   </>
+  // ) : null;
 
   return (
     <div className="container-fluid profile-page">
@@ -112,7 +151,7 @@ const Profile = () => {
       </div>
       <div className="profile-page-body">
         <section className="container subscribe-edit">
-          {editButtonIfWorkBelongsToUser}
+          {showEditSubOrUnsubBtn()}
         </section>
         <section className="container user-bio">
           <h2 className="title">Bio</h2>

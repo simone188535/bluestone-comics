@@ -102,9 +102,17 @@
             }
         }
 
-        .sub-edit-unsub-btn {
-            width: 200px;
-            font-size: 1rem;
+        .subscribe-edit {
+            .sub-edit-unsub-btn {
+                width: 200px;
+                font-size: 1rem;
+                margin: 0 auto;
+                display: block;
+
+                a {
+                    text-decoration: none;
+                }
+            }
         }
     }
 }
@@ -144,8 +152,10 @@
                 }
             }
 
-            .sub-edit-unsub-btn {
-                width: 250px;
+            .subscribe-edit {
+                .sub-edit-unsub-btn {
+                    width: 250px;
+                }
             }
         }
     }

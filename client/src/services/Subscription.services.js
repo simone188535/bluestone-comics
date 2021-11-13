@@ -1,10 +1,10 @@
 import axios from "axios";
 
-function checkSubscription(profileUserId) {
+function checkSubscription(publisherId) {
   const jwtToken = localStorage.getItem("jwtToken");
 
   return axios.get(
-    `/api/v1/subscribe/check-subscription/publisher/${profileUserId}`,
+    `/api/v1/subscribe/check-subscription/publisher/${publisherId}`,
     {
       headers: { Authorization: `Bearer ${jwtToken}` },
     }
