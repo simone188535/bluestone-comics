@@ -57,7 +57,8 @@ const Profile = () => {
   );
   // Maybe use ternary https://medium.com/javascript-scene/nested-ternaries-are-great-361bddd0f340
   const showEditSubOrUnsubBtn = () => {
-    if (!profilePageUser) return;
+    if (!profilePageUser) return null;
+
     if (belongsToCurrentUser) {
       return (
         <Link to="#">
@@ -82,16 +83,21 @@ const Profile = () => {
         </Link>
       );
     }
-    return (
-      <Link to="#">
-        <button
-          type="button"
-          className="sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
-        >
-          Subscribe
-        </button>
-      </Link>
-    );
+
+    if (isUserSubscribedToProfilePageUser === false) {
+      return (
+        <Link to="#">
+          <button
+            type="button"
+            className="sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
+          >
+            Subscribe
+          </button>
+        </Link>
+      );
+    }
+
+    return <></>;
   };
   // const editButtonIfWorkBelongsToUser = belongsToCurrentUser ? (
   //   <>

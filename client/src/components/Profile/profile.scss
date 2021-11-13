@@ -103,15 +103,16 @@
         }
 
         .subscribe-edit {
+            
+            a {
+                text-decoration: none;
+            }
+            
             .sub-edit-unsub-btn {
                 width: 200px;
                 font-size: 1rem;
                 margin: 0 auto;
                 display: block;
-
-                a {
-                    text-decoration: none;
-                }
             }
         }
     }
