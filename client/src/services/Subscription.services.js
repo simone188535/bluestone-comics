@@ -1,5 +1,21 @@
 import axios from "axios";
 
+function add(publisherId) {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  return axios.get(`api/v1/subscribe/add/publisher/${publisherId}`, {
+    headers: { Authorization: `Bearer ${jwtToken}` },
+  });
+}
+
+function remove(publisherId) {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  return axios.get(`/api/v1/subscribe/remove/publisher/${publisherId}`, {
+    headers: { Authorization: `Bearer ${jwtToken}` },
+  });
+}
+
 function checkSubscription(publisherId) {
   const jwtToken = localStorage.getItem("jwtToken");
 
@@ -11,4 +27,4 @@ function checkSubscription(publisherId) {
   );
 }
 
-export { checkSubscription };
+export { add, remove, checkSubscription };

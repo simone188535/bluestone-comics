@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { getUser } from "../../services";
+import { getUser, add, remove } from "../../services";
 import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
 import useIsUserSubscribed from "../../hooks/useIsUserSubscribed";
 import Works from "./tab-views/Works-Tabs/Works";
@@ -21,6 +21,7 @@ const Profile = () => {
   // Should be an object
   const [profilePageUser, setProfilePageUser] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   // const [currentUsername, setCurrentUsername] = useState('');
   // const { isAuthenticated, currentUser, isFetching } = useSelector(state => ({
   //     isAuthenticated: state.auth.isAuthenticated,
@@ -42,7 +43,8 @@ const Profile = () => {
         setProfilePageUser(res.data.user);
       } catch (err) {
         // setErrorMessage(err.response.data.message);
-        setErrorMessage("An error occurred. Please try again later.");
+        // setErrorMessage("An error occurred. Please try again later.");
+        setErrorMessage(true);
       }
     };
     fetchProfileUser();
@@ -55,7 +57,13 @@ const Profile = () => {
   const isUserSubscribedToProfilePageUser = useIsUserSubscribed(
     profilePageUser.id
   );
-  // Maybe use ternary https://medium.com/javascript-scene/nested-ternaries-are-great-361bddd0f340
+
+  /* 
+    This method displays edit, subscribe, and unsubscribe conditionally. if the page belongs 
+    to the user, the edit button is shown. If the user is subscribed, the user should see
+    unsubscribed button. If the user is not subscribed, the user should see the subscribed 
+    button.
+  */
   const showEditSubOrUnsubBtn = () => {
     if (!profilePageUser) return null;
 
@@ -64,24 +72,53 @@ const Profile = () => {
       {
         btnClass: "transparent transparent-blue",
         btnVal: " Edit",
+        btnClick: async () => {
+          try {
+            setIsLoading(true);
+
+            // const res = await getUser({ username });
+            console.log("Edit");
+            setIsLoading(false);
+          } catch (err) {
+            setErrorMessage(true);
+          }
+        },
       },
       {
         btnClass: "transparent transparent-red",
         btnVal: "Unsubscribe",
+        btnClick: async () => {
+          try {
+            setIsLoading(true);
+            console.log("unsubscribe");
+            const res = await remove(profilePageUser.id);
+            setIsLoading(false);
+          } catch (err) {
+            setErrorMessage(true);
+          }
+        },
       },
       {
         btnClass: "primary-round primary-glow",
         btnVal: "Subscribe",
+        btnClick: async () => {
+          try {
+            setIsLoading(true);
+            console.log("Subscribe");
+            const res = await add(profilePageUser.id);
+            setIsLoading(false);
+          } catch (err) {
+            setErrorMessage(true);
+          }
+        },
       },
     ];
 
     if (belongsToCurrentUser) {
       index = 0;
-    }
-    if (isUserSubscribedToProfilePageUser) {
+    } else if (isUserSubscribedToProfilePageUser) {
       index = 1;
-    }
-    if (isUserSubscribedToProfilePageUser === false) {
+    } else if (isUserSubscribedToProfilePageUser === false) {
       index = 2;
     }
 
@@ -90,6 +127,7 @@ const Profile = () => {
         <button
           type="button"
           className={`sub-edit-unsub-btn bsc-button ${editSubUnsubBtnVal[index].btnClass}`}
+          onClick={editSubUnsubBtnVal[index].btnClick}
         >
           {editSubUnsubBtnVal[index].btnVal}
         </button>
@@ -128,6 +166,7 @@ const Profile = () => {
         </div>
       </div>
       <div className="profile-page-body">
+        {/* SET ERROR MESSAGE HERE */}
         <section className="container subscribe-edit">
           {showEditSubOrUnsubBtn()}
         </section>
