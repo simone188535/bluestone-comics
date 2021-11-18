@@ -3,7 +3,7 @@ import axios from "axios";
 function add(publisherId) {
   const jwtToken = localStorage.getItem("jwtToken");
 
-  return axios.get(`api/v1/subscribe/add/publisher/${publisherId}`, {
+  return axios.post(`api/v1/subscribe/add/publisher/${publisherId}`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
   });
 }
@@ -11,7 +11,7 @@ function add(publisherId) {
 function remove(publisherId) {
   const jwtToken = localStorage.getItem("jwtToken");
 
-  return axios.get(`/api/v1/subscribe/remove/publisher/${publisherId}`, {
+  return axios.delete(`/api/v1/subscribe/remove/publisher/${publisherId}`, {
     headers: { Authorization: `Bearer ${jwtToken}` },
   });
 }

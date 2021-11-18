@@ -24,7 +24,7 @@ router
   );
 router
   .route('/remove/publisher/:publisherId')
-  .post(
+  .delete(
     subscriberController.checkSubscription(),
     subscriberController.unsubscribe
   );
