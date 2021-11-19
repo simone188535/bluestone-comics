@@ -4,7 +4,6 @@ function createBook(formData, config = {}) {
   // send request to create a book which will contain the first issue
   const jwtToken = localStorage.getItem("jwtToken");
 
-  // eslint-disable-next-line no-param-reassign
   config.headers = {
     Authorization: `Bearer ${jwtToken}`,
   };
@@ -20,7 +19,6 @@ function getBookAndIssueImagePrefix(
   // send request to create a book which will contain the first issue
   const jwtToken = localStorage.getItem("jwtToken");
 
-  // eslint-disable-next-line no-param-reassign
   config.headers = {
     Authorization: `Bearer ${jwtToken}`,
   };
