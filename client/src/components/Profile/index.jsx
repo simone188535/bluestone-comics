@@ -179,7 +179,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className="profile-page-body">
+      <main className="profile-page-body">
         {/* SET ERROR MESSAGE HERE */}
         <section className="container subscribe-edit">
           {showEditSubOrUnsubBtn()}
@@ -190,7 +190,7 @@ const Profile = () => {
         </section>
         <section className="user-info">
           <Tabs className="tab-navigation">
-            <div className="container">
+            <section className="container">
               <TabList>
                 <Tab>Works</Tab>
                 <Tab>Bookmarks</Tab>
@@ -198,8 +198,8 @@ const Profile = () => {
                 <Tab>Subscribed</Tab>
                 {/* <Tab>Achievements</Tab> */}
               </TabList>
-            </div>
-            <div className="container-fluid">
+            </section>
+            <section className="container-fluid">
               <TabPanel>
                 <Works profilePageUser={profilePageUser} />
               </TabPanel>
@@ -212,10 +212,10 @@ const Profile = () => {
               <TabPanel>
                 <Subscribed profilePageUser={profilePageUser} />
               </TabPanel>
-            </div>
+            </section>
           </Tabs>
         </section>
-      </div>
+      </main>
     </div>
   );
 };

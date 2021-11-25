@@ -29,4 +29,32 @@ function checkSubscription(publisherId) {
   );
 }
 
-export { add, remove, checkSubscription };
+function getAllSubscriberedTo(subscriberId, pageNumber = null) {
+  if (pageNumber) {
+    // params: { page: pageNumber }
+    config.params = { page: pageNumber };
+  }
+  return axios.get(
+    `/api/v1/subscribe/get-all-subscribed-to/subscriber/${subscriberId}`,
+    config
+  );
+}
+
+function getAllSubscribers(publisherId, pageNumber = null) {
+  if (pageNumber) {
+    // params: { page: pageNumber }
+    config.params = { page: pageNumber };
+  }
+  return axios.get(
+    `/api/v1/subscribe/get-all-subscribers/publisher/${publisherId}`,
+    config
+  );
+}
+
+export {
+  add,
+  remove,
+  checkSubscription,
+  getAllSubscribers,
+  getAllSubscriberedTo,
+};

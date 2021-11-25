@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from "react";
+import "../subscription.scss";
 
-const Subscribed = () => {
-    return (<div>Subscribed</div>);
-}
+const Subscribed = ({ profilePageUser }) => {
+  const { username, id } = profilePageUser;
+
+  useEffect(() => {}, []);
+  return <div>Subscribed</div>;
+};
 
 export default Subscribed;

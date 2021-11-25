@@ -10,7 +10,7 @@ router
   .get(subscriberController.getAllSubscribers);
 
 router
-  .route('/get-all-subscribed/subscriber/:subscriberId')
+  .route('/get-all-subscribed-to/subscriber/:subscriberId')
   .get(subscriberController.getAllSubscribedTo);
 
 // Protect all routes after this middleware
