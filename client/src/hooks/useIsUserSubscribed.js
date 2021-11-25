@@ -1,29 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { checkSubscription } from "../services";
 
 // this hook checks if the current user is subscribed to a particular user(publisherId)
-function useIsUserSubscribed(publisherId) {
+function useIsUserSubscribed() {
   const [userIsSubscribed, setUserIsSubscribed] = useState(null);
   const currentUserId = useSelector((state) => state.auth.user?.id);
 
-  useEffect(() => {
-    if (!currentUserId || !publisherId) return;
+  const setUserIsSubscribedCB = useCallback(
+    async (publisherId) => {
+      if (!currentUserId || !publisherId) return;
 
-    async function fetchCheckSubscriptionData() {
       try {
-        const res = await checkSubscription(publisherId);
-        console.log("res ", res);
+        await checkSubscription(publisherId);
         setUserIsSubscribed(true);
       } catch (err) {
         setUserIsSubscribed(false);
       }
-    }
+    },
+    [currentUserId]
+  );
 
-    fetchCheckSubscriptionData();
-  }, [publisherId, currentUserId]);
-
-  return userIsSubscribed;
+  return [userIsSubscribed, setUserIsSubscribedCB];
 }
 
 export default useIsUserSubscribed;

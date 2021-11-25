@@ -1,17 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 
-function useBelongsToCurrentUser(providedUserId) {
+function useBelongsToCurrentUser() {
   const [belongsToUser, setBelongsToUser] = useState(null);
   const currentUserId = useSelector((state) => state.auth.user?.id);
 
-  useEffect(() => {
-    if (!currentUserId || !providedUserId) return;
+  const setBelongsToUserCB = useCallback(
+    (providedUserId) => {
+      if (!currentUserId || !providedUserId) return;
 
-    setBelongsToUser(currentUserId === providedUserId);
-  }, [currentUserId, providedUserId]);
+      setBelongsToUser(currentUserId === providedUserId);
+    },
+    [currentUserId]
+  );
 
-  return belongsToUser;
+  return [belongsToUser, setBelongsToUserCB];
 }
 
 export default useBelongsToCurrentUser;
