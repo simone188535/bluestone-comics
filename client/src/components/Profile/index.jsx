@@ -17,12 +17,106 @@ import "./profile.scss";
 // https://codepen.io/JavaScriptJunkie/full/jvRGZy
 // https://www.dccomics.com/talent/tanya-horie
 
+const SubUnsubBtnOrEdit = ({
+  setErrorMessage,
+  setIsLoading,
+  profilePageUserId,
+}) => {
+  const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
+  const [userIsSubscribed, setUserIsSubscribedCB] = useIsUserSubscribed();
+
+  useEffect(() => {
+    // set initial state to check if this profile page belongsToUser or if userIsSubscribed to it
+    setBelongsToUserCB(profilePageUserId);
+    setUserIsSubscribedCB(profilePageUserId);
+  }, [profilePageUserId, setBelongsToUserCB, setUserIsSubscribedCB]);
+
+  /* 
+    This method displays edit, subscribe, and unsubscribe conditionally. if the page belongs 
+    to the user, the edit button is shown. If the user is subscribed, the user should see
+    unsubscribed button. If the user is not subscribed, the user should see the subscribed 
+    button.
+  */
+
+  // const showEditSubOrUnsubBtn = () => {
+  if (!profilePageUserId) return null;
+
+  let index = null;
+  const editSubUnsubBtnVal = [
+    {
+      btnClass: "transparent transparent-blue",
+      btnVal: " Edit",
+      btnClick: async () => {
+        try {
+          setIsLoading(true);
+
+          // const res = await getUser({ username });
+          // console.log("Edit");
+          setIsLoading(false);
+        } catch (err) {
+          setErrorMessage(true);
+        }
+      },
+    },
+    {
+      btnClass: "transparent transparent-red",
+      btnVal: "Unsubscribe",
+      btnClick: async () => {
+        try {
+          setIsLoading(true);
+          // subcribe user
+          await remove(profilePageUserId);
+          // reset userIsSubscribed for useIsUserSubscribed to update button
+          setUserIsSubscribedCB(profilePageUserId);
+          setIsLoading(false);
+        } catch (err) {
+          setErrorMessage(true);
+        }
+      },
+    },
+    {
+      btnClass: "primary primary-round primary-glow",
+      btnVal: "Subscribe",
+      btnClick: async () => {
+        try {
+          setIsLoading(true);
+          // subcribe user
+          await add(profilePageUserId);
+          // reset userIsSubscribed for useIsUserSubscribed to update button
+          setUserIsSubscribedCB(profilePageUserId);
+          setIsLoading(false);
+        } catch (err) {
+          setErrorMessage(true);
+        }
+      },
+    },
+  ];
+
+  if (belongsToUser) {
+    index = 0;
+  } else if (userIsSubscribed) {
+    index = 1;
+  } else if (userIsSubscribed === false) {
+    index = 2;
+  }
+
+  return index !== null ? (
+    <button
+      type="button"
+      className={`sub-edit-unsub-btn bsc-button ${editSubUnsubBtnVal[index].btnClass}`}
+      onClick={editSubUnsubBtnVal[index].btnClick}
+    >
+      {editSubUnsubBtnVal[index].btnVal}
+    </button>
+  ) : (
+    <></>
+  );
+};
+
 const Profile = () => {
   const { username } = useParams();
   // Should be an object
   const [profilePageUser, setProfilePageUser] = useState({});
-  const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
-  const [userIsSubscribed, setUserIsSubscribedCB] = useIsUserSubscribed();
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   // const [currentUsername, setCurrentUsername] = useState('');
@@ -57,101 +151,6 @@ const Profile = () => {
   //     console.log('profilePageUser', profilePageUser);
   // }, [profilePageUser]);
 
-  useEffect(() => {
-    // set initial state to check if this profile page belongsToUser or if userIsSubscribed to it
-    setBelongsToUserCB(profilePageUser.id);
-    setUserIsSubscribedCB(profilePageUser.id);
-  }, [profilePageUser.id, setBelongsToUserCB, setUserIsSubscribedCB]);
-
-  // useEffect(() => {
-  //     console.log('profilePageUser', profilePageUser);
-  // }, [profilePageUser]);
-
-  /* 
-    This method displays edit, subscribe, and unsubscribe conditionally. if the page belongs 
-    to the user, the edit button is shown. If the user is subscribed, the user should see
-    unsubscribed button. If the user is not subscribed, the user should see the subscribed 
-    button.
-  */
-
-  const showEditSubOrUnsubBtn = () => {
-    if (!profilePageUser) return null;
-
-    let index = null;
-    const editSubUnsubBtnVal = [
-      {
-        btnClass: "transparent transparent-blue",
-        btnVal: " Edit",
-        btnClick: async () => {
-          try {
-            setIsLoading(true);
-
-            // const res = await getUser({ username });
-            // console.log("Edit");
-            setIsLoading(false);
-          } catch (err) {
-            setErrorMessage(true);
-          }
-        },
-      },
-      {
-        btnClass: "transparent transparent-red",
-        btnVal: "Unsubscribe",
-        btnClick: async () => {
-          try {
-            setIsLoading(true);
-            // subcribe user
-            await remove(profilePageUser.id);
-            // reset userIsSubscribed for useIsUserSubscribed to update button
-            setUserIsSubscribedCB(profilePageUser.id);
-            setIsLoading(false);
-          } catch (err) {
-            setErrorMessage(true);
-          }
-        },
-      },
-      {
-        btnClass: "primary primary-round primary-glow",
-        btnVal: "Subscribe",
-        btnClick: async () => {
-          try {
-            setIsLoading(true);
-            // subcribe user
-            await add(profilePageUser.id);
-            // reset userIsSubscribed for useIsUserSubscribed to update button
-            setUserIsSubscribedCB(profilePageUser.id);
-            setIsLoading(false);
-          } catch (err) {
-            setErrorMessage(true);
-          }
-        },
-      },
-    ];
-
-    if (belongsToUser) {
-      index = 0;
-    } else if (userIsSubscribed) {
-      index = 1;
-    } else if (userIsSubscribed === false) {
-      index = 2;
-    }
-
-    const showBtnOrNull =
-      index !== null ? (
-        <button
-          type="button"
-          className={`sub-edit-unsub-btn bsc-button ${editSubUnsubBtnVal[index].btnClass}`}
-          onClick={editSubUnsubBtnVal[index].btnClick}
-        >
-          {editSubUnsubBtnVal[index].btnVal}
-        </button>
-      ) : (
-        <></>
-      );
-
-    return showBtnOrNull;
-  };
-
   return (
     <div className="container-fluid profile-page">
       <div className="profile-page-header">
@@ -182,7 +181,11 @@ const Profile = () => {
       <main className="profile-page-body">
         {/* SET ERROR MESSAGE HERE */}
         <section className="container subscribe-edit">
-          {showEditSubOrUnsubBtn()}
+          <SubUnsubBtnOrEdit
+            setErrorMessage={setErrorMessage}
+            setIsLoading={setIsLoading}
+            profilePageUserId={profilePageUser.id}
+          />
         </section>
         <section className="container user-bio">
           <h2 className="title">Bio</h2>
