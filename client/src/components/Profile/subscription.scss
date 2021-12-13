@@ -1,5 +1,59 @@
 @import '../../styles/abstracts/variables.scss';
 
 .subscription {
-    
+
+    &.sub-table {
+        border-collapse: collapse;
+        width: 100%;
+
+        .sub-table-row {
+
+            .sub-table-body .sub-table-head {
+                color: $mid-dark-gray;
+
+                &:nth-child(3) {
+                    color: $off-black;
+                }
+            }
+
+            .sub-table-data {
+                font-weight: $bold;
+
+                &:not(:nth-child(1)) {
+                    color: $tender-black;
+                    font-weight: $light;
+                }
+            }
+
+            .sub-table-head,
+            .sub-table-data {
+                border: 1px solid $mid-gray;
+                border-left: none;
+                border-right: none;
+                text-align: left;
+                padding: 20px 10px;
+
+                // &:nth-child(1) {
+                //     border-right: none;
+                // }
+                // &:nth-child(2) {
+                //     border-left: none;
+                //     border-right: none;
+                // }
+                // &:nth-child(3) {
+                //     border-left: none;
+                // }
+
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .subscription {
+        &.sub-table {
+            width: 80%;
+            max-width: 1200px;
+        }
+    }
 }

@@ -26,17 +26,24 @@ const Subscribed = ({ profilePageUser }) => {
 
   return (
     <>
-      <table className="subscription sub-table">
-        <tr className="sub-table-row">
-          <th className="sub-table-head">Profile</th>
-          <th className="sub-table-head">Date subscribed</th>
-          <th className="sub-table-head">Subscriber count</th>
-        </tr>
-        <tr className="sub-table-row">
-          <td className="sub-table-data">Alfreds Futterkiste</td>
-          <td className="sub-table-data">Maria Anders</td>
-          <td className="sub-table-data">Germany</td>
-        </tr>
+      <table className="subscription sub-table container-fluid">
+        <tbody className="sub-table-body">
+          <tr className="sub-table-row">
+            <th className="sub-table-head">Profile</th>
+            <th className="sub-table-head">Date subscribed</th>
+            <th className="sub-table-head">Subscriber count</th>
+          </tr>
+          <tr className="sub-table-row">
+            <td className="sub-table-data">Alfreds Futterkiste</td>
+            <td className="sub-table-data">Maria Anders</td>
+            <td className="sub-table-data">Germany</td>
+          </tr>
+          <tr className="sub-table-row">
+            <td className="sub-table-data">Alfreds Futterkiste</td>
+            <td className="sub-table-data">Maria Anders</td>
+            <td className="sub-table-data">Germany</td>
+          </tr>
+        </tbody>
       </table>
     </>
   );
