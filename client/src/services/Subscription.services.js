@@ -31,7 +31,6 @@ function checkSubscription(publisherId) {
 
 function getAllSubscriberedTo(subscriberId, pageNumber = null) {
   if (pageNumber) {
-    // params: { page: pageNumber }
     config.params = { page: pageNumber };
   }
   return axios.get(
@@ -42,7 +41,6 @@ function getAllSubscriberedTo(subscriberId, pageNumber = null) {
 
 function getAllSubscribers(publisherId, pageNumber = null) {
   if (pageNumber) {
-    // params: { page: pageNumber }
     config.params = { page: pageNumber };
   }
   return axios.get(

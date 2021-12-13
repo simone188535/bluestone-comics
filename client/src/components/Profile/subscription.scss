@@ -18,6 +18,15 @@
 
             .sub-table-data {
                 font-weight: $bold;
+                width: 33.33333%;
+                max-width: 0;
+
+                &:nth-child(1) {
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    // max-width: 33%;
+                }
 
                 &:not(:nth-child(1)) {
                     color: $tender-black;

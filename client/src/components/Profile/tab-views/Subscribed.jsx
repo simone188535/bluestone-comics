@@ -4,13 +4,14 @@ import "../subscription.scss";
 
 const Subscribed = ({ profilePageUser }) => {
   const [errorMessage, setErrorMessage] = useState("");
+  const [page, setPage] = useState(1);
   const [allSubscribedList, setAllSubscribedList] = useState([]);
   const { username, id } = profilePageUser;
 
   useEffect(() => {
     async function getAllSubscriberedToAPI() {
       try {
-        const subbedToUser = await getAllSubscriberedTo(id);
+        const subbedToUser = await getAllSubscriberedTo(id, page);
         setAllSubscribedList(subbedToUser);
       } catch (err) {
         setErrorMessage("An error occurred. Please try again later.");
@@ -34,7 +35,7 @@ const Subscribed = ({ profilePageUser }) => {
             <th className="sub-table-head">Subscriber count</th>
           </tr>
           <tr className="sub-table-row">
-            <td className="sub-table-data">Alfreds Futterkiste</td>
+            <td className="sub-table-data">WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW</td>
             <td className="sub-table-data">Maria Anders</td>
             <td className="sub-table-data">Germany</td>
           </tr>
