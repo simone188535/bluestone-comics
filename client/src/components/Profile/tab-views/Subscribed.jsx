@@ -11,8 +11,10 @@ const Subscribed = ({ profilePageUser }) => {
   useEffect(() => {
     async function getAllSubscriberedToAPI() {
       try {
-        const subbedToUser = await getAllSubscriberedTo(id, page);
-        setAllSubscribedList(subbedToUser);
+        const { subscribedTo } = await (
+          await getAllSubscriberedTo(id, page)
+        ).data;
+        setAllSubscribedList(subscribedTo);
       } catch (err) {
         setErrorMessage("An error occurred. Please try again later.");
       }
@@ -21,31 +23,40 @@ const Subscribed = ({ profilePageUser }) => {
     getAllSubscriberedToAPI();
   }, [id]);
 
+  const renderAllSubscribedList = allSubscribedList.map((subscriber) => (
+    <li
+      key={subscriber.publisher_id}
+      className="subscription-list-item grid-list-item"
+    >
+      <div className="grid-image-container">
+        <img
+          className="subscription-profile-img grid-image"
+          src={subscriber.user_photo}
+          alt={subscriber.username}
+        />
+      </div>
+      <div className="grid-info-box subscription-username">
+        <div className="grid-info-box-header">{subscriber.username}</div>
+      </div>
+    </li>
+  ));
+
   useEffect(() => {
     console.log("all Subscribed to user.", allSubscribedList);
   }, [allSubscribedList]);
 
   return (
     <>
-      <table className="subscription sub-table container-fluid">
-        <tbody className="sub-table-body">
-          <tr className="sub-table-row">
-            <th className="sub-table-head">Profile</th>
-            <th className="sub-table-head">Date subscribed</th>
-            <th className="sub-table-head">Subscriber count</th>
-          </tr>
-          <tr className="sub-table-row">
-            <td className="sub-table-data">WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW</td>
-            <td className="sub-table-data">Maria Anders</td>
-            <td className="sub-table-data">Germany</td>
-          </tr>
-          <tr className="sub-table-row">
-            <td className="sub-table-data">Alfreds Futterkiste</td>
-            <td className="sub-table-data">Maria Anders</td>
-            <td className="sub-table-data">Germany</td>
-          </tr>
-        </tbody>
-      </table>
+      <section className="subscription container-fluid">
+        <ul className="display-work-grid subscription-list col-sm-2 col-5">
+          {renderAllSubscribedList}
+          {/* <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW</div></div></li>
+          <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">supercookie</div></div></li>
+          <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">supercookie</div></div></li>
+          <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">supercookie</div></div></li>
+          <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">supercookie</div></div></li> */}
+        </ul>
+      </section>
     </>
   );
 };
