@@ -310,12 +310,11 @@ const Works = ({ profilePageUser }) => {
     if (errorMessageStatus) {
       // when an error occurs during data fetching
       renderStatusOfDataRetrieval = (
-        <p className="description">
-          <ErrorMessage
-            errorStatus={errorMessageStatus}
-            MessageText="An error occurred. Please try again later."
-          />
-        </p>
+        <ErrorMessage
+          errorStatus={errorMessageStatus}
+          MessageText="An error occurred. Please try again later."
+          className="description"
+        />
       );
     } else if (loadingStatus) {
       //  while data fetching is occuring
