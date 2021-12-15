@@ -319,7 +319,7 @@ const Works = ({ profilePageUser }) => {
     } else if (loadingStatus) {
       //  while data fetching is occuring
       renderStatusOfDataRetrieval = (
-        <LoadingSpinner loadingStatus={loadingStatus} />
+        <LoadingSpinner loadingStatus={loadingStatus} spinnerType="large" />
       );
     } else {
       // when data fetching is completed

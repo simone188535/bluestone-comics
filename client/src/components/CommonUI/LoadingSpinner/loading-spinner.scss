@@ -27,6 +27,11 @@
       -webkit-transform-origin: 50% 100%;
       animation: loading 1.5s linear infinite;
       -webkit-animation: loading 1.5s linear infinite;
+      
+      &.small {
+        width: 25px;
+        height: 12px;
+      }
     }
 
     &-name {
