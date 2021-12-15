@@ -5,7 +5,7 @@ import LoadingSpinner from "../../CommonUI/LoadingSpinner";
 import "../subscription.scss";
 
 const Subscribed = ({ profilePageUser }) => {
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [allSubscribedList, setAllSubscribedList] = useState([]);
@@ -17,7 +17,8 @@ const Subscribed = ({ profilePageUser }) => {
       setLoading(true);
       try {
         setErrorMessage(false);
-        const { subscribedTo } = await getAllSubscriberedTo(id, page).data;
+        const subscribedToRes = await getAllSubscriberedTo(id, page);
+        const { subscribedTo } = subscribedToRes.data;
 
         setAllSubscribedList((prevSubscribedTo) => [
           ...prevSubscribedTo,
@@ -69,9 +70,9 @@ const Subscribed = ({ profilePageUser }) => {
       </ul>
     ) : null;
 
-  useEffect(() => {
-    console.log("all Subscribed to user.");
-  }, [allSubscribedList]);
+  // useEffect(() => {
+  //   console.log("all Subscribed to user.");
+  // }, [allSubscribedList]);
 
   return (
     <>
