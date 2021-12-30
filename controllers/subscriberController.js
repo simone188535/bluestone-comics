@@ -102,7 +102,7 @@ exports.getAllSubscribers = catchAsync(async (req, res, next) => {
   });
 });
 
-// All publishers this user is subscribed to
+// Get All publishers this user is subscribed to
 exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
   const { page } = req.query;
   const { subscriberId } = req.params;
@@ -116,19 +116,16 @@ exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
   */
   // (SELECT COUNT(all_users_subbed_to.subscriber_id) FROM subscribers s2 WHERE s2.subscriber_id = all_users_subbed_to.publisher_id) AS subscribers_sub_count
   // GROUP BY s.subscriber_id
+  // (SELECT COUNT(*) FROM subscribers s2 WHERE s2.subscriber_id = all_users_subbed_to.publisher_id) AS subscribers_sub_count
+  // Count group by: https://www.w3resource.com/sql/aggregate-functions/count-with-group-by.php
+  // (SELECT COUNT(all_users_subbed_to.subscriber_id) FROM subscribers s2 WHERE s2.subscriber_id = all_users_subbed_to.publisher_id GROUP BY all_users_subbed_to.subscriber_id) AS subscribers_sub_count
+
   const allSubscribedTo = await new QueryPG(pool).find(
-    'all_users_subbed_to.*',
-    '(SELECT publisher_id, subscriber_id, u.username AS username, u.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.subscriber_id) INNER JOIN users u2 ON (u2.id = s.publisher_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to',
+    'all_users_subbed_to.*, (SELECT COUNT(*) FROM subscribers s2 WHERE s2.publisher_id = all_users_subbed_to.publisher_id) AS subscribers_sub_count',
+    '(SELECT publisher_id, subscriber_id, u2.username AS username, u2.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.subscriber_id) INNER JOIN users u2 ON (u2.id = s.publisher_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to',
     [subscriberId, offset],
     true
   );
-
-  // const allSubscribedTo = await new QueryPG(pool).find(
-  //   'publisher_id, username, user_photo, (SELECT COUNT(*) FROM subscribers WHERE subscribers.subscriber_id = all_users_subbed_to.subscriber_id ) AS subscribers_sub_count, (SELECT COUNT(all_users_subbed_to.*) AS current_user_sub_count)',
-  //   '(SELECT * from subscribers INNER JOIN users ON (users.id = subscribers.subscriber_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to',
-  //   [subscriberId, offset],
-  //   true
-  // );
   // ORIGINAL
   // const allSubscribedTo = await new QueryPG(pool).find(
   //   'publisher_id, username, user_photo',
