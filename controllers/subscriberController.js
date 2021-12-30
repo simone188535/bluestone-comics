@@ -118,7 +118,7 @@ exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
   // GROUP BY s.subscriber_id
   const allSubscribedTo = await new QueryPG(pool).find(
     'all_users_subbed_to.*',
-    '(SELECT * FROM subscribers s INNER JOIN users u ON (u.id = s.subscriber_id) INNER JOIN users u2 ON (u2.id = s.publisher_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to',
+    '(SELECT publisher_id, subscriber_id, u.username AS username, u.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.subscriber_id) INNER JOIN users u2 ON (u2.id = s.publisher_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to',
     [subscriberId, offset],
     true
   );
