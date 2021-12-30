@@ -109,12 +109,39 @@ exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
 
   const offset = pageOffset(page);
 
+  /* 
+  This query works by first searching for all of the users the current user is subscribed to in the subscribers table (the action occurs in the 3rd subquery).
+  It then takes the list of users (that the current user is subscribed to) and displays their publisher_id, username, user_photo and their subscriber count. 
+  ex: https://stackoverflow.com/questions/46988538/sql-use-result-from-one-query-for-another-query
+  */
+  // (SELECT COUNT(all_users_subbed_to.subscriber_id) FROM subscribers s2 WHERE s2.subscriber_id = all_users_subbed_to.publisher_id) AS subscribers_sub_count
+  // GROUP BY s.subscriber_id
   const allSubscribedTo = await new QueryPG(pool).find(
-    'publisher_id, username, user_photo',
-    'subscribers INNER JOIN users ON (users.id = subscribers.subscriber_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)',
+    'all_users_subbed_to.*',
+    '(SELECT * FROM subscribers s INNER JOIN users u ON (u.id = s.subscriber_id) INNER JOIN users u2 ON (u2.id = s.publisher_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to',
     [subscriberId, offset],
     true
   );
+
+  // const allSubscribedTo = await new QueryPG(pool).find(
+  //   'publisher_id, username, user_photo, (SELECT COUNT(*) FROM subscribers WHERE subscribers.subscriber_id = all_users_subbed_to.subscriber_id ) AS subscribers_sub_count, (SELECT COUNT(all_users_subbed_to.*) AS current_user_sub_count)',
+  //   '(SELECT * from subscribers INNER JOIN users ON (users.id = subscribers.subscriber_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to',
+  //   [subscriberId, offset],
+  //   true
+  // );
+  // ORIGINAL
+  // const allSubscribedTo = await new QueryPG(pool).find(
+  //   'publisher_id, username, user_photo',
+  //   'subscribers INNER JOIN users ON (users.id = subscribers.subscriber_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)',
+  //   [subscriberId, offset],
+  //   true
+  // );
+  // const allSubscribedTo = await new QueryPG(pool).find(
+  //   '*',
+  //   'subscribers WHERE subscribers.publisher_id = 80',
+  //   [],
+  //   true
+  // );
 
   // This user hasn't subscribed to anyone yet
   if (!allSubscribedTo) {
