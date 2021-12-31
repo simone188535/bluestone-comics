@@ -97,7 +97,7 @@ exports.getAllSubscribers = catchAsync(async (req, res, next) => {
 
   const allSubscribers = await new QueryPG(pool).find(
     'all_users_subbed.*, (SELECT COUNT(*) FROM subscribers s2 WHERE s2.publisher_id = all_users_subbed.subscriber_id) AS subscribers_sub_count',
-    '(SELECT publisher_id, subscriber_id, u2.username AS username, u2.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.publisher_id) INNER JOIN users u2 ON (u2.id = s.subscriber_id) WHERE publisher_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed',
+    '(SELECT publisher_id, subscriber_id, u2.username AS username, u2.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.publisher_id) INNER JOIN users u2 ON (u2.id = s.subscriber_id) WHERE publisher_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed ORDER BY subscribers_sub_count DESC',
     [publisherId, offset],
     true
   );
@@ -141,7 +141,7 @@ exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
 
   const allSubscribedTo = await new QueryPG(pool).find(
     'all_users_subbed_to.*, (SELECT COUNT(*) FROM subscribers s2 WHERE s2.publisher_id = all_users_subbed_to.publisher_id) AS subscribers_sub_count',
-    '(SELECT publisher_id, subscriber_id, u2.username AS username, u2.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.subscriber_id) INNER JOIN users u2 ON (u2.id = s.publisher_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to',
+    '(SELECT publisher_id, subscriber_id, u2.username AS username, u2.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.subscriber_id) INNER JOIN users u2 ON (u2.id = s.publisher_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to ORDER BY subscribers_sub_count DESC',
     [subscriberId, offset],
     true
   );
