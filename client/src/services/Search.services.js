@@ -1,15 +1,15 @@
 import axios from "axios";
 
-const searchAPIParams = {
-  q: null,
-  username: null,
-  status: null,
-  page: null,
-  sort: null,
-  limit: null,
-};
-
 const reqObj = (queryValues) => {
+  const searchAPIParams = {
+    q: null,
+    username: null,
+    status: null,
+    page: null,
+    sort: null,
+    limit: null,
+  };
+
   return Object.assign(searchAPIParams, queryValues);
 };
 
