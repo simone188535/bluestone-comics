@@ -174,7 +174,10 @@ const WorkCredits = ({ identifier, defaultSelectedUsernames }) => {
 
             } else {
 
-                const res = await searchUser(textSearch);
+                const res = await searchUser({
+                    q: textSearch,
+                    sort: "desc"
+                });
 
                 // assign results to APIResults state
                 setAPIResults(res.data.users);
