@@ -49,10 +49,24 @@ function getAllSubscribers(publisherId, pageNumber = null) {
   );
 }
 
+function totalSubscribers(publisherId) {
+  return axios.get(
+    `/api/v1/subscribe/total-subscribers/publisher/${publisherId}`
+  );
+}
+
+function totalSubscribedTo(subscriberId) {
+  return axios.get(
+    `/api/v1/subscribe/total-subscribed-to/subscriber/${subscriberId}`
+  );
+}
+
 export {
   add,
   remove,
   checkSubscription,
   getAllSubscribers,
   getAllSubscriberedTo,
+  totalSubscribers,
+  totalSubscribedTo,
 };
