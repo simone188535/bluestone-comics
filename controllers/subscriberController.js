@@ -165,3 +165,34 @@ exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
     subscribedTo: allSubscribedTo
   });
 });
+
+// This is the total count of the subscribers that the provided user (publisherId) has
+exports.totalSubscribers = catchAsync(async (req, res) => {
+  const { publisherId } = req.params;
+  const totalSubscribers = await new QueryPG(pool).find(
+    'COUNT(*)',
+    'subscribers WHERE publisher_id = ($1)',
+    [publisherId],
+    false
+  );
+  res.status(200).json({
+    status: 'success',
+    totalSubscribers: Number(totalSubscribers.count)
+  });
+});
+
+// This is the total count of the subscriptions (to other users/publishers) that the provided user (subscriberId) has
+exports.totalSubscribedTo = catchAsync(async (req, res) => {
+  const { subscriberId } = req.params;
+  const totalSubscribedTo = await new QueryPG(pool).find(
+    'COUNT(*)',
+    'subscribers WHERE subscriber_id = ($1)',
+    [subscriberId],
+    false
+  );
+
+  res.status(200).json({
+    status: 'success',
+    totalSubscribedTo: Number(totalSubscribedTo.count)
+  });
+});

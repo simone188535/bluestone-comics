@@ -13,6 +13,14 @@ router
   .route('/get-all-subscribed-to/subscriber/:subscriberId')
   .get(subscriberController.getAllSubscribedTo);
 
+router
+  .route('/total-subscribers/publisher/:publisherId')
+  .get(subscriberController.totalSubscribers);
+
+router
+  .route('/total-subscribed-to/subscriber/:subscriberId')
+  .get(subscriberController.totalSubscribedTo);
+
 // Protect all routes after this middleware
 router.use(authController.protect);
 
