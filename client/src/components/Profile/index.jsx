@@ -14,6 +14,7 @@ import Works from "./tab-views/Works-Tabs/Works";
 import Bookmarks from "./tab-views/Bookmarks";
 import Subscribed from "./tab-views/Subscribed";
 import Subscribers from "./tab-views/Subscribers";
+import ErrorMessage from "../CommonUI/ErrorMessage";
 import "./profile.scss";
 
 // https://www.google.com/search?q=profile+page+examples&tbm=isch&ved=2ahUKEwiHqYjq8pfuAhUWGs0KHX0JDK8Q2-cCegQIABAA&oq=profile+page+ex&gs_lcp=CgNpbWcQARgAMgIIADIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAgQHjoECAAQQ1CjxxZYquUWYLTuFmgAcAB4AIABeIgBrQKSAQMyLjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=iV_-X8fAB5a0tAb9krD4Cg&bih=610&biw=1191&rlz=1C5CHFA_enUS873US873#imgrc=H1KWibQNaM5UGM
@@ -189,7 +190,11 @@ const Profile = () => {
         </div>
       </div>
       <main className="profile-page-body">
-        {/* SET ERROR MESSAGE HERE */}
+        <ErrorMessage
+          errorStatus={errorMessage}
+          MessageText="An error occurred. Please try again later."
+          className="description-err-msg centered-err-msg"
+        />
         <section className="container subscribe-edit">
           <SubUnsubBtnOrEdit
             setErrorMessage={setErrorMessage}

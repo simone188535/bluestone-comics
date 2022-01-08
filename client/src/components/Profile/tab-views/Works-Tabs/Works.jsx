@@ -313,7 +313,7 @@ const Works = ({ profilePageUser }) => {
         <ErrorMessage
           errorStatus={errorMessageStatus}
           MessageText="An error occurred. Please try again later."
-          className="description"
+          className="description-err-msg centered-err-msg"
         />
       );
     } else if (loadingStatus) {

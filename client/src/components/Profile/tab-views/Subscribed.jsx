@@ -39,7 +39,7 @@ const Subscribed = ({ profilePageUser }) => {
     <ErrorMessage
       errorStatus={errorMessage}
       MessageText="An error occurred. Please try again later."
-      className="description"
+      className="description-err-msg centered-err-msg"
     />
   ) : null;
 
