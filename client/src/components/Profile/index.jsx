@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { getUser, add, remove } from "../../services";
+import {
+  getUser,
+  add,
+  remove,
+  getTotalSubscribers,
+  getTotalSubscribedTo,
+} from "../../services";
 import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
 import useIsUserSubscribed from "../../hooks/useIsUserSubscribed";
 import Works from "./tab-views/Works-Tabs/Works";
@@ -17,13 +23,10 @@ import "./profile.scss";
 // https://codepen.io/JavaScriptJunkie/full/jvRGZy
 // https://www.dccomics.com/talent/tanya-horie
 
-const SubUnsubBtnOrEdit = ({
-  setErrorMessage,
-  setIsLoading,
-  profilePageUserId,
-}) => {
+const SubUnsubBtnOrEdit = ({ setErrorMessage, profilePageUserId }) => {
   const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
   const [userIsSubscribed, setUserIsSubscribedCB] = useIsUserSubscribed();
+  const [btnIsLoading, setBtnIsLoading] = useState(false);
 
   useEffect(() => {
     // set initial state to check if this profile page belongsToUser or if userIsSubscribed to it
@@ -48,11 +51,11 @@ const SubUnsubBtnOrEdit = ({
       btnVal: " Edit",
       btnClick: async () => {
         try {
-          setIsLoading(true);
+          setBtnIsLoading(true);
 
           // const res = await getUser({ username });
           // console.log("Edit");
-          setIsLoading(false);
+          setBtnIsLoading(false);
         } catch (err) {
           setErrorMessage(true);
         }
@@ -63,12 +66,12 @@ const SubUnsubBtnOrEdit = ({
       btnVal: "Unsubscribe",
       btnClick: async () => {
         try {
-          setIsLoading(true);
+          setBtnIsLoading(true);
           // subcribe user
           await remove(profilePageUserId);
           // reset userIsSubscribed for useIsUserSubscribed to update button
           setUserIsSubscribedCB(profilePageUserId);
-          setIsLoading(false);
+          setBtnIsLoading(false);
         } catch (err) {
           setErrorMessage(true);
         }
@@ -79,18 +82,22 @@ const SubUnsubBtnOrEdit = ({
       btnVal: "Subscribe",
       btnClick: async () => {
         try {
-          setIsLoading(true);
+          setBtnIsLoading(true);
           // subcribe user
           await add(profilePageUserId);
           // reset userIsSubscribed for useIsUserSubscribed to update button
           setUserIsSubscribedCB(profilePageUserId);
-          setIsLoading(false);
+          setBtnIsLoading(false);
         } catch (err) {
           setErrorMessage(true);
         }
       },
     },
   ];
+
+  const displayLoadingOrContent = () => {
+    return btnIsLoading ? "Loading..." : editSubUnsubBtnVal[index].btnVal;
+  };
 
   if (belongsToUser) {
     index = 0;
@@ -105,8 +112,9 @@ const SubUnsubBtnOrEdit = ({
       type="button"
       className={`sub-edit-unsub-btn bsc-button ${editSubUnsubBtnVal[index].btnClass}`}
       onClick={editSubUnsubBtnVal[index].btnClick}
+      disabled={btnIsLoading}
     >
-      {editSubUnsubBtnVal[index].btnVal}
+      {displayLoadingOrContent()}
     </button>
   ) : (
     <></>
@@ -115,31 +123,27 @@ const SubUnsubBtnOrEdit = ({
 
 const Profile = () => {
   const { username } = useParams();
-  // Should be an object
   const [profilePageUser, setProfilePageUser] = useState({});
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  // const [currentUsername, setCurrentUsername] = useState('');
-  // const { isAuthenticated, currentUser, isFetching } = useSelector(state => ({
-  //     isAuthenticated: state.auth.isAuthenticated,
-  //     currentUser: state.auth.user,
-  //     isFetching: state.auth.isFetching
-  // }));
+  const [errorMessage, setErrorMessage] = useState(false);
+  const [generalInfo, setGeneralInfo] = useState({
+    views: "",
+    subscribers: "",
+    subscribed: "",
+  });
 
   // a helper function will be needed to format profile numbers: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900
 
   useEffect(() => {
     const fetchProfileUser = async () => {
       try {
-        const res = await getUser({ username });
+        const {
+          data: { user },
+        } = await getUser({ username });
 
-        // if (errorMessage) {
-        setErrorMessage("");
-        // }
+        setErrorMessage(false);
 
-        setProfilePageUser(res.data.user);
+        setProfilePageUser(user);
       } catch (err) {
-        // setErrorMessage(err.response.data.message);
         // setErrorMessage("An error occurred. Please try again later.");
         setErrorMessage(true);
       }
@@ -147,9 +151,25 @@ const Profile = () => {
     fetchProfileUser();
   }, [username]);
 
-  // useEffect(() => {
-  //     console.log('profilePageUser', profilePageUser);
-  // }, [profilePageUser]);
+  useEffect(() => {
+    const fetchGeneralInfo = async () => {
+      if (!profilePageUser) return;
+      // https://stackoverflow.com/questions/60444100/how-to-update-multiple-state-at-once-using-react-hook-react-js
+      try {
+        const {
+          data: { totalSubscribers },
+        } = await getTotalSubscribers(profilePageUser.id);
+
+        const {
+          data: { totalSubscribedTo },
+        } = await getTotalSubscribedTo(profilePageUser.id);
+      } catch (err) {
+        setErrorMessage(true);
+      }
+    };
+
+    // fetchGeneralInfo();
+  }, [profilePageUser]);
 
   return (
     <div className="container-fluid profile-page">
@@ -183,7 +203,6 @@ const Profile = () => {
         <section className="container subscribe-edit">
           <SubUnsubBtnOrEdit
             setErrorMessage={setErrorMessage}
-            setIsLoading={setIsLoading}
             profilePageUserId={profilePageUser.id}
           />
         </section>

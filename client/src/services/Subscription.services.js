@@ -49,13 +49,13 @@ function getAllSubscribers(publisherId, pageNumber = null) {
   );
 }
 
-function totalSubscribers(publisherId) {
+function getTotalSubscribers(publisherId) {
   return axios.get(
     `/api/v1/subscribe/total-subscribers/publisher/${publisherId}`
   );
 }
 
-function totalSubscribedTo(subscriberId) {
+function getTotalSubscribedTo(subscriberId) {
   return axios.get(
     `/api/v1/subscribe/total-subscribed-to/subscriber/${subscriberId}`
   );
@@ -67,6 +67,6 @@ export {
   checkSubscription,
   getAllSubscribers,
   getAllSubscriberedTo,
-  totalSubscribers,
-  totalSubscribedTo,
+  getTotalSubscribers,
+  getTotalSubscribedTo,
 };
