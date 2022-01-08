@@ -41,7 +41,6 @@ const SubUnsubBtnOrEdit = ({ setErrorMessage, profilePageUserId }) => {
     button.
   */
 
-  // const showEditSubOrUnsubBtn = () => {
   if (!profilePageUserId) return null;
 
   let index = null;
@@ -50,47 +49,28 @@ const SubUnsubBtnOrEdit = ({ setErrorMessage, profilePageUserId }) => {
       btnClass: "transparent transparent-blue",
       btnVal: " Edit",
       btnClick: async () => {
-        try {
-          setBtnIsLoading(true);
-
-          // const res = await getUser({ username });
-          // console.log("Edit");
-          setBtnIsLoading(false);
-        } catch (err) {
-          setErrorMessage(true);
-        }
+        // const res = await getUser({ username });
+        // console.log("Edit");
       },
     },
     {
       btnClass: "transparent transparent-red",
       btnVal: "Unsubscribe",
       btnClick: async () => {
-        try {
-          setBtnIsLoading(true);
-          // subcribe user
-          await remove(profilePageUserId);
-          // reset userIsSubscribed for useIsUserSubscribed to update button
-          setUserIsSubscribedCB(profilePageUserId);
-          setBtnIsLoading(false);
-        } catch (err) {
-          setErrorMessage(true);
-        }
+        // subcribe user
+        await remove(profilePageUserId);
+        // reset userIsSubscribed for useIsUserSubscribed to update button
+        await setUserIsSubscribedCB(profilePageUserId);
       },
     },
     {
       btnClass: "primary primary-round primary-glow",
       btnVal: "Subscribe",
       btnClick: async () => {
-        try {
-          setBtnIsLoading(true);
-          // subcribe user
-          await add(profilePageUserId);
-          // reset userIsSubscribed for useIsUserSubscribed to update button
-          setUserIsSubscribedCB(profilePageUserId);
-          setBtnIsLoading(false);
-        } catch (err) {
-          setErrorMessage(true);
-        }
+        // subcribe user
+        await add(profilePageUserId);
+        // reset userIsSubscribed for useIsUserSubscribed to update button
+        await setUserIsSubscribedCB(profilePageUserId);
       },
     },
   ];
@@ -107,11 +87,21 @@ const SubUnsubBtnOrEdit = ({ setErrorMessage, profilePageUserId }) => {
     index = 2;
   }
 
+  const btnOnClick = async () => {
+    try {
+      setBtnIsLoading(true);
+      await editSubUnsubBtnVal[index].btnClick();
+      setBtnIsLoading(false);
+    } catch (err) {
+      setErrorMessage(true);
+    }
+  };
+
   return index !== null ? (
     <button
       type="button"
       className={`sub-edit-unsub-btn bsc-button ${editSubUnsubBtnVal[index].btnClass}`}
-      onClick={editSubUnsubBtnVal[index].btnClick}
+      onClick={btnOnClick}
       disabled={btnIsLoading}
     >
       {displayLoadingOrContent()}
