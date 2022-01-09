@@ -15,6 +15,7 @@ import Bookmarks from "./tab-views/Bookmarks";
 import Subscribed from "./tab-views/Subscribed";
 import Subscribers from "./tab-views/Subscribers";
 import ErrorMessage from "../CommonUI/ErrorMessage";
+import abbreviateNumber from "../../utils/abbreviateNumber";
 import "./profile.scss";
 
 // https://www.google.com/search?q=profile+page+examples&tbm=isch&ved=2ahUKEwiHqYjq8pfuAhUWGs0KHX0JDK8Q2-cCegQIABAA&oq=profile+page+ex&gs_lcp=CgNpbWcQARgAMgIIADIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAgQHjoECAAQQ1CjxxZYquUWYLTuFmgAcAB4AIABeIgBrQKSAQMyLjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=iV_-X8fAB5a0tAb9krD4Cg&bih=610&biw=1191&rlz=1C5CHFA_enUS873US873#imgrc=H1KWibQNaM5UGM
@@ -68,7 +69,7 @@ const SubUnsubBtnOrEdit = ({ setErrorMessage, profilePageUserId }) => {
       btnClass: "primary primary-round primary-glow",
       btnVal: "Subscribe",
       btnClick: async () => {
-        // subcribe user
+        // subscribe user
         await add(profilePageUserId);
         // reset userIsSubscribed for useIsUserSubscribed to update button
         await setUserIsSubscribedCB(profilePageUserId);
@@ -119,7 +120,7 @@ const Profile = () => {
   const [generalInfo, setGeneralInfo] = useState({
     views: "",
     subscribers: "",
-    subscribed: "",
+    subscribedTo: "",
   });
 
   // a helper function will be needed to format profile numbers: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900
@@ -132,10 +133,8 @@ const Profile = () => {
         } = await getUser({ username });
 
         setErrorMessage(false);
-
         setProfilePageUser(user);
       } catch (err) {
-        // setErrorMessage("An error occurred. Please try again later.");
         setErrorMessage(true);
       }
     };
@@ -144,7 +143,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchGeneralInfo = async () => {
-      if (!profilePageUser) return;
+      if (!profilePageUser.id) return;
       // https://stackoverflow.com/questions/60444100/how-to-update-multiple-state-at-once-using-react-hook-react-js
       try {
         const {
@@ -154,12 +153,18 @@ const Profile = () => {
         const {
           data: { totalSubscribedTo },
         } = await getTotalSubscribedTo(profilePageUser.id);
+
+        setGeneralInfo({
+          views: "",
+          subscribers: abbreviateNumber(totalSubscribers),
+          subscribedTo: abbreviateNumber(totalSubscribedTo),
+        });
       } catch (err) {
         setErrorMessage(true);
       }
     };
 
-    // fetchGeneralInfo();
+    fetchGeneralInfo();
   }, [profilePageUser]);
 
   return (
@@ -179,11 +184,11 @@ const Profile = () => {
               <p>Views</p>
             </div>
             <div className="general-info-content">
-              <h2>WWW.W</h2>
+              <h2>{generalInfo.subscribers}</h2>
               <p>Subscribers</p>
             </div>
             <div className="general-info-content">
-              <h2>WWW.W</h2>
+              <h2>{generalInfo.subscribedTo}</h2>
               <p>Subscribed</p>
             </div>
           </div>
