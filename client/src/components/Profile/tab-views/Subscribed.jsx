@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { getAllSubscriberedTo } from "../../../services";
 import ErrorMessage from "../../CommonUI/ErrorMessage";
 import LoadingSpinner from "../../CommonUI/LoadingSpinner";
+import abbreviateNumber from "../../../utils/abbreviateNumber";
 import "../subscription.scss";
 
 const Subscribed = ({ profilePageUser }) => {
@@ -10,21 +11,40 @@ const Subscribed = ({ profilePageUser }) => {
   const [page, setPage] = useState(1);
   const [allSubscribedList, setAllSubscribedList] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  const { username, id } = profilePageUser;
+  const observer = useRef();
+  const lastSubElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          // console.log("Visible");
+          setPage((prevPageNum) => prevPageNum + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+      console.log(node);
+    },
+    [loading, hasMore]
+  );
+  const { id } = profilePageUser;
 
   useEffect(() => {
     async function getAllSubscriberedToAPI() {
       setLoading(true);
       try {
         setErrorMessage(false);
-        const subscribedToRes = await getAllSubscriberedTo(id, page);
-        const { subscribedTo } = subscribedToRes.data;
+        const {
+          data: { subscribedTo },
+        } = await getAllSubscriberedTo(id, page);
 
         setAllSubscribedList((prevSubscribedTo) => [
           ...prevSubscribedTo,
           ...subscribedTo,
         ]);
 
+        // console.log('subscribedTo', subscribedTo);
+        // console.log('subscribedTo.length', subscribedTo.length);
         setHasMore(subscribedTo.length > 0);
       } catch (err) {
         setErrorMessage(true);
@@ -34,6 +54,14 @@ const Subscribed = ({ profilePageUser }) => {
 
     getAllSubscriberedToAPI();
   }, [id, page]);
+
+  // useEffect(() => {
+  //   console.log('page', page);
+  // }, [page]);
+
+  // useEffect(() => {
+  //   console.log('hasMore', hasMore);
+  // }, [hasMore]);
 
   const renderError = errorMessage ? (
     <ErrorMessage
@@ -50,8 +78,13 @@ const Subscribed = ({ profilePageUser }) => {
   const renderAllSubscribedList =
     allSubscribedList.length > 0 ? (
       <ul className="display-work-grid subscription-list col-sm-2 col-5">
-        {allSubscribedList.map((subscriber) => (
+        {allSubscribedList.map((subscriber, index) => (
           <li
+            ref={
+              allSubscribedList.length === index + 1
+                ? lastSubElementRef
+                : undefined
+            }
             key={subscriber.publisher_id}
             className="subscription-list-item grid-list-item"
           >
@@ -62,7 +95,10 @@ const Subscribed = ({ profilePageUser }) => {
                 alt={subscriber.username}
               />
             </div>
-            <div className="grid-info-box subscription-username">
+            <div className="grid-info-box subscription-general-info">
+              <div className="grid-info-box-header">
+                {abbreviateNumber(subscriber.subscribers_sub_count)}
+              </div>
               <div className="grid-info-box-header">{subscriber.username}</div>
             </div>
           </li>
@@ -71,7 +107,7 @@ const Subscribed = ({ profilePageUser }) => {
     ) : null;
 
   // useEffect(() => {
-  //   console.log("all Subscribed to user.");
+  //   console.log("all Subscribed to user.", allSubscribedList);
   // }, [allSubscribedList]);
 
   return (
