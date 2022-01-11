@@ -18,7 +18,7 @@ const Subscribed = ({ profilePageUser }) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          // console.log("Visible");
+          console.log("Visible");
           setPage((prevPageNum) => prevPageNum + 1);
         }
       });
@@ -43,8 +43,6 @@ const Subscribed = ({ profilePageUser }) => {
           ...subscribedTo,
         ]);
 
-        // console.log('subscribedTo', subscribedTo);
-        // console.log('subscribedTo.length', subscribedTo.length);
         setHasMore(subscribedTo.length > 0);
       } catch (err) {
         setErrorMessage(true);
@@ -54,14 +52,6 @@ const Subscribed = ({ profilePageUser }) => {
 
     getAllSubscriberedToAPI();
   }, [id, page]);
-
-  // useEffect(() => {
-  //   console.log('page', page);
-  // }, [page]);
-
-  // useEffect(() => {
-  //   console.log('hasMore', hasMore);
-  // }, [hasMore]);
 
   const renderError = errorMessage ? (
     <ErrorMessage
