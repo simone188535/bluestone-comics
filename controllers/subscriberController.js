@@ -82,7 +82,7 @@ exports.getAllSubscribers = catchAsync(async (req, res, next) => {
   const { page } = req.query;
   const { publisherId } = req.params;
 
-  const offset = pageOffset(page);
+  const offset = pageOffset(page, 20);
 
   /* 
   This query works by first searching for all of the users subscribed to the current users in the subscribers table (this action occurs in the 2nd subquery).
@@ -126,7 +126,7 @@ exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
   const { page } = req.query;
   const { subscriberId } = req.params;
 
-  const offset = pageOffset(page);
+  const offset = pageOffset(page, 20);
 
   /* 
   This query works by first searching for all of the users the current user is subscribed to in the subscribers table (this action occurs in the 2nd subquery).
