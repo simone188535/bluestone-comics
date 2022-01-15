@@ -8,16 +8,16 @@ import "../subscription.scss";
 const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
   const { id } = profilePageUser;
   const [errorMessage, setErrorMessage] = useState(false);
-  // const [pageType, setPageType] = useState(null);
+  const [pageType, setPageType] = useState(type);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [allSubscribedList, setAllSubscribedList] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const observer = useRef();
 
-  // useEffect(() => {
-  //   setPageType(type);
-  // }, [type]);
+  useEffect(() => {
+    setPageType(type);
+  }, [type]);
 
   useEffect(() => {
     async function getAllSubscriptionToAPI() {
@@ -28,7 +28,7 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
 
         // Choose which API call to use
         const appropiateAPICall =
-          type === "getAllSubscribers"
+          pageType === "getAllSubscribers"
             ? getAllSubscribers(id, page)
             : getAllSubscribedTo(id, page);
 
@@ -51,7 +51,7 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
     }
 
     getAllSubscriptionToAPI();
-  }, [id, page, type]);
+  }, [id, page, pageType]);
 
   /* 
     This logic controls whether more subscriber data is fetched when the last element of 
