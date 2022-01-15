@@ -118,21 +118,12 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
       </ul>
     ) : null;
 
-  // useEffect(() => {
-  //   console.log("all Subscribed to user.", allSubscribedList);
-  // }, [allSubscribedList]);
-
   return (
     <>
       <section className="subscription container-fluid">
         {renderAllSubscribedList}
         {renderSpinner}
         {renderError}
-        {/* <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW</div></div></li>
-          <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">supercookie</div></div></li>
-          <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">supercookie</div></div></li>
-          <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">supercookie</div></div></li>
-          <li className="subscription-list-item grid-list-item"><div className="grid-image-container"><img className="subscription-profile-img grid-image" src="https://bluestone-defaults.s3.us-east-2.amazonaws.com/profile-pic.jpeg" alt="supercookie"/></div><div className="grid-info-box subscription-username"><div className="grid-info-box-header">supercookie</div></div></li> */}
       </section>
     </>
   );
