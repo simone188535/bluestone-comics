@@ -1,57 +1,77 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { getAllSubscriberedTo } from "../../../services";
+import { getAllSubscribedTo, getAllSubscribers } from "../../../services";
 import ErrorMessage from "../../CommonUI/ErrorMessage";
 import LoadingSpinner from "../../CommonUI/LoadingSpinner";
 import abbreviateNumber from "../../../utils/abbreviateNumber";
 import "../subscription.scss";
 
-const Subscribed = ({ profilePageUser }) => {
+const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
+  const { id } = profilePageUser;
   const [errorMessage, setErrorMessage] = useState(false);
+  // const [pageType, setPageType] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [allSubscribedList, setAllSubscribedList] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const observer = useRef();
-  const lastSubElementRef = useCallback(
-    (node) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          console.log("Visible");
-          setPage((prevPageNum) => prevPageNum + 1);
-        }
-      });
-      if (node) observer.current.observe(node);
-      console.log(node);
-    },
-    [loading, hasMore]
-  );
-  const { id } = profilePageUser;
+
+  // useEffect(() => {
+  //   setPageType(type);
+  // }, [type]);
 
   useEffect(() => {
-    async function getAllSubscriberedToAPI() {
+    async function getAllSubscriptionToAPI() {
       setLoading(true);
       try {
+        // Remove Error Message
         setErrorMessage(false);
+
+        // Choose which API call to use
+        const appropiateAPICall =
+          type === "getAllSubscribers"
+            ? getAllSubscribers(id, page)
+            : getAllSubscribedTo(id, page);
+
         const {
-          data: { subscribedTo },
-        } = await getAllSubscriberedTo(id, page);
+          data: { subscribedTo, subscribers },
+        } = await appropiateAPICall;
+
+        const subscriptionResults = subscribedTo || subscribers;
 
         setAllSubscribedList((prevSubscribedTo) => [
           ...prevSubscribedTo,
-          ...subscribedTo,
+          ...subscriptionResults,
         ]);
 
-        setHasMore(subscribedTo.length > 0);
+        setHasMore(subscriptionResults.length > 0);
       } catch (err) {
         setErrorMessage(true);
       }
       setLoading(false);
     }
 
-    getAllSubscriberedToAPI();
-  }, [id, page]);
+    getAllSubscriptionToAPI();
+  }, [id, page, type]);
+
+  /* 
+    This logic controls whether more subscriber data is fetched when the last element of 
+    the page is present to the user. This conditionally adds a ref tags to the last li if
+    it is visible when the user scrolls.
+    https://www.youtube.com/watch?v=NZKUirTtxcg
+  */
+  const lastSubElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPageNum) => prevPageNum + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   const renderError = errorMessage ? (
     <ErrorMessage
@@ -87,7 +107,9 @@ const Subscribed = ({ profilePageUser }) => {
             </div>
             <div className="grid-info-box subscription-general-info">
               <div className="grid-info-box-header">
-                {abbreviateNumber(subscriber.subscribers_sub_count)}
+                {`${abbreviateNumber(
+                  subscriber.subscribers_sub_count
+                )} subscribers`}
               </div>
               <div className="grid-info-box-header">{subscriber.username}</div>
             </div>
@@ -116,4 +138,4 @@ const Subscribed = ({ profilePageUser }) => {
   );
 };
 
-export default Subscribed;
+export default SubscribedOrSubscribedTo;

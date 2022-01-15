@@ -12,8 +12,8 @@ import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
 import useIsUserSubscribed from "../../hooks/useIsUserSubscribed";
 import Works from "./tab-views/Works-Tabs/Works";
 import Bookmarks from "./tab-views/Bookmarks";
-import Subscribed from "./tab-views/Subscribed";
-import Subscribers from "./tab-views/Subscribers";
+import SubscribedOrSubscribedTo from "./tab-views/SubscribedOrSubscribedTo";
+// import Subscribers from "./tab-views/Subscribers";
 import ErrorMessage from "../CommonUI/ErrorMessage";
 import abbreviateNumber from "../../utils/abbreviateNumber";
 import "./profile.scss";
@@ -229,10 +229,16 @@ const Profile = () => {
                 <Bookmarks profilePageUser={profilePageUser} />
               </TabPanel>
               <TabPanel>
-                <Subscribers profilePageUser={profilePageUser} />
+                <SubscribedOrSubscribedTo
+                  profilePageUser={profilePageUser}
+                  type="getAllSubscribers"
+                />
               </TabPanel>
               <TabPanel>
-                <Subscribed profilePageUser={profilePageUser} />
+                <SubscribedOrSubscribedTo
+                  profilePageUser={profilePageUser}
+                  type="getAllSubscribedTo"
+                />
               </TabPanel>
             </section>
           </Tabs>

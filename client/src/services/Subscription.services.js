@@ -29,7 +29,7 @@ function checkSubscription(publisherId) {
   );
 }
 
-function getAllSubscriberedTo(subscriberId, pageNumber = null) {
+function getAllSubscribedTo(subscriberId, pageNumber = null) {
   if (pageNumber) {
     config.params = { page: pageNumber };
   }
@@ -66,7 +66,7 @@ export {
   remove,
   checkSubscription,
   getAllSubscribers,
-  getAllSubscriberedTo,
+  getAllSubscribedTo,
   getTotalSubscribers,
   getTotalSubscribedTo,
 };
