@@ -14,6 +14,7 @@ import Contest from "./Contest";
 import News from "./News";
 import Upload from "./Upload";
 import Profile from "./Profile";
+import EditProfile from "./Profile/Edit";
 import ProtectedRoute from "./Auth/ProtectedRoute";
 
 import store from "../store";
@@ -45,6 +46,7 @@ const AllRoutes = () => {
       <Route path="/login" component={Login} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password/:resetToken" component={ResetPassword} />
+      <ProtectedRoute path="/profile/:username/edit" component={EditProfile} />
       <Route path="/profile/:username" component={Profile} />
       <Route path="/" component={Home} />
     </Switch>
