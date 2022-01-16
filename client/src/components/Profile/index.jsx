@@ -24,8 +24,11 @@ import "./profile.scss";
 // https://codepen.io/JavaScriptJunkie/full/jvRGZy
 // https://www.dccomics.com/talent/tanya-horie
 
-const SubUnsubBtnOrEdit = ({ setErrorMessage, profilePageUserId }) => {
-  const { username } = useParams();
+const SubUnsubBtnOrEdit = ({
+  setErrorMessage,
+  profilePageUserId,
+  username,
+}) => {
   const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
   const [userIsSubscribed, setUserIsSubscribedCB] = useIsUserSubscribed();
   const [btnIsLoading, setBtnIsLoading] = useState(false);
@@ -202,6 +205,7 @@ const Profile = () => {
           <SubUnsubBtnOrEdit
             setErrorMessage={setErrorMessage}
             profilePageUserId={profilePageUser.id}
+            username={username}
           />
         </section>
         <section className="container user-bio">
