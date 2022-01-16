@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import {
   getUser,
@@ -13,7 +13,6 @@ import useIsUserSubscribed from "../../hooks/useIsUserSubscribed";
 import Works from "./tab-views/Works-Tabs/Works";
 import Bookmarks from "./tab-views/Bookmarks";
 import SubscribedOrSubscribedTo from "./tab-views/SubscribedOrSubscribedTo";
-// import Subscribers from "./tab-views/Subscribers";
 import ErrorMessage from "../CommonUI/ErrorMessage";
 import abbreviateNumber from "../../utils/abbreviateNumber";
 import "./profile.scss";
@@ -26,9 +25,11 @@ import "./profile.scss";
 // https://www.dccomics.com/talent/tanya-horie
 
 const SubUnsubBtnOrEdit = ({ setErrorMessage, profilePageUserId }) => {
+  const { username } = useParams();
   const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
   const [userIsSubscribed, setUserIsSubscribedCB] = useIsUserSubscribed();
   const [btnIsLoading, setBtnIsLoading] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     // set initial state to check if this profile page belongsToUser or if userIsSubscribed to it
@@ -51,8 +52,8 @@ const SubUnsubBtnOrEdit = ({ setErrorMessage, profilePageUserId }) => {
       btnClass: "transparent transparent-blue",
       btnVal: " Edit",
       btnClick: async () => {
-        // const res = await getUser({ username });
-        // console.log("Edit");
+        // go to edit profile page
+        history.push(`/profile/${username}/edit`);
       },
     },
     {
@@ -123,8 +124,6 @@ const Profile = () => {
     subscribedTo: "",
   });
 
-  // a helper function will be needed to format profile numbers: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900
-
   useEffect(() => {
     const fetchProfileUser = async () => {
       try {
@@ -144,7 +143,6 @@ const Profile = () => {
   useEffect(() => {
     const fetchGeneralInfo = async () => {
       if (!profilePageUser.id) return;
-      // https://stackoverflow.com/questions/60444100/how-to-update-multiple-state-at-once-using-react-hook-react-js
       try {
         const {
           data: { totalSubscribers },
