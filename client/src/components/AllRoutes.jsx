@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import Home from "./Home";
 import SignUp from "./Auth/SignUp";
@@ -22,17 +21,11 @@ import store from "../store";
 import { errorActions } from "../actions/index";
 
 const AllRoutes = () => {
-  const hasError = useSelector((state) => state.error.hasError);
   const location = useLocation();
   // This watches for a route change in location
   useEffect(() => {
     // This clears the global redux error state if the route changes
-    if (hasError) {
-      store.dispatch(errorActions.removeError());
-    }
-
-    // BUG: adding this dependency will cause error in the global redux state to not appear in the ui
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    store.dispatch(errorActions.removeError());
   }, [location]);
   return (
     <Switch>
