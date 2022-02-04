@@ -61,7 +61,8 @@ const SearchedUsers = ({
       <button
         className="work-credit-search-list-item-btn"
         type="button"
-        onClick={() => addSelectedUser(selectedListItem, push)}>
+        onClick={() => addSelectedUser(selectedListItem, push)}
+      >
         {selectedListItem.username}
       </button>
     </li>

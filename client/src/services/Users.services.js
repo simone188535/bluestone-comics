@@ -16,14 +16,13 @@ function getUser(queryValue) {
   });
 }
 
-// function getBooks() {
+function updateMe(formData) {
+  const jwtToken = localStorage.getItem("jwtToken");
 
-// const reqObj = Object.assign(target, queryValue);
-
-// return axios.get(`/api/v1/publish/test-slug/book/`, {
-//     params: {
-//        ...reqObj
-//     }
-// });
-// }
-export { getUser };
+  return axios.patch(`/api/v1/users/update-me`, formData, {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`,
+    },
+  });
+}
+export { getUser, updateMe };

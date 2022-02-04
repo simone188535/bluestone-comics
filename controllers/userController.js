@@ -60,8 +60,15 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-  const { firstName, lastName, email, username, password, passwordConfirm } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    username,
+    password,
+    passwordConfirm,
+    bio
+  } = req.body;
 
   // 1) THIS ROUTE IS NOT FOR PASSWORD UPDATES. PLEASE USE /update-password
   if (password || passwordConfirm) {
@@ -80,9 +87,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   const updatedUser = await new QueryPG(pool).update(
     'users',
-    `first_name = ($1), last_name = ($2), username = ($3), email = ($4)`,
-    'id = ($5)',
-    [firstName, lastName, username, email, res.locals.user.id]
+    `first_name = ($1), last_name = ($2), username = ($3), email = ($4), bio = ($5)`,
+    'id = ($6)',
+    [firstName, lastName, username, email, bio, res.locals.user.id]
   );
 
   // remove encrypted passwords from results

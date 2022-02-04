@@ -5,7 +5,6 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const User = require('../models/userModel');
 const sendEmail = require('../utils/email');
 const pool = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
@@ -72,14 +71,8 @@ const wasPasswordChangedAfterJWTIssued = (JWTTimestamp, passwordChangedAt) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const {
-    firstName,
-    lastName,
-    username,
-    email,
-    password,
-    passwordConfirm
-  } = req.body;
+  const { firstName, lastName, username, email, password, passwordConfirm } =
+    req.body;
 
   if (!validator.isEmail(email)) {
     return next(new AppError('This is not a valid email!', 406));
