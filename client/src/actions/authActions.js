@@ -3,15 +3,16 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT_SUCCESS,
+  GET_ME
 } from "./types";
 import { AuthenticationServices } from "../services";
-import { errorActions } from "./index";
+import { errorActions } from "./errorActions";
 
 const loginRequest = () => {
   return { type: LOGIN_REQUEST };
 };
 
-const loginSuccess = (user, reactivated) => {
+const loginSuccess = (user, reactivated = false) => {
   return { type: LOGIN_SUCCESS, user, reactivated };
 };
 
@@ -61,6 +62,8 @@ const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT_SUCCESS });
   AuthenticationServices.logout();
 };
+
+
 export const authActions = {
   loginRequest,
   loginSuccess,

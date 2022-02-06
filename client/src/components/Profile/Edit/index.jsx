@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-// import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { updateMe } from "../../../services";
 
