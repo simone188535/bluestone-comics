@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useFormikContext } from 'formik';
+import React, { useState } from "react";
+import { useFormikContext } from "formik";
 
 /*
     This component is designed to be used with formik. Out of the box, formik does not support file inputs. so `setFieldValue` is needed
@@ -7,28 +7,42 @@ import { useFormikContext } from 'formik';
 */
 
 const FileInputSingleUpload = ({ identifier, triggerText, className }) => {
-    const [file, setFile] = useState(null);
-    const { setFieldValue } = useFormikContext();
-    const providedClassNames = className ? className : '';
-    
-    const fileInputOnChange = (event) => {
-        const uploadedFile = event.currentTarget.files[0];
+  const [file, setFile] = useState(null);
+  const { setFieldValue } = useFormikContext();
+  const providedClassNames = className || "";
 
-        // if no file is uploaded do not update the state
-        if (!uploadedFile) return false;
+  const fileInputOnChange = (event) => {
+    const uploadedFile = event.currentTarget.files[0];
 
-        setFile(uploadedFile);
-        setFieldValue(identifier, uploadedFile);
-    }
+    // if no file is uploaded do not update the state
+    if (!uploadedFile) return false;
 
-    return (
-        <div className={`file-input-single-upload-container ${providedClassNames}`}>
-            <input id={identifier} name={identifier} className="file-input-single-upload-field" type="file" onChange={fileInputOnChange} />
-            <label tabIndex="0" htmlFor={identifier} className="file-input-single-upload-trigger">{triggerText}</label>
-            <div className="file-input-single-upload-name">{file ? file.name : 'No file selected'}</div>
-        </div>
-    );
-}
+    setFile(uploadedFile);
+    setFieldValue(identifier, uploadedFile);
+  };
+
+  return (
+    <div className={`file-input-single-upload-container ${providedClassNames}`}>
+      <input
+        id={identifier}
+        name={identifier}
+        className="file-input-single-upload-field"
+        type="file"
+        onChange={fileInputOnChange}
+      />
+      <label
+        tabIndex="0"
+        htmlFor={identifier}
+        className="file-input-single-upload-trigger"
+      >
+        {triggerText}
+      </label>
+      <div className="file-input-single-upload-name">
+        {file ? file.name : "No file selected"}
+      </div>
+    </div>
+  );
+};
 
 export default FileInputSingleUpload;
 /* 

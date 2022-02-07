@@ -4,9 +4,60 @@ import { useFormikContext, Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { updateMe } from "../../../services";
 import { authActions } from "../../../actions";
+import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
 
 const ChangeProfilePics = () => {
-  return <p>ChangeProfilePics</p>;
+  const [errMsg, setErrMsg] = useState(null);
+  return (
+    <div className="upload-page container">
+      <div className="upload-form-container">
+        <Formik
+          initialValues={{
+            profilePhoto: null,
+            backgroundPhoto: null,
+          }}
+          onSubmit={(values, actions) => {
+            setTimeout(() => {
+              alert(JSON.stringify(values, null, 2));
+              actions.setSubmitting(false);
+            }, 1000);
+          }}
+        >
+          <Form className="bsc-form upload-form">
+            <h1 className="form-header-text">
+              <strong>Change Profile Photos</strong>
+            </h1>
+
+            <FileInputSingleUpload
+              identifier="profilePhoto"
+              triggerText="Select a profile Photo"
+            />
+            <ErrorMessage
+              className="error-message error-text-color"
+              component="div"
+              name="profilePhoto"
+            />
+
+            <FileInputSingleUpload
+              identifier="backgroundPhoto"
+              triggerText="Select a Background Photo"
+            />
+            <ErrorMessage
+              className="error-message error-text-color"
+              component="div"
+              name="backgroundPhoto"
+            />
+
+            <button type="submit" className="form-submit form-item">
+              Submit
+            </button>
+
+            <SubmissionMsg errMsg={errMsg} />
+          </Form>
+        </Formik>
+      </div>
+    </div>
+  );
 };
 
 const DeleteAccount = () => {
