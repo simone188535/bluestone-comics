@@ -11,8 +11,9 @@ export const AuthenticationServices = {
 
 // This function helps ReAuth a user if the jwtToken is in the browser
 // https://stackoverflow.com/questions/47541032/handling-async-request-with-react-redux-and-axios
-async function ReAuthUser(jwtToken) {
+async function ReAuthUser() {
   try {
+    const jwtToken = localStorage.getItem("jwtToken");
     const config = {
       headers: { Authorization: `Bearer ${jwtToken}` },
     };

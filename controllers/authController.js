@@ -25,7 +25,7 @@ const signToken = (user) => {
 /* 
   This method send the jwt token to the client/browser
 */
-const createSendToken = (user, status, res, reactivated = false) => {
+const createSendToken = (user, status, res, isReactivated = false) => {
   if (!user.id) {
     throw new AppError('id field is missing, token is invalid', 500);
   }
@@ -38,7 +38,7 @@ const createSendToken = (user, status, res, reactivated = false) => {
 
   res.status(status).json({
     status: 'success',
-    reactivated,
+    isReactivated,
     token,
     data: {
       user
@@ -115,10 +115,10 @@ exports.signup = catchAsync(async (req, res, next) => {
   createSendToken(newUser, 200, res);
 });
 
-// BUG account reactivation, send message to client if account is reactivated, change account status to enabled if it is disabled
+// BUG account reactivation, send message to client if account is isReactivated, change account status to enabled if it is disabled
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  let reactivated = false;
+  let isReactivated = false;
 
   if (!email || !password) {
     return next(new AppError(`Email or Password has not been provided!`, 400));
@@ -143,9 +143,10 @@ exports.login = catchAsync(async (req, res, next) => {
       [true, new Date(), email]
     );
 
-    reactivated = true;
+    isReactivated = true;
   }
 
+  console.log('isReactivated', isReactivated);
   const passedPasswordVerification = await bcryptPasswordCompare(
     password,
     existingUser.password
@@ -155,7 +156,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Password is incorrect.', 406));
   }
 
-  createSendToken(existingUser, 200, res, reactivated);
+  createSendToken(existingUser, 200, res, isReactivated);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {

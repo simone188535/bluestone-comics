@@ -3,13 +3,16 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT_SUCCESS,
+  FETCHING,
+  NOT_FETCHING,
+  GET_ME,
 } from "../actions/types";
 
 const initialState = {
   isFetching: false,
   isAuthenticated: null,
   user: null,
-  reactivated: false,
+  isReactivated: false,
 };
 export default function (state = initialState, action) {
   switch (action.type) {
@@ -21,7 +24,7 @@ export default function (state = initialState, action) {
         isFetching: false,
         isAuthenticated: true,
         user: action.user,
-        isReactivated: action.reactivated,
+        isReactivated: action.isReactivated,
       };
     case LOGIN_FAILURE:
       return {
@@ -36,6 +39,22 @@ export default function (state = initialState, action) {
         isFetching: false,
         isAuthenticated: false,
         user: null,
+        isReactivated: false,
+      };
+    case FETCHING:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case NOT_FETCHING:
+      return {
+        ...state,
+        isFetching: false,
+      };
+    case GET_ME:
+      return {
+        ...state,
+        user: action.user,
       };
     default:
       return state;

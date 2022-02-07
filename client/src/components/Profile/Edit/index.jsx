@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { useSelector, useDispatch } from "react-redux";
+import { useFormikContext, Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { updateMe } from "../../../services";
+import { authActions } from "../../../actions";
 
 const ChangeProfilePics = () => {
   return <p>ChangeProfilePics</p>;
@@ -12,8 +13,25 @@ const DeleteAccount = () => {
   return <p>DeleteAccount</p>;
 };
 
+const SubmissionMsg = ({ errMsg }) => {
+  const { submitCount } = useFormikContext();
+  if (submitCount > 0) {
+    if (errMsg) {
+      return (
+        <div className="error-message error-text-color text-center">
+          Something went wrong. Please try again later.
+        </div>
+      );
+    }
+    return <div className="text-blue text-center">Updated!</div>;
+  }
+
+  return "";
+};
+
 const AboutYou = () => {
-  const [submissionSuccessful, setSubmissionSuccessful] = useState(null);
+  const [errMsg, setErrMsg] = useState(null);
+  const dispatch = useDispatch();
 
   // eslint-disable-next-line camelcase
   const { first_name, last_name, username, email, bio } = useSelector(
@@ -31,6 +49,8 @@ const AboutYou = () => {
     { setSubmitting }
   ) => {
     try {
+      if (errMsg) setErrMsg(null);
+
       await updateMe({
         firstName,
         lastName,
@@ -38,25 +58,14 @@ const AboutYou = () => {
         username: userUsername,
         bio: userBio,
       });
-      setSubmitting(false);
-      setSubmissionSuccessful(true);
-    } catch (err) {
-      setSubmissionSuccessful(false);
-    }
-  };
 
-  const submissionMsg = () => {
-    if (submissionSuccessful) {
-      return <div className="text-blue text-center">Updated!</div>;
+      dispatch(authActions.refetchUser());
+      // debugger;
+      setSubmitting(false);
+    } catch (err) {
+      console.log(err);
+      setErrMsg(err);
     }
-    if (submissionSuccessful === false) {
-      return (
-        <div className="error-message error-text-color text-center">
-          Something went wrong. Please try again later.
-        </div>
-      );
-    }
-    return "";
   };
 
   return (
@@ -151,9 +160,10 @@ const AboutYou = () => {
             <button type="submit" className="form-submit form-item">
               Submit
             </button>
+
+            <SubmissionMsg errMsg={errMsg} />
           </Form>
         </Formik>
-        {submissionMsg()}
       </div>
     </div>
   );
