@@ -146,7 +146,6 @@ exports.login = catchAsync(async (req, res, next) => {
     isReactivated = true;
   }
 
-  console.log('isReactivated', isReactivated);
   const passedPasswordVerification = await bcryptPasswordCompare(
     password,
     existingUser.password

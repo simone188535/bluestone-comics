@@ -14,8 +14,8 @@ const DeleteAccount = () => {
 };
 
 const SubmissionMsg = ({ errMsg }) => {
-  const { submitCount } = useFormikContext();
-  if (submitCount > 0) {
+  const { submitCount, isSubmitting } = useFormikContext();
+  if (submitCount > 0 && !isSubmitting) {
     if (errMsg) {
       return (
         <div className="error-message error-text-color text-center">
@@ -60,10 +60,8 @@ const AboutYou = () => {
       });
 
       dispatch(authActions.refetchUser());
-      // debugger;
       setSubmitting(false);
     } catch (err) {
-      console.log(err);
       setErrMsg(err);
     }
   };
