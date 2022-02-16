@@ -1,0 +1,18 @@
+@import '../../../styles/abstracts/variables';
+
+.error-message {
+  .error-text-color {
+    color: $error-red;
+}
+&.description-err-msg {
+  margin-top: 30px;
+  color: $gray-black;
+  line-height: 1.9em;
+  font-weight: $light;
+  font-size: 1.1em;
+}
+
+&.centered-err-msg {
+  text-align: center;
+}
+}

@@ -1,12 +1,10 @@
 /*
-    this function shows the correct page number/offset 
-    of the pgSQL results returned from the PostgresDB.
+    this function returns the proper number offset calculation
+    needed for proper pagination in pgSQL.
 */
-const pageOffset = (pageNumber) => {
-  let offset = pageNumber - 1;
-  if (offset < 1) offset = 0;
-
-  return offset;
+const pageOffset = (pageNumber, offsetBy) => {
+  const pageNumMinusOne = pageNumber - 1;
+  return (pageNumMinusOne < 0 ? 0 : pageNumMinusOne) * offsetBy;
 };
 
 module.exports = pageOffset;

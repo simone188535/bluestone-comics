@@ -11,7 +11,7 @@ import {
   useFormikContext,
 } from "formik";
 import * as Yup from "yup";
-import { PublishServices } from "../../services";
+import { createBook, getBookAndIssueImagePrefix } from "../../services";
 import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
 import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
 import Checkboxes from "../CommonUI/Checkboxes";
@@ -20,7 +20,7 @@ import ProgressBar from "../CommonUI/ProgressBar";
 import WorkCredits from "./WorkCredits";
 // eslint-disable-next-line
 import { imageDimensionCheck, imageSizeCheck } from '../../utils/Yup/yupCustomMethods';
-import { IMAGE_UPLOAD_DIMENSIONS } from "../../utils/Constants";
+import IMAGE_UPLOAD_DIMENSIONS from "../../utils/Constants";
 import "./upload.scss";
 
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
@@ -96,8 +96,8 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
       method="post"
     >
       <h1 className="form-header-text">
-        Upload a<strong>New Book</strong>
-        along with its<strong>First Issue</strong>
+        Upload a <strong>New Book</strong> along with its{" "}
+        <strong>First Issue</strong>
       </h1>
       <div>
         <Field
@@ -114,7 +114,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
         />
         <FileInputSingleUpload
           identifier="bookCoverPhoto"
-          triggerText="Select Book Cover Photo Thumbnail"
+          triggerText="Select Book Thumbnail Photo"
         />
         <ErrorMessage
           className="error-message error-text-color"
@@ -169,7 +169,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
         />
         <FileInputSingleUpload
           identifier="issueCoverPhoto"
-          triggerText="Select Issue Cover Photo Thumbnail"
+          triggerText="Select Issue Thumbnail Photo"
         />
         <ErrorMessage
           className="error-message error-text-color"
@@ -180,6 +180,18 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           Thumbnail size must be:{" "}
           <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong>
         </div>
+        <Field
+          className="form-input form-textarea"
+          name="issueDescription"
+          as="textarea"
+          placeholder="Issue Description"
+          autoComplete="on"
+        />
+        <ErrorMessage
+          className="error-message error-text-color"
+          component="div"
+          name="issueDescription"
+        />
         <div className="form-header-text">
           Select the applicable <strong>genres</strong>
         </div>
@@ -320,8 +332,7 @@ const Upload = () => {
      */
 
     try {
-      const imagePrefixesRes =
-        await PublishServices.getBookAndIssueImagePrefix();
+      const imagePrefixesRes = await getBookAndIssueImagePrefix();
       const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;
       // console.log('res', res);
       const formData = new FormData();
@@ -330,6 +341,7 @@ const Upload = () => {
       formData.append("bookDescription", values.bookDescription);
       formData.append("urlSlug", values.urlSlug);
       formData.append("issueTitle", values.issueTitle);
+      formData.append("issueDescription", values.issueDescription);
       // formData cannot contain plain objects, so it must be stringified
       /* values.workCredits.forEach((formValue) => formData.append('workCredits',
       console.log(JSON.stringify(formValue))));
@@ -380,7 +392,7 @@ const Upload = () => {
         },
       };
 
-      const createBookRes = await PublishServices.createBook(formData, config);
+      const createBookRes = await createBook(formData, config);
       // Set progress bar to 100 percent upon returned promise
       setUploadPercentage(100);
 
@@ -411,6 +423,7 @@ const Upload = () => {
             urlSlug: "",
             issueTitle: "",
             issueCoverPhoto: null,
+            issueDescription: "",
             genres: [],
             issueAssets: [],
             workCredits: [{ user: currentUserId, credits: [] }],
@@ -436,6 +449,9 @@ const Upload = () => {
               .required("A Issue Cover Photo is required!")
               .imageDimensionCheck()
               .imageSizeCheck(),
+            issueDescription: Yup.string().required(
+              "Issue Description required!"
+            ),
             // issueAssets: Yup.array().of(
             //     Yup.mixed().imageDimensionCheck()
             // )

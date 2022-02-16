@@ -14,6 +14,19 @@
         &.active {
             background: $dark-violet-blue;
         }
+
+        &.primary-round {
+            border-radius: 35px;
+        }
+
+        &.primary-glow {
+            box-shadow: 0 2px 15px $violet-blue;
+
+            &:hover,
+            &.active {
+                box-shadow: 0 2px 15px $dark-violet-blue;
+            }
+        }
     }
 
     &.transparent {
@@ -33,13 +46,36 @@
         border: unset;
         color: $violet-blue;
         background: transparent;
-        padding:  unset;
+        padding: unset;
         line-height: 1.5;
         letter-spacing: 1px;
         font-size: 15px;
+
         &:hover,
         &.active {
             color: $dark-violet-blue;
+        }
+    }
+
+    &.transparent-blue {
+        color: $dark-violet-blue;
+        border-color: $dark-violet-blue;
+
+        &:hover,
+        &.active {
+            color: $violet-blue;
+            border-color: $violet-blue;
+        }
+    }
+
+    &.transparent-red {
+        color: $error-red;
+        border-color: $error-red;
+
+        &:hover,
+        &.active {
+            color: $dark-red;
+            border-color: $dark-red;
         }
     }
 }

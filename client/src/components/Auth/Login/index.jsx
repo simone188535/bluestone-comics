@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import LoginForm from './form/LoginForm';
-import '../auth.scss';
-import './login.scss';
+import React from "react";
+import { Link } from "react-router-dom";
+import LoginForm from "./form/LoginForm";
+import "../auth.scss";
+import "./login.scss";
 
 const Login = () => {
   return (

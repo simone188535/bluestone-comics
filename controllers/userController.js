@@ -1,9 +1,9 @@
 // const express = require('express');
 const validator = require('validator');
 const catchAsync = require('../utils/catchAsync');
-const filterObj = require('../utils/filterObj');
+// const filterObj = require('../utils/filterObj');
 const AppError = require('../utils/appError');
-const User = require('../models/userModel');
+// const User = require('../models/userModel');
 const QueryPG = require('../utils/QueryPGFeature');
 // const pageOffset = require('../utils/offset');
 const pool = require('../db');
@@ -33,10 +33,8 @@ exports.getUser = catchAsync(async (req, res, next) => {
   }
 
   // const user = await User.findOne(queryObject);
-  const user = await new QueryPG(
-    pool
-  ).find(
-    'email, username, user_photo, background_user_photo, role, bio, date_created',
+  const user = await new QueryPG(pool).find(
+    'id, email, username, user_photo, background_user_photo, role, bio, date_created',
     `users WHERE ${findVal} = ($1)`,
     [preparedStatementVal]
   );
@@ -68,7 +66,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     email,
     username,
     password,
-    passwordConfirm
+    passwordConfirm,
+    bio
   } = req.body;
 
   // 1) THIS ROUTE IS NOT FOR PASSWORD UPDATES. PLEASE USE /update-password
@@ -88,9 +87,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   const updatedUser = await new QueryPG(pool).update(
     'users',
-    `first_name = ($1), last_name = ($2), username = ($3), email = ($4)`,
-    'id = ($5)',
-    [firstName, lastName, username, email, res.locals.user.id]
+    `first_name = ($1), last_name = ($2), username = ($3), email = ($4), bio = ($5)`,
+    'id = ($6)',
+    [firstName, lastName, username, email, bio, res.locals.user.id]
   );
 
   // remove encrypted passwords from results
@@ -106,11 +105,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
   // User is never really deleted. Just deactivated as a safety precaution
-  // await User.findByIdAndUpdate(
-  //   res.locals.user.id,
-  //   { $set: { active: false } },
-  //   { new: true }
-  // );
 
   // Change user account activity to false, this account is no longer active
   const currentUser = await new QueryPG(pool).find(
@@ -137,17 +131,29 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     );
   }
 
+  res.locals.user = undefined;
+
   res.status(204).json({
     status: 'success',
     data: null
   });
 });
 
-exports.getMe = catchAsync(async (req, res, next) => {
+exports.updateProfileImg = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
-    data: {
-      user: res.locals.user
-    }
+    user: res.locals.user
+  });
+});
+
+exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
+exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success'
   });
 });

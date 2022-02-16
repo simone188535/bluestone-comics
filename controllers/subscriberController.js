@@ -1,22 +1,18 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const Subscriber = require('../models/subscriberModel');
+// const Subscriber = require('../models/subscriberModel');
 const QueryPG = require('../utils/QueryPGFeature');
 const pageOffset = require('../utils/offset');
 const pool = require('../db');
 
 exports.checkSubscription = (onlyCheckSubscription = false) =>
   catchAsync(async (req, res, next) => {
-    // const currentUserSubscribedToPublisher = await Subscriber.findOne({
-    //   publisher: req.body.publisher,
-    //   subscriber: res.locals.user.id
-    // });
-    const currentUserSubscribedToPublisher = await new QueryPG(
-      pool
-    ).find(
+    const { publisherId } = req.params;
+
+    const currentUserSubscribedToPublisher = await new QueryPG(pool).find(
       'publisher_id, subscriber_id',
       'subscribers WHERE publisher_id = ($1) AND subscriber_id = ($2)',
-      [req.body.publisher, res.locals.user.id]
+      [publisherId, res.locals.user.id]
     );
 
     if (onlyCheckSubscription) {
@@ -38,7 +34,7 @@ exports.checkSubscription = (onlyCheckSubscription = false) =>
   });
 
 exports.subscribe = catchAsync(async (req, res, next) => {
-  const { publisher } = req.body;
+  const { publisherId } = req.params;
 
   if (res.locals.subscribed) {
     return next(
@@ -46,16 +42,15 @@ exports.subscribe = catchAsync(async (req, res, next) => {
     );
   }
   // prevent user from subscribing to themselves
-  if (Number(publisher) === Number(res.locals.user.id)) {
+  if (Number(publisherId) === Number(res.locals.user.id)) {
     return next(new AppError('A user cannot subscribe to themselves.', 400));
   }
 
-  const subscribeToPublisher = await new QueryPG(
-    pool
-  ).insert('subscribers (publisher_id, subscriber_id)', '$1, $2', [
-    publisher,
-    res.locals.user.id
-  ]);
+  const subscribeToPublisher = await new QueryPG(pool).insert(
+    'subscribers (publisher_id, subscriber_id)',
+    '$1, $2',
+    [publisherId, res.locals.user.id]
+  );
 
   res.status(201).json({
     subscribed: subscribeToPublisher,
@@ -64,7 +59,7 @@ exports.subscribe = catchAsync(async (req, res, next) => {
 });
 
 exports.unsubscribe = catchAsync(async (req, res, next) => {
-  const { publisher } = req.body;
+  const { publisherId } = req.params;
   if (!res.locals.subscribed) {
     return next(
       new AppError('This user is not subscribed to this publisher.', 404)
@@ -74,7 +69,7 @@ exports.unsubscribe = catchAsync(async (req, res, next) => {
   await new QueryPG(pool).delete(
     'subscribers',
     'publisher_id = ($1) AND subscriber_id = ($2) ',
-    [publisher, res.locals.user.id]
+    [publisherId, res.locals.user.id]
   );
 
   res.status(204).json({
@@ -82,19 +77,38 @@ exports.unsubscribe = catchAsync(async (req, res, next) => {
   });
 });
 
-// all subscribers to a specific user
+// all subscribers to a the current user
 exports.getAllSubscribers = catchAsync(async (req, res, next) => {
   const { page } = req.query;
-  const { publisher } = req.body;
+  const { publisherId } = req.params;
 
-  const offset = pageOffset(page);
+  const offset = pageOffset(page, 20);
+
+  /* 
+  This query works by first searching for all of the users subscribed to the current users in the subscribers table (this action occurs in the 2nd subquery).
+  It then takes that list of users ie all_users_subbed and displays their publisher_id, username, user_photo and their subscriber count. 
+  Remember, Subqueries are run before the parent query.
+  ex: https://stackoverflow.com/questions/46988538/sql-use-result-from-one-query-for-another-query
+  */
+  /*
+    P.S.: all_users_subbed.* does not need to display publisherId (meaning all_users_subbed.* can be replaced with all_users_subbed.subscriber_id, all_users_subbed.username 
+    and all_users_subbed.user_photo in the outer most SELECT query), it is the same for them all results
+  */
 
   const allSubscribers = await new QueryPG(pool).find(
-    'subscriber_id, username, user_photo',
-    'subscribers INNER JOIN users ON (users.id = subscribers.publisher_id) WHERE publisher_id = ($1) LIMIT 20 OFFSET ($2)',
-    [publisher, offset],
+    'all_users_subbed.*, (SELECT COUNT(*) FROM subscribers s2 WHERE s2.publisher_id = all_users_subbed.subscriber_id) AS subscribers_sub_count',
+    '(SELECT publisher_id, subscriber_id, u2.username AS username, u2.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.publisher_id) INNER JOIN users u2 ON (u2.id = s.subscriber_id) WHERE publisher_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed ORDER BY subscribers_sub_count DESC',
+    [publisherId, offset],
     true
   );
+
+  // ORIGINAL
+  // const allSubscribers = await new QueryPG(pool).find(
+  //   'subscriber_id, username, user_photo',
+  //   'subscribers INNER JOIN users ON (users.id = subscribers.publisher_id) WHERE publisher_id = ($1) LIMIT 20 OFFSET ($2)',
+  //   [publisherId, offset],
+  //   true
+  // );
 
   // There are no subscriber to this user yet
   if (!allSubscribers) {
@@ -107,19 +121,37 @@ exports.getAllSubscribers = catchAsync(async (req, res, next) => {
   });
 });
 
-// All publishers this user is subscribed to
+// Get All publishers this user is subscribed to
 exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
   const { page } = req.query;
-  const { subscriber } = req.body;
+  const { subscriberId } = req.params;
 
-  const offset = pageOffset(page);
+  const offset = pageOffset(page, 20);
+
+  /* 
+  This query works by first searching for all of the users the current user is subscribed to in the subscribers table (this action occurs in the 2nd subquery).
+  It then takes that list of users ie all_users_subbed_to (that the current user is subscribed to) and displays their publisher_id, username, user_photo and their subscriber count. 
+  Remember, Subqueries are run before the parent query.
+  ex: https://stackoverflow.com/questions/46988538/sql-use-result-from-one-query-for-another-query
+  */
+  /* 
+    P.S.: all_users_subbed_to.* does not need to display subscriberId (meaning all_users_subbed_to.* can be replaced with all_users_subbed_to.subscriber_id, all_users_subbed_to.username 
+    and all_users_subbed_to.user_photo in the outer most SELECT query), it is the same for them all
+    */
 
   const allSubscribedTo = await new QueryPG(pool).find(
-    'publisher_id, username, user_photo',
-    'subscribers INNER JOIN users ON (users.id = subscribers.subscriber_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)',
-    [subscriber, offset],
+    'all_users_subbed_to.*, (SELECT COUNT(*) FROM subscribers s2 WHERE s2.publisher_id = all_users_subbed_to.publisher_id) AS subscribers_sub_count',
+    '(SELECT publisher_id, subscriber_id, u2.username AS username, u2.user_photo AS user_photo FROM subscribers s INNER JOIN users u ON (u.id = s.subscriber_id) INNER JOIN users u2 ON (u2.id = s.publisher_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)) AS all_users_subbed_to ORDER BY subscribers_sub_count DESC',
+    [subscriberId, offset],
     true
   );
+  // ORIGINAL
+  // const allSubscribedTo = await new QueryPG(pool).find(
+  //   'publisher_id, username, user_photo',
+  //   'subscribers INNER JOIN users ON (users.id = subscribers.subscriber_id) WHERE subscriber_id = ($1) LIMIT 20 OFFSET ($2)',
+  //   [subscriberId, offset],
+  //   true
+  // );
 
   // This user hasn't subscribed to anyone yet
   if (!allSubscribedTo) {
@@ -131,5 +163,36 @@ exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     subscribedTo: allSubscribedTo
+  });
+});
+
+// This is the total count of the subscribers that the provided user (publisherId) has
+exports.totalSubscribers = catchAsync(async (req, res) => {
+  const { publisherId } = req.params;
+  const totalSubscribers = await new QueryPG(pool).find(
+    'COUNT(*)',
+    'subscribers WHERE publisher_id = ($1)',
+    [publisherId],
+    false
+  );
+  res.status(200).json({
+    status: 'success',
+    totalSubscribers: Number(totalSubscribers.count)
+  });
+});
+
+// This is the total count of the subscriptions (to other users/publishers) that the provided user (subscriberId) has
+exports.totalSubscribedTo = catchAsync(async (req, res) => {
+  const { subscriberId } = req.params;
+  const totalSubscribedTo = await new QueryPG(pool).find(
+    'COUNT(*)',
+    'subscribers WHERE subscriber_id = ($1)',
+    [subscriberId],
+    false
+  );
+
+  res.status(200).json({
+    status: 'success',
+    totalSubscribedTo: Number(totalSubscribedTo.count)
   });
 });
