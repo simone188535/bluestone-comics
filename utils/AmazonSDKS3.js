@@ -2,7 +2,7 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 const uuid = require('uuid');
-const keys = require('../config/keys.js');
+const keys = require('../config/keys');
 const AppError = require('./appError');
 // come here for more details concerning how this works: https://stackabuse.com/uploading-files-to-aws-s3-with-node-js/
 const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_BUCKET_NAME } = keys;
@@ -33,21 +33,6 @@ exports.uploadS3 = () => {
           issuePrefix is the reference for the folder where the issue resides within the book in AWS.
         */
         const { bookImagePrefixRef, issueImagePrefixRef } = req.body;
-        // console.log(
-        //   'BbookImagePrefixRef: ',
-        //   bookImagePrefixRef,
-        //   'issueImagePrefixRef: ',
-        //   issueImagePrefixRef
-        // );
-        // JSON.parse(issueImagePrefixRef);
-
-        // console.log('req.body: ', req.body);
-        // if (issueImagePrefixRef) {
-        //   console.log('imagePrefix', issueImagePrefixRef);
-        // }
-        // const optionalIssueImagePrefixRef = issueImagePrefixRef
-        //   ? `/${issueImagePrefixRef}`
-        //   : '';
         cb(
           null,
           `${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`

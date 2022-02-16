@@ -5,6 +5,7 @@ const pool = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 const SearchFeatures = require('../utils/SearchFeatures');
 
+// TODO: may implement this in our pagination later: https://ivopereira.net/efficient-pagination-dont-use-offset-limit , https://medium.com/swlh/how-to-implement-cursor-pagination-like-a-pro-513140b65f32
 exports.searchBooks = catchAsync(async (req, res, next) => {
   const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id)`;
 
@@ -12,11 +13,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   //   parameterizedQuery = `${parameterizedQuery} INNER JOIN work_credits ON (work_credits.book_id = books.id)`;
   // }
 
-  const { query, parameterizedValues } = new SearchFeatures(
-    parameterizedQuery,
-    req.query,
-    []
-  )
+  const searchedBooks = new SearchFeatures(parameterizedQuery, req.query, [])
     .filter('books')
     .sort('books.')
     .paginate(20);
@@ -25,10 +22,11 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   // https://stackoverflow.com/questions/32903988/postgres-ts-rank-cd-different-result-for-same-tsvector
   // ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce( books.title,'')), 'A') || setweight(to_tsvector('english', coalesce(books.description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const books = await new QueryPG(pool).find(
-    `users.id,
+    `users.id AS user_id,
     users.username,
     users.user_photo,
-    books.title, 
+    books.id AS book_id,
+    books.title AS book_title, 
     books.url_slug, 
     books.cover_photo, 
     books.description, 
@@ -36,14 +34,28 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.last_updated, 
     books.date_created
    `,
-    query,
-    parameterizedValues,
+    searchedBooks.query,
+    searchedBooks.parameterizedValues,
     true
   );
 
+  // const searchedBookstotalCount = new SearchFeatures(
+  //   parameterizedQuery,
+  //   req.query,
+  //   []
+  // ).filter('books');
+
+  // const totalBooksSearched = await new QueryPG(pool).find(
+  //   `COUNT(*)`,
+  //   searchedBookstotalCount.query,
+  //   searchedBookstotalCount.parameterizedValues,
+  //   false
+  // );
+
   // Send Response
   res.status(200).json({
-    results: books.length,
+    // totalResultCount: Number(totalBooksSearched.count),
+    resultCount: books.length,
     books,
     status: 'success'
   });
@@ -62,13 +74,18 @@ exports.searchIssues = catchAsync(async (req, res) => {
 
   //  ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const issues = await new QueryPG(pool).find(
-    `issues.title,
+    `users.id AS user_id,
+    users.username,
+    users.email,
+    users.user_photo,
+    issues.id AS issue_id,
+    issues.title AS issue_title,
+    issues.description,
     issues.cover_photo,
     issues.issue_number,
     issues.date_created,
-    users.username,
-    users.email,
-    users.user_photo`,
+    books.title AS book_title
+    `,
     query,
     parameterizedValues,
     true
@@ -76,7 +93,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
 
   // Send Response
   res.status(200).json({
-    results: issues.length,
+    resultCount: issues.length,
     issues,
     status: 'success'
   });
@@ -85,30 +102,6 @@ exports.searchIssues = catchAsync(async (req, res) => {
 exports.search = catchAsync(async (req, res) => {});
 
 exports.searchUsers = catchAsync(async (req, res) => {
-  const usernameQuery = req.query.q;
-
-  // const users = await User.find({
-  //   username: { $regex: usernameQuery, $options: 'i' }
-  // });
-  // const parameterizedQuery = `users`;
-  // const { query, parameterizedValues } = new SearchFeatures(
-  //   parameterizedQuery,
-  //   req.query,
-  //   []
-  // )
-  //   .filter('users')
-  //   .sort('users.')
-  //   .paginate(20);
-
-  //   console.log('query ', query);
-  //   console.log('parameterizedValues ', parameterizedValues);
-  // const users = await new QueryPG(pool).find(
-  //   `*,  similarity(username, '${req.query.q}') AS rank`,
-  //   query,
-  //   parameterizedValues,
-  //   true
-  // );
-
   const parameterizedQuery = `users`;
   const { query, parameterizedValues } = new SearchFeatures(
     parameterizedQuery,
@@ -128,10 +121,86 @@ exports.searchUsers = catchAsync(async (req, res) => {
 
   // Send Response
   res.status(200).json({
-    results: users.length,
+    resultCount: users.length,
     users,
     status: 'success'
   });
 });
 
-exports.searchAccreditedWorks = catchAsync(async (req, res) => {});
+exports.searchAccreditedWorks = catchAsync(async (req, res) => {
+  const { userId } = req.query;
+
+  // issue_id, creator_credit
+  const accreditedWorksQuery =
+    'work_credits INNER JOIN issues ON (work_credits.issue_id = issues.id) INNER JOIN books ON (work_credits.book_id = books.id) WHERE creator_id = ($1) AND creator_credit = ($2)';
+
+  const accreditedWorksSelectedData =
+    'issues.book_id, issues.date_created, issues.issue_number, issues.title AS issue_title, work_credits.issue_id, work_credits.creator_credit, books.id, books.title AS book_title';
+
+  const writer = await new QueryPG(pool).find(
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
+    [userId, 'writer'],
+    true
+  );
+
+  const artist = await new QueryPG(pool).find(
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
+    [userId, 'artist'],
+    true
+  );
+
+  const editor = await new QueryPG(pool).find(
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
+    [userId, 'editor'],
+    true
+  );
+
+  const inker = await new QueryPG(pool).find(
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
+    [userId, 'inker'],
+    true
+  );
+
+  const letterer = await new QueryPG(pool).find(
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
+    [userId, 'letterer'],
+    true
+  );
+
+  const penciller = await new QueryPG(pool).find(
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
+    [userId, 'penciller'],
+    true
+  );
+
+  const colorist = await new QueryPG(pool).find(
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
+    [userId, 'colorist'],
+    true
+  );
+
+  const coverArtist = await new QueryPG(pool).find(
+    accreditedWorksSelectedData,
+    accreditedWorksQuery,
+    [userId, 'cover artist'],
+    true
+  );
+  res.status(200).json({
+    writer,
+    artist,
+    editor,
+    inker,
+    letterer,
+    penciller,
+    colorist,
+    coverArtist,
+    status: 'success'
+  });
+});

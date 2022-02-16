@@ -1,0 +1,56 @@
+@import '../../../styles/abstracts/variables';
+
+.accordian {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    .accordian-trigger {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid $mid-gray;
+        // color: #325191;
+        // color: #273586;
+        color: #3143A8;
+        background-color: $white-light-grey;
+        &:not(:last-child) {
+            border-bottom: 0;
+        }
+
+        .accordian-header {
+            padding: 2rem;
+            font-size: 1.4rem;
+        }
+
+        .accordian-icon {
+            margin-right: 1.5rem;
+            color: #8CACEB;
+        }
+        &:not(.active):hover {
+            background-color: #fcfcfc;
+        }
+    }
+
+    .dropdown {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        padding: 0rem 2rem 2rem;
+        font-weight: 300;
+        font-size: 1rem;
+
+        ul.accordian-list {
+            list-style-position: inside;
+            
+            li {
+                margin-bottom: .5rem;
+            }
+        }
+    }
+}
