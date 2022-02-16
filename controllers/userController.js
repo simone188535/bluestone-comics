@@ -139,9 +139,21 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getMe = catchAsync(async (req, res, next) => {
+exports.updateProfileImg = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     user: res.locals.user
+  });
+});
+
+exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
+exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success'
   });
 });

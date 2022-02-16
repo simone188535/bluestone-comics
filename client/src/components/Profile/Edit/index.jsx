@@ -7,7 +7,7 @@ import { authActions } from "../../../actions";
 import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
 
 const ChangeProfilePics = () => {
-  const [errMsg, setErrMsg] = useState(null);
+  const [hasErrMsg, setHasErrMsg] = useState(null);
   return (
     <div className="upload-page container">
       <div className="upload-form-container">
@@ -16,10 +16,10 @@ const ChangeProfilePics = () => {
             profilePhoto: null,
             backgroundPhoto: null,
           }}
-          onSubmit={(values, actions) => {
+          onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
               alert(JSON.stringify(values, null, 2));
-              actions.setSubmitting(false);
+              setSubmitting(false);
             }, 1000);
           }}
         >
@@ -52,7 +52,7 @@ const ChangeProfilePics = () => {
               Submit
             </button>
 
-            <SubmissionMsg errMsg={errMsg} />
+            <SubmissionMsg hasErrMsg={hasErrMsg} />
           </Form>
         </Formik>
       </div>
@@ -64,10 +64,10 @@ const DeleteAccount = () => {
   return <p>DeleteAccount</p>;
 };
 
-const SubmissionMsg = ({ errMsg }) => {
+const SubmissionMsg = ({ hasErrMsg }) => {
   const { submitCount, isSubmitting } = useFormikContext();
   if (submitCount > 0 && !isSubmitting) {
-    if (errMsg) {
+    if (hasErrMsg) {
       return (
         <div className="error-message error-text-color text-center">
           Something went wrong. Please try again later.
@@ -81,7 +81,7 @@ const SubmissionMsg = ({ errMsg }) => {
 };
 
 const AboutYou = () => {
-  const [errMsg, setErrMsg] = useState(null);
+  const [hasErrMsg, setHasErrMsg] = useState(false);
   const dispatch = useDispatch();
 
   // eslint-disable-next-line camelcase
@@ -100,7 +100,7 @@ const AboutYou = () => {
     { setSubmitting }
   ) => {
     try {
-      if (errMsg) setErrMsg(null);
+      if (hasErrMsg) setHasErrMsg(false);
 
       await updateMe({
         firstName,
@@ -113,7 +113,7 @@ const AboutYou = () => {
       dispatch(authActions.refetchUser());
       setSubmitting(false);
     } catch (err) {
-      setErrMsg(err);
+      setHasErrMsg(true);
     }
   };
 
@@ -210,7 +210,7 @@ const AboutYou = () => {
               Submit
             </button>
 
-            <SubmissionMsg errMsg={errMsg} />
+            <SubmissionMsg hasErrMsg={hasErrMsg} />
           </Form>
         </Formik>
       </div>
