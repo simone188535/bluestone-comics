@@ -1,12 +1,12 @@
 import React from "react";
 import { useFormikContext } from "formik";
 
-const FormikStatus = ({ err, successMessage, errMsg }) => {
+const FormikSubmissionStatus = ({ err, successMessage, errMsg }) => {
   const { submitCount, isSubmitting, isValid } = useFormikContext();
   if (submitCount > 0 && !isSubmitting && isValid) {
     if (err) {
       return (
-        <div className="text-danger text-center">
+        <div className="error-message error-text-color text-center">
           {errMsg || "Something went wrong. Please try again later."}
         </div>
       );
@@ -16,4 +16,4 @@ const FormikStatus = ({ err, successMessage, errMsg }) => {
   return "";
 };
 
-export default FormikStatus;
+export default FormikSubmissionStatus;
