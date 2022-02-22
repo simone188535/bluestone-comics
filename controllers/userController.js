@@ -142,9 +142,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 exports.getMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
-    data: {
-      user: res.locals.user
-    }
+    user: res.locals.user
   });
 });
 
