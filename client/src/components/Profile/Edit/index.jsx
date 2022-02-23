@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useFormikContext, Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { updateMe } from "../../../services";
 import { authActions } from "../../../actions";
 import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
+import FormikSubmissionStatus from "../../CommonUI/FormikSubmissionStatus";
 
 const ChangeProfilePics = () => {
   const [hasErrMsg, setHasErrMsg] = useState(null);
@@ -23,37 +24,46 @@ const ChangeProfilePics = () => {
             }, 1000);
           }}
         >
-          <Form className="bsc-form upload-form">
-            <h1 className="form-header-text">
-              <strong>Change Profile Photos</strong>
-            </h1>
+          {({ isValid }) => (
+            <Form className="bsc-form upload-form">
+              <h1 className="form-header-text">
+                <strong>Change Profile Photos</strong>
+              </h1>
 
-            <FileInputSingleUpload
-              identifier="profilePhoto"
-              triggerText="Select a profile Photo"
-            />
-            <ErrorMessage
-              className="error-message error-text-color"
-              component="div"
-              name="profilePhoto"
-            />
+              <FileInputSingleUpload
+                identifier="profilePhoto"
+                triggerText="Select a profile Photo"
+              />
+              <ErrorMessage
+                className="error-message error-text-color"
+                component="div"
+                name="profilePhoto"
+              />
 
-            <FileInputSingleUpload
-              identifier="backgroundPhoto"
-              triggerText="Select a Background Photo"
-            />
-            <ErrorMessage
-              className="error-message error-text-color"
-              component="div"
-              name="backgroundPhoto"
-            />
+              <FileInputSingleUpload
+                identifier="backgroundPhoto"
+                triggerText="Select a Background Photo"
+              />
+              <ErrorMessage
+                className="error-message error-text-color"
+                component="div"
+                name="backgroundPhoto"
+              />
 
-            <button type="submit" className="form-submit form-item">
-              Submit
-            </button>
-
-            <SubmissionMsg hasErrMsg={hasErrMsg} />
-          </Form>
+              <button
+                type="submit"
+                className="form-submit form-item"
+                disabled={!isValid}
+              >
+                Submit
+              </button>
+              <FormikSubmissionStatus
+                err={hasErrMsg}
+                successMessage="Profile Pic updated!"
+                errMsg="Something went wrong. Please try again later."
+              />
+            </Form>
+          )}
         </Formik>
       </div>
     </div>
@@ -64,29 +74,13 @@ const DeleteAccount = () => {
   return <p>DeleteAccount</p>;
 };
 
-const SubmissionMsg = ({ hasErrMsg }) => {
-  const { submitCount, isSubmitting } = useFormikContext();
-  if (submitCount > 0 && !isSubmitting) {
-    if (hasErrMsg) {
-      return (
-        <div className="error-message error-text-color text-center">
-          Something went wrong. Please try again later.
-        </div>
-      );
-    }
-    return <div className="text-blue text-center">Updated!</div>;
-  }
-
-  return "";
-};
-
 const AboutYou = () => {
   const [hasErrMsg, setHasErrMsg] = useState(false);
   const dispatch = useDispatch();
 
   // eslint-disable-next-line camelcase
   const { first_name, last_name, username, email, bio } = useSelector(
-    (state) => state.auth.user
+    (state) => state.auth?.user
   );
 
   const onSubmit = async (
@@ -140,78 +134,87 @@ const AboutYou = () => {
           onSubmit={onSubmit}
           enableReinitialize
         >
-          <Form className="bsc-form upload-form">
-            <h1 className="form-header-text">
-              <strong>About Me</strong>
-            </h1>
+          {({ isValid }) => (
+            <Form className="bsc-form upload-form">
+              <h1 className="form-header-text">
+                <strong>About Me</strong>
+              </h1>
 
-            <Field
-              name="firstName"
-              type="text"
-              placeholder="First Name"
-              className="form-input form-item"
-            />
-            <ErrorMessage
-              name="firstName"
-              className="error-message error-text-color"
-              component="div"
-            />
+              <Field
+                name="firstName"
+                type="text"
+                placeholder="First Name"
+                className="form-input form-item"
+              />
+              <ErrorMessage
+                name="firstName"
+                className="error-message error-text-color"
+                component="div"
+              />
 
-            <Field
-              name="lastName"
-              type="text"
-              placeholder="Last Name"
-              className="form-input form-item"
-            />
-            <ErrorMessage
-              name="lastName"
-              className="error-message error-text-color"
-              component="div"
-            />
+              <Field
+                name="lastName"
+                type="text"
+                placeholder="Last Name"
+                className="form-input form-item"
+              />
+              <ErrorMessage
+                name="lastName"
+                className="error-message error-text-color"
+                component="div"
+              />
 
-            <Field
-              name="username"
-              type="text"
-              className="form-input form-item"
-              placeholder="Username"
-            />
-            <ErrorMessage
-              name="username"
-              className="error-message error-text-color"
-              component="div"
-            />
+              <Field
+                name="username"
+                type="text"
+                className="form-input form-item"
+                placeholder="Username"
+              />
+              <ErrorMessage
+                name="username"
+                className="error-message error-text-color"
+                component="div"
+              />
 
-            <Field
-              name="email"
-              type="email"
-              className="form-input form-item"
-              placeholder="Email"
-            />
-            <ErrorMessage
-              name="email"
-              className="error-message error-text-color"
-              component="div"
-            />
+              <Field
+                name="email"
+                type="email"
+                className="form-input form-item"
+                placeholder="Email"
+              />
+              <ErrorMessage
+                name="email"
+                className="error-message error-text-color"
+                component="div"
+              />
 
-            <Field
-              className="form-input form-textarea"
-              name="bio"
-              as="textarea"
-              placeholder="Book Description"
-              autoComplete="on"
-            />
-            <ErrorMessage
-              className="error-message error-text-color"
-              component="div"
-              name="bio"
-            />
+              <Field
+                className="form-input form-textarea"
+                name="bio"
+                as="textarea"
+                placeholder="Book Description"
+                autoComplete="on"
+              />
+              <ErrorMessage
+                className="error-message error-text-color"
+                component="div"
+                name="bio"
+              />
 
-            <button type="submit" className="form-submit form-item">
-              Submit
-            </button>
-
-            <SubmissionMsg hasErrMsg={hasErrMsg} />
-          </Form>
+              <button
+                type="submit"
+                className="form-submit form-item"
+                disabled={!isValid}
+              >
+                Submit
+              </button>
+              <FormikSubmissionStatus
+                err={hasErrMsg}
+                successMessage="Profile updated!"
+                errMsg="Something went wrong. Please try again later."
+              />
+            </Form>
+          )}
         </Formik>
       </div>
     </div>

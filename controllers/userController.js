@@ -1,11 +1,8 @@
-// const express = require('express');
 const validator = require('validator');
 const catchAsync = require('../utils/catchAsync');
-// const filterObj = require('../utils/filterObj');
 const AppError = require('../utils/appError');
-// const User = require('../models/userModel');
 const QueryPG = require('../utils/QueryPGFeature');
-// const pageOffset = require('../utils/offset');
+const randomUUIDString = require('../utils/randomUUIDString');
 const pool = require('../db');
 
 exports.getUser = catchAsync(async (req, res, next) => {
@@ -160,7 +157,38 @@ exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
 });
 
 exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
+  let userProfilePhotoPrefix;
+  let userProfileBackgroundPhotoPrefix;
+  const userId = res.locals.user.id;
+
+  // find the current user
+  const userProfilePics = await new QueryPG(pool).find(
+    'user_photo, background_user_photo',
+    'users WHERE id = ($1)',
+    [userId]
+  );
+
+  /* 
+  if the default image is used, create a new path for the 'soon to be created' image, else
+  use the existing name
+  */
+  if (userProfilePics.user_photo.includes('profile-pic.jpeg')) {
+    userProfilePhotoPrefix = randomUUIDString();
+  } else {
+    userProfilePhotoPrefix = userProfilePics.user_photo;
+  }
+
+  if (
+    userProfilePics.background_user_photo.includes('plain-white-background.jpg')
+  ) {
+    userProfileBackgroundPhotoPrefix = randomUUIDString();
+  } else {
+    userProfileBackgroundPhotoPrefix = userProfilePics.background_user_photo;
+  }
+
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    userProfilePhotoPrefix,
+    userProfileBackgroundPhotoPrefix
   });
 });

@@ -28,7 +28,7 @@ router
   .patch(userController.updateBackgroundProfileImg);
 
 router
-  .route('/profile-pic-image-prefix/:bookId?')
+  .route('/profile-pic-image-prefix')
   .get(userController.getProfilePicImagePrefix);
 
 module.exports = router;

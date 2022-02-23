@@ -33,10 +33,13 @@ exports.uploadS3 = () => {
           issuePrefix is the reference for the folder where the issue resides within the book in AWS.
         */
         const { bookImagePrefixRef, issueImagePrefixRef } = req.body;
-        cb(
-          null,
-          `${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`
-        );
+
+        if (bookImagePrefixRef || issueImagePrefixRef) {
+          return cb(
+            null,
+            `${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`
+          );
+        }
       }
     })
   });
