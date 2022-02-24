@@ -84,9 +84,8 @@ const addGenres = async (genres, bookId) => {
 };
 
 const S3FilePath = (fileURL) => {
-  const AWSFileLocation = fileURL.split('/').reverse();
-
-  return `${AWSFileLocation[2]}/${AWSFileLocation[1]}/${AWSFileLocation[0]}`;
+  // return AWS File path Location
+  return fileURL.split('/').slice(3).join('/');
 };
 
 exports.getBook = catchAsync(async (req, res, next) => {
@@ -97,6 +96,11 @@ exports.getBook = catchAsync(async (req, res, next) => {
     [bookId, res.locals.user.id]
   );
 
+  if (!bookByUser) {
+    return next(
+      new AppError(`Existing book by the current user cannot be found.`, 404)
+    );
+  }
   // Get the book cover photo file in AWS associated with this book
   const bookCoverPhoto = await AmazonSDKS3.getSingleS3Object(
     S3FilePath(bookByUser.cover_photo)
@@ -143,7 +147,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
   } = req.body;
 
   // grab AWS file path (where the file is saved in aws) and save it to the db (each of these files should share path/location in aws)
-  const AWSPrefixArray = req.files.bookCoverPhoto[0].key.split('/');
+  const AWSPrefixArray = req.files.issueCoverPhoto[0].key.split('/');
 
   // create new Book
   const newBook = await new QueryPG(pool).insert(

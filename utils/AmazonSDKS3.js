@@ -34,7 +34,14 @@ exports.uploadS3 = () => {
         */
         const { bookImagePrefixRef, issueImagePrefixRef } = req.body;
 
-        if (bookImagePrefixRef || issueImagePrefixRef) {
+        if (file.fieldname === 'bookCoverPhoto') {
+          return cb(null, `${bookImagePrefixRef}/${randomString()}`);
+        }
+
+        if (
+          file.fieldname === 'issueCoverPhoto' ||
+          file.fieldname === 'issueAssets'
+        ) {
           return cb(
             null,
             `${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`
