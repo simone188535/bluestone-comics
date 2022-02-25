@@ -192,3 +192,40 @@ exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
     userProfileBackgroundPhotoPrefix
   });
 });
+
+exports.updateProfileImg = catchAsync(async (req, res, next) => {
+  const userId = res.locals.user.id;
+  // const { bookId, issueNumber } = req.params;
+  // const issueCoverPhoto = req.file.location;
+
+  // const issueToUpdate = await new QueryPG(pool).find(
+  //   'cover_photo',
+  //   'issues WHERE book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
+  //   [bookId, issueNumber, res.locals.user.id]
+  // );
+
+  // if (!issueToUpdate) {
+  //   return next(
+  //     new AppError(
+  //       `Existing issue cannot be found. Issue could not be updated.`,
+  //       404
+  //     )
+  //   );
+  // }
+
+  // // update cover photo of issue
+  // const updatedIssue = await new QueryPG(pool).update(
+  //   'issues',
+  //   'cover_photo = ($1), last_updated = ($2)',
+  //   'book_id = ($3) AND issue_number = ($4) AND publisher_id = ($5)',
+  //   [issueCoverPhoto, new Date(), bookId, issueNumber, res.locals.user.id]
+  // );
+
+  // // Delete previous Issue Cover photo in AWS
+  // await deleteSingleS3Object(issueToUpdate.cover_photo);
+
+  // res.status(200).json({
+  //   status: 'success',
+  //   updatedIssue
+  // });
+});
