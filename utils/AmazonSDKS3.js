@@ -97,6 +97,16 @@ const deleteObjects = async (bucket, deleteItems, config) => {
   }
 };
 
+// Upload an object/single file
+const uploadObject = async (bucket, key, config) => {
+  Object.assign(config, { Bucket: bucket, Key: key });
+  try {
+    return await s3.upload(config).promise();
+  } catch (err) {
+    throw new AppError(err.message, 500);
+  }
+};
+
 // Delete an entire Bucket
 const deleteBucket = async (bucket, config) => {
   Object.assign(config, { Bucket: bucket });
@@ -130,6 +140,10 @@ exports.deleteSingleS3Object = async (bucketKey, config = {}) => {
 
 exports.deleteMultipleS3Objects = async (deleteItems, config = {}) => {
   await deleteObjects(keys.AWS_S3_BUCKET_NAME, deleteItems, config);
+};
+
+exports.uploadS3Object = async (bucketKey, config = {}) => {
+  return await uploadObject(keys.AWS_S3_BUCKET_NAME, bucketKey, config);
 };
 
 exports.deleteS3Bucket = async (bucket, config = {}) => {

@@ -53,7 +53,7 @@ router.route('/:urlSlug/book/:bookId/issues').get(publishController.getIssues);
 router
   .route('/:urlSlug/book/:bookId/book-cover-photo')
   .patch(
-    uploadS3.single('bookCoverPhoto'),
+    upload.single('bookCoverPhoto'),
     publishController.updateBookCoverPhoto
   );
 router

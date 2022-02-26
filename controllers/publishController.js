@@ -346,7 +346,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 
 exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
-  const bookCoverPhoto = req.file.location;
+  const { fieldname, mimetype, buffer } = req.file;
 
   const bookCoverPhotoByCurrentUser = await new QueryPG(pool).find(
     'cover_photo',
@@ -357,18 +357,28 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   if (!bookCoverPhotoByCurrentUser) {
     return next(
       new AppError(
-        `Existing book cannot be found. Book Could not be updated.`,
+        `Existing book cannot be found by this user. Book could not be updated.`,
         404
       )
     );
   }
+
+  const updatedImg = await AmazonSDKS3.uploadS3Object(
+    S3FilePath(bookCoverPhotoByCurrentUser.cover_photo),
+    {
+      Body: buffer,
+      ACL: 'public-read',
+      ContentType: mimetype,
+      Metadata: { fieldName: fieldname }
+    }
+  );
 
   // update cover photo of book
   const updatedBook = await new QueryPG(pool).update(
     'books',
     'cover_photo = ($1), last_updated = ($2)',
     'id = ($3) AND publisher_id = ($4)',
-    [bookCoverPhoto, new Date(), bookId, res.locals.user.id]
+    [updatedImg.Location, new Date(), bookId, res.locals.user.id]
   );
   if (!updatedBook) {
     return next(
@@ -378,11 +388,6 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
       )
     );
   }
-
-  // Delete previous Book Cover photo in AWS
-  await AmazonSDKS3.deleteSingleS3Object(
-    S3FilePath(bookCoverPhotoByCurrentUser.cover_photo)
-  );
 
   res.status(200).json({
     status: 'success',
