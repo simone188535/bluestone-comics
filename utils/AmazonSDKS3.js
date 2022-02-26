@@ -35,7 +35,7 @@ exports.uploadS3 = () => {
         const { bookImagePrefixRef, issueImagePrefixRef } = req.body;
 
         if (file.fieldname === 'bookCoverPhoto') {
-          return cb(null, `${bookImagePrefixRef}/${randomString()}`);
+          return cb(null, `works/${bookImagePrefixRef}/${randomString()}`);
         }
 
         if (
@@ -44,7 +44,7 @@ exports.uploadS3 = () => {
         ) {
           return cb(
             null,
-            `${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`
+            `works/${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`
           );
         }
       }

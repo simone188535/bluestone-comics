@@ -159,7 +159,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
       urlSlug,
       req.files.bookCoverPhoto[0].location,
       bookDescription,
-      AWSPrefixArray[0] // book path
+      AWSPrefixArray[1] // book path
     ]
   );
 
@@ -173,7 +173,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
       issueTitle,
       req.files.issueCoverPhoto[0].location,
       issueDescription,
-      AWSPrefixArray[1] // issue path
+      AWSPrefixArray[2] // issue path
     ]
   );
 
