@@ -397,7 +397,7 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
 
 exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
-  const issueCoverPhoto = req.file.location;
+  const { fieldname, mimetype, buffer } = req.file;
 
   const issueToUpdate = await new QueryPG(pool).find(
     'cover_photo',
@@ -414,16 +414,23 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
     );
   }
 
+  const updatedImg = await AmazonSDKS3.uploadS3Object(
+    S3FilePath(issueToUpdate.cover_photo),
+    {
+      Body: buffer,
+      ACL: 'public-read',
+      ContentType: mimetype,
+      Metadata: { fieldName: fieldname }
+    }
+  );
+
   // update cover photo of issue
   const updatedIssue = await new QueryPG(pool).update(
     'issues',
     'cover_photo = ($1), last_updated = ($2)',
     'book_id = ($3) AND issue_number = ($4) AND publisher_id = ($5)',
-    [issueCoverPhoto, new Date(), bookId, issueNumber, res.locals.user.id]
+    [updatedImg.Location, new Date(), bookId, issueNumber, res.locals.user.id]
   );
-
-  // Delete previous Issue Cover photo in AWS
-  await AmazonSDKS3.deleteSingleS3Object(S3FilePath(issueToUpdate.cover_photo));
 
   res.status(200).json({
     status: 'success',

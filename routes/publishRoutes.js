@@ -59,8 +59,7 @@ router
 router
   .route('/:urlSlug/book/:bookId/issue/:issueNumber/issue-cover-photo')
   .patch(
-    // add a middleware that checks the S3 book prefix
-    uploadS3.single('issueCoverPhoto'),
+    upload.single('issueCoverPhoto'),
     publishController.updateIssueCoverPhoto
   );
 router.route('/:urlSlug/book/:bookId/issue/:issueNumber/issue-assets').patch(
