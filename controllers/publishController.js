@@ -83,11 +83,6 @@ const addGenres = async (genres, bookId) => {
   return newGenres;
 };
 
-const S3FilePath = (fileURL) => {
-  // return AWS File path Location
-  return fileURL.split('/').slice(3).join('/');
-};
-
 exports.getBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const bookByUser = await new QueryPG(pool).find(
@@ -103,7 +98,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
   }
   // Get the book cover photo file in AWS associated with this book
   const bookCoverPhoto = await AmazonSDKS3.getSingleS3Object(
-    S3FilePath(bookByUser.cover_photo)
+    AmazonSDKS3.getS3FilePath(bookByUser.cover_photo)
   );
 
   // Get book and issues.
@@ -259,14 +254,16 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
     );
 
     const issueAssetsToDelete = issueAssets.map((issueAsset) => {
-      return { Key: S3FilePath(issueAsset.photo_url) };
+      return { Key: AmazonSDKS3.getS3FilePath(issueAsset.photo_url) };
     });
 
     // delete issue assets
     await AmazonSDKS3.deleteMultipleS3Objects(issueAssetsToDelete);
 
     // delete issue cover photo
-    await AmazonSDKS3.deleteSingleS3Object(S3FilePath(issue.cover_photo));
+    await AmazonSDKS3.deleteSingleS3Object(
+      AmazonSDKS3.getS3FilePath(issue.cover_photo)
+    );
 
     remainingIssues -= 1;
 
@@ -279,7 +276,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 
   // delete book cover photo
   await AmazonSDKS3.deleteSingleS3Object(
-    S3FilePath(existingBookByCurrentUser.cover_photo)
+    AmazonSDKS3.getS3FilePath(existingBookByCurrentUser.cover_photo)
   );
 
   // delete existing Books by user. issues, issues assets ect will be deleted as well because of cascading in PG
@@ -364,7 +361,7 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   }
 
   const updatedImg = await AmazonSDKS3.uploadS3Object(
-    S3FilePath(bookCoverPhotoByCurrentUser.cover_photo),
+    AmazonSDKS3.getS3FilePath(bookCoverPhotoByCurrentUser.cover_photo),
     {
       Body: buffer,
       ACL: 'public-read',
@@ -415,7 +412,7 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
   }
 
   const updatedImg = await AmazonSDKS3.uploadS3Object(
-    S3FilePath(issueToUpdate.cover_photo),
+    AmazonSDKS3.getS3FilePath(issueToUpdate.cover_photo),
     {
       Body: buffer,
       ACL: 'public-read',
@@ -480,7 +477,9 @@ exports.getIssue = catchAsync(async (req, res, next) => {
   const issueAssetFiles = await Promise.all(
     issueAssets.map(
       async (issueAsset) =>
-        await AmazonSDKS3.getSingleS3Object(S3FilePath(issueAsset.photo_url))
+        await AmazonSDKS3.getSingleS3Object(
+          AmazonSDKS3.getS3FilePath(issueAsset.photo_url)
+        )
     )
   );
 
@@ -561,12 +560,14 @@ exports.createIssue = catchAsync(async (req, res, next) => {
   if (!existingBookByCurrentUser) {
     // deleted Issue Cover photo and Issue Assets from AWS because the issue cannot be added
     await AmazonSDKS3.deleteSingleS3Object(
-      S3FilePath(req.files.issueCoverPhoto[0].location)
+      AmazonSDKS3.getS3FilePath(req.files.issueCoverPhoto[0].location)
     );
 
     await Promise.all(
       req.files.issueAssets.map(async (issueAsset) => {
-        await AmazonSDKS3.deleteSingleS3Object(S3FilePath(issueAsset.location));
+        await AmazonSDKS3.deleteSingleS3Object(
+          AmazonSDKS3.getS3FilePath(issueAsset.location)
+        );
       })
     );
     return next(
@@ -640,7 +641,9 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
   }
 
   // deleted Issue Cover photo from AWS
-  await AmazonSDKS3.deleteSingleS3Object(S3FilePath(deletedIssue.cover_photo));
+  await AmazonSDKS3.deleteSingleS3Object(
+    AmazonSDKS3.getS3FilePath(deletedIssue.cover_photo)
+  );
 
   // all issues are deleted remove book
   const remainingIssues = await new QueryPG(pool).find(

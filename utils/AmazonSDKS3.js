@@ -150,3 +150,8 @@ exports.deleteS3Bucket = async (bucket, config = {}) => {
   // THIS NEEDS TO BE TESTED
   await deleteBucket(bucket, config);
 };
+
+exports.getS3FilePath = (fileURL) => {
+  // return AWS File path Location
+  return fileURL.split('/').slice(3).join('/');
+};

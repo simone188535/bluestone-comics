@@ -2,6 +2,7 @@ const validator = require('validator');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const QueryPG = require('../utils/QueryPGFeature');
+const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 const randomUUIDString = require('../utils/randomUUIDString');
 const pool = require('../db');
 
@@ -143,19 +144,6 @@ exports.getMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateProfileImg = catchAsync(async (req, res, next) => {
-  res.status(200).json({
-    status: 'success',
-    user: res.locals.user
-  });
-});
-
-exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
-  res.status(200).json({
-    status: 'success'
-  });
-});
-
 exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
   let userProfilePhotoPrefix;
   let userProfileBackgroundPhotoPrefix;
@@ -195,37 +183,28 @@ exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
 
 exports.updateProfileImg = catchAsync(async (req, res, next) => {
   const userId = res.locals.user.id;
-  // const { bookId, issueNumber } = req.params;
-  // const issueCoverPhoto = req.file.location;
+  // the amazon image file should be named user-profile-resources
+  const userProfilePics = await new QueryPG(pool).find(
+    'user_photo, background_user_photo',
+    'users WHERE id = ($1)',
+    [userId]
+  );
 
-  // const issueToUpdate = await new QueryPG(pool).find(
-  //   'cover_photo',
-  //   'issues WHERE book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
-  //   [bookId, issueNumber, res.locals.user.id]
-  // );
+  if (userProfilePics.user_photo.includes('profile-pic.jpeg')) {
+    // create new file path and save it to the db
+    // userProfilePhotoPrefix = randomUUIDString();
+  } else {
+    // update the current image using AmazonSDKS3.uploadS3Object, do not save the path to the db
+  }
 
-  // if (!issueToUpdate) {
-  //   return next(
-  //     new AppError(
-  //       `Existing issue cannot be found. Issue could not be updated.`,
-  //       404
-  //     )
-  //   );
-  // }
+  res.status(200).json({
+    status: 'success'
+    // updatedIssue
+  });
+});
 
-  // // update cover photo of issue
-  // const updatedIssue = await new QueryPG(pool).update(
-  //   'issues',
-  //   'cover_photo = ($1), last_updated = ($2)',
-  //   'book_id = ($3) AND issue_number = ($4) AND publisher_id = ($5)',
-  //   [issueCoverPhoto, new Date(), bookId, issueNumber, res.locals.user.id]
-  // );
-
-  // // Delete previous Issue Cover photo in AWS
-  // await deleteSingleS3Object(issueToUpdate.cover_photo);
-
-  // res.status(200).json({
-  //   status: 'success',
-  //   updatedIssue
-  // });
+exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success'
+  });
 });
