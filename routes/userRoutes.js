@@ -22,12 +22,12 @@ router.route('/delete-me').delete(userController.deleteMe);
 router.route('/get-me').get(userController.getMe);
 
 router
-  .route('/update-profile-pic')
-  .patch(upload.single('profilePic'), userController.updateProfileImg);
+  .route('/update-profile-photo')
+  .patch(upload.single('profilePhoto'), userController.updateProfileImg);
 router
-  .route('/update-background-profile-pic')
+  .route('/update-background-profile-photo')
   .patch(
-    upload.single('backgroundProfilePic'),
+    upload.single('backgroundProfilePhoto'),
     userController.updateBackgroundProfileImg
   );
 
