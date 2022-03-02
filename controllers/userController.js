@@ -182,6 +182,7 @@ exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
 });
 
 exports.updateProfileImg = catchAsync(async (req, res, next) => {
+  let updatedUser = null;
   let uploadFilePath = null;
   const userId = res.locals.user.id;
   const { fieldname, mimetype, buffer } = req.file;
@@ -208,7 +209,7 @@ exports.updateProfileImg = catchAsync(async (req, res, next) => {
   });
 
   if (userProfilePics.user_photo.includes('profile-pic.jpeg')) {
-    await new QueryPG(pool).update(
+    updatedUser = await new QueryPG(pool).update(
       'users',
       `user_photo = ($1), last_updated = ($2)`,
       'id = ($3)',
@@ -216,20 +217,74 @@ exports.updateProfileImg = catchAsync(async (req, res, next) => {
     );
   }
 
-  const updatedUserProfilePic = await new QueryPG(pool).find(
-    'user_photo',
-    'users WHERE id = ($1)',
-    [userId]
-  );
+  // return the updated photo or return the photo from the original document
+  const updatedUserPhoto =
+    updatedUser && updatedUser.user_photo ? updatedUser.user_photo : null;
 
   res.status(200).json({
     status: 'success',
-    updatedUserPhoto: updatedUserProfilePic.user_photo
+    updatedUserPhoto: updatedUserPhoto || userProfilePics.user_photo
   });
 });
 
 exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
+  let updatedUser = null;
+  let uploadFilePath = null;
+  const userId = res.locals.user.id;
+  const { fieldname, mimetype, buffer } = req.file;
+
+  const userBackgroundProfilePic = await new QueryPG(pool).find(
+    'background_user_photo',
+    'users WHERE id = ($1)',
+    [userId]
+  );
+
+  if (
+    userBackgroundProfilePic.background_user_photo.includes(
+      'plain-white-background.jpg'
+    )
+  ) {
+    // create new file path and save it to the db
+    uploadFilePath = `user-profile-resources/background-profile-pic/${randomUUIDString()}`;
+  } else {
+    // use existing db file name
+    uploadFilePath = AmazonSDKS3.getS3FilePath(
+      userBackgroundProfilePic.background_user_photo
+    );
+  }
+
+  const updatedBackgroundProfileImg = await AmazonSDKS3.uploadS3Object(
+    uploadFilePath,
+    {
+      Body: buffer,
+      ACL: 'public-read',
+      ContentType: mimetype,
+      Metadata: { fieldName: fieldname }
+    }
+  );
+
+  if (
+    userBackgroundProfilePic.background_user_photo.includes(
+      'plain-white-background.jpg'
+    )
+  ) {
+    updatedUser = await new QueryPG(pool).update(
+      'users',
+      `background_user_photo = ($1), last_updated = ($2)`,
+      'id = ($3)',
+      [updatedBackgroundProfileImg.Location, new Date(), userId]
+    );
+  }
+
+  // return the updated photo or return the photo from the original document
+  const updatedUserPhoto =
+    updatedUser && updatedUser.background_user_photo
+      ? updatedUser.background_user_photo
+      : null;
+
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    updatedBackgroundUserPhoto:
+      updatedUserPhoto || userBackgroundProfilePic.background_user_photo
   });
 });
