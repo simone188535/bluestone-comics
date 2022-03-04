@@ -17,6 +17,22 @@ const ChangeProfilePics = () => {
             profilePhoto: null,
             backgroundPhoto: null,
           }}
+          validateOnMount
+          validationSchema={Yup.object().shape(
+            {
+              profilePhoto: Yup.mixed().when(["backgroundPhoto"], {
+                is: null,
+                then: Yup.mixed().required(""),
+              }),
+              backgroundPhoto: Yup.mixed().when(["profilePhoto"], {
+                is: null,
+                then: Yup.mixed().required(
+                  "At least one of these fields is required."
+                ),
+              }),
+            },
+            ["profilePhoto", "backgroundPhoto"]
+          )}
           onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
               alert(JSON.stringify(values, null, 2));
