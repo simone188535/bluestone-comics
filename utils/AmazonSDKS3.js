@@ -33,19 +33,28 @@ exports.uploadS3 = () => {
           issuePrefix is the reference for the folder where the issue resides within the book in AWS.
         */
         const { bookImagePrefixRef, issueImagePrefixRef } = req.body;
-        cb(
-          null,
-          `${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`
-        );
+
+        if (file.fieldname === 'bookCoverPhoto') {
+          return cb(null, `works/${bookImagePrefixRef}/${randomString()}`);
+        }
+
+        if (
+          file.fieldname === 'issueCoverPhoto' ||
+          file.fieldname === 'issueAssets'
+        ) {
+          return cb(
+            null,
+            `works/${bookImagePrefixRef}/${issueImagePrefixRef}/${randomString()}`
+          );
+        }
       }
     })
   });
 };
 
 // AWS docs are here: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html
-
 // Retrieve object from Amazon s3
-exports.getObject = async (bucket, key, config = {}) => {
+const getObject = async (bucket, key, config) => {
   Object.assign(config, { Bucket: bucket, Key: key });
 
   try {
@@ -56,7 +65,7 @@ exports.getObject = async (bucket, key, config = {}) => {
 };
 
 // Returns some or all objects in a bucket
-exports.listObjects = async (bucket, maxKeys, config = {}) => {
+const listObjects = async (bucket, maxKeys, config) => {
   Object.assign(config, { Bucket: bucket, MaxKeys: maxKeys });
 
   try {
@@ -67,7 +76,7 @@ exports.listObjects = async (bucket, maxKeys, config = {}) => {
 };
 
 // Delete an object/single file
-exports.deleteObject = async (bucket, key, config = {}) => {
+const deleteObject = async (bucket, key, config) => {
   Object.assign(config, { Bucket: bucket, Key: key });
 
   try {
@@ -78,7 +87,7 @@ exports.deleteObject = async (bucket, key, config = {}) => {
 };
 
 // Delete many object/files
-exports.deleteObjects = async (bucket, deleteItems, config = {}) => {
+const deleteObjects = async (bucket, deleteItems, config) => {
   Object.assign(config, { Bucket: bucket, Delete: { Objects: deleteItems } });
 
   try {
@@ -88,12 +97,61 @@ exports.deleteObjects = async (bucket, deleteItems, config = {}) => {
   }
 };
 
+// Upload an object/single file
+const uploadObject = async (bucket, key, config) => {
+  Object.assign(config, { Bucket: bucket, Key: key });
+  try {
+    return await s3.upload(config).promise();
+  } catch (err) {
+    throw new AppError(err.message, 500);
+  }
+};
+
 // Delete an entire Bucket
-exports.deleteBucket = async (bucket, config = {}) => {
+const deleteBucket = async (bucket, config) => {
   Object.assign(config, { Bucket: bucket });
   try {
     return await s3.deleteBucket(config).promise();
   } catch (err) {
     throw new AppError(err.message, 500);
   }
+};
+
+// These are the exported methods that implement AWS Object methods
+
+exports.listS3Objects = async (fileRef, maxKey, config = {}) => {
+  // THIS NEEDS TO BE TESTED
+  const AWSFileLocation = fileRef.split('/').reverse();
+
+  const folderPrefix = `${AWSFileLocation[2]}/${AWSFileLocation[1]}/`;
+
+  Object.assign(config, { Prefix: folderPrefix });
+
+  return await listObjects(keys.AWS_S3_BUCKET_NAME, maxKey, config);
+};
+
+exports.getSingleS3Object = async (bucketKey, config = {}) => {
+  return await getObject(keys.AWS_S3_BUCKET_NAME, bucketKey, config);
+};
+
+exports.deleteSingleS3Object = async (bucketKey, config = {}) => {
+  await deleteObject(keys.AWS_S3_BUCKET_NAME, bucketKey, config);
+};
+
+exports.deleteMultipleS3Objects = async (deleteItems, config = {}) => {
+  await deleteObjects(keys.AWS_S3_BUCKET_NAME, deleteItems, config);
+};
+
+exports.uploadS3Object = async (bucketKey, config = {}) => {
+  return await uploadObject(keys.AWS_S3_BUCKET_NAME, bucketKey, config);
+};
+
+exports.deleteS3Bucket = async (bucket, config = {}) => {
+  // THIS NEEDS TO BE TESTED
+  await deleteBucket(bucket, config);
+};
+
+exports.getS3FilePath = (fileURL) => {
+  // return AWS File path Location
+  return fileURL.split('/').slice(3).join('/');
 };

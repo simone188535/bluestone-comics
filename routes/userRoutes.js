@@ -1,12 +1,11 @@
 const express = require('express');
+const multer = require('multer');
 
 const router = express.Router();
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 
-const AmazonSDKS3 = require('../utils/AmazonSDKS3');
-
-const uploadS3 = AmazonSDKS3.uploadS3();
+const upload = multer();
 
 // define the home page route
 router.route('/get-user').get(userController.getUser);
@@ -22,13 +21,18 @@ router.route('/update-me').patch(userController.updateMe);
 router.route('/delete-me').delete(userController.deleteMe);
 router.route('/get-me').get(userController.getMe);
 
-router.route('/update-profile-pic').patch(userController.updateProfileImg);
 router
-  .route('/update-background-profile-pic')
-  .patch(userController.updateBackgroundProfileImg);
+  .route('/update-profile-photo')
+  .patch(upload.single('profilePhoto'), userController.updateProfileImg);
+router
+  .route('/update-background-profile-photo')
+  .patch(
+    upload.single('backgroundProfilePhoto'),
+    userController.updateBackgroundProfileImg
+  );
 
 router
-  .route('/profile-pic-image-prefix/:bookId?')
+  .route('/profile-pic-image-prefix')
   .get(userController.getProfilePicImagePrefix);
 
 module.exports = router;

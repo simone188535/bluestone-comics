@@ -191,8 +191,12 @@ form.bsc-form {
         color: $pure-white;
         border: none;
 
-        &:hover {
+        &:hover { 
             background-color: $dark-violet-blue;
+        }
+
+        &[disabled=disabled], &:disabled {
+            background-color: $disabled-violet-blue; 
         }
     }
 

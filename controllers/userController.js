@@ -1,11 +1,9 @@
-// const express = require('express');
 const validator = require('validator');
 const catchAsync = require('../utils/catchAsync');
-// const filterObj = require('../utils/filterObj');
 const AppError = require('../utils/appError');
-// const User = require('../models/userModel');
 const QueryPG = require('../utils/QueryPGFeature');
-// const pageOffset = require('../utils/offset');
+const AmazonSDKS3 = require('../utils/AmazonSDKS3');
+const randomUUIDString = require('../utils/randomUUIDString');
 const pool = require('../db');
 
 exports.getUser = catchAsync(async (req, res, next) => {
@@ -142,27 +140,151 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 exports.getMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
-    data: {
-      user: res.locals.user
-    }
-  });
-});
-
-exports.updateProfileImg = catchAsync(async (req, res, next) => {
-  res.status(200).json({
-    status: 'success',
     user: res.locals.user
   });
 });
 
-exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
+exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
+  let userProfilePhotoPrefix;
+  let userProfileBackgroundPhotoPrefix;
+  const userId = res.locals.user.id;
+
+  // find the current user
+  const userProfilePics = await new QueryPG(pool).find(
+    'user_photo, background_user_photo',
+    'users WHERE id = ($1)',
+    [userId]
+  );
+
+  /* 
+  if the default image is used, create a new path for the 'soon to be created' image, else
+  use the existing name
+  */
+  if (userProfilePics.user_photo.includes('profile-pic.jpeg')) {
+    userProfilePhotoPrefix = randomUUIDString();
+  } else {
+    userProfilePhotoPrefix = userProfilePics.user_photo;
+  }
+
+  if (
+    userProfilePics.background_user_photo.includes('plain-white-background.jpg')
+  ) {
+    userProfileBackgroundPhotoPrefix = randomUUIDString();
+  } else {
+    userProfileBackgroundPhotoPrefix = userProfilePics.background_user_photo;
+  }
+
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    userProfilePhotoPrefix,
+    userProfileBackgroundPhotoPrefix
   });
 });
 
-exports.getProfilePicImagePrefix = catchAsync(async (req, res, next) => {
+exports.updateProfileImg = catchAsync(async (req, res, next) => {
+  let updatedUser = null;
+  let uploadFilePath = null;
+  const userId = res.locals.user.id;
+  const { fieldname, mimetype, buffer } = req.file;
+
+  const userProfilePics = await new QueryPG(pool).find(
+    'user_photo',
+    'users WHERE id = ($1)',
+    [userId]
+  );
+
+  if (userProfilePics.user_photo.includes('profile-pic.jpeg')) {
+    // create new file path and save it to the db
+    uploadFilePath = `user-profile-resources/profile-pic/${randomUUIDString()}`;
+  } else {
+    // use existing db file name
+    uploadFilePath = AmazonSDKS3.getS3FilePath(userProfilePics.user_photo);
+  }
+
+  const updatedProfileImg = await AmazonSDKS3.uploadS3Object(uploadFilePath, {
+    Body: buffer,
+    ACL: 'public-read',
+    ContentType: mimetype,
+    Metadata: { fieldName: fieldname }
+  });
+
+  if (userProfilePics.user_photo.includes('profile-pic.jpeg')) {
+    updatedUser = await new QueryPG(pool).update(
+      'users',
+      `user_photo = ($1), last_updated = ($2)`,
+      'id = ($3)',
+      [updatedProfileImg.Location, new Date(), userId]
+    );
+  }
+
+  // return the updated photo or return the photo from the original document
+  const updatedUserPhoto =
+    updatedUser && updatedUser.user_photo ? updatedUser.user_photo : null;
+
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    updatedUserPhoto: updatedUserPhoto || userProfilePics.user_photo
+  });
+});
+
+exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
+  let updatedUser = null;
+  let uploadFilePath = null;
+  const userId = res.locals.user.id;
+  const { fieldname, mimetype, buffer } = req.file;
+
+  const userBackgroundProfilePic = await new QueryPG(pool).find(
+    'background_user_photo',
+    'users WHERE id = ($1)',
+    [userId]
+  );
+
+  if (
+    userBackgroundProfilePic.background_user_photo.includes(
+      'plain-white-background.jpg'
+    )
+  ) {
+    // create new file path and save it to the db
+    uploadFilePath = `user-profile-resources/background-profile-pic/${randomUUIDString()}`;
+  } else {
+    // use existing db file name
+    uploadFilePath = AmazonSDKS3.getS3FilePath(
+      userBackgroundProfilePic.background_user_photo
+    );
+  }
+
+  const updatedBackgroundProfileImg = await AmazonSDKS3.uploadS3Object(
+    uploadFilePath,
+    {
+      Body: buffer,
+      ACL: 'public-read',
+      ContentType: mimetype,
+      Metadata: { fieldName: fieldname }
+    }
+  );
+
+  if (
+    userBackgroundProfilePic.background_user_photo.includes(
+      'plain-white-background.jpg'
+    )
+  ) {
+    updatedUser = await new QueryPG(pool).update(
+      'users',
+      `background_user_photo = ($1), last_updated = ($2)`,
+      'id = ($3)',
+      [updatedBackgroundProfileImg.Location, new Date(), userId]
+    );
+  }
+
+  // return the updated photo or return the photo from the original document
+  const updatedUserPhoto =
+    updatedUser && updatedUser.background_user_photo
+      ? updatedUser.background_user_photo
+      : null;
+
+  res.status(200).json({
+    status: 'success',
+    updatedBackgroundUserPhoto:
+      updatedUserPhoto || userBackgroundProfilePic.background_user_photo
   });
 });
