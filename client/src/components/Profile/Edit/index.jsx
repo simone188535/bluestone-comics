@@ -2,13 +2,49 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { updateMe } from "../../../services";
+import {
+  updateMe,
+  updateProfilePhoto,
+  updateBackgroundProfilePhoto,
+} from "../../../services";
 import { authActions } from "../../../actions";
 import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
 import FormikSubmissionStatus from "../../CommonUI/FormikSubmissionStatus";
 
 const ChangeProfilePics = () => {
   const [hasErrMsg, setHasErrMsg] = useState(null);
+  const dispatch = useDispatch();
+
+  const onSubmit = async (
+    { profilePhoto, backgroundPhoto },
+    { setSubmitting }
+  ) => {
+    try {
+      if (hasErrMsg) setHasErrMsg(false);
+
+      if (profilePhoto) {
+        const profilePhotoFormData = new FormData();
+        profilePhotoFormData.append("profilePhoto", profilePhoto);
+
+        await updateProfilePhoto(profilePhotoFormData);
+      }
+
+      if (backgroundPhoto) {
+        const backgroundProfilePhotoFormData = new FormData();
+        backgroundProfilePhotoFormData.append(
+          "backgroundProfilePhoto",
+          backgroundPhoto
+        );
+        await updateBackgroundProfilePhoto(backgroundProfilePhotoFormData);
+      }
+
+      dispatch(authActions.refetchUser());
+      setSubmitting(false);
+    } catch (err) {
+      setHasErrMsg(true);
+    }
+  };
+
   return (
     <div className="upload-page container">
       <div className="upload-form-container">
@@ -33,12 +69,7 @@ const ChangeProfilePics = () => {
             },
             ["profilePhoto", "backgroundPhoto"]
           )}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 1000);
-          }}
+          onSubmit={onSubmit}
         >
           {({ isValid }) => (
             <Form className="bsc-form upload-form">
