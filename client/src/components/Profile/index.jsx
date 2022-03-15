@@ -170,7 +170,12 @@ const Profile = () => {
 
   return (
     <div className="container-fluid profile-page">
-      <div className="profile-page-header">
+      <div
+        className="profile-page-header"
+        style={{
+          backgroundImage: `url(${profilePageUser.background_user_photo})`,
+        }}
+      >
         <div className="background-overlay">
           <img
             className="profile-pic"
