@@ -18,11 +18,17 @@ import Checkboxes from "../CommonUI/Checkboxes";
 import Modal from "../CommonUI/Modal";
 import ProgressBar from "../CommonUI/ProgressBar";
 import WorkCredits from "./WorkCredits";
-// eslint-disable-next-line
-import { imageDimensionCheck, imageSizeCheck } from '../../utils/Yup/yupCustomMethods';
+import {
+  // eslint-disable-next-line no-unused-vars
+  imageDimensionCheck,
+  // eslint-disable-next-line no-unused-vars
+  imageSizeCheck,
+} from "../../utils/Yup/yupCustomMethods";
 import IMAGE_UPLOAD_DIMENSIONS from "../../utils/Constants";
 import "./upload.scss";
 
+const { WIDTH, HEIGHT, MAX_FILE_SIZE, MAX_FILE_SIZE_IN_BYTES } =
+  IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL;
 // MAKE THIS REUSABLE FOR BOOKS AND ISSUE UPDATES
 const UrlSlugifedField = (props) => {
   /*
@@ -122,8 +128,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           name="bookCoverPhoto"
         />
         <div className="form-header-subtext">
-          Thumbnail size must be:{" "}
-          <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong>
+          Thumbnail size must be: <strong>{`${WIDTH} x ${HEIGHT}`}</strong>
         </div>
         <Field
           className="form-input form-textarea"
@@ -177,8 +182,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
           name="issueCoverPhoto"
         />
         <div className="form-header-subtext">
-          Thumbnail size must be:{" "}
-          <strong>{`${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL.HEIGHT}`}</strong>
+          Thumbnail size must be: <strong>{`${WIDTH} x ${HEIGHT}`}</strong>
         </div>
         <Field
           className="form-input form-textarea"
@@ -432,8 +436,8 @@ const Upload = () => {
             bookTitle: Yup.string().required("Book Title required!"),
             bookCoverPhoto: Yup.mixed()
               .required("You need to provide a file")
-              .imageDimensionCheck()
-              .imageSizeCheck(),
+              .imageDimensionCheck(WIDTH, HEIGHT)
+              .imageSizeCheck(MAX_FILE_SIZE, MAX_FILE_SIZE_IN_BYTES),
             bookDescription: Yup.string().required(
               "Book Description required!"
             ),
@@ -447,8 +451,8 @@ const Upload = () => {
             issueTitle: Yup.string().required("Issue Title required!"),
             issueCoverPhoto: Yup.mixed()
               .required("A Issue Cover Photo is required!")
-              .imageDimensionCheck()
-              .imageSizeCheck(),
+              .imageDimensionCheck(WIDTH, HEIGHT)
+              .imageSizeCheck(MAX_FILE_SIZE, MAX_FILE_SIZE_IN_BYTES),
             issueDescription: Yup.string().required(
               "Issue Description required!"
             ),

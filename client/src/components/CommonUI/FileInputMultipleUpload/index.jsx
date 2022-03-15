@@ -94,7 +94,7 @@ const FileInputMultipleUpload = ({
     return allFiles;
   };
   const validator = (providedFile) => {
-    const { WIDTH, HEIGHT, MAX_FILE, MAX_FILE_IN_BYTES } =
+    const { WIDTH, HEIGHT, MAX_FILE_SIZE, MAX_FILE_SIZE_IN_BYTES } =
       IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE;
 
     // validation 1. check width and height of file
@@ -106,10 +106,10 @@ const FileInputMultipleUpload = ({
     }
 
     // validation 2. check if file size is too large / above 2MB
-    if (isFileSizeTooLarge(providedFile, MAX_FILE)) {
+    if (isFileSizeTooLarge(providedFile, MAX_FILE_SIZE)) {
       return {
         code: "file-size-too-large",
-        message: `This file is too large! The file size cannot be larger than: ${MAX_FILE_IN_BYTES}`,
+        message: `This file is too large! The file size cannot be larger than: ${MAX_FILE_SIZE_IN_BYTES}`,
       };
     }
     return null;
