@@ -208,6 +208,7 @@ const WorkCredits = ({ identifier, defaultSelectedUsernames }) => {
         const res = await searchUser({
           q: textSearch,
           sort: "desc",
+          allowDeactivatedUserResults: true,
         });
 
         // assign results to APIResults state

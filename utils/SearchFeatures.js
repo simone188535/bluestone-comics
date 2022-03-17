@@ -16,7 +16,7 @@ class SearchFeatures {
     if (this.queryString.q) {
       if (tableToSearch === 'books' || tableToSearch === 'issues') {
         // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
-        whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) OR  ${tableToSearch}.description ILIKE ($${this.parameterizedIndexInc()}) `;
+        whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) OR ${tableToSearch}.description ILIKE ($${this.parameterizedIndexInc()}) `;
         // append where clause values for title and description
         this.parameterizedValues.push(
           `${this.queryString.q}%`,
@@ -48,6 +48,17 @@ class SearchFeatures {
 
       // append where clause values for username
       this.parameterizedValues.push(`${this.queryString.username}`);
+    }
+
+    // By default, only the works of users who have active accounts are shown
+    if (!this.queryString.allowDeactivatedUserResults) {
+      whereClause += `${this.appendAndOrClause(
+        whereClause,
+        'AND'
+      )} users.active = ($${this.parameterizedIndexInc()})`;
+
+      // append where clause values for users with active accounts
+      this.parameterizedValues.push(true);
     }
 
     // if whereClause string is populated, add WHERE in the beginning of the string
