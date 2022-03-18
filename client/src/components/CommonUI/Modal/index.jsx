@@ -1,13 +1,37 @@
 import React from "react";
 import { createPortal } from "react-dom";
 
-const Modal = ({ children, isOpen, onClose, className }) => {
+const Modal = ({
+  className,
+  children,
+  isOpen,
+  onClose,
+  doesModalBackDropClose = true,
+  isCloseButtonPresent = true,
+}) => {
   const providedClassNames = className || "";
+
+  const isModalBackDropCloseAvailable = doesModalBackDropClose ? onClose : null;
+
+  const showModalCloseBtn = isCloseButtonPresent ? (
+    <button type="button" className="modal-close-btn" onClick={onClose}>
+      X
+    </button>
+  ) : (
+    <></>
+  );
 
   const modalMarkup = (
     <div className={`modal-wrapper ${providedClassNames}`}>
-      <div onClick={onClose} aria-hidden="true" className="modal-backdrop">
-        <div className="modal-box">{children}</div>
+      <div
+        onClick={isModalBackDropCloseAvailable}
+        aria-hidden="true"
+        className="modal-backdrop"
+      >
+        <div className="modal-box">
+          {showModalCloseBtn}
+          {children}
+        </div>
       </div>
     </div>
   );

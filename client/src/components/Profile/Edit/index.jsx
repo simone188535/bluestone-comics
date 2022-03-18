@@ -144,7 +144,11 @@ const DeleteAccount = () => {
       >
         Deactivate Account
       </button>
-      <Modal isOpen={modalIsOpen} onClose={toggleModal}>
+      <Modal
+        isOpen={modalIsOpen}
+        doesModalBackDropClose={false}
+        onClose={toggleModal}
+      >
         <div>Some child element. Anything can go in here.</div>
       </Modal>
     </div>
