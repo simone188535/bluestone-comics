@@ -10,6 +10,8 @@ import {
 import { authActions } from "../../../actions";
 import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
 import FormikSubmissionStatus from "../../CommonUI/FormikSubmissionStatus";
+import Modal from "../../CommonUI/Modal";
+import "./edit-profile.scss";
 
 const ChangeProfilePics = () => {
   const [hasErrMsg, setHasErrMsg] = useState(null);
@@ -118,7 +120,35 @@ const ChangeProfilePics = () => {
 };
 
 const DeleteAccount = () => {
-  return <p>DeleteAccount</p>;
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const toggleModal = () => setModalIsOpen(!modalIsOpen);
+
+  return (
+    <div className="edit-profile-page container">
+      <h1 className="header-text">
+        <strong>Deactivate Account</strong>
+      </h1>
+      <p className="error-text-color warning">
+        <strong>
+          * Deactivating your account will remove your work from all search
+          results. It does not delete existing work but rather makes them
+          inaccessible to all users.
+        </strong>{" "}
+        In order to delete work it must be done manually from the user profile
+        page. Doing so will delete them permanently!
+      </p>
+      <button
+        type="button"
+        className="bsc-button transparent transparent-red deactivation-btn"
+        onClick={toggleModal}
+      >
+        Deactivate Account
+      </button>
+      <Modal isOpen={modalIsOpen} onClose={toggleModal}>
+        <div>Some child element. Anything can go in here.</div>
+      </Modal>
+    </div>
+  );
 };
 
 const AboutYou = () => {
