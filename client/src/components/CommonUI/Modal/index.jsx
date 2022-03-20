@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { createPortal } from "react-dom";
 
 const Modal = ({
@@ -15,7 +17,7 @@ const Modal = ({
 
   const showModalCloseBtn = isCloseButtonPresent ? (
     <button type="button" className="modal-close-btn" onClick={onClose}>
-      X
+      <FontAwesomeIcon icon={faTimes} size="lg" />
     </button>
   ) : (
     <></>

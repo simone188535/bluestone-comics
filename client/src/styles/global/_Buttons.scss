@@ -40,6 +40,17 @@
             color: $violet-blue;
             border-color: $violet-blue;
         }
+
+        &.transparent-blue {
+            color: $dark-violet-blue;
+            border-color: $dark-violet-blue;
+    
+            &:hover,
+            &.active {
+                color: $violet-blue;
+                border-color: $violet-blue;
+            }
+        }
     }
 
     &.primary-link {
@@ -54,17 +65,6 @@
         &:hover,
         &.active {
             color: $dark-violet-blue;
-        }
-    }
-
-    &.transparent-blue {
-        color: $dark-violet-blue;
-        border-color: $dark-violet-blue;
-
-        &:hover,
-        &.active {
-            color: $violet-blue;
-            border-color: $violet-blue;
         }
     }
 

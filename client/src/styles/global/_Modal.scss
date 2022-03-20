@@ -19,7 +19,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        height: 70%;
+        height: 50%;
         width: 90%;
         overflow: scroll;
         background-color: $pure-white;
@@ -35,6 +35,19 @@
         .modal-spacing-md-top {
             margin-top: 15px;
         }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: none;
+            padding: 10px;
+            border: none;
+           
+            &:hover {
+                color: $error-red;
+            }
+        }
     }
 }
 
@@ -49,7 +62,7 @@
 @media only screen and (min-width: $medium) {
     .modal-wrapper {
         .modal-box {
-            width: 60%;
+            width: 50%;
         }
     }
 }

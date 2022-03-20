@@ -12,6 +12,7 @@ import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
 import FormikSubmissionStatus from "../../CommonUI/FormikSubmissionStatus";
 import Modal from "../../CommonUI/Modal";
 import "./edit-profile.scss";
+import "../../CommonUI/Modal/styles/user-accept-reject-prompt.scss";
 
 const ChangeProfilePics = () => {
   const [hasErrMsg, setHasErrMsg] = useState(null);
@@ -119,7 +120,33 @@ const ChangeProfilePics = () => {
   );
 };
 
-const DeleteAccount = () => {
+const DeactivateAccountModalContent = ({ toggleModal }) => {
+  return (
+    <div className="user-accept-reject-prompt">
+      <h2 className="prompt-header">
+        <strong>Are you sure you want to deactivate your account?</strong>
+      </h2>
+      <div className="prompt-btn-container">
+        <button
+          type="button"
+          className="bsc-button transparent transparent-red deactivation-btn prompt-btn"
+          onClick={toggleModal}
+        >
+          Deactivate Account
+        </button>
+        <button
+          type="button"
+          className="bsc-button transparent transparent-blue prompt-btn"
+          onClick={toggleModal}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const DeactivateAccount = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
@@ -149,7 +176,7 @@ const DeleteAccount = () => {
         doesModalBackDropClose={false}
         onClose={toggleModal}
       >
-        <div>Some child element. Anything can go in here.</div>
+        <DeactivateAccountModalContent toggleModal={toggleModal} />
       </Modal>
     </div>
   );
@@ -306,7 +333,7 @@ const EditProfile = () => {
     <>
       <ChangeProfilePics />
       <AboutYou />
-      <DeleteAccount />
+      <DeactivateAccount />
     </>
   );
 };
