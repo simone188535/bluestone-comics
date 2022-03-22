@@ -11,6 +11,7 @@ import {
   updateMe,
   updateProfilePhoto,
   updateBackgroundProfilePhoto,
+  deleteMe,
 } from "../../../services";
 import ErrorMessage from "../../CommonUI/ErrorMessage";
 import { authActions } from "../../../actions";
@@ -115,8 +116,9 @@ const ChangeProfilePics = () => {
               </button>
               <FormikSubmissionStatus
                 err={hasErrMsg}
-                successMessage="Profile Pic updated!"
+                successMessage="Profile pic updated!"
                 errMsg="Something went wrong. Please try again later."
+                removeSuccessAfterSetTime={3000}
               />
             </Form>
           )}
@@ -134,7 +136,7 @@ const DeactivateAccountModalContent = ({
   const triggerDeactivateAccount = async () => {
     try {
       if (hasErrMsg) setHasErrMsg(false);
-      
+      await deleteMe();
     } catch (err) {
       setHasErrMsg(true);
     }
@@ -168,7 +170,6 @@ const DeactivateAccountModalContent = ({
 const DeactivateAccount = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [hasErrMsg, setHasErrMsg] = useState(false);
-  // const toggleHasErrMsg = () => setHasErrMsg(!hasErrMsg);
   const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
   return (
@@ -352,6 +353,7 @@ const AboutYou = () => {
                 err={hasErrMsg}
                 successMessage="Profile updated!"
                 errMsg="Something went wrong. Please try again later."
+                removeSuccessAfterSetTime={3000}
               />
             </Form>
           )}
