@@ -312,7 +312,7 @@ const Works = ({ profilePageUser }) => {
       renderStatusOfDataRetrieval = (
         <ErrorMessage
           errorStatus={errorMessageStatus}
-          MessageText="An error occurred. Please try again later."
+          messageText="An error occurred. Please try again later."
           className="description-err-msg centered-err-msg"
         />
       );

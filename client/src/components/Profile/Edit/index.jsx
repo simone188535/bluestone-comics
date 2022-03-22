@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import {
+  Formik,
+  Field,
+  Form,
+  ErrorMessage as FormikErrorMessage,
+} from "formik";
 import * as Yup from "yup";
 import {
   updateMe,
   updateProfilePhoto,
   updateBackgroundProfilePhoto,
 } from "../../../services";
+import ErrorMessage from "../../CommonUI/ErrorMessage";
 import { authActions } from "../../../actions";
 import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
 import FormikSubmissionStatus from "../../CommonUI/FormikSubmissionStatus";
@@ -15,7 +21,7 @@ import "./edit-profile.scss";
 import "../../CommonUI/Modal/styles/user-accept-reject-prompt.scss";
 
 const ChangeProfilePics = () => {
-  const [hasErrMsg, setHasErrMsg] = useState(null);
+  const [hasErrMsg, setHasErrMsg] = useState(false);
   const dispatch = useDispatch();
 
   const onSubmit = async (
@@ -84,7 +90,7 @@ const ChangeProfilePics = () => {
                 identifier="profilePhoto"
                 triggerText="Select a profile Photo"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 className="error-message error-text-color"
                 component="div"
                 name="profilePhoto"
@@ -94,7 +100,7 @@ const ChangeProfilePics = () => {
                 identifier="backgroundPhoto"
                 triggerText="Select a Background Photo"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 className="error-message error-text-color"
                 component="div"
                 name="backgroundPhoto"
@@ -120,7 +126,20 @@ const ChangeProfilePics = () => {
   );
 };
 
-const DeactivateAccountModalContent = ({ toggleModal }) => {
+const DeactivateAccountModalContent = ({
+  hasErrMsg,
+  setHasErrMsg,
+  toggleModal,
+}) => {
+  const triggerDeactivateAccount = async () => {
+    try {
+      if (hasErrMsg) setHasErrMsg(false);
+      
+    } catch (err) {
+      setHasErrMsg(true);
+    }
+  };
+
   return (
     <div className="user-accept-reject-prompt">
       <h2 className="prompt-header">
@@ -130,7 +149,7 @@ const DeactivateAccountModalContent = ({ toggleModal }) => {
         <button
           type="button"
           className="bsc-button transparent transparent-red deactivation-btn prompt-btn"
-          onClick={toggleModal}
+          onClick={() => triggerDeactivateAccount()}
         >
           Deactivate Account
         </button>
@@ -148,6 +167,8 @@ const DeactivateAccountModalContent = ({ toggleModal }) => {
 
 const DeactivateAccount = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [hasErrMsg, setHasErrMsg] = useState(false);
+  // const toggleHasErrMsg = () => setHasErrMsg(!hasErrMsg);
   const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
   return (
@@ -176,8 +197,19 @@ const DeactivateAccount = () => {
         doesModalBackDropClose={false}
         onClose={toggleModal}
       >
-        <DeactivateAccountModalContent toggleModal={toggleModal} />
+        <DeactivateAccountModalContent
+          hasErrMsg={hasErrMsg}
+          toggleModal={toggleModal}
+          setHasErrMsg={setHasErrMsg}
+        />
       </Modal>
+      {hasErrMsg && (
+        <ErrorMessage
+          errorStatus={hasErrMsg}
+          messageText="An error occurred. Please try again later."
+          className="description-err-msg centered-err-msg"
+        />
+      )}
     </div>
   );
 };
@@ -254,7 +286,7 @@ const AboutYou = () => {
                 placeholder="First Name"
                 className="form-input form-item"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 name="firstName"
                 className="error-message error-text-color"
                 component="div"
@@ -266,7 +298,7 @@ const AboutYou = () => {
                 placeholder="Last Name"
                 className="form-input form-item"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 name="lastName"
                 className="error-message error-text-color"
                 component="div"
@@ -278,7 +310,7 @@ const AboutYou = () => {
                 className="form-input form-item"
                 placeholder="Username"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 name="username"
                 className="error-message error-text-color"
                 component="div"
@@ -290,7 +322,7 @@ const AboutYou = () => {
                 className="form-input form-item"
                 placeholder="Email"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 name="email"
                 className="error-message error-text-color"
                 component="div"
@@ -303,7 +335,7 @@ const AboutYou = () => {
                 placeholder="Book Description"
                 autoComplete="on"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 className="error-message error-text-color"
                 component="div"
                 name="bio"
