@@ -125,6 +125,12 @@ const ChangeProfilePics = () => {
           )}
         </Formik>
       </div>
+      <p>
+        <strong>
+          * Changing the profile pictures may take some time to update on the
+          profile page. Please be patient.
+        </strong>
+      </p>
     </div>
   );
 };
