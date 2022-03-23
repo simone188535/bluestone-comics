@@ -53,7 +53,7 @@ function updateBackgroundProfilePhoto(formData) {
 function deleteMe() {
   const jwtToken = localStorage.getItem("jwtToken");
 
-  return axios.get(`/api/v1/users/delete-me`, {
+  return axios.delete(`/api/v1/users/delete-me`, {
     headers: {
       Authorization: `Bearer ${jwtToken}`,
     },

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Formik,
@@ -133,10 +134,22 @@ const DeactivateAccountModalContent = ({
   setHasErrMsg,
   toggleModal,
 }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const triggerDeactivateAccount = async () => {
     try {
       if (hasErrMsg) setHasErrMsg(false);
+      // delete current user
       await deleteMe();
+
+      // logout
+      dispatch(authActions.logout());
+
+      // go to home page
+      history.push("/");
+
+      // close modal
+      toggleModal();
     } catch (err) {
       setHasErrMsg(true);
     }
@@ -151,7 +164,7 @@ const DeactivateAccountModalContent = ({
         <button
           type="button"
           className="bsc-button transparent transparent-red deactivation-btn prompt-btn"
-          onClick={() => triggerDeactivateAccount()}
+          onClick={triggerDeactivateAccount}
         >
           Deactivate Account
         </button>
