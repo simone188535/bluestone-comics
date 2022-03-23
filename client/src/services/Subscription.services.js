@@ -1,35 +1,41 @@
 import axios from "axios";
 
-const jwtToken = localStorage.getItem("jwtToken");
-const config = {};
+const configObj = () => {
+  const jwtToken = localStorage.getItem("jwtToken");
+  const config = {};
 
-config.headers = {
-  Authorization: `Bearer ${jwtToken}`,
+  config.headers = {
+    Authorization: `Bearer ${jwtToken}`,
+  };
+
+  return config;
 };
 
 function add(publisherId) {
   return axios.post(
     `/api/v1/subscribe/add/publisher/${publisherId}`,
     {},
-    config
+    configObj()
   );
 }
 
 function remove(publisherId) {
   return axios.delete(
     `/api/v1/subscribe/remove/publisher/${publisherId}`,
-    config
+    configObj()
   );
 }
 
 function checkSubscription(publisherId) {
   return axios.get(
     `/api/v1/subscribe/check-subscription/publisher/${publisherId}`,
-    config
+    configObj()
   );
 }
 
 function getAllSubscribedTo(subscriberId, pageNumber = null) {
+  const config = configObj();
+
   if (pageNumber) {
     config.params = { page: pageNumber };
   }
@@ -40,6 +46,8 @@ function getAllSubscribedTo(subscriberId, pageNumber = null) {
 }
 
 function getAllSubscribers(publisherId, pageNumber = null) {
+  const config = configObj();
+
   if (pageNumber) {
     config.params = { page: pageNumber };
   }
