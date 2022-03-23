@@ -404,7 +404,7 @@ const Upload = () => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
         history.push("/");
-      }, 3000);
+      }, 2000);
 
       console.log("success", createBookRes);
     } catch (err) {
@@ -484,7 +484,12 @@ const Upload = () => {
                 {...props}
                 defaultSelectedUsernames={currentUsername}
               />
-              <Modal isOpen={modalIsOpen} onClose={toggleModal}>
+              <Modal
+                isOpen={modalIsOpen}
+                onClose={toggleModal}
+                doesModalBackDropClose={false}
+                isCloseButtonPresent={false}
+              >
                 <h2 className="modal-head">Upload Progress: </h2>
                 <ProgressBar uploadPercentage={uploadPercentage} />
                 {ModalStatusMessage()}
