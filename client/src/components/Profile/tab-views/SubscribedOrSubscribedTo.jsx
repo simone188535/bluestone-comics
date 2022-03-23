@@ -6,8 +6,9 @@ import LoadingSpinner from "../../CommonUI/LoadingSpinner";
 import abbreviateNumber from "../../../utils/abbreviateNumber";
 import "../subscription.scss";
 
-const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
-  const { id } = profilePageUser;
+const SubscribedOrSubscribedTo = ({ profilePageUserId, type }) => {
+  // const { id } = profilePageUserId;
+  const [id, setId] = useState(profilePageUserId);
   const [errorMessage, setErrorMessage] = useState(false);
   const [pageType, setPageType] = useState(type);
   const [loading, setLoading] = useState(false);
@@ -19,6 +20,12 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
   useEffect(() => {
     setPageType(type);
   }, [type]);
+
+  useEffect(() => {
+    setId(profilePageUserId);
+    // reset sub list when the profilePageUserId is changed
+    setAllSubscribedList([]);
+  }, [profilePageUserId]);
 
   useEffect(() => {
     async function getAllSubscriptionToAPI() {
@@ -93,6 +100,7 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
           (
             {
               publisher_id: publisherId,
+              subscriber_id: subscriberId,
               username,
               user_photo: userPhoto,
               subscribers_sub_count,
@@ -105,7 +113,7 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
                   ? lastSubElementRef
                   : undefined
               }
-              key={publisherId}
+              key={type === "getAllSubscribers" ? subscriberId : publisherId}
               className="subscription-list-item grid-list-item"
             >
               {" "}

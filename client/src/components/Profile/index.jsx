@@ -236,13 +236,13 @@ const Profile = () => {
               </TabPanel>
               <TabPanel>
                 <SubscribedOrSubscribedTo
-                  profilePageUser={profilePageUser}
+                  profilePageUserId={profilePageUser.id}
                   type="getAllSubscribers"
                 />
               </TabPanel>
               <TabPanel>
                 <SubscribedOrSubscribedTo
-                  profilePageUser={profilePageUser}
+                  profilePageUserId={profilePageUser.id}
                   type="getAllSubscribedTo"
                 />
               </TabPanel>
