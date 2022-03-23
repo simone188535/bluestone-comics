@@ -4,23 +4,28 @@
 
     .subscription-list {
         grid-gap: 5%;
+
         .subscription-list-item {
-            img.subscription-profile-img {
-                border-radius: 50%;
-                width: 150px !important;
-                height: 150px;
-                margin: 0 auto;
-            }
-            .subscription-general-info {
-                text-align: center;
+            .subscription-link {
+                text-decoration: none;
+                color: $off-black;
+
+                img.subscription-profile-img {
+                    border-radius: 50%;
+                    width: 150px !important;
+                    height: 150px;
+                    margin: 0 auto;
+                }
+
+                .subscription-general-info {
+                    text-align: center;
+                }
             }
         }
     }
-    
+
 }
 
 @media only screen and (min-width: $medium) {
-    .subscription {
-       
-    }
+    .subscription {}
 }
