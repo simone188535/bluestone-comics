@@ -238,10 +238,13 @@ const AboutYou = () => {
   const [hasErrMsg, setHasErrMsg] = useState(false);
   const dispatch = useDispatch();
 
-  // eslint-disable-next-line camelcase
-  const { first_name, last_name, username, email, bio } = useSelector(
-    (state) => state.auth?.user
-  );
+  const {
+    first_name: userFirstName,
+    last_name: userLastName,
+    username,
+    email,
+    bio,
+  } = useSelector((state) => state.auth?.user);
 
   const onSubmit = async (
     {
@@ -276,8 +279,8 @@ const AboutYou = () => {
       <div className="upload-form-container">
         <Formik
           initialValues={{
-            firstName: first_name,
-            lastName: last_name,
+            firstName: userFirstName,
+            lastName: userLastName,
             username,
             email,
             bio,
