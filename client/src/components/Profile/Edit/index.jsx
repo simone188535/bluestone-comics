@@ -51,8 +51,14 @@ const ChangeProfilePics = () => {
 
       dispatch(authActions.refetchUser());
       // reset form after 3 seconds
+      // console.log(profilePhoto);
       setTimeout(() => {
-        resetForm();
+        resetForm({
+          values: {
+            profilePhoto: null,
+            backgroundPhoto: null,
+          },
+        });
       }, 3000);
 
       // setTimeout(() => {
@@ -263,11 +269,11 @@ const AboutYou = () => {
     {
       firstName,
       lastName,
-      email: userEmail,
       username: userUsername,
+      email: userEmail,
       bio: userBio,
     },
-    { setSubmitting }
+    { setSubmitting, resetForm }
   ) => {
     try {
       if (hasErrMsg) setHasErrMsg(false);
@@ -275,12 +281,26 @@ const AboutYou = () => {
       await updateMe({
         firstName,
         lastName,
-        email: userEmail,
         username: userUsername,
+        email: userEmail,
         bio: userBio,
       });
 
       dispatch(authActions.refetchUser());
+
+      // reset form after 2 seconds so that the formik context in FormikSubmissionStatus can also be reset and remove the success msg
+      setTimeout(() => {
+        resetForm({
+          values: {
+            firstName,
+            lastName,
+            username: userUsername,
+            email: userEmail,
+            bio: userBio,
+          },
+        });
+      }, 2000);
+
       setSubmitting(false);
     } catch (err) {
       setHasErrMsg(true);
@@ -308,7 +328,6 @@ const AboutYou = () => {
             bio: Yup.string(),
           })}
           onSubmit={onSubmit}
-          enableReinitialize
         >
           {({ isValid }) => (
             <Form className="bsc-form upload-form">
