@@ -28,7 +28,7 @@ const ChangeProfilePics = () => {
 
   const onSubmit = async (
     { profilePhoto, backgroundPhoto },
-    { setSubmitting }
+    { setSubmitting, resetForm }
   ) => {
     try {
       if (hasErrMsg) setHasErrMsg(false);
@@ -50,6 +50,20 @@ const ChangeProfilePics = () => {
       }
 
       dispatch(authActions.refetchUser());
+      // reset form after 3 seconds
+      setTimeout(() => {
+        resetForm();
+      }, 3000);
+
+      // setTimeout(() => {
+      //   resetForm({
+      //     values: {
+      //       profilePhoto: null,
+      //       backgroundPhoto: null,
+      //     },
+      //   });
+      // }, 3000);
+
       setSubmitting(false);
     } catch (err) {
       setHasErrMsg(true);
@@ -119,7 +133,6 @@ const ChangeProfilePics = () => {
                 err={hasErrMsg}
                 successMessage="Profile pic updated!"
                 errMsg="Something went wrong. Please try again later."
-                removeSuccessAfterSetTime={3000}
               />
             </Form>
           )}
@@ -375,7 +388,6 @@ const AboutYou = () => {
                 err={hasErrMsg}
                 successMessage="Profile updated!"
                 errMsg="Something went wrong. Please try again later."
-                removeSuccessAfterSetTime={3000}
               />
             </Form>
           )}

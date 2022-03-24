@@ -1,27 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useFormikContext } from "formik";
 
-const FormikSubmissionStatus = ({
-  err,
-  successMessage,
-  errMsg,
-  removeSuccessAfterSetTime = null,
-}) => {
-  const [showSuccess, setShowSuccess] = useState(true);
+const FormikSubmissionStatus = ({ err, successMessage, errMsg }) => {
   const { submitCount, isSubmitting, isValid } = useFormikContext();
-
-  const afterSubmission = submitCount > 0 && !isSubmitting && isValid;
-
-  useEffect(() => {
-    // remove error message after seconds specified by the user ie removeSuccessAfterSetTime
-    if (afterSubmission && successMessage && removeSuccessAfterSetTime) {
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, removeSuccessAfterSetTime);
-    }
-  }, [afterSubmission, removeSuccessAfterSetTime, successMessage]);
-
-  if (afterSubmission) {
+  if (submitCount > 0 && !isSubmitting && isValid) {
     if (err) {
       return (
         <div className="error-message error-text-color text-center">
@@ -29,11 +11,7 @@ const FormikSubmissionStatus = ({
         </div>
       );
     }
-    return (
-      showSuccess && (
-        <div className="text-blue text-center">{successMessage}</div>
-      )
-    );
+    return <div className="text-blue text-center">{successMessage}</div>;
   }
   return "";
 };
