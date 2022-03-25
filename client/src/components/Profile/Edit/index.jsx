@@ -51,7 +51,6 @@ const ChangeProfilePics = () => {
 
       dispatch(authActions.refetchUser());
       // reset form after 3 seconds
-      // console.log(profilePhoto);
       setTimeout(() => {
         resetForm({
           values: {
@@ -59,16 +58,7 @@ const ChangeProfilePics = () => {
             backgroundPhoto: null,
           },
         });
-      }, 3000);
-
-      // setTimeout(() => {
-      //   resetForm({
-      //     values: {
-      //       profilePhoto: null,
-      //       backgroundPhoto: null,
-      //     },
-      //   });
-      // }, 3000);
+      }, 2000);
 
       setSubmitting(false);
     } catch (err) {
