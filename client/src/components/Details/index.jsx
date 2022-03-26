@@ -16,6 +16,7 @@ const Details = () => {
         <section className="details-img-container">
           <figure>
             {/* Use flex basis of 20%, flex-grow 1 and flex-shrink 1 */}
+            {/* https://developer.mozilla.org/en-US/docs/Web/CSS/flex */}
           </figure>
         </section>
         <section className="detail-description">
