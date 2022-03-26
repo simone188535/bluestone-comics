@@ -14,6 +14,8 @@ import News from "./News";
 import Upload from "./Upload";
 import Profile from "./Profile";
 import EditProfile from "./Profile/Edit";
+import Details from "./Details";
+import Read from "./Read";
 import ProtectedRoute from "./Auth/ProtectedRoute";
 
 import store from "../store";
@@ -41,6 +43,16 @@ const AllRoutes = () => {
       <Route path="/reset-password/:resetToken" component={ResetPassword} />
       <ProtectedRoute path="/profile/:username/edit" component={EditProfile} />
       <Route path="/profile/:username" component={Profile} />
+      <Route
+        path="/details/:url-slug/book/:bookId/issue/:issueId"
+        component={Details}
+      />
+      <Route path="/details/:url-slug/book/:bookId" component={Details} />
+      <Route
+        path="/read/:url-slug/book/:bookId/issue/:issueId"
+        component={Read}
+      />
+      <Route path="/read/:url-slug/book/:bookId" component={Read} />
       <Route path="/" component={Home} />
     </Switch>
   );
