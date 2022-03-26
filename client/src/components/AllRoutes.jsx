@@ -44,15 +44,15 @@ const AllRoutes = () => {
       <ProtectedRoute path="/profile/:username/edit" component={EditProfile} />
       <Route path="/profile/:username" component={Profile} />
       <Route
-        path="/details/:url-slug/book/:bookId/issue/:issueId"
+        path="/details/:urlSlug/book/:bookId/issue/:issueId"
         component={Details}
       />
       <Route path="/details/:url-slug/book/:bookId" component={Details} />
       <Route
-        path="/read/:url-slug/book/:bookId/issue/:issueId"
+        path="/read/:urlSlug/book/:bookId/issue/:issueId"
         component={Read}
       />
-      <Route path="/read/:url-slug/book/:bookId" component={Read} />
+      <Route path="/read/:urlSlug/book/:bookId" component={Read} />
       <Route path="/" component={Home} />
     </Switch>
   );

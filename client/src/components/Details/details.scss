@@ -1,1 +1,7 @@
-.details-page {}
+.details-page {
+    .details {
+        &-header {
+            display: flex;
+        }
+    }
+}

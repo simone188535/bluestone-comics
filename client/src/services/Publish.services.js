@@ -1,4 +1,5 @@
 import axios from "axios";
+import { configObjects, configPageNumber } from "../utils/configObjects";
 
 function createBook(formData, config = {}) {
   // send request to create a book which will contain the first issue
@@ -38,4 +39,28 @@ function getBookAndIssueImagePrefix(
   );
 }
 
-export { createBook, getBookAndIssueImagePrefix };
+function getBook(urlSlug, bookId) {
+  return axios.get(
+    `/api/v1/publish/${urlSlug}/book/${bookId}`,
+    configObjects()
+  );
+}
+
+function getIssue(urlSlug, bookId, issueId) {
+  return axios.get(
+    `/api/v1/publish/${urlSlug}/book/${bookId}/issue/${issueId}`,
+    configObjects()
+  );
+}
+
+function getIssues(urlSlug, bookId, pageNumber) {
+  const config = configObjects();
+  const appendedConfig = configPageNumber(config, pageNumber);
+
+  return axios.get(
+    `/api/v1/publish/${urlSlug}/book/${bookId}/issues`,
+    appendedConfig()
+  );
+}
+
+export { createBook, getBookAndIssueImagePrefix, getBook, getIssue, getIssues };

@@ -51,6 +51,7 @@ function getAllSubscribers(publisherId, pageNumber = null) {
   if (pageNumber) {
     config.params = { page: pageNumber };
   }
+
   return axios.get(
     `/api/v1/subscribe/get-all-subscribers/publisher/${publisherId}`,
     config

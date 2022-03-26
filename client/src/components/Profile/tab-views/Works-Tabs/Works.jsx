@@ -83,6 +83,19 @@ const BooksOrIssues = ({
   );
 
   const searchResults = currentResultsDisplayed?.map((currentResult) => {
+    const imgThumbnailURL = () => {
+      let detailsURL;
+
+      if (filterType === "Books") {
+        detailsURL = `/details/${currentResult.url_slug}/book/${currentResult.book_id}`;
+      }
+
+      if (filterType === "Issues") {
+        detailsURL = `/details/${currentResult.url_slug}/book/${currentResult.book_id}/issue/${currentResult.issue_id}`;
+      }
+      return detailsURL;
+    };
+
     const showFirstHeaderWithBooksorIssueTitle =
       filterType === "Books" ? (
         <h3 className="grid-info-box-header">
@@ -114,7 +127,7 @@ const BooksOrIssues = ({
         }`}
       >
         <div className="grid-image-container">
-          <Link to="#">
+          <Link to={imgThumbnailURL()}>
             <img
               className="grid-image"
               src={currentResult.cover_photo}
