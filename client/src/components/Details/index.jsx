@@ -1,15 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
-import { getBook } from "../../services";
+import { getBook, getIssue } from "../../services";
 import "./details.scss";
 
 const Details = () => {
-  let { urlSlug, bookId, issueId } = useParams();
+  const { urlSlug, bookId, issueId } = useParams();
+  const [errMsg, setErrMsg] = useState("");
+  const [detailInfo, setDetailInfo] = useState(null);
+
+  // If issueId does not exist then the provided URL and the data on this page is for a book.
+  const isIssue = !!issueId;
+
+  // console.log({isIssue});
 
   useEffect(() => {
-    // create call for getBook and set it to state.
-  }, []);
+    (async () => {
+      try {
+        // create call for getBook or getIssue and set it to state.
+        const appropiateAPICall = isIssue
+          ? getIssue(urlSlug, bookId)
+          : getBook(urlSlug, bookId, issueId);
 
+        const { book, issue } = await appropiateAPICall;
+        setDetailInfo(book ?? issue);
+      } catch (err) {
+        setErrMsg("Something went wrong! Please try again later.");
+      }
+    })();
+  }, [bookId, isIssue, issueId, urlSlug]);
+
+  console.log(detailInfo);
   return (
     <div className="container-fluid details-page">
       <article className="details-header">
