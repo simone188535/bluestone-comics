@@ -91,10 +91,13 @@ const BooksOrIssues = ({
       }
 
       if (filterType === "Issues") {
-        detailsURL = `/details/${currentResult.url_slug}/book/${currentResult.book_id}/issue/${currentResult.issue_id}`;
+        detailsURL = `/details/${currentResult.url_slug}/book/${currentResult.book_id}/issue/${currentResult.issue_number}`;
       }
       return detailsURL;
     };
+
+    const bookIdOrIssueId =
+      filterType === "Books" ? currentResult.book_id : currentResult.issue_id;
 
     const showFirstHeaderWithBooksorIssueTitle =
       filterType === "Books" ? (
@@ -120,12 +123,7 @@ const BooksOrIssues = ({
         </h4>
       ) : null;
     return (
-      <li
-        className="grid-list-item"
-        key={`filtered-result-${
-          currentResult.book_id || currentResult.issue_id
-        }`}
-      >
+      <li className="grid-list-item" key={`filtered-result-${bookIdOrIssueId}`}>
         <div className="grid-image-container">
           <Link to={imgThumbnailURL()}>
             <img

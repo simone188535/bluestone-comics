@@ -1,7 +1,36 @@
+@import '../../styles/abstracts/variables.scss';
+
 .details-page {
-    .details {
-        &-header {
-            display: flex;
+    .primary-info {
+        display: flex;
+        flex-direction: column;
+
+        .detail {
+            &-img-container {
+                flex: 1 1 100%;
+            }
+
+            &-description {
+                flex: 1 1 100%;
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $large) {
+    .details-page {
+        .primary-info {
+            flex-direction: row;
+
+            .detail {
+                &-img-container {
+                    flex: 1 1 30%;
+                }
+
+                &-description {
+                    flex: 1 1 70%;
+                }
+            }
         }
     }
 }
