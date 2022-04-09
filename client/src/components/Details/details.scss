@@ -1,17 +1,56 @@
 @import '../../styles/abstracts/variables.scss';
 
 .details-page {
-    .primary-info {
-        display: flex;
-        flex-direction: column;
+    overflow: auto;
 
-        .detail {
-            &-img-container {
-                flex: 1 1 100%;
-            }
+    .bg-overlay {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
 
-            &-description {
-                flex: 1 1 100%;
+
+        .blur {
+            backdrop-filter: blur(8px); // This be the blur
+            width: 100%;
+            overflow:auto;
+            background-color: rgba(80, 80, 80, 0.5);
+
+            .primary-info {
+                display: flex;
+                flex-direction: column;
+                width: 90%;
+                margin: 50px auto 0;
+
+                .detail {
+                    &-img {
+                        display: block;
+                        width: 250px;
+                        align-self: center;
+
+                        &-container {
+                            flex: 1 1 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-content: center;
+                            // min-height: 450px;
+                            padding: 20px;
+                        }
+                    }
+
+                    &-description {
+                        flex: 1 1 100%;
+                        background-color: $bg-color;
+
+                        .primary-header {
+                            font-size: 2rem;
+                            color: $violet-blue;
+                            // letter-spacing: .5px;
+                            font-weight: $normal;
+                            overflow-wrap: anywhere;
+                            font-weight: $semibold;
+                        }
+                    }
+                }
             }
         }
     }
@@ -19,16 +58,23 @@
 
 @media only screen and (min-width: $large) {
     .details-page {
-        .primary-info {
-            flex-direction: row;
+        .bg-overlay {
+            .blur {
+                .primary-info {
+                    flex-direction: row;
 
-            .detail {
-                &-img-container {
-                    flex: 1 1 30%;
-                }
+                    .detail {
+                        &-img-container {
+                            flex: 1 1 30%;
+                            background-color: $bg-color;
+                            // needs letter spacing!
+                        }
 
-                &-description {
-                    flex: 1 1 70%;
+                        &-description {
+                            flex: 1 1 70%;
+                            padding: 1rem 2rem 0 0;
+                        }
+                    }
                 }
             }
         }

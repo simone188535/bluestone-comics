@@ -6,7 +6,7 @@ import "./details.scss";
 const Details = () => {
   const { urlSlug, bookId, issueNumber } = useParams();
   const [errMsg, setErrMsg] = useState("");
-  const [detailInfo, setDetailInfo] = useState(null);
+  const [detailInfo, setDetailInfo] = useState({});
 
   // If issueId does not exist then the provided URL and the data on this page is for a book.
   const isIssue = !!issueNumber;
@@ -17,34 +17,66 @@ const Details = () => {
     (async () => {
       try {
         // create call for getBook or getIssue and set it to state.
-        const appropiateAPICall = isIssue
+        const appropriateAPICall = isIssue
           ? await getIssue(urlSlug, bookId, issueNumber)
           : await getBook(urlSlug, bookId);
 
-        const { book, issue } = appropiateAPICall.data;
-        setDetailInfo(book ?? issue);
+        const { book, issue } = appropriateAPICall.data;
+        // setDetailInfo(book ?? issue);
+        // ADD AUTHOR, Genres, work credits, bookmark button
+        setDetailInfo({
+          id: book?.id || issue?.id,
+          publisherId: book?.publisher_id || issue?.publisher_id,
+          title: book?.title || issue?.title,
+          coverPhoto: book?.cover_photo || issue?.cover_photo,
+          description: book?.description || issue?.description,
+          imagePrefixReference:
+            book?.image_prefix_reference || issue?.image_prefix_reference,
+          dateCreated: book?.date_created || issue?.date_created,
+          lastUpdated: book?.last_updated || issue?.last_updated,
+          removed: book?.removed || null,
+          status: book?.status || null,
+          URLSlug: book?.url_slug || null,
+          issueBookId: issue?.book_id || null,
+          issueNum: issue?.issue_number || null,
+        });
       } catch (err) {
         setErrMsg("Something went wrong! Please try again later.");
       }
     })();
   }, [bookId, isIssue, issueNumber, urlSlug]);
 
-  console.log(detailInfo);
+  useEffect(() => {
+    console.log(detailInfo);
+  }, [detailInfo]);
+
   return (
     <div className="container-fluid details-page">
-      <article className="primary-info">
-        <section className="detail-img-container">
-          <figure className="detail-img">
-            {/* Use flex basis of 30%, flex-grow 1 and flex-shrink 1 */}
-            {/* https://developer.mozilla.org/en-US/docs/Web/CSS/flex */}
-            Hello
-          </figure>
-        </section>
-        <section className="detail-description">
-          {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
-          World
-        </section>
-      </article>
+      <div
+        className="bg-overlay"
+        style={{ backgroundImage: `url(${detailInfo.coverPhoto})` }}
+      >
+        <div className="blur">
+          <article className="primary-info">
+            <section className="detail-img-container">
+              {/* Use flex basis of 30%, flex-grow 1 and flex-shrink 1 */}
+              {/* https://developer.mozilla.org/en-US/docs/Web/CSS/flex */}
+              <img
+                className="detail-img"
+                src={detailInfo.coverPhoto}
+                alt={detailInfo.title}
+              />
+              {/* maybe put rating stars here later */}
+            </section>
+            <section className="detail-description">
+              {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
+              <h1 className="primary-header">{detailInfo.title}</h1>
+              <div>{detailInfo.status}</div>
+              <p>{detailInfo.description}</p>
+            </section>
+          </article>
+        </div>
+      </div>
     </div>
   );
 };
