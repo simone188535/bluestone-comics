@@ -11,8 +11,6 @@ const Details = () => {
   // If issueId does not exist then the provided URL and the data on this page is for a book.
   const isIssue = !!issueNumber;
 
-  // console.log({isIssue});
-
   useEffect(() => {
     (async () => {
       try {
@@ -68,11 +66,21 @@ const Details = () => {
               />
               {/* maybe put rating stars here later */}
             </section>
-            <section className="detail-description">
+            <section className="detail-description desc-detail normal">
               {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
               <h1 className="primary-header">{detailInfo.title}</h1>
-              <div>{detailInfo.status}</div>
-              <p>{detailInfo.description}</p>
+              <div className="desc-detail bold">
+                Author:{" "}
+                <span className="desc-detail normal">{detailInfo.status}</span>
+              </div>
+              <div className="desc-detail bold">
+                Status:{" "}
+                <span className="desc-detail normal">{detailInfo.status}</span>
+              </div>
+              <p>
+                <span className="desc-detail bold">Description:</span>{" "}
+                {detailInfo.description}
+              </p>
             </section>
           </article>
         </div>

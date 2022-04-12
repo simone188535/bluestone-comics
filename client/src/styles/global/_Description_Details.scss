@@ -1,0 +1,12 @@
+.desc-detail {
+
+    &.normal {
+        font-weight: $light;
+        line-height: 1.5;
+    }
+   
+    &.bold {
+        font-weight: $normal;
+    }
+
+}

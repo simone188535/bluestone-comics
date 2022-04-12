@@ -86,8 +86,8 @@ const addGenres = async (genres, bookId) => {
 exports.getBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const bookByUser = await new QueryPG(pool).find(
-    '*',
-    'books WHERE id = $1 AND publisher_id = $2',
+    'users.username, publisher_id, title, url_slug, cover_photo, description, status, removed, image_prefix_reference, books.last_updated, books.date_created',
+    'books INNER JOIN users ON books.publisher_id = users.id WHERE books.id = $1 AND books.publisher_id = $2',
     [bookId, res.locals.user.id]
   );
 
@@ -113,7 +113,7 @@ exports.getIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const { page } = req.query;
 
-  const offset = pageOffset(page);
+  const offset = pageOffset(page, 20);
 
   const issuesOfBookByUser = await new QueryPG(pool).find(
     '*',
@@ -458,8 +458,8 @@ exports.getIssue = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
 
   const issueOfBookByUser = await new QueryPG(pool).find(
-    '*',
-    'issues WHERE book_id = ($1) AND publisher_id = ($2) AND issue_number = ($3)',
+    'users.username, issues.id AS issue_id, issues.publisher_id, issues.book_id, title, cover_photo, issue_number, image_prefix_reference, issues.last_updated, issues.date_created, description',
+    'issues INNER JOIN users ON issues.publisher_id = users.id WHERE issues.book_id = ($1) AND issues.publisher_id = ($2) AND issue_number = ($3)',
     [bookId, res.locals.user.id, issueNumber]
   );
 
@@ -469,7 +469,7 @@ exports.getIssue = catchAsync(async (req, res, next) => {
   const issueAssets = await new QueryPG(pool).find(
     '*',
     'issue_assets WHERE book_id = ($1) AND publisher_id = ($2) AND issue_id = ($3) ORDER BY page_number ASC',
-    [bookId, res.locals.user.id, issueOfBookByUser.id],
+    [bookId, res.locals.user.id, issueOfBookByUser.issue_id],
     true
   );
 
