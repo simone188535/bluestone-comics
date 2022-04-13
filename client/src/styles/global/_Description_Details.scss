@@ -1,8 +1,18 @@
 .desc-detail {
+    letter-spacing: 1px;
+    line-height: 1.5;
+
+    &.link {
+        color: $pure-black;
+        text-decoration: none;
+        
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 
     &.normal {
         font-weight: $light;
-        line-height: 1.5;
     }
    
     &.bold {
