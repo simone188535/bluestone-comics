@@ -11,6 +11,40 @@ const Details = () => {
   // If issueId does not exist then the provided URL and the data on this page is for a book.
   const isIssue = !!issueNumber;
 
+  const displayPrimaryInfo = (classes) => {
+    return (
+      <section className={`detail-description desc-detail normal ${classes}`}>
+        {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
+        <h1 className="primary-header">
+          {isIssue ? detailInfo.issueTitle : detailInfo.bookTitle}
+        </h1>
+        <div className="desc-detail bold">
+          Author:{" "}
+          <Link
+            to={`/profile/${detailInfo.author}`}
+            className="desc-detail link"
+          >
+            <span className="desc-detail normal">{detailInfo.author}</span>
+          </Link>
+        </div>
+        {isIssue && (
+          <div className="desc-detail bold">
+            Book:{" "}
+            <span className="desc-detail normal">{detailInfo.bookTitle}</span>
+          </div>
+        )}
+        <div className="desc-detail bold">
+          Status:{" "}
+          <span className="desc-detail normal">{detailInfo.status}</span>
+        </div>
+        <p>
+          <span className="desc-detail bold">Description:</span>{" "}
+          {detailInfo.description}
+        </p>
+      </section>
+    );
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -67,43 +101,23 @@ const Details = () => {
               />
               {/* maybe put rating stars here later */}
             </section>
-            <section className="detail-description desc-detail normal">
-              {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
-              <h1 className="primary-header">
-                {isIssue ? detailInfo.issueTitle : detailInfo.bookTitle}
-              </h1>
-              <div className="desc-detail bold">
-                Author:{" "}
-                <Link
-                  to={`/profile/${detailInfo.author}`}
-                  className="desc-detail link"
-                >
-                  <span className="desc-detail normal">
-                    {detailInfo.author}
-                  </span>
-                </Link>
-              </div>
-              {isIssue && (
-                <div className="desc-detail bold">
-                  Book:{" "}
-                  <span className="desc-detail normal">
-                    {detailInfo.bookTitle}
-                  </span>
-                </div>
-              )}
-              <div className="desc-detail bold">
-                Status:{" "}
-                <span className="desc-detail normal">{detailInfo.status}</span>
-              </div>
-              <p>
-                <span className="desc-detail bold">Description:</span>{" "}
-                {detailInfo.description}
-              </p>
-            </section>
+            {displayPrimaryInfo("hide-until-lg")}
           </article>
         </div>
       </div>
-      <section className="work-credits">work-credits</section>
+      {displayPrimaryInfo("show-at-lg")}
+      <section className="secondary-info">
+        <section className="details">
+          <h2 className="desc-detail bold text-center secondary-header">
+            Details
+          </h2>
+          <div className="panel-container">
+            <article className="half-panel">Panel 1</article>
+            <article className="half-panel">Panel 2</article>
+          </div>
+        </section>
+      </section>
+      {/* Add comment section in the future */}
     </div>
   );
 };
