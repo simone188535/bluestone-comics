@@ -20,6 +20,13 @@
     
     .secondary-header {
         font-size: 1.7rem;
+        margin-bottom: 25px;
+    }
+
+    .tertiary-header {
+        font-size: 1rem;
+        // margin-bottom: 25px;
+        font-weight: $normal;
     }
 
     .bg-overlay {
@@ -67,8 +74,24 @@
     .secondary-info {
         .panel-container {
             display: flex;
+            &.whole-view {
+                flex-direction: column;
+            }
+            &.half-view {
+                flex-direction: column;
+            }
             .half-panel {
-                flex: 1 0 50%;
+                flex: 1 1 100%;
+                .view-full-field, .view-half-field {
+                    margin-bottom: 25px;
+                }
+                .view-half-field {
+                    display: flex;
+                    align-items: baseline;
+                    > * {
+                        flex: 1 1 50%;
+                    }
+                }
             }
         }
     }
@@ -80,18 +103,28 @@
             .blur {
                 .primary-info {
                     flex-direction: row;
+                } 
+            }
+        }
+        .detail {
+            &-img-container {
+                flex: 1 1 30%;
+                background-color: $bg-color;
+            }
+
+            &-description {
+                flex: 1 1 70%;
+                padding: 1rem 2rem 0 0;
+            }
+        }
+
+        .secondary-info {
+            .panel-container {
+                &.half-view {
+                    flex-direction: row;
                 }
-
-                .detail {
-                    &-img-container {
-                        flex: 1 1 30%;
-                        background-color: $bg-color;
-                    }
-
-                    &-description {
-                        flex: 1 1 70%;
-                        padding: 1rem 2rem 0 0;
-                    }
+                .half-panel {
+                    flex: 1 1 50%;
                 }
             }
         }

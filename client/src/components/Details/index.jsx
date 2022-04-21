@@ -3,6 +3,82 @@ import { useParams, Link } from "react-router-dom";
 import { getBook, getIssue } from "../../services";
 import "./details.scss";
 
+const ExtraInfo = ({ isIssue }) => {
+  const className = isIssue ? "half" : "whole";
+
+  const detailsFirstSection = () => {
+    return (
+      <article className={`${className}-panel`}>
+        <div className="view-full-field">
+          <h3 className="tertiary-header">Accredited:</h3>
+          {isIssue ? (
+            <div>
+              {/* Shows a list of all the creators of the current comic */}
+            </div>
+          ) : (
+            <div>
+              {/* Shows all the creators who contributed to all the issues.
+          Uses the accredited component */}
+            </div>
+          )}
+        </div>
+        <div className="view-full-field">
+          <h3 className="tertiary-header">Genres:</h3>
+          {isIssue ? (
+            <div>
+              {/* Shows a list of genres of the creators of the current comic */}
+            </div>
+          ) : (
+            <div>{/* Shows all the genres the work */}</div>
+          )}
+        </div>
+      </article>
+    );
+  };
+
+  const detailsSecondSection = () => {
+    return (
+      <article className={`${className}-panel`}>
+        {/* Only show these fields if this is an issue */}
+        {isIssue ? (
+          <>
+            <div className="view-half-field">
+              <h3 className="tertiary-header">Total Page Count:</h3>
+              <div className="desc-detail normal">Total Page Count</div>
+            </div>
+            <div className="view-half-field">
+              <h3 className="tertiary-header">Volume/Issue #:</h3>
+              <div className="desc-detail normal">Volume/Issue #</div>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
+        <div className="view-half-field">
+          <h3 className="tertiary-header">Date Published:</h3>
+          <div className="desc-detail normal">Date Published</div>
+        </div>
+        <div className="view-half-field">
+          <h3 className="tertiary-header">Last Updated:</h3>
+          <div className="desc-detail normal">Last Updated</div>
+        </div>
+      </article>
+    );
+  };
+
+  return (
+    <section className="details">
+      <h2 className="desc-detail bold text-center secondary-header">
+        Extra Info
+      </h2>
+      <div className={`panel-container ${className}-view`}>
+        {detailsFirstSection()}
+        {detailsSecondSection()}
+      </div>
+    </section>
+  );
+};
+
 const Details = () => {
   const { urlSlug, bookId, issueNumber } = useParams();
   const [errMsg, setErrMsg] = useState("");
@@ -10,40 +86,6 @@ const Details = () => {
 
   // If issueId does not exist then the provided URL and the data on this page is for a book.
   const isIssue = !!issueNumber;
-
-  const displayPrimaryInfo = (classes) => {
-    return (
-      <section className={`detail-description desc-detail normal ${classes}`}>
-        {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
-        <h1 className="primary-header">
-          {isIssue ? detailInfo.issueTitle : detailInfo.bookTitle}
-        </h1>
-        <div className="desc-detail bold">
-          Author:{" "}
-          <Link
-            to={`/profile/${detailInfo.author}`}
-            className="desc-detail link"
-          >
-            <span className="desc-detail normal">{detailInfo.author}</span>
-          </Link>
-        </div>
-        {isIssue && (
-          <div className="desc-detail bold">
-            Book:{" "}
-            <span className="desc-detail normal">{detailInfo.bookTitle}</span>
-          </div>
-        )}
-        <div className="desc-detail bold">
-          Status:{" "}
-          <span className="desc-detail normal">{detailInfo.status}</span>
-        </div>
-        <p>
-          <span className="desc-detail bold">Description:</span>{" "}
-          {detailInfo.description}
-        </p>
-      </section>
-    );
-  };
 
   useEffect(() => {
     (async () => {
@@ -83,6 +125,40 @@ const Details = () => {
     console.log(detailInfo);
   }, [detailInfo]);
 
+  const displayPrimaryInfo = (classes) => {
+    return (
+      <section className={`detail-description desc-detail normal ${classes}`}>
+        {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
+        <h1 className="primary-header">
+          {isIssue ? detailInfo.issueTitle : detailInfo.bookTitle}
+        </h1>
+        <div className="desc-detail bold">
+          Author:{" "}
+          <Link
+            to={`/profile/${detailInfo.author}`}
+            className="desc-detail link"
+          >
+            <span className="desc-detail normal">{detailInfo.author}</span>
+          </Link>
+        </div>
+        {isIssue && (
+          <div className="desc-detail bold">
+            Book:{" "}
+            <span className="desc-detail normal">{detailInfo.bookTitle}</span>
+          </div>
+        )}
+        <div className="desc-detail bold">
+          Status:{" "}
+          <span className="desc-detail normal">{detailInfo.status}</span>
+        </div>
+        <p>
+          <span className="desc-detail bold">Description:</span>{" "}
+          {detailInfo.description}
+        </p>
+      </section>
+    );
+  };
+
   return (
     <div className="container-fluid details-page">
       <div
@@ -107,15 +183,7 @@ const Details = () => {
       </div>
       {displayPrimaryInfo("show-at-lg")}
       <section className="secondary-info">
-        <section className="details">
-          <h2 className="desc-detail bold text-center secondary-header">
-            Details
-          </h2>
-          <div className="panel-container">
-            <article className="half-panel">Panel 1</article>
-            <article className="half-panel">Panel 2</article>
-          </div>
-        </section>
+        <ExtraInfo isIssue={isIssue} />
       </section>
       {/* Add comment section in the future */}
     </div>
