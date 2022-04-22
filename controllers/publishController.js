@@ -487,6 +487,7 @@ exports.getIssue = catchAsync(async (req, res, next) => {
     status: 'success',
     issue: issueOfBookByUser,
     issueAssets,
+    totalIssueAssets: issueAssets.length,
     issueAssetFiles
   });
 });

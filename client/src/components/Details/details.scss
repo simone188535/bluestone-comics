@@ -7,6 +7,8 @@
     .primary-info, .secondary-info {
         width: 90%;
         margin: 50px auto 0;
+        max-width: 1010px;
+        background-color: $bg-color;
     }
 
     .primary-header {
@@ -66,7 +68,6 @@
 
         &-description {
             flex: 1 1 100%;
-            background-color: $bg-color;
             padding: 1rem 2rem;
         }
     }
@@ -76,20 +77,29 @@
             display: flex;
             &.whole-view {
                 flex-direction: column;
+                text-align: center;
+                .whole-panel {
+                    .view-whole-field {
+                        margin-bottom: 25px;
+                        .tertiary-header {
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
             }
             &.half-view {
                 flex-direction: column;
-            }
-            .half-panel {
-                flex: 1 1 100%;
-                .view-full-field, .view-half-field {
-                    margin-bottom: 25px;
-                }
-                .view-half-field {
-                    display: flex;
-                    align-items: baseline;
-                    > * {
-                        flex: 1 1 50%;
+                .half-panel {
+                    flex: 1 1 100%;
+                    .view-whole-field, .view-half-field {
+                        margin-bottom: 25px;
+                    }
+                    .view-half-field {
+                        display: flex;
+                        align-items: baseline;
+                        > * {
+                            flex: 1 1 50%;
+                        }
                     }
                 }
             }
@@ -109,7 +119,6 @@
         .detail {
             &-img-container {
                 flex: 1 1 30%;
-                background-color: $bg-color;
             }
 
             &-description {
@@ -122,9 +131,9 @@
             .panel-container {
                 &.half-view {
                     flex-direction: row;
-                }
-                .half-panel {
-                    flex: 1 1 50%;
+                    .half-panel {
+                        flex: 1 1 50%;
+                    }
                 }
             }
         }

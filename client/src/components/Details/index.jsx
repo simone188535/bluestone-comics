@@ -1,15 +1,35 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { useParams, Link } from "react-router-dom";
 import { getBook, getIssue } from "../../services";
 import "./details.scss";
 
-const ExtraInfo = ({ isIssue }) => {
+const ExtraInfo = ({
+  isIssue,
+  issueNum,
+  dateCreated,
+  lastUpdated,
+  totalIssuePages,
+}) => {
   const className = isIssue ? "half" : "whole";
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // create call for getBook or getIssue and set it to state.
+        // const appropriateAPICall = isIssue
+        //   ? await getIssue(urlSlug, bookId, issueNumber)
+        //   : await getBook(urlSlug, bookId);
+      } catch (err) {
+        // setErrMsg("Something went wrong! Please try again later.");
+      }
+    })();
+  }, []);
 
   const detailsFirstSection = () => {
     return (
       <article className={`${className}-panel`}>
-        <div className="view-full-field">
+        <div className="view-whole-field">
           <h3 className="tertiary-header">Accredited:</h3>
           {isIssue ? (
             <div>
@@ -22,7 +42,7 @@ const ExtraInfo = ({ isIssue }) => {
             </div>
           )}
         </div>
-        <div className="view-full-field">
+        <div className="view-whole-field">
           <h3 className="tertiary-header">Genres:</h3>
           {isIssue ? (
             <div>
@@ -44,37 +64,47 @@ const ExtraInfo = ({ isIssue }) => {
           <>
             <div className="view-half-field">
               <h3 className="tertiary-header">Total Page Count:</h3>
-              <div className="desc-detail normal">Total Page Count</div>
+              <div className="desc-detail normal">{totalIssuePages}</div>
             </div>
             <div className="view-half-field">
               <h3 className="tertiary-header">Volume/Issue #:</h3>
-              <div className="desc-detail normal">Volume/Issue #</div>
+              <div className="desc-detail normal">{issueNum}</div>
             </div>
           </>
         ) : (
           <></>
         )}
-        <div className="view-half-field">
+        <div className={`view-${className}-field`}>
           <h3 className="tertiary-header">Date Published:</h3>
-          <div className="desc-detail normal">Date Published</div>
+          <div className="desc-detail normal">
+            {moment(dateCreated).format("MMMM D, YYYY")}
+          </div>
         </div>
-        <div className="view-half-field">
-          <h3 className="tertiary-header">Last Updated:</h3>
-          <div className="desc-detail normal">Last Updated</div>
-        </div>
+        {lastUpdated ? (
+          <div className={`view-${className}-field`}>
+            <h3 className="tertiary-header">Last Updated:</h3>
+            <div className="desc-detail normal">
+              {moment(lastUpdated).format("MMMM D, YYYY")}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
       </article>
     );
   };
 
   return (
-    <section className="details">
-      <h2 className="desc-detail bold text-center secondary-header">
-        Extra Info
-      </h2>
-      <div className={`panel-container ${className}-view`}>
-        {detailsFirstSection()}
-        {detailsSecondSection()}
-      </div>
+    <section className="secondary-info">
+      <section className="details">
+        <h2 className="desc-detail bold text-center secondary-header">
+          Extra Info
+        </h2>
+        <div className={`panel-container ${className}-view`}>
+          {detailsFirstSection()}
+          {detailsSecondSection()}
+        </div>
+      </section>
     </section>
   );
 };
@@ -95,25 +125,27 @@ const Details = () => {
           ? await getIssue(urlSlug, bookId, issueNumber)
           : await getBook(urlSlug, bookId);
 
-        const { book, issue } = appropriateAPICall.data;
+        const { book, issue, totalIssueAssets } = appropriateAPICall.data;
         // ADD AUTHOR, Genres, work credits, bookmark button
+        // console.log(book);
+        // console.log(issue);
         setDetailInfo({
-          id: book?.id || issue?.id,
           author: book?.username || issue?.username,
           publisherId: book?.publisher_id || issue?.publisher_id,
           bookTitle: book?.book_title || issue?.book_title,
-          issueTitle: issue?.issue_title,
+          issueTitle: issue?.issue_title || null,
           coverPhoto: book?.cover_photo || issue?.cover_photo,
           description: book?.description || issue?.description,
           imagePrefixReference:
             book?.image_prefix_reference || issue?.image_prefix_reference,
           dateCreated: book?.date_created || issue?.date_created,
-          lastUpdated: book?.last_updated || issue?.last_updated,
+          lastUpdated: book?.last_updated || issue?.last_updated || null,
           removed: book?.removed || null,
           status: book?.status || issue?.status,
           URLSlug: book?.url_slug || null,
           issueBookId: issue?.book_id || null,
           issueNum: issue?.issue_number || null,
+          totalIssuePages: totalIssueAssets || null,
         });
       } catch (err) {
         setErrMsg("Something went wrong! Please try again later.");
@@ -182,9 +214,13 @@ const Details = () => {
         </div>
       </div>
       {displayPrimaryInfo("show-at-lg")}
-      <section className="secondary-info">
-        <ExtraInfo isIssue={isIssue} />
-      </section>
+      <ExtraInfo
+        isIssue={isIssue}
+        dateCreated={detailInfo.dateCreated}
+        lastUpdated={detailInfo.lastUpdated}
+        issueNum={detailInfo.issueNum}
+        totalIssuePages={detailInfo.totalIssuePages}
+      />
       {/* Add comment section in the future */}
     </div>
   );
