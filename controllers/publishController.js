@@ -85,6 +85,7 @@ const addGenres = async (genres, bookId) => {
 
 exports.getBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
+  console.log(bookId);
   const bookByUser = await new QueryPG(pool).find(
     'users.username, publisher_id, title AS book_title, url_slug, cover_photo, description, status, removed, image_prefix_reference, books.last_updated, books.date_created',
     'books INNER JOIN users ON books.publisher_id = users.id WHERE books.id = $1 AND books.publisher_id = $2',
