@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { useParams, Link } from "react-router-dom";
-import { getBook, getIssue } from "../../services";
+import { getBookData, getIssueData } from "../../services";
 import "./details.scss";
 
 const ExtraInfo = ({
@@ -122,8 +122,8 @@ const Details = () => {
       try {
         // create call for getBook or getIssue and set it to state.
         const appropriateAPICall = isIssue
-          ? await getIssue(urlSlug, bookId, issueNumber)
-          : await getBook(urlSlug, bookId);
+          ? await getIssueData(urlSlug, bookId, issueNumber)
+          : await getBookData(urlSlug, bookId);
 
         const { book, issue, totalIssueAssets } = appropriateAPICall.data;
         // ADD AUTHOR, Genres, work credits, bookmark button

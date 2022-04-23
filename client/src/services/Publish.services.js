@@ -39,21 +39,21 @@ function getBookAndIssueImagePrefix(
   );
 }
 
-function getBook(urlSlug, bookId) {
+function getUsersBook(urlSlug, bookId) {
   return axios.get(
     `/api/v1/publish/${urlSlug}/book/${bookId}`,
     configObjects()
   );
 }
 
-function getIssue(urlSlug, bookId, issueId) {
+function getUsersIssue(urlSlug, bookId, issueId) {
   return axios.get(
     `/api/v1/publish/${urlSlug}/book/${bookId}/issue/${issueId}`,
     configObjects()
   );
 }
 
-function getIssues(urlSlug, bookId, pageNumber) {
+function getUsersIssues(urlSlug, bookId, pageNumber) {
   const config = configObjects();
   const appendedConfig = configPageNumber(config, pageNumber);
 
@@ -63,4 +63,10 @@ function getIssues(urlSlug, bookId, pageNumber) {
   );
 }
 
-export { createBook, getBookAndIssueImagePrefix, getBook, getIssue, getIssues };
+export {
+  createBook,
+  getBookAndIssueImagePrefix,
+  getUsersBook,
+  getUsersIssue,
+  getUsersIssues,
+};
