@@ -10,13 +10,12 @@ const authController = require('../../controllers/authController');
 const publishController = require('../../controllers/publishController');
 
 // This middleware runs before all the routes beneath get the chance to. This checks if user is present for all routes before continuing.
-// router.use(authController.protect);
+router.use(authController.protect);
 // router.use(authController.restrictTo('creator'));
 
 router
   .route('/')
   .post(
-    authController.protect,
     uploadS3.fields([
       { name: 'bookCoverPhoto', maxCount: 1 },
       { name: 'issueCoverPhoto', maxCount: 1 },
