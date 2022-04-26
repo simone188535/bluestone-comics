@@ -12,11 +12,11 @@ const configObj = () => {
   return config;
 };
 
-function getBookData(urlSlug, bookId) {
+function getBook(urlSlug, bookId) {
   return axios.get(`/api/v1/read/${urlSlug}/book/${bookId}`, configObj());
 }
 
-function getIssueData(urlSlug, bookId, issueId) {
+function getIssue(urlSlug, bookId, issueId) {
   return axios.get(
     `/api/v1/read/${urlSlug}/book/${bookId}/issue/${issueId}`,
     configObj()
@@ -33,4 +33,4 @@ function getIssueData(urlSlug, bookId, issueId) {
 //   );
 // }
 
-export { getBookData, getIssueData };
+export { getBook, getIssue };

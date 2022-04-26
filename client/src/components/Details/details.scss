@@ -45,7 +45,7 @@
             .primary-info {
                 display: flex;
                 flex-direction: column;
-                margin: 50px auto 0;
+                margin: 30px auto;
             }
         }
     }
@@ -99,6 +99,12 @@
                 flex-direction: column;
                 .half-panel {
                     flex: 1 1 100%;
+                    &:nth-child(1) {
+                        order: 2;
+                    }
+                    &:nth-child(2) {
+                        order: 1;
+                    }
                     .view-whole-field, .view-half-field {
                         margin-bottom: 25px;
                     }
@@ -153,6 +159,12 @@
                     flex-direction: row;
                     .half-panel {
                         flex: 1 1 50%;
+                        &:nth-child(1) {
+                            order: 1;
+                        }
+                        &:nth-child(2) {
+                            order: 2;
+                        }
                     }
                 }
             }
