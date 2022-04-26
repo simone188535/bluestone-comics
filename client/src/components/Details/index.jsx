@@ -95,8 +95,9 @@ const ExtraInfo = ({
   };
 
   return (
-    <section className="secondary-info">
-      <section className="details">
+    <section className="extra-info-container mt-50">
+      <section className="secondary-info">
+        {/* <section className="details"> */}
         <h2 className="desc-detail bold text-center secondary-header">
           Extra Info
         </h2>
@@ -105,6 +106,7 @@ const ExtraInfo = ({
           {detailsSecondSection()}
         </div>
       </section>
+      {/* </section> */}
     </section>
   );
 };
@@ -161,32 +163,38 @@ const Details = () => {
     return (
       <section className={`detail-description desc-detail normal ${classes}`}>
         {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
-        <h1 className="primary-header">
-          {isIssue ? detailInfo.issueTitle : detailInfo.bookTitle}
-        </h1>
-        <div className="desc-detail bold">
-          Author:{" "}
-          <Link
-            to={`/profile/${detailInfo.author}`}
-            className="desc-detail link"
-          >
-            <span className="desc-detail normal">{detailInfo.author}</span>
-          </Link>
-        </div>
-        {isIssue && (
-          <div className="desc-detail bold">
-            Book:{" "}
-            <span className="desc-detail normal">{detailInfo.bookTitle}</span>
+        <section className="extra-info-content-block">
+          <div className="extra-info">
+            <h1 className="primary-header">
+              {isIssue ? detailInfo.issueTitle : detailInfo.bookTitle}
+            </h1>
+            <div className="desc-detail bold">
+              Author:{" "}
+              <Link
+                to={`/profile/${detailInfo.author}`}
+                className="desc-detail link"
+              >
+                <span className="desc-detail normal">{detailInfo.author}</span>
+              </Link>
+            </div>
+            {isIssue && (
+              <div className="desc-detail bold">
+                Book:{" "}
+                <span className="desc-detail normal">
+                  {detailInfo.bookTitle}
+                </span>
+              </div>
+            )}
+            <div className="desc-detail bold">
+              Status:{" "}
+              <span className="desc-detail normal">{detailInfo.status}</span>
+            </div>
+            <p>
+              <span className="desc-detail bold">Description:</span>{" "}
+              {detailInfo.description}
+            </p>
           </div>
-        )}
-        <div className="desc-detail bold">
-          Status:{" "}
-          <span className="desc-detail normal">{detailInfo.status}</span>
-        </div>
-        <p>
-          <span className="desc-detail bold">Description:</span>{" "}
-          {detailInfo.description}
-        </p>
+        </section>
       </section>
     );
   };
