@@ -4,8 +4,11 @@ const router = express.Router({ mergeParams: true });
 const readController = require('../../controllers/readController');
 
 router.route('/').get(readController.getBook);
+router.route('/genres').get(readController.getGenres);
+router.route('/work-credits').get(readController.getBookWorkCredits);
 router.route('/Issue/:issueNumber').get(readController.getIssue);
-
-// Add get genres for books and issues: https://stackoverflow.com/questions/6059246/how-to-include-route-handlers-in-multiple-files-in-express/37309212#37309212
+router
+  .route('/Issue/:issueNumber/work-credits')
+  .get(readController.getIssueWorkCredits);
 
 module.exports = router;

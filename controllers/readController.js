@@ -90,35 +90,33 @@ exports.getIssues = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getWorkCredits = catchAsync(async (req, res, next) => {
-  // Find issue of a book
+exports.getBookWorkCredits = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success'
   });
 });
 
-exports.getGenresForBook = catchAsync(async (req, res, next) => {
-  // const { bookId } = req.params;
-  // const bookByUser = await new QueryPG(pool).find(
-  //   'users.username, publisher_id, title AS book_title, url_slug, cover_photo, description, status, removed, image_prefix_reference, books.last_updated, books.date_created',
-  //   'books INNER JOIN users ON books.publisher_id = users.id WHERE books.id = $1 AND books.publisher_id = $2',
-  //   [bookId, res.locals.user.id]
-  // );
-
-  // if (!bookByUser) {
-  //   return next(
-  //     new AppError(`Existing book by the current user cannot be found.`, 404)
-  //   );
-  // }
-  // // Get the book cover photo file in AWS associated with this book
-  // const bookCoverPhoto = await AmazonSDKS3.getSingleS3Object(
-  //   AmazonSDKS3.getS3FilePath(bookByUser.cover_photo)
-  // );
-
-  // Get book and issues.
+exports.getIssueWorkCredits = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success'
-    // book: bookByUser,
-    // bookCoverPhoto
+  });
+});
+
+exports.getGenres = catchAsync(async (req, res, next) => {
+  const { bookId } = req.params;
+
+  const genres = await new QueryPG(pool).find(
+    'genre',
+    'genres WHERE book_id = ($1)',
+    [bookId],
+    true
+  );
+
+  const formattedGenres = genres.map((genre) => genre.genre);
+
+  // Get all genres
+  res.status(200).json({
+    status: 'success',
+    genres: formattedGenres
   });
 });
