@@ -97,8 +97,86 @@ exports.getBookWorkCredits = catchAsync(async (req, res, next) => {
 });
 
 exports.getIssueWorkCredits = catchAsync(async (req, res, next) => {
+  const { bookId, issueNumber } = req.params;
+
+  const { issueId } = await new QueryPG(pool).find(
+    'id AS "issueId"',
+    'issues WHERE book_id = ($1) AND issue_number = ($2)',
+    [bookId, issueNumber],
+    false
+  );
+
+  const getIssueWorkSelect = 'users.username';
+
+  const getIssueWorkCreditsQuery =
+    'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND issue_id = ($2) AND creator_credit = ($3)';
+
+  const writers = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, issueId, 'writer'],
+    true
+  );
+
+  const artists = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, issueId, 'artist'],
+    true
+  );
+
+  const editors = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, issueId, 'editor'],
+    true
+  );
+
+  const inkers = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, issueId, 'inker'],
+    true
+  );
+
+  const letterers = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, issueId, 'letterer'],
+    true
+  );
+
+  const pencillers = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, issueId, 'penciller'],
+    true
+  );
+
+  const colorists = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, issueId, 'colorist'],
+    true
+  );
+
+  const coverArtists = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, issueId, 'cover artist'],
+    true
+  );
+
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    writers,
+    artists,
+    editors,
+    inkers,
+    letterers,
+    pencillers,
+    colorists,
+    coverArtists
   });
 });
 
