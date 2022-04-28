@@ -109,7 +109,7 @@ exports.getIssueWorkCredits = catchAsync(async (req, res, next) => {
   const getIssueWorkSelect = 'users.username';
 
   const getIssueWorkCreditsQuery =
-    'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND issue_id = ($2) AND creator_credit = ($3)';
+    'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND issue_id = ($2) AND creator_credit = ($3) ORDER BY  users.username ASC';
 
   const writers = await new QueryPG(pool).find(
     getIssueWorkSelect,
