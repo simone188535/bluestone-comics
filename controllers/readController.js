@@ -93,7 +93,7 @@ exports.getIssues = catchAsync(async (req, res, next) => {
 exports.getBookWorkCredits = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
-  const getIssueWorkSelect = 'users.username';
+  const getIssueWorkSelect = 'DISTINCT users.username';
 
   const getIssueWorkCreditsQuery =
     'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND creator_credit = ($2) ORDER BY users.username ASC';
