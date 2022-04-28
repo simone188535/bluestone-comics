@@ -91,8 +91,78 @@ exports.getIssues = catchAsync(async (req, res, next) => {
 });
 
 exports.getBookWorkCredits = catchAsync(async (req, res, next) => {
+  const { bookId } = req.params;
+
+  const getIssueWorkSelect = 'users.username';
+
+  const getIssueWorkCreditsQuery =
+    'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND creator_credit = ($2) ORDER BY users.username ASC';
+
+  const writers = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, 'writer'],
+    true
+  );
+
+  const artists = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, 'artist'],
+    true
+  );
+
+  const editors = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, 'editor'],
+    true
+  );
+
+  const inkers = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, 'inker'],
+    true
+  );
+
+  const letterers = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, 'letterer'],
+    true
+  );
+
+  const pencillers = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, 'penciller'],
+    true
+  );
+
+  const colorists = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, 'colorist'],
+    true
+  );
+
+  const coverArtists = await new QueryPG(pool).find(
+    getIssueWorkSelect,
+    getIssueWorkCreditsQuery,
+    [bookId, 'cover artist'],
+    true
+  );
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    writers,
+    artists,
+    editors,
+    inkers,
+    letterers,
+    pencillers,
+    colorists,
+    coverArtists
   });
 });
 
@@ -109,7 +179,7 @@ exports.getIssueWorkCredits = catchAsync(async (req, res, next) => {
   const getIssueWorkSelect = 'users.username';
 
   const getIssueWorkCreditsQuery =
-    'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND issue_id = ($2) AND creator_credit = ($3) ORDER BY  users.username ASC';
+    'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND issue_id = ($2) AND creator_credit = ($3) ORDER BY users.username ASC';
 
   const writers = await new QueryPG(pool).find(
     getIssueWorkSelect,
