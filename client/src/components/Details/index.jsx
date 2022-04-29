@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { useParams, Link } from "react-router-dom";
-import { getBook, getIssue } from "../../services";
+import {
+  getBook,
+  getIssue,
+  getBookWorkCredits,
+  getIssueWorkCredits,
+  getGenres,
+} from "../../services";
 import "./details.scss";
 
 const ExtraInfo = ({
@@ -11,20 +17,54 @@ const ExtraInfo = ({
   lastUpdated,
   totalIssuePages,
 }) => {
+  const { urlSlug, bookId, issueNumber } = useParams();
+  const [workCredits, setWorkCredits] = useState({});
+  const [genreList, setGenreList] = useState([]);
+  // // const [errMsg, setErrMsg] = useState("");
   const className = isIssue ? "half" : "whole";
 
   useEffect(() => {
     (async () => {
       try {
-        // create call for getBook or getIssue and set it to state.
-        // const appropriateAPICall = isIssue
-        //   ? await getIssue(urlSlug, bookId, issueNumber)
-        //   : await getBook(urlSlug, bookId);
+        /* 
+        create call for based off whether the details page is for book or issue and set the Work Credits 
+        from the api call to state.
+        */
+        const appropriateWorkCreditsCall = isIssue
+          ? await getIssueWorkCredits(urlSlug, bookId, issueNumber)
+          : await getBookWorkCredits(urlSlug, bookId);
+
+        const {
+          writers,
+          artists,
+          editors,
+          inkers,
+          letterers,
+          pencillers,
+          colorists,
+          coverArtists,
+        } = appropriateWorkCreditsCall.data;
+
+        setWorkCredits({
+          writers,
+          artists,
+          editors,
+          inkers,
+          letterers,
+          pencillers,
+          colorists,
+          coverArtists,
+        });
+
+        // get the genres for this book and issue and set it to the genre list state
+        const getGenresRes = await getGenres(bookId);
+        const { genres } = getGenresRes.data;
+        setGenreList(genres);
       } catch (err) {
         // setErrMsg("Something went wrong! Please try again later.");
       }
     })();
-  }, []);
+  }, [bookId, isIssue, issueNumber, urlSlug]);
 
   const detailsFirstSection = () => {
     return (
