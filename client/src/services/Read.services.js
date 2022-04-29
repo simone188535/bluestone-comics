@@ -15,7 +15,7 @@ function getBookWorkCredits(urlSlug, bookId) {
 
 function getIssueWorkCredits(urlSlug, bookId, issueId) {
   return axios.get(
-    `/api/v1/read/${urlSlug}/book/${bookId}/Issue/${issueId}/work-credits`
+    `/api/v1/read/${urlSlug}/book/${bookId}/issue/${issueId}/work-credits`
   );
 }
 
