@@ -8,6 +8,9 @@ const QueryPG = require('../utils/QueryPGFeature');
 // const pageOffset = require('../utils/offset');
 const pool = require('../db');
 
+const extractUsernameFromUserData = (userData) =>
+  userData.map((user) => user.username);
+
 exports.getAllBooks = catchAsync(async (req, res, next) => {
   // edit any issue of a book
   // const books = await Book.find({});
@@ -90,6 +93,7 @@ exports.getIssues = catchAsync(async (req, res, next) => {
   });
 });
 
+// get a list of all the creators who have contributed to this book, and also remove duplicates
 exports.getBookWorkCredits = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
@@ -98,61 +102,78 @@ exports.getBookWorkCredits = catchAsync(async (req, res, next) => {
   const getIssueWorkCreditsQuery =
     'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND creator_credit = ($2) ORDER BY users.username ASC';
 
-  const writers = await new QueryPG(pool).find(
+  const writersResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, 'writer'],
     true
   );
 
-  const artists = await new QueryPG(pool).find(
+  const writers = extractUsernameFromUserData(writersResults);
+
+  const artistsResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, 'artist'],
     true
   );
 
-  const editors = await new QueryPG(pool).find(
+  const artists = extractUsernameFromUserData(artistsResults);
+
+  const editorsResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, 'editor'],
     true
   );
 
-  const inkers = await new QueryPG(pool).find(
+  const editors = extractUsernameFromUserData(editorsResults);
+
+  const inkersResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, 'inker'],
     true
   );
 
-  const letterers = await new QueryPG(pool).find(
+  const inkers = extractUsernameFromUserData(inkersResults);
+
+  const letterersResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, 'letterer'],
     true
   );
 
-  const pencillers = await new QueryPG(pool).find(
+  const letterers = extractUsernameFromUserData(letterersResults);
+
+  const pencillersResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, 'penciller'],
     true
   );
 
-  const colorists = await new QueryPG(pool).find(
+  const pencillers = extractUsernameFromUserData(pencillersResults);
+
+  const coloristsResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, 'colorist'],
     true
   );
 
-  const coverArtists = await new QueryPG(pool).find(
+  const colorists = extractUsernameFromUserData(coloristsResults);
+
+  const coverArtistsResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, 'cover artist'],
     true
   );
+
+  const coverArtists = extractUsernameFromUserData(coverArtistsResults);
+
   res.status(200).json({
     status: 'success',
     writers,
@@ -166,6 +187,7 @@ exports.getBookWorkCredits = catchAsync(async (req, res, next) => {
   });
 });
 
+// get a list of all the creators who have contributed to a single issue
 exports.getIssueWorkCredits = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
 
@@ -181,61 +203,77 @@ exports.getIssueWorkCredits = catchAsync(async (req, res, next) => {
   const getIssueWorkCreditsQuery =
     'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND issue_id = ($2) AND creator_credit = ($3) ORDER BY users.username ASC';
 
-  const writers = await new QueryPG(pool).find(
+  const writersResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, issueId, 'writer'],
     true
   );
 
-  const artists = await new QueryPG(pool).find(
+  const writers = extractUsernameFromUserData(writersResults);
+
+  const artistsResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, issueId, 'artist'],
     true
   );
 
-  const editors = await new QueryPG(pool).find(
+  const artists = extractUsernameFromUserData(artistsResults);
+
+  const editorsResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, issueId, 'editor'],
     true
   );
 
-  const inkers = await new QueryPG(pool).find(
+  const editors = extractUsernameFromUserData(editorsResults);
+
+  const inkersResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, issueId, 'inker'],
     true
   );
 
-  const letterers = await new QueryPG(pool).find(
+  const inkers = extractUsernameFromUserData(inkersResults);
+
+  const letterersResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, issueId, 'letterer'],
     true
   );
 
-  const pencillers = await new QueryPG(pool).find(
+  const letterers = extractUsernameFromUserData(letterersResults);
+
+  const pencillersResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, issueId, 'penciller'],
     true
   );
 
-  const colorists = await new QueryPG(pool).find(
+  const pencillers = extractUsernameFromUserData(pencillersResults);
+
+  const coloristsResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, issueId, 'colorist'],
     true
   );
 
-  const coverArtists = await new QueryPG(pool).find(
+  const colorists = extractUsernameFromUserData(coloristsResults);
+
+  const coverArtistsResults = await new QueryPG(pool).find(
     getIssueWorkSelect,
     getIssueWorkCreditsQuery,
     [bookId, issueId, 'cover artist'],
     true
   );
+
+  const coverArtists = extractUsernameFromUserData(coverArtistsResults);
 
   res.status(200).json({
     status: 'success',
