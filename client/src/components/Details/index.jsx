@@ -57,7 +57,7 @@ const ExtraInfo = ({
         });
 
         // get the genres for this book and issue and set it to the genre list state
-        const getGenresRes = await getGenres(bookId);
+        const getGenresRes = await getGenres(urlSlug, bookId);
         const { genres } = getGenresRes.data;
         setGenreList(genres);
       } catch (err) {
@@ -84,13 +84,23 @@ const ExtraInfo = ({
         </div>
         <div className="view-whole-field">
           <h3 className="tertiary-header">Genres:</h3>
-          {isIssue ? (
-            <div>
-              {/* Shows a list of genres of the creators of the current comic */}
-            </div>
-          ) : (
-            <div>{/* Shows all the genres the work */}</div>
-          )}
+          {
+            // isIssue ? (
+            //   <div>
+            //     {/* Shows a list of genres of the creators of the current comic */}
+            //   </div>
+            // ) : (
+            //   <div>{/* Shows all the genres the work */}</div>
+            // )
+            console.log(genreList)
+          }
+          <ul className="genres">
+            {genreList.map((obj) => (
+              <li className="genre-item" key={obj.id}>
+                {obj.genre}
+              </li>
+            ))}
+          </ul>
         </div>
       </article>
     );

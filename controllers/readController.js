@@ -292,13 +292,16 @@ exports.getGenres = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
   const genres = await new QueryPG(pool).find(
-    'genre',
+    'id, genre',
     'genres WHERE book_id = ($1)',
     [bookId],
     true
   );
 
-  const formattedGenres = genres.map((genre) => genre.genre);
+  const formattedGenres = genres.map((obj) => ({
+    id: obj.id,
+    genre: obj.genre
+  }));
 
   // Get all genres
   res.status(200).json({

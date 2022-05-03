@@ -30,6 +30,18 @@
         font-weight: $normal;
     }
 
+    .genres {
+        display: flex;
+        list-style: none;
+        max-width: 450px;
+        margin: 0 auto;
+        justify-content: center;
+        flex-wrap: wrap;
+        .genre-item {
+            flex: 0 1 150px;
+        }
+    }
+
     .bg-overlay {
         background-position: center;
         background-repeat: no-repeat;

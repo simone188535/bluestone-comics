@@ -19,8 +19,8 @@ function getIssueWorkCredits(urlSlug, bookId, issueId) {
   );
 }
 
-function getGenres(bookId) {
-  return axios.get(`/api/v1/read/test-slug/${bookId}/87/genres`);
+function getGenres(urlSlug, bookId) {
+  return axios.get(`/api/v1/read/${urlSlug}/book/${bookId}/genres`);
 }
 
 export {
