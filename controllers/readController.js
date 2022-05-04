@@ -298,10 +298,7 @@ exports.getGenres = catchAsync(async (req, res, next) => {
     true
   );
 
-  const formattedGenres = genres.map((obj) => ({
-    id: obj.id,
-    genre: obj.genre
-  }));
+  const formattedGenres = genres.map((obj) => obj.genre);
 
   // Get all genres
   res.status(200).json({

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
 import { useParams, Link } from "react-router-dom";
 import {
   getBook,
@@ -84,20 +85,10 @@ const ExtraInfo = ({
         </div>
         <div className="view-whole-field">
           <h3 className="tertiary-header">Genres:</h3>
-          {
-            // isIssue ? (
-            //   <div>
-            //     {/* Shows a list of genres of the creators of the current comic */}
-            //   </div>
-            // ) : (
-            //   <div>{/* Shows all the genres the work */}</div>
-            // )
-            console.log(genreList)
-          }
           <ul className="genres">
-            {genreList.map((obj) => (
-              <li className="genre-item" key={obj.id}>
-                {obj.genre}
+            {genreList.map((genre) => (
+              <li className="genre-item" key={uuidv4()}>
+                {genre}
               </li>
             ))}
           </ul>

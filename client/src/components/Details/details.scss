@@ -26,19 +26,26 @@
 
     .tertiary-header {
         font-size: 1rem;
-        // margin-bottom: 25px;
         font-weight: $normal;
+        letter-spacing: 1px;
     }
 
     .genres {
         display: flex;
         list-style: none;
-        max-width: 450px;
+        max-width: 300px;
         margin: 0 auto;
         justify-content: center;
         flex-wrap: wrap;
+        color: #ccc;
+        text-transform: capitalize;
+        letter-spacing: 1.2px;
+
         .genre-item {
-            flex: 0 1 150px;
+            flex: 1 1 auto;
+            padding: 10px;
+            background: #222222;
+            margin: 10px;
         }
     }
 
@@ -134,6 +141,18 @@
 
     .mt-50 {
         margin-top: 50px;
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .details-page {
+        .genres {
+            max-width: 560px;
+            
+            .genre-item {
+                flex: 0 1 150px;
+            }
+        }
     }
 }
 
