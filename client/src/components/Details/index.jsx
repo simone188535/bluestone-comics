@@ -83,16 +83,6 @@ const ExtraInfo = ({
             </div>
           )}
         </div>
-        <div className="view-whole-field">
-          <h3 className="tertiary-header">Genres:</h3>
-          <ul className="genres">
-            {genreList.map((genre) => (
-              <li className="genre-item" key={uuidv4()}>
-                {genre}
-              </li>
-            ))}
-          </ul>
-        </div>
       </article>
     );
   };
@@ -135,6 +125,24 @@ const ExtraInfo = ({
     );
   };
 
+  const genres = () => {
+    const orderClass = isIssue ? "last-order" : "";
+    return (
+      <article className={`whole-panel ${orderClass}`}>
+        <div className="view-whole-field">
+          <h3 className="tertiary-header text-center">Genres:</h3>
+          <ul className="genres">
+            {genreList.map((genre) => (
+              <li className="genre-item" key={uuidv4()}>
+                {genre}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    );
+  };
+
   return (
     <section className="extra-info-container mt-50">
       <section className="secondary-info">
@@ -145,6 +153,7 @@ const ExtraInfo = ({
         <div className={`panel-container ${className}-view`}>
           {detailsFirstSection()}
           {detailsSecondSection()}
+          {genres()}
         </div>
       </section>
       {/* </section> */}

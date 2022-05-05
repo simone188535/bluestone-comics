@@ -42,10 +42,11 @@
         letter-spacing: 1.2px;
 
         .genre-item {
-            flex: 1 1 auto;
+            flex: 1 1 100%;
             padding: 10px;
             background: #222222;
             margin: 10px;
+            text-align: center;
         }
     }
 
@@ -102,24 +103,34 @@
     .secondary-info {
         .panel-container {
             display: flex;
+            &.whole-view, &.half-view {
+                .whole-panel {
+                    flex: 1 1 100%;
+                }
+            }
             &.whole-view {
                 flex-direction: column;
                 text-align: center;
                 .whole-panel {
                     .view-whole-field {
                         margin-bottom: 25px;
-                        .tertiary-header {
-                            margin-bottom: 10px;
-                        }
+                    }
+                    .tertiary-header {
+                        margin-bottom: 10px;
                     }
                 }
             }
             &.half-view {
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
                 .half-panel {
                     flex: 1 1 100%;
                     &:nth-child(1) {
                         order: 2;
+
+                        .tertiary-header {
+                            text-align: center;
+                        }
                     }
                     &:nth-child(2) {
                         order: 1;
@@ -132,8 +143,25 @@
                         align-items: baseline;
                         > * {
                             flex: 1 1 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        
+                        // .tertiary-header {
+                        //     margin-bottom: 0px;
+                        // }
+                    }
+                }
+                .whole-panel {
+                    .view-whole-field {
+                        .tertiary-header {
+                            margin-bottom: 10px;
                         }
                     }
+                }
+                .last-order {
+                    order: 3;
                 }
             }
         }
