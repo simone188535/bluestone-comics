@@ -256,6 +256,7 @@ const Works = ({ profilePageUser }) => {
           setFilteredResults([
             { artist },
             { colorist },
+            // eslint-disable-next-line camelcase
             { cover_Artist: coverArtist },
             { editor },
             { inker },

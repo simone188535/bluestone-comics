@@ -9,6 +9,7 @@ import {
   getIssueWorkCredits,
   getGenres,
 } from "../../services";
+import Accordion from "../CommonUI/Accordion";
 import "./details.scss";
 
 const ExtraInfo = ({
@@ -19,7 +20,7 @@ const ExtraInfo = ({
   totalIssuePages,
 }) => {
   const { urlSlug, bookId, issueNumber } = useParams();
-  const [workCredits, setWorkCredits] = useState({});
+  const [workCredits, setWorkCredits] = useState([]);
   const [genreList, setGenreList] = useState([]);
   // // const [errMsg, setErrMsg] = useState("");
   const className = isIssue ? "half" : "whole";
@@ -46,16 +47,17 @@ const ExtraInfo = ({
           coverArtists,
         } = appropriateWorkCreditsCall.data;
 
-        setWorkCredits({
-          writers,
-          artists,
-          editors,
-          inkers,
-          letterers,
-          pencillers,
-          colorists,
-          coverArtists,
-        });
+        setWorkCredits([
+          { writers },
+          { artists },
+          { editors },
+          { inkers },
+          { letterers },
+          { pencillers },
+          { colorists },
+          // eslint-disable-next-line camelcase
+          { cover_Artist: coverArtists },
+        ]);
 
         // get the genres for this book and issue and set it to the genre list state
         const getGenresRes = await getGenres(urlSlug, bookId);
@@ -67,19 +69,54 @@ const ExtraInfo = ({
     })();
   }, [bookId, isIssue, issueNumber, urlSlug]);
 
+  useEffect(() => {
+    // console.log(workCredits);
+  }, [workCredits]);
+
   const detailsFirstSection = () => {
+    const accreditedData = workCredits
+      // if the user has not works in the given a comic role, do not return the array
+      .filter((workCredit) => workCredit[Object.keys(workCredit)].length > 0)
+      .map((workCredit) => {
+        const workCreditKey = Object.keys(workCredit);
+        const workCreditAsString = workCreditKey[0];
+        const allWorkCreditValues = workCredit[workCreditKey];
+
+        //   // if object key contains _ remove it, make name uppercase and then add it to the array data
+        const header = `${workCreditAsString.replace("_", " ")} (${
+          allWorkCreditValues.length
+        })`;
+
+        // map through current allAccreditedWorkValues and return the html containing all the work details for this specific role
+        const description = allWorkCreditValues.map(
+          (worksUserParticipatedIn) => {
+            return {
+              id: `${workCreditAsString}-${uuidv4()}`,
+              listItem: `${worksUserParticipatedIn}`,
+            };
+          }
+        );
+
+        return {
+          id: `${workCreditAsString}-${uuidv4()}`,
+          header,
+          description,
+        };
+      });
+
     return (
       <article className={`${className}-panel`}>
         <div className="view-whole-field">
           <h3 className="tertiary-header">Accredited:</h3>
           {isIssue ? (
             <div>
-              {/* Shows a list of all the creators of the current comic */}
+              {/* Shows a list of all the creators of the current issue */}
             </div>
           ) : (
             <div>
-              {/* Shows all the creators who contributed to all the issues.
+              {/* Shows all the creators who contributed to atleast all on of the issues in a book.
           Uses the accredited component */}
+              <Accordion AccordianData={accreditedData} />
             </div>
           )}
         </div>
@@ -205,9 +242,9 @@ const Details = () => {
     })();
   }, [bookId, isIssue, issueNumber, urlSlug]);
 
-  useEffect(() => {
-    console.log(detailInfo);
-  }, [detailInfo]);
+  // useEffect(() => {
+  //   console.log(detailInfo);
+  // }, [detailInfo]);
 
   const displayPrimaryInfo = (classes) => {
     return (
