@@ -37,14 +37,14 @@
         margin: 0 auto;
         justify-content: center;
         flex-wrap: wrap;
-        color: #ccc;
+        color: $white-gray;
         text-transform: capitalize;
         letter-spacing: 1.2px;
 
         .genre-item {
             flex: 1 1 100%;
             padding: 10px;
-            background: #222222;
+            background: $kinda-gray-kinda-black;
             margin: 10px;
             text-align: center;
         }
@@ -120,7 +120,14 @@
                     }
 
                     .detail-accordian {
-                        margin: 0 auto;
+                        margin: 2rem auto 2.5rem;
+                        max-width: 500px;
+                        .accordian-header {
+                            color: $kinda-gray-kinda-black;
+                        }
+                        .accordian-icon {
+                            color: $mid-dark-gray;
+                        }
                         .dropdown .accordian-list .accordian-list-item {
                             text-align: left;
                         }
@@ -222,12 +229,6 @@
 
         .secondary-info {
             .panel-container {
-                &.whole-view {
-                    .detail-accordian {
-                        max-width: 80%;
-                    }
-                }
-
                 &.half-view {
                     flex-direction: row;
                     .half-panel {
