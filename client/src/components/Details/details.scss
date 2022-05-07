@@ -121,6 +121,10 @@
 
                     .detail-accordian {
                         margin: 0 auto;
+                        .dropdown .accordian-list .accordian-list-item {
+                            text-align: left;
+                        }
+
                     }
                 }
             }

@@ -118,7 +118,7 @@ const ExtraInfo = ({
           Uses the accredited component */}
               <Accordion
                 AccordianData={accreditedData}
-                className="detail-accordian"
+                className="accredited-works-accordian detail-accordian"
               />
             </div>
           )}

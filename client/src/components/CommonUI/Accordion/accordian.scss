@@ -16,8 +16,6 @@
         text-align: center;
         cursor: pointer;
         border: 1px solid $mid-gray;
-        // color: #325191;
-        // color: #273586;
         color: #3143A8;
         background-color: $white-light-grey;
         &:not(:last-child) {
@@ -55,6 +53,7 @@
 
         ul.accordian-list {
             list-style-type: none;
+            flex: 1;
             
             li {
                 margin-bottom: .5rem;
@@ -80,7 +79,7 @@
             padding: 0;
 
             & > li.accordian-list-item {
-                max-width: 150px;
+                word-break: break-word;
                 
                 .accredited-work-group {
                     list-style-type: none;
@@ -88,7 +87,6 @@
                     &-item-link {
                         color: $dark-violet-blue;
                         text-decoration: none;
-                        word-break: break-word;
 
                         &:hover {
                             color: $violet-blue;
@@ -109,8 +107,6 @@
                 grid-template-columns: repeat(2, 1fr);
 
                 & > li.accordian-list-item {
-                    max-width: none;
-                    width: 240px;
                     padding-left: 2rem;
                 }
             }
@@ -125,22 +121,7 @@
             .accordian-list {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 1.5rem 0rem;
-
-                & > li.accordian-list-item {
-                    width: 250px;
-                    padding-left: 1rem;
-                }
             }
-        }
-    }
-}
-
-@media only screen and (min-width: $large) {
-
-    .accredited-works-accordian {
-
-        .dropdown .accordian-list li.accordian-list-item {
-            width: 290px;
         }
     }
 }
