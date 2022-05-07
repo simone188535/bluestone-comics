@@ -120,10 +120,12 @@
                     }
 
                     .detail-accordian {
-                        margin: 2rem auto 2.5rem;
+                        margin: 2rem auto 4rem;
                         max-width: 500px;
                         .accordian-header {
                             color: $kinda-gray-kinda-black;
+                            font-size: 1.1rem;
+                            letter-spacing: 1.2px;
                         }
                         .accordian-icon {
                             color: $mid-dark-gray;
