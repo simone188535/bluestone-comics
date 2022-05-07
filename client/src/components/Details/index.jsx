@@ -116,7 +116,10 @@ const ExtraInfo = ({
             <div>
               {/* Shows all the creators who contributed to atleast all on of the issues in a book.
           Uses the accredited component */}
-              <Accordion AccordianData={accreditedData} />
+              <Accordion
+                AccordianData={accreditedData}
+                className="detail-accordian"
+              />
             </div>
           )}
         </div>

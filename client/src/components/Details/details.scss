@@ -118,6 +118,10 @@
                     .tertiary-header {
                         margin-bottom: 10px;
                     }
+
+                    .detail-accordian {
+                        margin: 0 auto;
+                    }
                 }
             }
             &.half-view {
@@ -214,6 +218,12 @@
 
         .secondary-info {
             .panel-container {
+                &.whole-view {
+                    .detail-accordian {
+                        max-width: 80%;
+                    }
+                }
+
                 &.half-view {
                     flex-direction: row;
                     .half-panel {
