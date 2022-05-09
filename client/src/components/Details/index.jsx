@@ -92,7 +92,10 @@ const ExtraInfo = ({
           (worksUserParticipatedIn) => {
             return {
               id: `${workCreditAsString}-${uuidv4()}`,
-              listItem: `${worksUserParticipatedIn}`,
+              listItem: `
+                <a class="desc-detail link" href="/profile/${worksUserParticipatedIn}">
+                  ${worksUserParticipatedIn}
+                </a>`,
             };
           }
         );
