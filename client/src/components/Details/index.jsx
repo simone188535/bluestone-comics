@@ -25,6 +25,14 @@ const ExtraInfo = ({
   // // const [errMsg, setErrMsg] = useState("");
   const className = isIssue ? "half" : "whole";
 
+  const filterOutEmptyWorkCreditsObj = () => {
+    return (
+      workCredits
+        // if the user has not works in the given a comic role, do not return the array
+        .filter((workCredit) => workCredit[Object.keys(workCredit)].length > 0)
+    );
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -74,39 +82,49 @@ const ExtraInfo = ({
   }, [workCredits]);
 
   const detailsFirstSection = () => {
-    const accreditedData = workCredits
-      // if the user has not works in the given a comic role, do not return the array
-      .filter((workCredit) => workCredit[Object.keys(workCredit)].length > 0)
-      .map((workCredit) => {
-        const workCreditKey = Object.keys(workCredit);
-        const workCreditAsString = workCreditKey[0];
-        const allWorkCreditValues = workCredit[workCreditKey];
+    const accreditedData = filterOutEmptyWorkCreditsObj().map((workCredit) => {
+      const workCreditKey = Object.keys(workCredit);
+      const workCreditAsString = workCreditKey[0];
+      const allWorkCreditValues = workCredit[workCreditKey];
 
-        //   // if object key contains _ remove it, make name uppercase and then add it to the array data
-        const header = `${workCreditAsString.replace("_", " ")} (${
-          allWorkCreditValues.length
-        })`;
+      //   // if object key contains _ remove it, make name uppercase and then add it to the array data
+      const header = `${workCreditAsString.replace("_", " ")} (${
+        allWorkCreditValues.length
+      })`;
 
-        // map through current allAccreditedWorkValues and return the html containing all the work details for this specific role
-        const description = allWorkCreditValues.map(
-          (worksUserParticipatedIn) => {
-            return {
-              id: `${workCreditAsString}-${uuidv4()}`,
-              listItem: `
+      // map through current allAccreditedWorkValues and return the html containing all the work details for this specific role
+      const description = allWorkCreditValues.map((worksUserParticipatedIn) => {
+        return {
+          id: `${workCreditAsString}-${uuidv4()}`,
+          listItem: `
                 <a class="desc-detail link" href="/profile/${worksUserParticipatedIn}">
                   ${worksUserParticipatedIn}
                 </a>`,
-            };
-          }
-        );
-
-        return {
-          id: `${workCreditAsString}-${uuidv4()}`,
-          header,
-          description,
         };
       });
 
+      return {
+        id: `${workCreditAsString}-${uuidv4()}`,
+        header,
+        description,
+      };
+    });
+
+    const accreditedIssues = () => {
+      // Reduce the time complexity of this. It is terrible
+      return filterOutEmptyWorkCreditsObj().map((workCredit) => {
+        const header = `${Object.keys(workCredit)[0].replace("_", " ")}`;
+        const creators = Object.values(workCredit).map((workCreditVal) => (
+          <li key={uuidv4()}>{workCreditVal}</li>
+        ));
+        return (
+          <React.Fragment key={uuidv4()}>
+            <h3>{header}</h3>
+            <ul>{creators}</ul>
+          </React.Fragment>
+        );
+      });
+    };
     return (
       <article className={`${className}-panel`}>
         <div className="view-whole-field">
@@ -114,6 +132,7 @@ const ExtraInfo = ({
           {isIssue ? (
             <div>
               {/* Shows a list of all the creators of the current issue */}
+              {accreditedIssues()}
             </div>
           ) : (
             <div>
