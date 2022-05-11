@@ -169,6 +169,33 @@
                         //     margin-bottom: 0px;
                         // }
                     }
+                    .view-whole-field {
+                        .accredited-issue {
+                            &-row {
+                                margin-bottom: 25px;
+                            }
+
+                            &-info {
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                            
+                                    .creator-header {
+                                        text-transform: capitalize;
+                                    }
+                                    .creator-list {
+                                        list-style-type: none;
+                                        &-item {
+                                            margin: 10px auto;
+                                        }
+                                    }
+                        //    .creator-list li{
+                        //         margin-bottom: 25px;
+                        //     }
+                            }
+                        }
+                    }
                 }
                 .whole-panel {
                     .view-whole-field {

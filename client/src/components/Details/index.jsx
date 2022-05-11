@@ -115,22 +115,29 @@ const ExtraInfo = ({
       return filterOutEmptyWorkCreditsObj().map((workCredit) => {
         const header = `${Object.keys(workCredit)[0].replace("_", " ")}`;
         const creators = Object.values(workCredit).map((workCreditVal) => (
-          <li key={uuidv4()}>{workCreditVal}</li>
+          <li key={uuidv4()} className="creator-list-item">
+            <Link
+              className="desc-detail link normal"
+              to={`/profile/${workCreditVal}`}
+            >
+              {workCreditVal}
+            </Link>
+          </li>
         ));
         return (
-          <React.Fragment key={uuidv4()}>
-            <h3>{header}</h3>
-            <ul>{creators}</ul>
-          </React.Fragment>
+          <div key={uuidv4()}>
+            <h3 className="tertiary-header creator-header">{header}</h3>
+            <ul className="creator-list">{creators}</ul>
+          </div>
         );
       });
     };
     return (
       <article className={`${className}-panel`}>
         <div className="view-whole-field">
-          <h3 className="tertiary-header">Accredited:</h3>
+          <h3 className="tertiary-header accredited-issue-row">Accredited:</h3>
           {isIssue ? (
-            <div>
+            <div className="accredited-issue-info">
               {/* Shows a list of all the creators of the current issue */}
               {accreditedIssues()}
             </div>
