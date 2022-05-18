@@ -4,7 +4,8 @@
     overflow: auto;
     background-color: $bg-color;
 
-    .primary-info, .secondary-info {
+    .primary-info,
+    .secondary-info {
         width: 90%;
         margin: 0 auto;
         max-width: 1010px;
@@ -18,7 +19,7 @@
         overflow-wrap: anywhere;
         font-weight: $semibold;
     }
-    
+
     .secondary-header {
         font-size: 1.7rem;
         margin-bottom: 25px;
@@ -59,7 +60,7 @@
         .blur {
             backdrop-filter: blur(8px); // This be the blur
             width: 100%;
-            overflow:auto;
+            overflow: auto;
             background-color: rgba(80, 80, 80, 0.5);
 
             .primary-info {
@@ -103,18 +104,23 @@
     .secondary-info {
         .panel-container {
             display: flex;
-            &.whole-view, &.half-view {
+
+            &.whole-view,
+            &.half-view {
                 .whole-panel {
                     flex: 1 1 100%;
                 }
             }
+
             &.whole-view {
                 flex-direction: column;
                 text-align: center;
+
                 .whole-panel {
                     .view-whole-field {
                         margin-bottom: 25px;
                     }
+
                     .tertiary-header {
                         margin-bottom: 10px;
                     }
@@ -122,14 +128,17 @@
                     .detail-accordian {
                         margin: 2rem auto 4rem;
                         max-width: 500px;
+
                         .accordian-header {
                             color: $kinda-gray-kinda-black;
                             font-size: 1.1rem;
                             letter-spacing: 1.2px;
                         }
+
                         .accordian-icon {
                             color: $mid-dark-gray;
                         }
+
                         .dropdown .accordian-list .accordian-list-item {
                             text-align: left;
                         }
@@ -137,38 +146,46 @@
                     }
                 }
             }
+
             &.half-view {
                 flex-direction: row;
                 flex-wrap: wrap;
+
                 .half-panel {
                     flex: 1 1 100%;
-                    &:nth-child(1) {
-                        order: 2;
 
+                    &:nth-child(3) {
+                        order: 2;
+                    }
+
+                    &:nth-child(2) {
+                        order: 3;
                         .tertiary-header {
                             text-align: center;
                         }
                     }
-                    &:nth-child(2) {
-                        order: 1;
-                    }
-                    .view-whole-field, .view-half-field {
+
+                    .view-whole-field,
+                    .view-half-field {
                         margin-bottom: 25px;
                     }
+
                     .view-half-field {
                         display: flex;
                         align-items: baseline;
-                        > * {
+
+                        >* {
                             flex: 1 1 50%;
                             display: flex;
                             justify-content: center;
                             align-items: center;
                         }
-                        
+
                         // .tertiary-header {
                         //     margin-bottom: 0px;
                         // }
                     }
+
                     .view-whole-field {
                         .accredited-issue {
                             &-row {
@@ -177,35 +194,54 @@
 
                             &-info {
                                 display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                align-items: center;
-                            
-                                    .creator-header {
-                                        text-transform: capitalize;
+                                align-items: flex-start;
+                                flex-wrap: wrap;
+                                max-width: 700px;
+                                margin: 0 auto;
+
+
+                                .creator-header {
+                                    text-transform: capitalize;
+                                }
+
+                                .creator-list {
+                                    list-style-type: none;
+
+                                    &-item {
+                                        margin: 10px auto;
+                                        text-align: center;
                                     }
-                                    .creator-list {
-                                        list-style-type: none;
-                                        &-item {
-                                            margin: 10px auto;
-                                        }
-                                    }
-                        //    .creator-list li{
-                        //         margin-bottom: 25px;
-                        //     }
+                                }
+
+                                .credit-section {
+                                    flex: 1 1 100%;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    word-break: break-word;
+                                }
                             }
                         }
                     }
                 }
+
                 .whole-panel {
                     .view-whole-field {
                         .tertiary-header {
                             margin-bottom: 10px;
                         }
                     }
+                    &.first-order {
+                        margin-bottom: 50px;
+                    }
                 }
+
+                .first-order {
+                    order: 1;
+                }
+
                 .last-order {
-                    order: 3;
+                    order: 4;
                 }
             }
         }
@@ -220,9 +256,24 @@
     .details-page {
         .genres {
             max-width: 560px;
-            
+
             .genre-item {
                 flex: 0 1 150px;
+            }
+        }
+
+        .secondary-info {
+            .panel-container {
+                &.half-view .half-panel .view-whole-field .accredited-issue {
+                    &-info {
+                        max-width: unset;
+                        margin: unset;
+
+                        .credit-section {
+                            flex: 1 1 50%;
+                        }
+                    }
+                }
             }
         }
     }
@@ -235,9 +286,10 @@
                 .primary-info {
                     flex-direction: row;
                     background-color: $bg-color;
-                } 
+                }
             }
         }
+
         .detail {
             &-img-container {
                 flex: 1 1 30%;
@@ -260,11 +312,14 @@
             .panel-container {
                 &.half-view {
                     flex-direction: row;
+
                     .half-panel {
                         flex: 1 1 50%;
-                        &:nth-child(1) {
-                            order: 1;
+
+                        &:nth-child(3) {
+                            order: 3;
                         }
+
                         &:nth-child(2) {
                             order: 2;
                         }
