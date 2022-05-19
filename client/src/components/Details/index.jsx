@@ -18,7 +18,6 @@ const ExtraInfo = ({
   dateCreated,
   lastUpdated,
   totalIssuePages,
-  status,
 }) => {
   const { urlSlug, bookId, issueNumber } = useParams();
   const [workCredits, setWorkCredits] = useState([]);
@@ -81,18 +80,6 @@ const ExtraInfo = ({
   useEffect(() => {
     // console.log(workCredits);
   }, [workCredits]);
-
-  const statusSection = () => {
-    const orderClass = isIssue ? "first-order" : "";
-    return (
-      <article className={`whole-panel ${orderClass}`}>
-        <div className="view-whole-field">
-          <h3 className="tertiary-header text-center">Status:</h3>
-          <div className="desc-detail normal text-center">{status}</div>
-        </div>
-      </article>
-    );
-  };
 
   const detailsFirstSection = () => {
     const accreditedData = filterOutEmptyWorkCreditsObj().map((workCredit) => {
@@ -233,7 +220,6 @@ const ExtraInfo = ({
           Extra Info
         </h2>
         <div className={`panel-container ${className}-view`}>
-          {statusSection()}
           {detailsFirstSection()}
           {detailsSecondSection()}
           {genres()}
@@ -361,7 +347,6 @@ const Details = () => {
         lastUpdated={detailInfo.lastUpdated}
         issueNum={detailInfo.issueNum}
         totalIssuePages={detailInfo.totalIssuePages}
-        status={detailInfo.status}
       />
       {/* Add comment section in the future */}
     </div>
