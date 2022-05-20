@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 import { useParams, Link } from "react-router-dom";
 import {
   getBook,
@@ -95,7 +95,7 @@ const ExtraInfo = ({
       // map through current allAccreditedWorkValues and return the html containing all the work details for this specific role
       const description = allWorkCreditValues.map((worksUserParticipatedIn) => {
         return {
-          id: `${workCreditAsString}-${uuidv4()}`,
+          id: `${workCreditAsString}-${nanoid()}`,
           listItem: `
                 <a class="desc-detail link" href="/profile/${worksUserParticipatedIn}">
                   ${worksUserParticipatedIn}
@@ -104,7 +104,7 @@ const ExtraInfo = ({
       });
 
       return {
-        id: `${workCreditAsString}-${uuidv4()}`,
+        id: `${workCreditAsString}-${nanoid()}`,
         header,
         description,
       };
@@ -115,7 +115,7 @@ const ExtraInfo = ({
       return filterOutEmptyWorkCreditsObj().map((workCredit) => {
         const header = `${Object.keys(workCredit)[0].replace("_", " ")}`;
         const creators = Object.values(workCredit).map((workCreditVal) => (
-          <li key={uuidv4()} className="creator-list-item">
+          <li key={nanoid()} className="creator-list-item">
             <Link
               className="desc-detail link normal"
               to={`/profile/${workCreditVal}`}
@@ -125,7 +125,7 @@ const ExtraInfo = ({
           </li>
         ));
         return (
-          <div key={uuidv4()} className="credit-section">
+          <div key={nanoid()} className="credit-section">
             <h3 className="tertiary-header creator-header">{header}</h3>
             <ul className="creator-list">{creators}</ul>
           </div>
@@ -202,7 +202,7 @@ const ExtraInfo = ({
           <h3 className="tertiary-header text-center">Genres:</h3>
           <ul className="genres">
             {genreList.map((genre) => (
-              <li className="genre-item" key={uuidv4()}>
+              <li className="genre-item" key={nanoid()}>
                 {genre}
               </li>
             ))}
