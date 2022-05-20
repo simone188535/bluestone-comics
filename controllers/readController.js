@@ -87,9 +87,19 @@ exports.getIssue = catchAsync(async (req, res, next) => {
 });
 
 exports.getIssues = catchAsync(async (req, res, next) => {
-  // Find issues of a book
+  // Find all issues of a book
+  const { bookId } = req.params;
+
+  const issues = await new QueryPG(pool).find(
+    'issues.title, issues.issue_number, issues.date_created',
+    'issues WHERE book_id = ($1) ORDER BY issue_number DESC',
+    [bookId],
+    true
+  );
+
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    issues
   });
 });
 
