@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getBook, getIssue } from "../../services";
 import ExtraInfo from "./ExtraInfo";
+import DisplayIssues from "./DisplayIssues";
 import "./details.scss";
 
 const Details = () => {
@@ -122,6 +123,7 @@ const Details = () => {
         issueNum={detailInfo.issueNum}
         totalIssuePages={detailInfo.totalIssuePages}
       />
+      <DisplayIssues isIssue={isIssue} bookId={bookId} urlSlug={urlSlug} />
       {/* Add comment section in the future */}
     </div>
   );

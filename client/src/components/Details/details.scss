@@ -14,7 +14,6 @@
     .primary-header {
         font-size: 2rem;
         color: $violet-blue;
-        // letter-spacing: .5px;
         font-weight: $normal;
         overflow-wrap: anywhere;
         font-weight: $semibold;
@@ -82,7 +81,6 @@
                 display: flex;
                 justify-content: center;
                 align-content: center;
-                // min-height: 450px;
                 padding: 20px;
             }
         }
@@ -94,9 +92,6 @@
             .extra-info-content-block {
                 display: flex;
                 justify-content: center;
-                // .extra-info {
-                //     flex: 0 1 80%;
-                // }
             }
         }
     }
@@ -180,10 +175,6 @@
                             justify-content: center;
                             align-items: center;
                         }
-
-                        // .tertiary-header {
-                        //     margin-bottom: 0px;
-                        // }
                     }
 
                     .view-whole-field {
@@ -231,14 +222,7 @@
                             margin-bottom: 10px;
                         }
                     }
-                    // &.first-order {
-                    //     margin-bottom: 50px;
-                    // }
                 }
-
-                // .first-order {
-                //     order: 1;
-                // }
 
                 .last-order {
                     order: 3;
@@ -249,6 +233,45 @@
 
     .mt-50 {
         margin-top: 50px;
+    }
+
+    .issues-list-table {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0 auto;
+
+        .row {
+            display: flex;
+            border-top: 2px dotted $mid-dark-gray;
+            border-bottom: 2px dotted $mid-dark-gray;
+            padding: 10px 0;
+
+            .col {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            .left-col, .right-col {
+                flex: 3;
+            }
+            .left-col {
+                font-style: italic;
+                // justify-content: end;
+            }
+
+            .mid-col {
+                flex: 1;
+                margin: 0 1rem;
+                // justify-content: center;
+            }
+
+            // .right-col {
+            //     justify-content: start;
+            // }
+        }
     }
 }
 
@@ -301,9 +324,6 @@
 
                 .extra-info-content-block {
                     justify-content: normal;
-                    // .extra-info {
-                    //     flex: 1 1 auto;
-                    // }
                 }
             }
         }

@@ -74,11 +74,11 @@ const ExtraInfo = ({
     })();
   }, [bookId, isIssue, issueNumber, urlSlug]);
 
-  useEffect(() => {
-    // console.log(workCredits);
-  }, [workCredits]);
+  //   useEffect(() => {
+  //     // console.log(workCredits);
+  //   }, [workCredits]);
 
-  const detailsFirstSection = () => {
+  const accredited = () => {
     const accreditedData = filterOutEmptyWorkCreditsObj().map((workCredit) => {
       const workCreditKey = Object.keys(workCredit);
       const workCreditAsString = workCreditKey[0];
@@ -153,7 +153,7 @@ const ExtraInfo = ({
     );
   };
 
-  const detailsSecondSection = () => {
+  const details = () => {
     return (
       <article className={`${className}-panel`}>
         {/* Only show these fields if this is an issue */}
@@ -212,17 +212,15 @@ const ExtraInfo = ({
   return (
     <section className="extra-info-container mt-50">
       <section className="secondary-info">
-        {/* <section className="details"> */}
         <h2 className="desc-detail bold text-center secondary-header">
           Extra Info
         </h2>
         <div className={`panel-container ${className}-view`}>
-          {detailsFirstSection()}
-          {detailsSecondSection()}
+          {accredited()}
+          {details()}
           {genres()}
         </div>
       </section>
-      {/* </section> */}
     </section>
   );
 };
