@@ -96,7 +96,24 @@
         }
     }
 
+
     .secondary-info {
+        &.action-btns-container {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+
+            &.action-btn-spacing {
+                margin: 20px auto 0;
+            }
+
+            .action-btn-link .action-btn {
+                min-width: 200px;
+                margin: .5rem;
+            }
+        }
+
         .panel-container {
             display: flex;
 
@@ -155,6 +172,7 @@
 
                     &:nth-child(1) {
                         order: 2;
+
                         .tertiary-header {
                             text-align: center;
                         }
@@ -254,9 +272,11 @@
                 text-align: center;
             }
 
-            .left-col, .right-col {
+            .left-col,
+            .right-col {
                 flex: 3;
             }
+
             .left-col {
                 font-style: italic;
                 // justify-content: end;
@@ -286,6 +306,18 @@
         }
 
         .secondary-info {
+            &.action-btns-container {
+                flex-direction: row;
+
+                &.action-btn-spacing {
+                    margin-top: 50px;
+                }
+
+                .action-btn-link .action-btn {
+                    margin: 1rem;
+                }
+            }
+
             .panel-container {
                 &.half-view .half-panel .view-whole-field .accredited-issue {
                     &-info {

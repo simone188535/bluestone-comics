@@ -93,6 +93,32 @@ const Details = () => {
     );
   };
 
+  const actionBtns = () => {
+    return (
+      <section className="action-btns-container action-btn-spacing secondary-info">
+        <Link to="#" className="action-btn-link">
+          <button
+            type="button"
+            className="action-btn sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
+            onClick={() => {}}
+          >
+            Read Now
+          </button>
+        </Link>
+
+        <Link to="#" className="action-btn-link">
+          <button
+            type="button"
+            className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
+            onClick={() => {}}
+          >
+            Edit
+          </button>
+        </Link>
+      </section>
+    );
+  };
+
   return (
     <div className="container-fluid details-page">
       <div
@@ -116,6 +142,7 @@ const Details = () => {
         </div>
       </div>
       {displayPrimaryInfo("show-at-lg")}
+      {actionBtns()}
       <ExtraInfo
         isIssue={isIssue}
         dateCreated={detailInfo.dateCreated}
