@@ -261,7 +261,11 @@
 
         .row {
             display: flex;
-            border-top: 2px dotted $white-gray;
+
+            &:first-child {
+                border-top: 2px dotted $white-gray;
+            }
+
             border-bottom: 2px dotted $white-gray;
             padding: 10px 0;
 

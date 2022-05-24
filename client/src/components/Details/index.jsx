@@ -3,12 +3,28 @@ import { useParams, Link } from "react-router-dom";
 import { getBook, getIssue } from "../../services";
 import ExtraInfo from "./ExtraInfo";
 import DisplayIssues from "./DisplayIssues";
+import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
 import "./details.scss";
 
 const Details = () => {
-  const { urlSlug, bookId, issueNumber } = useParams();
-  const [errMsg, setErrMsg] = useState("");
+  const [setErrMsg] = useState("");
   const [detailInfo, setDetailInfo] = useState({});
+  const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
+  const { urlSlug, bookId, issueNumber } = useParams();
+  const {
+    issueTitle,
+    bookTitle,
+    author,
+    status,
+    description,
+    coverPhoto,
+    title,
+    dateCreated,
+    lastUpdated,
+    issueNum,
+    totalIssuePages,
+    publisherId,
+  } = detailInfo;
 
   // If issueId does not exist then the provided URL and the data on this page is for a book.
   const isIssue = !!issueNumber;
@@ -47,7 +63,13 @@ const Details = () => {
         setErrMsg("Something went wrong! Please try again later.");
       }
     })();
-  }, [bookId, isIssue, issueNumber, urlSlug]);
+  }, [bookId, isIssue, issueNumber, setErrMsg, urlSlug]);
+
+  useEffect(() => {
+    if (publisherId) {
+      setBelongsToUserCB(publisherId);
+    }
+  }, [publisherId, setBelongsToUserCB]);
 
   // useEffect(() => {
   //   console.log(detailInfo);
@@ -60,32 +82,31 @@ const Details = () => {
         <section className="extra-info-content-block">
           <div className="extra-info">
             <h1 className="primary-header">
-              {isIssue ? detailInfo.issueTitle : detailInfo.bookTitle}
+              {isIssue ? issueTitle : bookTitle}
             </h1>
             <div className="desc-detail bold">
               Author:{" "}
-              <Link
-                to={`/profile/${detailInfo.author}`}
-                className="desc-detail link"
-              >
-                <span className="desc-detail normal">{detailInfo.author}</span>
+              <Link to={`/profile/${author}`} className="desc-detail link">
+                <span className="desc-detail normal">{author}</span>
               </Link>
             </div>
             {isIssue && (
               <div className="desc-detail bold">
                 Book:{" "}
-                <span className="desc-detail normal">
-                  {detailInfo.bookTitle}
-                </span>
+                <Link
+                  to={`/details/${urlSlug}/book/${bookId}`}
+                  className="desc-detail link"
+                >
+                  <span className="desc-detail normal">{bookTitle}</span>
+                </Link>
               </div>
             )}
             <div className="desc-detail bold">
-              Status:{" "}
-              <span className="desc-detail normal">{detailInfo.status}</span>
+              Status: <span className="desc-detail normal">{status}</span>
             </div>
             <p>
               <span className="desc-detail bold">Description:</span>{" "}
-              {detailInfo.description}
+              {description}
             </p>
           </div>
         </section>
@@ -106,15 +127,17 @@ const Details = () => {
           </button>
         </Link>
 
-        <Link to="#" className="action-btn-link">
-          <button
-            type="button"
-            className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
-            onClick={() => {}}
-          >
-            Edit
-          </button>
-        </Link>
+        {belongsToUser && (
+          <Link to="#" className="action-btn-link">
+            <button
+              type="button"
+              className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
+              onClick={() => {}}
+            >
+              Edit
+            </button>
+          </Link>
+        )}
       </section>
     );
   };
@@ -123,18 +146,14 @@ const Details = () => {
     <div className="container-fluid details-page">
       <div
         className="bg-overlay"
-        style={{ backgroundImage: `url(${detailInfo.coverPhoto})` }}
+        style={{ backgroundImage: `url(${coverPhoto})` }}
       >
         <div className="blur">
           <article className="primary-info">
             <section className="detail-img-container">
               {/* Use flex basis of 30%, flex-grow 1 and flex-shrink 1 */}
               {/* https://developer.mozilla.org/en-US/docs/Web/CSS/flex */}
-              <img
-                className="detail-img"
-                src={detailInfo.coverPhoto}
-                alt={detailInfo.title}
-              />
+              <img className="detail-img" src={coverPhoto} alt={title} />
               {/* maybe put rating stars here later */}
             </section>
             {displayPrimaryInfo("hide-until-lg")}
@@ -145,10 +164,10 @@ const Details = () => {
       {actionBtns()}
       <ExtraInfo
         isIssue={isIssue}
-        dateCreated={detailInfo.dateCreated}
-        lastUpdated={detailInfo.lastUpdated}
-        issueNum={detailInfo.issueNum}
-        totalIssuePages={detailInfo.totalIssuePages}
+        dateCreated={dateCreated}
+        lastUpdated={lastUpdated}
+        issueNum={issueNum}
+        totalIssuePages={totalIssuePages}
       />
       <DisplayIssues isIssue={isIssue} bookId={bookId} urlSlug={urlSlug} />
       {/* Add comment section in the future */}
