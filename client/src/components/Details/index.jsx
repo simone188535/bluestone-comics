@@ -119,15 +119,21 @@ const Details = () => {
   const actionBtns = () => {
     let workBelongsToUserOrIsLoggedIn = false;
     let btnText = null;
-    if (belongsToUser) {
-      // show Edit text
-      btnText = "Edit";
-      workBelongsToUserOrIsLoggedIn = true;
-    } else if (isLoggedIn) {
-      // show Bookmark text
-      btnText = "Bookmark";
+
+    /* 
+      If the work belongs to this user, show this button. If the user is logged in and 
+      the work belongs to them, the text should be 'Edit'. Does not belong to the current user, 
+      but they are logged in, show the 'Bookmark text'. else Do not show the button.
+    */
+    if (isLoggedIn) {
+      if (belongsToUser) {
+        btnText = "Edit";
+      } else {
+        btnText = "Bookmark";
+      }
       workBelongsToUserOrIsLoggedIn = true;
     }
+
     const editOrBookmarkBtn = () =>
       workBelongsToUserOrIsLoggedIn && (
         <Link to="#" className="action-btn-link">
