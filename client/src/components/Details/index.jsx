@@ -4,12 +4,14 @@ import { getBook, getIssue } from "../../services";
 import ExtraInfo from "./ExtraInfo";
 import DisplayIssues from "./DisplayIssues";
 import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
+import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import "./details.scss";
 
 const Details = () => {
   const [setErrMsg] = useState("");
   const [detailInfo, setDetailInfo] = useState({});
   const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
+  const [isLoggedIn] = useIsLoggedIn();
   const { urlSlug, bookId, issueNumber } = useParams();
   const {
     issueTitle,
@@ -115,6 +117,30 @@ const Details = () => {
   };
 
   const actionBtns = () => {
+    let workBelongsToUserOrIsLoggedIn = false;
+    let btnText = null;
+    if (belongsToUser) {
+      // show Edit text
+      btnText = "Edit";
+      workBelongsToUserOrIsLoggedIn = true;
+    } else if (isLoggedIn) {
+      // show Bookmark text
+      btnText = "Bookmark";
+      workBelongsToUserOrIsLoggedIn = true;
+    }
+    const editOrBookmarkBtn = () =>
+      workBelongsToUserOrIsLoggedIn && (
+        <Link to="#" className="action-btn-link">
+          <button
+            type="button"
+            className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
+            onClick={() => {}}
+          >
+            {btnText}
+          </button>
+        </Link>
+      );
+
     return (
       <section className="action-btns-container action-btn-spacing secondary-info">
         <Link to="#" className="action-btn-link">
@@ -127,17 +153,7 @@ const Details = () => {
           </button>
         </Link>
 
-        {belongsToUser && (
-          <Link to="#" className="action-btn-link">
-            <button
-              type="button"
-              className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
-              onClick={() => {}}
-            >
-              Edit
-            </button>
-          </Link>
-        )}
+        {editOrBookmarkBtn()}
       </section>
     );
   };
