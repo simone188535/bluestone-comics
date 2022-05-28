@@ -12,6 +12,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/userRoutes');
 const publishRoutes = require('./routes/Publish');
+const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const readRoutes = require('./routes/Read');
 const searchRoutes = require('./routes/searchRoutes');
 const subscribeRoutes = require('./routes/subscribeRoutes');
@@ -56,6 +57,7 @@ app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/publish', publishRoutes);
+app.use('/api/v1/bookmark', bookmarkRoutes);
 app.use('/api/v1/read', readRoutes);
 app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/subscribe', subscribeRoutes);
