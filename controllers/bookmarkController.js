@@ -19,11 +19,11 @@ exports.getBookmark = catchAsync(async (req, res) => {
 
 // get all bookmarks for current user
 exports.getAllBookmarks = catchAsync(async (req, res) => {
-  const { bookId } = req.params;
+  const { subscriberId } = req.params;
   const existingBookmarkByUser = await new QueryPG(pool).find(
-    'book_id, subscribed_id',
-    'bookmarks WHERE book_id = $1 AND subscribed_id = $2',
-    [bookId, res.locals.user.id],
+    'book_id',
+    'bookmarks WHERE subscribed_id = $1',
+    [subscriberId],
     true
   );
 
