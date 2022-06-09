@@ -5,9 +5,11 @@ const bookmarkRoutes = require('./bookmarkRoutes');
 const bookmarkController = require('../../controllers/bookmarkController');
 const authController = require('../../controllers/authController');
 
-router.route('/get-all/:subscriberId').get(bookmarkController.getAllBookmarks);
+router
+  .route('/get-all/subscriber/:subscriberId')
+  .get(bookmarkController.getAllBookmarks);
 
 router.use(authController.protect);
-router.use('/:bookId', bookmarkRoutes);
+router.use('/book/:bookId', bookmarkRoutes);
 
 module.exports = router;

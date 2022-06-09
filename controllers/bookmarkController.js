@@ -3,13 +3,17 @@ const AppError = require('../utils/appError');
 const QueryPG = require('../utils/QueryPGFeature');
 const pool = require('../db');
 
-exports.getBookmark = catchAsync(async (req, res) => {
+exports.getBookmark = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const existingBookmarkByUser = await new QueryPG(pool).find(
     'book_id, subscribed_id',
     'bookmarks WHERE book_id = $1 AND subscribed_id = $2',
     [bookId, res.locals.user.id]
   );
+
+  if (!existingBookmarkByUser) {
+    return next(new AppError(`This bookmark doesn't exist.`, 404));
+  }
 
   res.status(200).json({
     status: 'success',
@@ -58,4 +62,16 @@ exports.createBookmark = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteBookmark = catchAsync(async (req, res) => {});
+exports.deleteBookmark = catchAsync(async (req, res) => {
+  const { bookId } = req.params;
+
+  await new QueryPG(pool).delete(
+    'bookmarks',
+    'subscribed_id = ($1) AND book_id = ($2)',
+    [res.locals.user.id, bookId]
+  );
+
+  res.status(204).json({
+    status: 'success'
+  });
+});
