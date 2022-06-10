@@ -40,7 +40,7 @@ const Details = () => {
     setBookmarkLoading(false);
   }, [bookId, isBookmarkedCB]);
 
-  // API Call that get either the book or issue data an assigns it to the 
+  // API Call that get either the book or issue data an assigns it to the setDetailInfo state
   useEffect(() => {
     (async () => {
       try {
@@ -165,7 +165,7 @@ const Details = () => {
         btnOption = "edit";
       } else {
         btnOption = "bookmark";
-        // conditional based on whether the user is bookmarked
+        // text conditional based on whether the book is bookmarked (using isBookmarked) can be bookmark or removeBookmark
       }
       workBelongsToUserOrIsLoggedIn = true;
     }
@@ -178,9 +178,9 @@ const Details = () => {
             type="button"
             className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
             onClick={indexedOption?.onClick}
-            // disabled based off conditional based on whether the user is bookmarked
+            // disabled based off conditional based on whether the user is bookmarked (using boolean)
           >
-            {/* if isBookmarked is null show loading spinner */}
+            {/* if isBookmarked is loading show loading spinner, else show text */}
             {indexedOption.btnText}
           </button>
         </Link>
