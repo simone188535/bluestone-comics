@@ -5,12 +5,15 @@ import ExtraInfo from "./ExtraInfo";
 import DisplayIssues from "./DisplayIssues";
 import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
+import useIsBookmarked from "../../hooks/useIsBookmarked";
 import "./details.scss";
 
 const Details = () => {
   const [setErrMsg] = useState("");
   const [detailInfo, setDetailInfo] = useState({});
   const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
+  const [isBookmarked, isBookmarkedCB] = useIsBookmarked();
+  const [bookmarkLoading, setBookmarkLoading] = useState(true);
   const [isLoggedIn] = useIsLoggedIn();
   const { urlSlug, bookId, issueNumber } = useParams();
   const {
@@ -31,6 +34,13 @@ const Details = () => {
   // If issueId does not exist then the provided URL and the data on this page is for a book.
   const isIssue = !!issueNumber;
 
+  // create the initial values for whether the work is bookmarked and the loading state
+  useEffect(() => {
+    isBookmarkedCB(bookId);
+    setBookmarkLoading(false);
+  }, [bookId, isBookmarkedCB]);
+
+  // API Call that get either the book or issue data an assigns it to the 
   useEffect(() => {
     (async () => {
       try {
@@ -118,31 +128,60 @@ const Details = () => {
 
   const actionBtns = () => {
     let workBelongsToUserOrIsLoggedIn = false;
-    let btnText = null;
+    let btnOption = null;
 
     /* 
       If the work belongs to this user, show this button. If the user is logged in and 
       the work belongs to them, the text should be 'Edit'. Does not belong to the current user, 
       but they are logged in, show the 'Bookmark text'. else Do not show the button.
     */
+
+    const btnContent = {
+      edit: {
+        btnText: "Edit",
+        link: "#",
+      },
+      bookmark: {
+        btnText: "Bookmark",
+        async onClick() {
+          setBookmarkLoading(true);
+
+          setBookmarkLoading(false);
+        },
+        link: "#",
+      },
+      removeBookmark: {
+        btnText: "Remove Bookmark",
+        async onClick() {
+          setBookmarkLoading(true);
+
+          setBookmarkLoading(false);
+        },
+        link: "#",
+      },
+    };
     if (isLoggedIn) {
       if (belongsToUser) {
-        btnText = "Edit";
+        btnOption = "edit";
       } else {
-        btnText = "Bookmark";
+        btnOption = "bookmark";
+        // conditional based on whether the user is bookmarked
       }
       workBelongsToUserOrIsLoggedIn = true;
     }
 
+    const indexedOption = btnContent[btnOption];
     const editOrBookmarkBtn = () =>
       workBelongsToUserOrIsLoggedIn && (
-        <Link to="#" className="action-btn-link">
+        <Link to={indexedOption.link} className="action-btn-link">
           <button
             type="button"
             className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
-            onClick={() => {}}
+            onClick={indexedOption?.onClick}
+            // disabled based off conditional based on whether the user is bookmarked
           >
-            {btnText}
+            {/* if isBookmarked is null show loading spinner */}
+            {indexedOption.btnText}
           </button>
         </Link>
       );
