@@ -111,6 +111,13 @@
             .action-btn-link .action-btn {
                 min-width: 200px;
                 margin: .5rem;
+
+                .detail-spinner {
+                    height: 13px;
+                    .loading-circle {
+                        top: -5px;
+                    }
+                }
             }
         }
 

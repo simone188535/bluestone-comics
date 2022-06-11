@@ -6,6 +6,7 @@ import DisplayIssues from "./DisplayIssues";
 import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import useIsBookmarked from "../../hooks/useIsBookmarked";
+import LoadingSpinner from "../CommonUI/LoadingSpinner";
 import "./details.scss";
 
 const Details = () => {
@@ -38,6 +39,7 @@ const Details = () => {
   useEffect(() => {
     isBookmarkedCB(bookId);
     setBookmarkLoading(false);
+    setBookmarkLoading(true);
   }, [bookId, isBookmarkedCB]);
 
   // API Call that get either the book or issue data an assigns it to the setDetailInfo state
@@ -160,6 +162,7 @@ const Details = () => {
         link: "#",
       },
     };
+
     if (isLoggedIn) {
       if (belongsToUser) {
         btnOption = "edit";
@@ -181,7 +184,15 @@ const Details = () => {
             // disabled based off conditional based on whether the user is bookmarked (using boolean)
           >
             {/* if isBookmarked is loading show loading spinner, else show text */}
-            {indexedOption.btnText}
+            {bookmarkLoading ? (
+              <LoadingSpinner
+                loadingStatus={bookmarkLoading}
+                spinnerType="small"
+                className="detail-spinner"
+              />
+            ) : (
+              indexedOption.btnText
+            )}
           </button>
         </Link>
       );
