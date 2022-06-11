@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./loading-spinner.scss";
 
 // Inspired By this loading spinner: https://codepen.io/lucascalazans/pen/rerKwE
-const LoadingSpinner = ({ loadingStatus, className = "", spinnerType }) => {
+const LoadingSpinner = ({
+  loadingStatus,
+  className = "",
+  spinnerType = "large",
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   // TODO: this state is for a small loading spinner to be added later
   // const [typeOfSpinner, setTypeOfSpinner] = useState(spinnerType);
@@ -16,12 +20,12 @@ const LoadingSpinner = ({ loadingStatus, className = "", spinnerType }) => {
       <span className="loading-name">LOADING</span>
     ) : null;
 
-  const circleSize = spinnerType === "small" ? "small" : "";
+  const circleSize = spinnerType === "small" ? "small" : "large";
   return (
     isLoading && (
-      <div className={`loading-spinner ${className}`}>
+      <div className={`loading-spinner ${circleSize} ${className}`}>
         <div className="loading-content">
-          <div className={`loading-circle ${circleSize}`} />
+          <div className="loading-circle" />
           {hasLoadingText}
         </div>
       </div>
