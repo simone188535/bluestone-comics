@@ -146,7 +146,7 @@ const Details = () => {
         btnText: "Bookmark",
         async onClick() {
           setBookmarkLoading(true);
-
+          console.log('Bookmark');
           setBookmarkLoading(false);
         },
         link: "#",
@@ -155,7 +155,7 @@ const Details = () => {
         btnText: "Remove Bookmark",
         async onClick() {
           setBookmarkLoading(true);
-
+          console.log('Remove Bookmark');
           setBookmarkLoading(false);
         },
         link: "#",
@@ -166,8 +166,8 @@ const Details = () => {
       if (belongsToUser) {
         btnOption = "edit";
       } else {
-        btnOption = "bookmark";
-        // text conditional based on whether the book is bookmarked (using isBookmarked) can be bookmark or removeBookmark
+        // text conditional based on whether the book is bookmarked (using isBookmarked). can be bookmark or removeBookmark
+        btnOption = isBookmarked ? "removeBookmark" : "bookmark";
       }
       workBelongsToUserOrIsLoggedIn = true;
     }
