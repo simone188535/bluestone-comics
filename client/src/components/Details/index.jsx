@@ -39,7 +39,6 @@ const Details = () => {
   useEffect(() => {
     isBookmarkedCB(bookId);
     setBookmarkLoading(false);
-    setBookmarkLoading(true);
   }, [bookId, isBookmarkedCB]);
 
   // API Call that get either the book or issue data an assigns it to the setDetailInfo state
@@ -181,7 +180,7 @@ const Details = () => {
             type="button"
             className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
             onClick={indexedOption?.onClick}
-            // disabled based off conditional based on whether the user is bookmarked (using boolean)
+            disabled={bookmarkLoading}
           >
             {/* if isBookmarked is loading show loading spinner, else show text */}
             {bookmarkLoading ? (
