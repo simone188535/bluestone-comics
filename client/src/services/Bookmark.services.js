@@ -3,7 +3,7 @@ import { configObjects } from "../utils/configObjects";
 
 function createBookmark(bookId) {
   return axios.post(
-    `api/v1/bookmark/book/${bookId}/create`,
+    `/api/v1/bookmark/book/${bookId}/create`,
     {},
     configObjects()
   );

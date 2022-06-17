@@ -13,7 +13,9 @@ function useIsBookmarked() {
 
       try {
         const {
-          bookmark: { book_id: bookId },
+          data: {
+            bookmark: { book_id: bookId },
+          },
         } = await getBookmark(providedBookId);
 
         setIsBookmarked(!!bookId);

@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getBook, getIssue } from "../../services";
+import {
+  getBook,
+  getIssue,
+  createBookmark,
+  deleteBookmark,
+} from "../../services";
 import ExtraInfo from "./ExtraInfo";
 import DisplayIssues from "./DisplayIssues";
 import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
@@ -35,11 +40,17 @@ const Details = () => {
   // If issueId does not exist then the provided URL and the data on this page is for a book.
   const isIssue = !!issueNumber;
 
-  // create the initial values for whether the work is bookmarked and the loading state
   useEffect(() => {
-    isBookmarkedCB(bookId);
-    setBookmarkLoading(false);
-  }, [bookId, isBookmarkedCB]);
+    // create the initial values for whether the work is bookmarked and the loading state
+    (async () => {
+      try {
+        await isBookmarkedCB(bookId);
+      } catch (err) {
+        setErrMsg(true);
+      }
+      setBookmarkLoading(false);
+    })();
+  }, [bookId, isBookmarkedCB, setErrMsg]);
 
   // API Call that get either the book or issue data an assigns it to the setDetailInfo state
   useEffect(() => {
@@ -73,7 +84,8 @@ const Details = () => {
           totalIssuePages: totalIssueAssets || null,
         });
       } catch (err) {
-        setErrMsg("Something went wrong! Please try again later.");
+        // setErrMsg("Something went wrong! Please try again later.");
+        setErrMsg(true);
       }
     })();
   }, [bookId, isIssue, issueNumber, setErrMsg, urlSlug]);
@@ -146,7 +158,12 @@ const Details = () => {
         btnText: "Bookmark",
         async onClick() {
           setBookmarkLoading(true);
-          console.log('Bookmark');
+          try {
+            await createBookmark(bookId);
+            await isBookmarkedCB(bookId);
+          } catch (err) {
+            setErrMsg(true);
+          }
           setBookmarkLoading(false);
         },
         link: "#",
@@ -155,7 +172,12 @@ const Details = () => {
         btnText: "Remove Bookmark",
         async onClick() {
           setBookmarkLoading(true);
-          console.log('Remove Bookmark');
+          try {
+            await deleteBookmark(bookId);
+            await isBookmarkedCB(bookId);
+          } catch (err) {
+            setErrMsg(true);
+          }
           setBookmarkLoading(false);
         },
         link: "#",
