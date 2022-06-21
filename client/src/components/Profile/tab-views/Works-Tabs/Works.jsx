@@ -129,7 +129,7 @@ const BooksOrIssues = ({
             <img
               className="grid-image"
               src={currentResult.cover_photo}
-              alt={`${currentResult.title}`}
+              alt={`${currentResult.book_title}`}
             />
           </Link>
         </div>
