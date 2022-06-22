@@ -232,7 +232,7 @@ const Profile = () => {
                 <Works profilePageUser={profilePageUser} />
               </TabPanel>
               <TabPanel>
-                <Bookmarks profilePageUser={profilePageUser} />
+                <Bookmarks profilePageUserId={profilePageUser.id} />
               </TabPanel>
               <TabPanel>
                 <SubscribedOrSubscribedTo

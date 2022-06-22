@@ -113,7 +113,11 @@ const SubscribedOrSubscribedTo = ({ profilePageUserId, type }) => {
                   ? lastSubElementRef
                   : undefined
               }
-              key={type === "getAllSubscribers" ? subscriberId : publisherId}
+              key={
+                type === "getAllSubscribers"
+                  ? `subscriber-id-${subscriberId}`
+                  : `publisher-id-${publisherId}`
+              }
               className="subscription-list-item grid-list-item"
             >
               {" "}
