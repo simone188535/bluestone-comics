@@ -25,8 +25,8 @@ exports.getBookmark = catchAsync(async (req, res, next) => {
 exports.getAllBookmarks = catchAsync(async (req, res) => {
   const { subscriberId } = req.params;
   const existingBookmarkByUser = await new QueryPG(pool).find(
-    'books.id AS book_Id, users.username, publisher_id, title AS book_title, url_slug, cover_photo, description, status, removed, image_prefix_reference, books.last_updated, books.date_created',
-    'bookmarks INNER JOIN books ON bookmarks.book_id = books.id INNER JOIN users ON bookmarks.subscribed_id = users.id WHERE subscribed_id = $1',
+    'books.id AS book_Id, title AS book_title, url_slug, cover_photo, books.date_created',
+    'bookmarks INNER JOIN books ON bookmarks.book_id = books.id INNER JOIN users ON bookmarks.subscribed_id = users.id WHERE subscribed_id = $1 ORDER BY bookmarks.date_created DESC',
     [subscriberId],
     true
   );

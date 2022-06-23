@@ -146,12 +146,6 @@ const BooksOrIssues = ({
     );
   });
 
-  const showCurrentSearchPageDataIfPresent = filteredResults ? (
-    <ul className="display-work-grid col-4">{searchResults}</ul>
-  ) : (
-    <span>This user has not created this yet.</span>
-  );
-
   return (
     <>
       {
@@ -161,7 +155,7 @@ const BooksOrIssues = ({
         ) : (
           <>
             <div className="filtered-results">
-              {showCurrentSearchPageDataIfPresent}
+              <ul className="display-work-grid col-4">{searchResults}</ul>
             </div>
             <Pagination
               className="pagination-bar"
