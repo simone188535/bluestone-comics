@@ -14,7 +14,7 @@ const CONSTANTS = {
       MAX_FILE_SIZE_IN_BYTES: "2MB",
     },
   },
-  PAGINATION_LIMIT: 20,
+  PAGINATION_LIMIT: 12,
 };
 
 export default CONSTANTS;
