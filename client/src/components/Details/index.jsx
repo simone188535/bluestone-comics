@@ -152,7 +152,7 @@ const Details = () => {
     const btnContent = {
       edit: {
         btnText: "Edit",
-        link: "#",
+        link: "/edit-upload",
       },
       bookmark: {
         btnText: "Bookmark",
@@ -166,7 +166,6 @@ const Details = () => {
           }
           setBookmarkLoading(false);
         },
-        link: "#",
       },
       removeBookmark: {
         btnText: "Remove Bookmark",
@@ -180,7 +179,6 @@ const Details = () => {
           }
           setBookmarkLoading(false);
         },
-        link: "#",
       },
     };
 
@@ -197,7 +195,7 @@ const Details = () => {
     const indexedOption = btnContent[btnOption];
     const editOrBookmarkBtn = () =>
       workBelongsToUserOrIsLoggedIn && (
-        <Link to={indexedOption.link} className="action-btn-link">
+        <Link to={indexedOption?.link || "#"} className="action-btn-link">
           <button
             type="button"
             className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-blue"
