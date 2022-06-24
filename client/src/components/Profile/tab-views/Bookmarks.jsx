@@ -5,8 +5,9 @@ import { getAllBookmarks } from "../../../services";
 import LoadingSpinner from "../../CommonUI/LoadingSpinner";
 import Pagination from "../../CommonUI/Pagination";
 import useCurrentPageResults from "../../../hooks/useCurrentPageResults";
+import CONSTANTS from "../../../utils/Constants";
 
-const PAGINATION_LIMIT = 12;
+const { PAGINATION_LIMIT } = CONSTANTS;
 
 const Bookmarks = ({ profilePageUserId }) => {
   const [loadingStatus, setLoadingStatus] = useState(false);

@@ -8,7 +8,9 @@ import {
   imageWidthAndHeight,
   isFileSizeTooLarge,
 } from "../../../utils/FileReaderValidations";
-import IMAGE_UPLOAD_DIMENSIONS from "../../../utils/Constants";
+import CONSTANTS from "../../../utils/Constants";
+
+const { IMAGE_UPLOAD_DIMENSIONS } = CONSTANTS;
 
 const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
   // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order

@@ -12,8 +12,9 @@ import LoadingSpinner from "../../../CommonUI/LoadingSpinner";
 import ErrorMessage from "../../../CommonUI/ErrorMessage";
 import Accordion from "../../../CommonUI/Accordion";
 import "./works.scss";
+import CONSTANTS from "../../../../utils/Constants";
 
-const PAGINATION_LIMIT = 12;
+const { PAGINATION_LIMIT } = CONSTANTS;
 
 const Accredited = ({ filteredResults }) => {
   // TODO: reduce the time complexity of this function, it is 0(n) + 0(n^2). It can be more efficient

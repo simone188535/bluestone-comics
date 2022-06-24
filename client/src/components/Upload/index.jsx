@@ -24,8 +24,10 @@ import {
   // eslint-disable-next-line no-unused-vars
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
-import IMAGE_UPLOAD_DIMENSIONS from "../../utils/Constants";
+import CONSTANTS from "../../utils/Constants";
 import "./upload.scss";
+
+const { IMAGE_UPLOAD_DIMENSIONS } = CONSTANTS;
 
 const { WIDTH, HEIGHT, MAX_FILE_SIZE, MAX_FILE_SIZE_IN_BYTES } =
   IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL;
