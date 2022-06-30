@@ -25,53 +25,56 @@ const EditUpload = () => {
   const { urlSlug, bookId, issueNumber } = useParams();
 
   useEffect(() => {
-    if (currentUser) {
-      setCurrentUsername(currentUser.username);
-      setCurrentUserId(currentUser.id);
-      // setCurrentUploadInfo((prevState) => ({
-      //   ...prevState,
-      //   username: currentUser.username,
-      //   userId: currentUser.id,
-      // }));
+    (async () => {
+      if (currentUser) {
+        try {
+          setCurrentUsername(currentUser.username);
+          setCurrentUserId(currentUser.id);
+          // retrieve book data and set it to state
+          const {
+            data: {
+              book: {
+                title: bookTitle,
+                cover_photo: bookCoverPhoto,
+                description: bookDesc,
+              },
+              bookCoverPhotoFile,
+            },
+          } = await getUsersBook(urlSlug, bookId);
+          console.log(bookTitle);
 
-      //     (async () => {
-      //       try {
-      //         // retrieve book data and set it to state
-      //         const {
-      //           book: {
-      //             title: bookTitle,
-      //             cover_photo: bookCoverPhoto,
-      //             description: bookDesc,
-      //           },
-      //           bookCoverPhotoFile,
-      //         } = await getUsersBook(urlSlug, bookId);
+          setCurrentBookInfo((prevState) => ({
+            ...prevState,
+            bookTitle,
+            bookCoverPhoto,
+            bookDesc,
+            bookCoverPhotoFile,
+          }));
 
-      //         setCurrentBookInfo((prevState) => ({
-      //           ...prevState,
-      //           bookTitle,
-      //           bookCoverPhoto,
-      //           bookDesc,
-      //           bookCoverPhotoFile,
-      //         }));
+          // retrieve issue data and set it to state
+          const {
+            data: {
+              issue: {
+                title: issueTitle,
+                cover_photo: issueCoverPhoto,
+                description: issueDesc,
+              },
+              issueCoverPhotoFile,
+            },
+          } = await getUsersIssue(urlSlug, bookId, issueNumber);
 
-      //         // retrieve issue data and set it to state
-      //         const {
-      //           issue: { issueTitle, cover_photo: issueCoverPhoto, description },
-      //           issueCoverPhotoFile,
-      //         } = await getUsersIssue(urlSlug, bookId, issueNumber);
-
-      //         setCurrentIssueInfo((prevState) => ({
-      //           ...prevState,
-      //           issueTitle,
-      //           issueCoverPhoto,
-      //           description,
-      //           issueCoverPhotoFile,
-      //         }));
-      //       } catch (err) {
-      //         setErrorMessage(true);
-      //       }
-      //     })();
-    }
+          setCurrentIssueInfo((prevState) => ({
+            ...prevState,
+            issueTitle,
+            issueCoverPhoto,
+            issueDesc,
+            issueCoverPhotoFile,
+          }));
+        } catch (err) {
+          setErrorMessage(true);
+        }
+      }
+    })();
   }, [bookId, currentUser, issueNumber, urlSlug]);
 
   const toggleModal = () => setModalIsOpen(!modalIsOpen);
@@ -84,13 +87,13 @@ const EditUpload = () => {
     <UploadTemplate
       onSubmit={onSubmit}
       initialValues={{
-        bookTitle: "",
+        bookTitle: currentBookInfo.bookTitle || "",
         bookCoverPhoto: null,
-        bookDescription: "",
-        urlSlug: "",
-        issueTitle: "",
+        bookDescription: currentBookInfo.bookDesc || "",
+        urlSlug: urlSlug || "",
+        issueTitle: currentIssueInfo.issueTitle || "",
         issueCoverPhoto: null,
-        issueDescription: "",
+        issueDescription: currentIssueInfo.issueDesc || "",
         // bookTitle: currentBookInfo.bookTitle,
         // bookCoverPhoto: currentBookInfo.bookCoverPhotoFile,
         // bookDescription: currentBookInfo.bookDesc,
