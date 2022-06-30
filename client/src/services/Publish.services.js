@@ -63,6 +63,16 @@ function getUsersIssues(urlSlug, bookId, pageNumber) {
   );
 }
 
+// function getUsersIssues(urlSlug, bookId, pageNumber) {
+//   const config = configObjects();
+//   const appendedConfig = configPageNumber(config, pageNumber);
+
+//   return axios.get(
+//     `/api/v1/publish/${urlSlug}/book/${bookId}/issues`,
+//     appendedConfig()
+//   );
+// }
+
 export {
   createBook,
   getBookAndIssueImagePrefix,

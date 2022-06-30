@@ -97,7 +97,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
     );
   }
   // Get the book cover photo file in AWS associated with this book
-  const bookCoverPhoto = await AmazonSDKS3.getSingleS3Object(
+  const bookCoverPhotoFile = await AmazonSDKS3.getSingleS3Object(
     AmazonSDKS3.getS3FilePath(bookByUser.cover_photo)
   );
 
@@ -105,7 +105,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     book: bookByUser,
-    bookCoverPhoto
+    bookCoverPhotoFile
   });
 });
 
@@ -473,6 +473,10 @@ exports.getIssue = catchAsync(async (req, res, next) => {
     true
   );
 
+  const issueCoverPhotoFile = await AmazonSDKS3.getSingleS3Object(
+    AmazonSDKS3.getS3FilePath(issueOfBookByUser.cover_photo)
+  );
+
   // Get all AWS Objects for issue assets
   const issueAssetFiles = await Promise.all(
     issueAssets.map(
@@ -486,6 +490,7 @@ exports.getIssue = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     issue: issueOfBookByUser,
+    issueCoverPhotoFile,
     issueAssets,
     issueAssetFiles
   });

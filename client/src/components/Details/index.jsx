@@ -152,7 +152,9 @@ const Details = () => {
     const btnContent = {
       edit: {
         btnText: "Edit",
-        link: "/edit-upload",
+        link: `/edit-upload/${urlSlug}/book/${bookId}/issue/${
+          issueNumber || 1
+        }`,
       },
       bookmark: {
         btnText: "Bookmark",

@@ -38,7 +38,10 @@ const AllRoutes = () => {
       <Route path="/comic-list" component={ComicList} />
       <Route path="/news" component={News} />
       <ProtectedRoute path="/upload" component={Upload} />
-      <ProtectedRoute path="/edit-upload" component={EditUpload} />
+      <ProtectedRoute
+        path="/edit-upload/:urlSlug/book/:bookId/issue/:issueNumber"
+        component={EditUpload}
+      />
       <Route path="/sign-up" component={SignUp} />
       <Route path="/login" component={Login} />
       <Route path="/forgot-password" component={ForgotPassword} />
