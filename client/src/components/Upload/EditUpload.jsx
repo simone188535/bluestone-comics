@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
+import { Formik, Form } from "formik";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -8,6 +10,7 @@ import {
   // getBookAndIssueImagePrefix,
 } from "../../services";
 import UploadTemplate from "./UploadTemplate";
+import UploadTextField from "./UploadTextField";
 import "./upload.scss";
 
 const EditUpload = () => {
@@ -84,32 +87,56 @@ const EditUpload = () => {
   };
 
   return (
-    <UploadTemplate
-      onSubmit={onSubmit}
+    <Formik
       initialValues={{
-        bookTitle: currentBookInfo.bookTitle || "",
-        bookCoverPhoto: null,
-        bookDescription: currentBookInfo.bookDesc || "",
-        urlSlug: urlSlug || "",
-        issueTitle: currentIssueInfo.issueTitle || "",
-        issueCoverPhoto: null,
-        issueDescription: currentIssueInfo.issueDesc || "",
-        // bookTitle: currentBookInfo.bookTitle,
-        // bookCoverPhoto: currentBookInfo.bookCoverPhotoFile,
-        // bookDescription: currentBookInfo.bookDesc,
-        // urlSlug,
-        // issueTitle: currentIssueInfo.issueTitle,
-        // issueCoverPhoto: currentIssueInfo.issueCoverPhotoFile,
-        // issueDescription: currentIssueInfo.description,
-        genres: [],
-        issueAssets: [],
-        workCredits: [{ user: currentUserId, credits: [] }],
+        bookTitle: "",
       }}
-      currentUsername={currentUsername}
-      toggleModal={toggleModal}
-      uploadPercentage={uploadPercentage}
-      errorMessage={errorMessage}
-    />
+      validationSchema={Yup.object({
+        bookTitle: Yup.string().required("Book Title required!"),
+      })}
+      onSubmit={onSubmit}
+    >
+      <Form
+        className="bsc-form upload-form"
+        encType="multipart/form-data"
+        method="post"
+      >
+        <div className="upload-page container">
+          <div className="upload-form-container">
+            <UploadTextField name="bookTitle" placeholder="Book Title" />
+          </div>
+        </div>
+      </Form>
+    </Formik>
   );
+  //   return (
+  //     <UploadTemplate
+  //       onSubmit={onSubmit}
+  //       initialValues={{
+  //         bookTitle: currentBookInfo.bookTitle || "",
+  //         bookCoverPhoto: null,
+  //         bookDescription: currentBookInfo.bookDesc || "",
+  //         urlSlug: urlSlug || "",
+  //         issueTitle: currentIssueInfo.issueTitle || "",
+  //         issueCoverPhoto: null,
+  //         issueDescription: currentIssueInfo.issueDesc || "",
+  //         // bookTitle: currentBookInfo.bookTitle,
+  //         // bookCoverPhoto: currentBookInfo.bookCoverPhotoFile,
+  //         // bookDescription: currentBookInfo.bookDesc,
+  //         // urlSlug,
+  //         // issueTitle: currentIssueInfo.issueTitle,
+  //         // issueCoverPhoto: currentIssueInfo.issueCoverPhotoFile,
+  //         // issueDescription: currentIssueInfo.description,
+  //         genres: [],
+  //         issueAssets: [],
+  //         workCredits: [{ user: currentUserId, credits: [] }],
+  //       }}
+  //       currentUsername={currentUsername}
+  //       toggleModal={toggleModal}
+  //       uploadPercentage={uploadPercentage}
+  //       errorMessage={errorMessage}
+  //     />
+  //   );
+  // };
 };
 export default EditUpload;
