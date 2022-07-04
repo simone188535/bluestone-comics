@@ -103,7 +103,11 @@ const EditUpload = () => {
       >
         <div className="upload-page container">
           <div className="upload-form-container">
-            <UploadTextField name="bookTitle" placeholder="Book Title" />
+            <UploadTextField
+              name="bookTitle"
+              placeholder="Book Title"
+              // type="textarea"
+            />
           </div>
         </div>
       </Form>
