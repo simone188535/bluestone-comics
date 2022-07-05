@@ -24,6 +24,9 @@ const FileInputSingleUpload = ({ identifier, triggerText, className }) => {
         inputVal = null;
         setFile(null);
       }
+    } else {
+      // add file if it is found within the formik context
+      setFile(values[identifier]);
     }
   }, [identifier, values]);
 
@@ -54,7 +57,9 @@ const FileInputSingleUpload = ({ identifier, triggerText, className }) => {
         {triggerText}
       </label>
       <div className="file-input-single-upload-name">
-        {file ? file.name : "No file selected"}
+        {file
+          ? file.name || file?.Metadata.name || "unknown file name"
+          : "No file selected"}
       </div>
     </div>
   );

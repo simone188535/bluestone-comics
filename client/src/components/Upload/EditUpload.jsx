@@ -9,8 +9,9 @@ import {
   // createBook,
   // getBookAndIssueImagePrefix,
 } from "../../services";
-import UploadTemplate from "./UploadTemplate";
+// import UploadTemplate from "./UploadTemplate";
 import UploadTextField from "./UploadTextField";
+import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
 import "./upload.scss";
 
 const EditUpload = () => {
@@ -44,7 +45,7 @@ const EditUpload = () => {
               bookCoverPhotoFile,
             },
           } = await getUsersBook(urlSlug, bookId);
-          console.log(bookTitle);
+          // console.log(bookTitle);
 
           setCurrentBookInfo((prevState) => ({
             ...prevState,
@@ -86,15 +87,22 @@ const EditUpload = () => {
     setSubmitting(false);
   };
 
+  useEffect(() => {
+      console.log('currentBookInfo', currentBookInfo);
+      console.log('currentBookInfoFile', currentBookInfo?.bookCoverPhotoFile);
+  }, [currentBookInfo]);
+
   return (
     <Formik
       initialValues={{
         bookTitle: "",
+        bookCoverPhoto: currentBookInfo.bookCoverPhotoFile,
       }}
       validationSchema={Yup.object({
         bookTitle: Yup.string().required("Book Title required!"),
       })}
       onSubmit={onSubmit}
+      enableReinitialize
     >
       <Form
         className="bsc-form upload-form"
@@ -107,6 +115,10 @@ const EditUpload = () => {
               name="bookTitle"
               placeholder="Book Title"
               // type="textarea"
+            />
+            <FileInputSingleUpload
+              identifier="bookCoverPhoto"
+              triggerText="Select Book Thumbnail Photo"
             />
           </div>
         </div>
