@@ -107,7 +107,7 @@ const EditUpload = () => {
       initialValues={{
         bookTitle: "",
         bookCoverPhoto: currentBookInfo.bookCoverPhotoFile,
-        issueAssets: currentIssueInfo.issueAssets,
+        issueAssets: currentIssueInfo.issueAssetFiles,
       }}
       validationSchema={Yup.object({
         bookTitle: Yup.string().required("Book Title required!"),
