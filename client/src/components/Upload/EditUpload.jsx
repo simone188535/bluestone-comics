@@ -12,6 +12,7 @@ import {
 // import UploadTemplate from "./UploadTemplate";
 import UploadTextField from "./UploadTextField";
 import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
+import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
 import "./upload.scss";
 
 const EditUpload = () => {
@@ -64,6 +65,8 @@ const EditUpload = () => {
                 description: issueDesc,
               },
               issueCoverPhotoFile,
+              issueAssets,
+              issueAssetFiles,
             },
           } = await getUsersIssue(urlSlug, bookId, issueNumber);
 
@@ -73,6 +76,8 @@ const EditUpload = () => {
             issueCoverPhoto,
             issueDesc,
             issueCoverPhotoFile,
+            issueAssets,
+            issueAssetFiles,
           }));
         } catch (err) {
           setErrorMessage(true);
@@ -88,41 +93,49 @@ const EditUpload = () => {
   };
 
   useEffect(() => {
-      console.log('currentBookInfo', currentBookInfo);
-      console.log('currentBookInfoFile', currentBookInfo?.bookCoverPhotoFile);
+    console.log("currentBookInfo", currentBookInfo);
+    console.log("currentBookInfoFile", currentBookInfo?.bookCoverPhotoFile);
   }, [currentBookInfo]);
+
+  useEffect(() => {
+    console.log("currentIssueInfo", currentIssueInfo);
+    // console.log('currentIssueInfo', currentBookInfo?.bookCoverPhotoFile);
+  }, [currentIssueInfo]);
 
   return (
     <Formik
       initialValues={{
         bookTitle: "",
         bookCoverPhoto: currentBookInfo.bookCoverPhotoFile,
+        issueAssets: currentIssueInfo.issueAssets,
       }}
       validationSchema={Yup.object({
         bookTitle: Yup.string().required("Book Title required!"),
+        bookCoverPhoto: Yup.mixed().required("You need to provide a file"),
+        issueAssets: Yup.array().required("A Issue Assets are required!"),
       })}
       onSubmit={onSubmit}
       enableReinitialize
     >
-      <Form
-        className="bsc-form upload-form"
-        encType="multipart/form-data"
-        method="post"
-      >
-        <div className="upload-page container">
-          <div className="upload-form-container">
-            <UploadTextField
-              name="bookTitle"
-              placeholder="Book Title"
-              // type="textarea"
-            />
+      <div className="upload-page container">
+        <div className="upload-form-container">
+          <Form
+            className="bsc-form upload-form"
+            encType="multipart/form-data"
+            method="post"
+          >
+            <UploadTextField name="bookTitle" placeholder="Book Title" />
             <FileInputSingleUpload
               identifier="bookCoverPhoto"
               triggerText="Select Book Thumbnail Photo"
             />
-          </div>
+            <FileInputMultipleUpload
+              identifier="issueAssets"
+              dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files"
+            />
+          </Form>
         </div>
-      </Form>
+      </div>
     </Formik>
   );
   //   return (
