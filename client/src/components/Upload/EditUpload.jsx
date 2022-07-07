@@ -132,6 +132,7 @@ const EditUpload = () => {
             <FileInputMultipleUpload
               identifier="issueAssets"
               dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files"
+              hasPrevUploadedData
             />
           </Form>
         </div>

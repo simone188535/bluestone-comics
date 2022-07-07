@@ -71,10 +71,12 @@ const FileInputMultipleUpload = ({
   dropzoneInnerText,
   identifier,
   className,
+  hasPrevUploadedData = false,
 }) => {
   const [files, setFiles] = useState([]);
   const providedClassNames = className || "";
-  const { setFieldValue } = useFormikContext();
+  const [prevDataIsLoaded, setPrevDataIsLoaded] = useState(false);
+  const { setFieldValue, values } = useFormikContext();
 
   const getFilesFromEvent = async (event) => {
     const allFiles = [];
@@ -144,6 +146,29 @@ const FileInputMultipleUpload = ({
     // This sets the formik form value to the files hook in the parent component when the files hook is updated
     setFieldValue(identifier, files);
   }, [files, identifier, setFieldValue]);
+
+  useEffect(() => {
+    /*
+      only on initial render, if files have previously existing files have been uploaded (when values[identifier] is populated), 
+      add those files to the file state 
+    */
+    if (
+      values[identifier]?.length > 0 &&
+      !prevDataIsLoaded &&
+      hasPrevUploadedData
+    ) {
+      console.log(": )");
+      setFiles(values[identifier]);
+      setPrevDataIsLoaded(true);
+    }
+  }, [hasPrevUploadedData, identifier, prevDataIsLoaded, values]);
+
+  useEffect(() => {
+    console.log('files', files);
+  }, [files]);
+  useEffect(() => {
+    console.log('values', values[identifier]);
+  }, [identifier, values]);
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept: "image/*",
