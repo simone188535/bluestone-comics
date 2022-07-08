@@ -16,8 +16,8 @@ const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
   // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order
   const draggableImageThumbnails = files.map((uploadedFile, index) => (
     <Draggable
-      key={uploadedFile.name}
-      draggableId={uploadedFile.name}
+      key={uploadedFile?.name || uploadedFile?.Metadata?.name}
+      draggableId={uploadedFile.name || uploadedFile?.Metadata?.name}
       index={index}
     >
       {(provided) => (
@@ -39,6 +39,7 @@ const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
             alt={uploadedFile.name}
             src={uploadedFile.preview}
           />
+          {console.log(uploadedFile)}
         </li>
       )}
     </Draggable>
