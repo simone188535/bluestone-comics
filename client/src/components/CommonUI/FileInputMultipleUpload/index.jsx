@@ -39,7 +39,6 @@ const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
             alt={uploadedFile.name}
             src={uploadedFile.preview}
           />
-          {console.log(uploadedFile)}
         </li>
       )}
     </Draggable>
@@ -158,18 +157,17 @@ const FileInputMultipleUpload = ({
       !prevDataIsLoaded &&
       hasPrevUploadedData
     ) {
-      console.log(": )");
       setFiles(values[identifier]);
       setPrevDataIsLoaded(true);
     }
   }, [hasPrevUploadedData, identifier, prevDataIsLoaded, values]);
 
-  useEffect(() => {
-    console.log('files', files);
-  }, [files]);
-  useEffect(() => {
-    console.log('values', values[identifier]);
-  }, [identifier, values]);
+  // useEffect(() => {
+  //   console.log('files', files);
+  // }, [files]);
+  // useEffect(() => {
+  //   console.log('values', values[identifier]);
+  // }, [identifier, values]);
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept: "image/*",
