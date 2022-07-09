@@ -6,10 +6,16 @@ import { useFormikContext } from "formik";
     to assign values for validation. Search here for more details: https://stackoverflow.com/questions/56149756/reactjs-how-to-handle-image-file-upload-with-formik
 */
 
-const FileInputSingleUpload = ({ identifier, triggerText, className }) => {
+const FileInputSingleUpload = ({
+  identifier,
+  triggerText,
+  className,
+  hasPrevUploadedData = false,
+}) => {
   const ref = useRef();
   const [file, setFile] = useState(null);
   const { setFieldValue, values } = useFormikContext();
+  const [prevDataIsLoaded, setPrevDataIsLoaded] = useState(false);
   const providedClassNames = className || "";
 
   useEffect(() => {
@@ -29,6 +35,17 @@ const FileInputSingleUpload = ({ identifier, triggerText, className }) => {
       setFile(values[identifier]);
     }
   }, [identifier, values]);
+
+  useEffect(() => {
+    // if a file was previously uploaded, set the file upload value to the aws file string
+    if (!prevDataIsLoaded && hasPrevUploadedData && file?.prevFile) {
+      let currentInputValue = ref.current.value;
+      if (!currentInputValue) {
+        currentInputValue = file.prevFile;
+        setPrevDataIsLoaded(true);
+      }
+    }
+  }, [file, hasPrevUploadedData, prevDataIsLoaded]);
 
   const fileInputOnChange = (event) => {
     const uploadedFile = event.currentTarget.files[0];
@@ -57,9 +74,7 @@ const FileInputSingleUpload = ({ identifier, triggerText, className }) => {
         {triggerText}
       </label>
       <div className="file-input-single-upload-name">
-        {file
-          ? file.name || file?.Metadata.name || "unknown file name"
-          : "No file selected"}
+        {file ? file.name : "No file selected"}
       </div>
     </div>
   );

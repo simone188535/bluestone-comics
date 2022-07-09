@@ -94,7 +94,7 @@ const EditUpload = () => {
 
   useEffect(() => {
     console.log("currentBookInfo", currentBookInfo);
-    console.log("currentBookInfoFile", currentBookInfo?.bookCoverPhotoFile);
+    console.log("currentBookInfoFile", currentBookInfo?.bookCoverPhoto);
   }, [currentBookInfo]);
 
   useEffect(() => {
@@ -106,8 +106,11 @@ const EditUpload = () => {
     <Formik
       initialValues={{
         bookTitle: "",
-        bookCoverPhoto: currentBookInfo.bookCoverPhotoFile,
-        issueAssets: currentIssueInfo.issueAssetFiles,
+        bookCoverPhoto: {
+          name: currentBookInfo.bookCoverPhotoFile?.Metadata?.name,
+          prevFile: currentBookInfo.bookCoverPhoto,
+        },
+        issueAssets: currentIssueInfo.issueAssets,
       }}
       validationSchema={Yup.object({
         bookTitle: Yup.string().required("Book Title required!"),
@@ -128,6 +131,7 @@ const EditUpload = () => {
             <FileInputSingleUpload
               identifier="bookCoverPhoto"
               triggerText="Select Book Thumbnail Photo"
+              hasPrevUploadedData
             />
             <FileInputMultipleUpload
               identifier="issueAssets"
