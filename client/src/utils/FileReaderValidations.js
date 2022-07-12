@@ -2,7 +2,9 @@ export const imageWidthAndHeight = (providedFile) => {
   // take the given file (which should be an image) and return the width and height
 
   return new Promise((resolve) => {
-    const copiedFile = new Blob([providedFile], { type: providedFile.type });
+    const copiedFile = new File([providedFile], providedFile.name, {
+      type: providedFile.type,
+    });
     const image = new Image();
 
     image.onload = function () {
