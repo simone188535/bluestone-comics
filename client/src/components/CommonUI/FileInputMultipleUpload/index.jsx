@@ -78,8 +78,18 @@ const FileInputMultipleUpload = ({
   const [prevDataIsLoaded, setPrevDataIsLoaded] = useState(false);
   const { setFieldValue, values } = useFormikContext();
 
+  const fileDimensionsHelper = async (currentFile) => {
+    const providedFile = currentFile;
+    const imageDimensions = await imageWidthAndHeight(providedFile);
+    providedFile.width = imageDimensions.width;
+    providedFile.height = imageDimensions.height;
+
+    return providedFile;
+  };
+
   const getFilesFromEvent = async (event) => {
-    const allFiles = [];
+    // add width and height to all files before validating: https://stackoverflow.com/a/66254988/6195136
+    const promises = [];
     const fileList = event.target.files;
 
     for (let i = 0; i < fileList.length; i += 1) {
@@ -87,16 +97,14 @@ const FileInputMultipleUpload = ({
       // add width, and height properties to the current file
       if (file.width && file.height) return false;
 
-      const imageDimensions = imageWidthAndHeight(file);
-      file.width = imageDimensions.width;
-      file.height = imageDimensions.height;
-
-      allFiles.push(file);
+      const imageDimensions = fileDimensionsHelper(file);
+      promises.push(imageDimensions);
     }
 
-    await Promise.all(allFiles);
-    return allFiles;
+    const res = await Promise.all(promises);
+    return res;
   };
+
   const validator = (providedFile) => {
     const { WIDTH, HEIGHT, MAX_FILE_SIZE, MAX_FILE_SIZE_IN_BYTES } =
       IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE;
