@@ -94,7 +94,7 @@ const EditUpload = () => {
 
   useEffect(() => {
     console.log("currentBookInfo", currentBookInfo);
-    console.log("currentBookInfoFile", currentBookInfo?.bookCoverPhoto);
+    // console.log("currentBookInfoFile", currentBookInfo?.bookCoverPhoto);
   }, [currentBookInfo]);
 
   useEffect(() => {
@@ -111,6 +111,11 @@ const EditUpload = () => {
           prevFile: currentBookInfo.bookCoverPhoto,
         },
         issueAssets: currentIssueInfo.issueAssets,
+        // issueAssets: {
+        //   existingFiles: currentIssueInfo.issueAssets,
+        //   newFiles: [],
+        //   toRemoveFiles: [],
+        // },
       }}
       validationSchema={Yup.object({
         bookTitle: Yup.string().required("Book Title required!"),

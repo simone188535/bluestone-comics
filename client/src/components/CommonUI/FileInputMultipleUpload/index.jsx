@@ -14,35 +14,37 @@ const { IMAGE_UPLOAD_DIMENSIONS } = CONSTANTS;
 
 const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
   // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order
-  const draggableImageThumbnails = files.map((uploadedFile, index) => (
-    <Draggable
-      key={uploadedFile?.name || uploadedFile?.Metadata?.name}
-      draggableId={uploadedFile.name || uploadedFile?.Metadata?.name}
-      index={index}
-    >
-      {(provided) => (
-        <li
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <button
-            type="button"
-            className="thumb-nail-remove-icon"
-            onClick={(e) => removalOnClick(e, index)}
+  const draggableImageThumbnails = files.map(
+    ({ id, name, preview, photo_url: photoURL }, index) => (
+      <Draggable
+        key={name || `book-img-${id}`}
+        draggableId={name || `book-img-${id}`}
+        index={index}
+      >
+        {(provided) => (
+          <li
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
           >
-            <FontAwesomeIcon icon={faTimes} size="sm" />
-          </button>
-          <p className="thumb-nail-caption">Page {index + 1}</p>
-          <img
-            className="thumb-nail-img"
-            alt={uploadedFile.name}
-            src={uploadedFile.preview}
-          />
-        </li>
-      )}
-    </Draggable>
-  ));
+            <button
+              type="button"
+              className="thumb-nail-remove-icon"
+              onClick={(e) => removalOnClick(e, index)}
+            >
+              <FontAwesomeIcon icon={faTimes} size="sm" />
+            </button>
+            <p className="thumb-nail-caption">Page {index + 1}</p>
+            <img
+              className="thumb-nail-img"
+              alt={name}
+              src={preview || photoURL}
+            />
+          </li>
+        )}
+      </Draggable>
+    )
+  );
 
   if (!files.length) return <></>;
 
@@ -128,21 +130,23 @@ const FileInputMultipleUpload = ({
   };
   const onDrop = useCallback((acceptedFiles) => {
     /* 
-            the drag and drop functionality is modeled after this article: 
-            https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
-       */
+        the drag and drop functionality is modeled after this article: 
+        https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
+    */
 
-    // REJECT FILES THAT ARE NOT THE CORRECT SIZE
     acceptedFiles.forEach((acceptedFile) => {
       // rename inserted files (to avoid duplicate keys in list item): https://github.com/react-dropzone/react-dropzone/issues/583#issuecomment-496458314
       const renamedAcceptedFile = new File(
         [acceptedFile],
         `${new Date()}_${acceptedFile.name}`,
-        { type: acceptedFile.type }
+        {
+          type: acceptedFile.type,
+        }
       );
 
       Object.assign(renamedAcceptedFile, {
         preview: URL.createObjectURL(renamedAcceptedFile),
+        fileType: "newFile",
       });
 
       // this prevents the new files from overriding/erasing the old ones. Instead, new files are concatinated to the old ones in the hook
@@ -152,6 +156,7 @@ const FileInputMultipleUpload = ({
 
   useEffect(() => {
     // This sets the formik form value to the files hook in the parent component when the files hook is updated
+    console.log('files', files);
     setFieldValue(identifier, files);
   }, [files, identifier, setFieldValue]);
 
@@ -165,7 +170,12 @@ const FileInputMultipleUpload = ({
       !prevDataIsLoaded &&
       hasPrevUploadedData
     ) {
-      setFiles(values[identifier]);
+      const existingFiles = values[identifier].map((file) => {
+        const copiedFile = file;
+        copiedFile.fileType = "existingFile";
+        return copiedFile;
+      });
+      setFiles(existingFiles);
       setPrevDataIsLoaded(true);
     }
   }, [hasPrevUploadedData, identifier, prevDataIsLoaded, values]);
@@ -228,9 +238,9 @@ const FileInputMultipleUpload = ({
   };
   const removalOnClick = (e, currentElementIndex) => {
     /* 
-            This allows for deleteing images withing the preview section. 
-            When the user selects an image to remove.
-        */
+        This allows for deleting images withing the preview section. 
+        When the user selects an image to remove.
+    */
 
     // removes selected element from files hook and sets updated file to the hook
 
