@@ -353,7 +353,7 @@ const UploadTemplate = ({
             workCredits: Yup.array()
               .of(
                 Yup.object().shape({
-                  user: Yup.string().required("A User muct be selected"),
+                  user: Yup.string().required("A user must be selected"),
                   credits: Yup.array().required("Please select credits"),
                 })
               )
