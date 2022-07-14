@@ -144,6 +144,10 @@ const FileInputMultipleUpload = ({
         }
       );
 
+      /* 
+        this preview properties is added to make the file viewable as an image
+        the fileType property makes it  easier to identify in the backend
+       */
       Object.assign(renamedAcceptedFile, {
         preview: URL.createObjectURL(renamedAcceptedFile),
         fileType: "newFile",
@@ -156,7 +160,6 @@ const FileInputMultipleUpload = ({
 
   useEffect(() => {
     // This sets the formik form value to the files hook in the parent component when the files hook is updated
-    console.log('files', files);
     setFieldValue(identifier, files);
   }, [files, identifier, setFieldValue]);
 
@@ -170,6 +173,7 @@ const FileInputMultipleUpload = ({
       !prevDataIsLoaded &&
       hasPrevUploadedData
     ) {
+      // add a file type of existingFile to file state so that is easier to identify
       const existingFiles = values[identifier].map((file) => {
         const copiedFile = file;
         copiedFile.fileType = "existingFile";
@@ -179,13 +183,6 @@ const FileInputMultipleUpload = ({
       setPrevDataIsLoaded(true);
     }
   }, [hasPrevUploadedData, identifier, prevDataIsLoaded, values]);
-
-  // useEffect(() => {
-  //   console.log('files', files);
-  // }, [files]);
-  // useEffect(() => {
-  //   console.log('values', values[identifier]);
-  // }, [identifier, values]);
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept: "image/*",
@@ -225,7 +222,7 @@ const FileInputMultipleUpload = ({
         
         If you want to know how works, the drag and drop functionality was modelled after 
         this article: https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
-        */
+    */
 
     // Preventing errors from dragging a list item out of bounds of draggable
     if (!result.destination) return;
@@ -245,6 +242,20 @@ const FileInputMultipleUpload = ({
     // removes selected element from files hook and sets updated file to the hook
 
     const items = Array.from(files);
+
+    /* 
+      if the file was previously uploaded (in the Edit Upload flow) give it a fileType 
+      of fileToRemove, remove the it file state and save it the formik issueAssetsToBeRemoved field
+    */
+    const fileToDelete = items[currentElementIndex];
+    if (fileToDelete.fileType === "existingFile") {
+      fileToDelete.fileType = "fileToRemove";
+
+      setFieldValue("issueAssetsToBeRemoved", [
+        ...values.issueAssetsToBeRemoved,
+        fileToDelete,
+      ]);
+    }
 
     items.splice(currentElementIndex, 1);
 

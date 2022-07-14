@@ -111,6 +111,7 @@ const EditUpload = () => {
           prevFile: currentBookInfo.bookCoverPhoto,
         },
         issueAssets: currentIssueInfo.issueAssets,
+        issueAssetsToBeRemoved: [],
         // issueAssets: {
         //   existingFiles: currentIssueInfo.issueAssets,
         //   newFiles: [],
