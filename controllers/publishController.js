@@ -477,22 +477,22 @@ exports.getIssue = catchAsync(async (req, res, next) => {
     AmazonSDKS3.getS3FilePath(issueOfBookByUser.cover_photo)
   );
 
-  // Get all AWS Objects for issue assets
-  const issueAssetFiles = await Promise.all(
-    issueAssets.map(
-      async (issueAsset) =>
-        await AmazonSDKS3.getSingleS3Object(
-          AmazonSDKS3.getS3FilePath(issueAsset.photo_url)
-        )
-    )
-  );
+  // Get all AWS Objects (Files) for issue assets
+  // const issueAssetFiles = await Promise.all(
+  //   issueAssets.map(
+  //     async (issueAsset) =>
+  //       await AmazonSDKS3.getSingleS3Object(
+  //         AmazonSDKS3.getS3FilePath(issueAsset.photo_url)
+  //       )
+  //   )
+  // );
 
   res.status(200).json({
     status: 'success',
     issue: issueOfBookByUser,
     issueCoverPhotoFile,
-    issueAssets,
-    issueAssetFiles
+    issueAssets
+    // issueAssetFiles
   });
 });
 

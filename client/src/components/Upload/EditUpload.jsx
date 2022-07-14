@@ -66,7 +66,6 @@ const EditUpload = () => {
               },
               issueCoverPhotoFile,
               issueAssets,
-              issueAssetFiles,
             },
           } = await getUsersIssue(urlSlug, bookId, issueNumber);
 
@@ -77,7 +76,6 @@ const EditUpload = () => {
             issueDesc,
             issueCoverPhotoFile,
             issueAssets,
-            issueAssetFiles,
           }));
         } catch (err) {
           setErrorMessage(true);
