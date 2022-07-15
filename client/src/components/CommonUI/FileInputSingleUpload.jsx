@@ -74,7 +74,7 @@ const FileInputSingleUpload = ({
         {triggerText}
       </label>
       <div className="file-input-single-upload-name">
-        {file ? file.name : "No file selected"}
+        {file ? file.name || "Unknown File Name" : "No file selected"}
       </div>
     </div>
   );
