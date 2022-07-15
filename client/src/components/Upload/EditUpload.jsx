@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
-import { Formik, Form } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -13,6 +13,7 @@ import {
 import UploadTextField from "./UploadTextField";
 import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
 import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
+import WorkCredits from "./WorkCredits";
 import "./upload.scss";
 
 const EditUpload = () => {
@@ -100,6 +101,20 @@ const EditUpload = () => {
     // console.log('currentIssueInfo', currentBookInfo?.bookCoverPhotoFile);
   }, [currentIssueInfo]);
 
+  // const workCreditsErrorMessage = (WCErrors) =>
+  //   /*
+  //           This has been added because we are using a Field Array Validation within the WorkCredits Component.
+  //           In order to display the outer error message for this array of objects, this conditional is needed.
+  //           More info here: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
+  //       */
+  //   typeof WCErrors.workCredits === "string" ? (
+  //     <ErrorMessage
+  //       className="error-message error-text-color"
+  //       component="div"
+  //       name="workCredits"
+  //     />
+  //   ) : null;
+
   return (
     <Formik
       initialValues={{
@@ -111,6 +126,7 @@ const EditUpload = () => {
         bookCoverPhotoToBeRemoved: "",
         issueAssets: currentIssueInfo.issueAssets,
         issueAssetsToBeRemoved: [],
+        workCredits: [{ user: currentUserId, credits: [] }],
         // issueAssets: {
         //   existingFiles: currentIssueInfo.issueAssets,
         //   newFiles: [],
@@ -121,6 +137,14 @@ const EditUpload = () => {
         bookTitle: Yup.string().required("Book Title required!"),
         bookCoverPhoto: Yup.mixed().required("You need to provide a file"),
         issueAssets: Yup.array().required("A Issue Assets are required!"),
+        workCredits: Yup.array()
+          .of(
+            Yup.object().shape({
+              user: Yup.string().required("A user must be selected"),
+              credits: Yup.array().required("Please select credits"),
+            })
+          )
+          .required("Must have at least one work credit"),
       })}
       onSubmit={onSubmit}
       enableReinitialize
@@ -145,6 +169,12 @@ const EditUpload = () => {
               toBeRemovedField="issueAssetsToBeRemoved"
               hasPrevUploadedData
             />
+
+            {/* <WorkCredits
+              identifier="workCredits"
+              defaultSelectedUsernames={defaultSelectedUsernames}
+            /> */}
+            {/* {workCreditsErrorMessage(errors)} */}
           </Form>
         </div>
       </div>
