@@ -246,14 +246,14 @@ const FileInputMultipleUpload = ({
 
     /* 
       if the file was previously uploaded (in the Edit Upload flow) give it a fileType 
-      of fileToRemove, remove the it file state and save it the formik issueAssetsToBeRemoved field
+      of fileToRemove, remove the it file state and save it the formik toBeRemovedField field
     */
     const fileToDelete = items[currentElementIndex];
     if (fileToDelete.fileType === "existingFile") {
       fileToDelete.fileType = "fileToRemove";
 
       setFieldValue(toBeRemovedField, [
-        ...values.issueAssetsToBeRemoved,
+        ...values.toBeRemovedField,
         fileToDelete,
       ]);
     }
