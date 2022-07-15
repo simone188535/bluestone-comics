@@ -253,7 +253,7 @@ const FileInputMultipleUpload = ({
       fileToDelete.fileType = "fileToRemove";
 
       setFieldValue(toBeRemovedField, [
-        ...values.toBeRemovedField,
+        ...values[toBeRemovedField],
         fileToDelete,
       ]);
     }
