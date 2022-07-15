@@ -11,6 +11,7 @@ const FileInputSingleUpload = ({
   triggerText,
   className,
   hasPrevUploadedData = false,
+  toBeRemovedField = null,
 }) => {
   const ref = useRef();
   const [file, setFile] = useState(null);
@@ -49,6 +50,11 @@ const FileInputSingleUpload = ({
 
   const fileInputOnChange = (event) => {
     const uploadedFile = event.currentTarget.files[0];
+
+    // if prevUpload exists, save the removed file so that it can be deleted later
+    if (hasPrevUploadedData && toBeRemovedField) {
+      setFieldValue(toBeRemovedField, file.prevFile);
+    }
 
     // if a file is uploaded update the state. Conversely, if no file is uploaded, unset state
     if (uploadedFile) {

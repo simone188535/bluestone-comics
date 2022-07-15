@@ -108,6 +108,7 @@ const EditUpload = () => {
           name: currentBookInfo.bookCoverPhotoFile?.Metadata?.name,
           prevFile: currentBookInfo.bookCoverPhoto,
         },
+        bookCoverPhotoToBeRemoved: "",
         issueAssets: currentIssueInfo.issueAssets,
         issueAssetsToBeRemoved: [],
         // issueAssets: {
@@ -135,11 +136,13 @@ const EditUpload = () => {
             <FileInputSingleUpload
               identifier="bookCoverPhoto"
               triggerText="Select Book Thumbnail Photo"
+              toBeRemovedField="bookCoverPhotoToBeRemoved"
               hasPrevUploadedData
             />
             <FileInputMultipleUpload
               identifier="issueAssets"
               dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files"
+              toBeRemovedField="issueAssetsToBeRemoved"
               hasPrevUploadedData
             />
           </Form>

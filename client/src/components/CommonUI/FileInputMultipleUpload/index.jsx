@@ -74,6 +74,7 @@ const FileInputMultipleUpload = ({
   identifier,
   className,
   hasPrevUploadedData = false,
+  toBeRemovedField = null,
 }) => {
   const [files, setFiles] = useState([]);
   const providedClassNames = className || "";
@@ -251,7 +252,7 @@ const FileInputMultipleUpload = ({
     if (fileToDelete.fileType === "existingFile") {
       fileToDelete.fileType = "fileToRemove";
 
-      setFieldValue("issueAssetsToBeRemoved", [
+      setFieldValue(toBeRemovedField, [
         ...values.issueAssetsToBeRemoved,
         fileToDelete,
       ]);
