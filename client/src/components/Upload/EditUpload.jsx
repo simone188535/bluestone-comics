@@ -126,7 +126,9 @@ const EditUpload = () => {
         bookCoverPhotoToBeRemoved: "",
         issueAssets: currentIssueInfo.issueAssets,
         issueAssetsToBeRemoved: [],
-        workCredits: [{ user: currentUserId, credits: [] }],
+        workCredits: [
+          { user: currentUserId, username: currentUsername, credits: [] },
+        ],
         // issueAssets: {
         //   existingFiles: currentIssueInfo.issueAssets,
         //   newFiles: [],
@@ -141,6 +143,7 @@ const EditUpload = () => {
           .of(
             Yup.object().shape({
               user: Yup.string().required("A user must be selected"),
+              username: Yup.string().required("A user must have a username"),
               credits: Yup.array().required("Please select credits"),
             })
           )
