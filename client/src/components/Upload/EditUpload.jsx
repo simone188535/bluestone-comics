@@ -173,10 +173,7 @@ const EditUpload = () => {
               hasPrevUploadedData
             />
 
-            {/* <WorkCredits
-              identifier="workCredits"
-              defaultSelectedUsernames={defaultSelectedUsernames}
-            /> */}
+            <WorkCredits identifier="workCredits" />
             {/* {workCreditsErrorMessage(errors)} */}
           </Form>
         </div>

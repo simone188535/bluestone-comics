@@ -7,13 +7,7 @@ import Checkboxes from "../CommonUI/Checkboxes";
 import "./workCredits.scss";
 
 // THESE COMPONENTS WORKS WITH FORMIK.
-const RenderSearchList = ({
-  push,
-  apiResults,
-  addSelectedUsername,
-  selectedUsernames,
-  clearTextInput,
-}) => {
+const RenderSearchList = ({ push, apiResults, clearTextInput }) => {
   // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
   if (apiResults.length > 0) {
@@ -22,10 +16,8 @@ const RenderSearchList = ({
         {apiResults.map((item) => (
           <SearchedUsers
             key={item.id}
-            selectedListItem={item}
+            searchedListItem={item}
             push={push}
-            addSelectedUsername={addSelectedUsername}
-            selectedUsernames={selectedUsernames}
             clearTextInput={clearTextInput}
           />
         ))}
@@ -35,20 +27,21 @@ const RenderSearchList = ({
   return null;
 };
 
-const SearchedUsers = ({
-  selectedListItem,
-  push,
-  addSelectedUsername,
-  selectedUsernames,
-  clearTextInput,
-}) => {
+const SearchedUsers = ({ searchedListItem, push, clearTextInput }) => {
+  const { values } = useFormikContext();
   const addSelectedUser = (selListItem, pushMethod) => {
-    // if the Selected User was not already selected, push it to selectedUsernames state and formik workCredits value
-    if (!selectedUsernames.includes(selListItem.username)) {
-      // When a list item is selected, append it to the selectedUsernames state and push to formik workCredits array value
-
-      addSelectedUsername(selListItem.username);
-      pushMethod({ user: selListItem.id, credits: [] });
+    // if the Selected User was not already selected, push it to the formik workCredits value
+    if (
+      !values.workCredits.some(
+        ({ username }) => username === selListItem.username
+      )
+    ) {
+      // When a list item is selected, push it to formik workCredits array value
+      pushMethod({
+        user: selListItem.id,
+        username: selListItem.username,
+        credits: [],
+      });
       // clear out text search
       clearTextInput();
     } else {
@@ -61,56 +54,21 @@ const SearchedUsers = ({
       <button
         className="work-credit-search-list-item-btn"
         type="button"
-        onClick={() => addSelectedUser(selectedListItem, push)}
+        onClick={() => addSelectedUser(searchedListItem, push)}
       >
-        {selectedListItem.username}
+        {searchedListItem.username}
       </button>
     </li>
   );
 };
 
-const WorkCreditsFields = ({
-  identifier,
-  apiResults,
-  defaultSelectedUsernames,
-  clearTextInput,
-}) => {
-  const [selectedUsernames, setSelectedUsernames] = useState([]);
+const WorkCreditsFields = ({ identifier, apiResults, clearTextInput }) => {
   const { values } = useFormikContext();
 
-  const addSelectedUsername = (selectedListItemUsername) => {
-    // When a list item is selected, append it to the selectedUsernames state
-    const userNameToAddToSelectedUsernamesState = (selListItemUsername) => {
-      setSelectedUsernames((prevState) => [...prevState, selListItemUsername]);
-    };
-
-    // This conditional was added to allow an array of values to be added to the user state if needed
-    if (selectedListItemUsername instanceof Array) {
-      selectedListItemUsername.forEach((username) =>
-        userNameToAddToSelectedUsernamesState(username)
-      );
-    } else {
-      userNameToAddToSelectedUsernamesState(selectedListItemUsername);
-    }
-  };
-
   const removeSelectedUser = (remove, index) => {
-    // When the remove button is selected, remove it to the selectedUsernames state (using the index), and remove from formik
+    // When the remove button is selected (using the index), remove it from formik
     remove(index);
-    setSelectedUsernames((prevState) =>
-      prevState.filter((username, i) => i !== index)
-    );
   };
-
-  useEffect(() => {
-    /* 
-                This adds an inital/default value to the work credits array. If the defaultSelectedUsernames prop is populated
-                it is added to the state. This prevents the user from having to search their own username when adding work credits. 
-            */
-    if (defaultSelectedUsernames) {
-      addSelectedUsername(defaultSelectedUsernames);
-    }
-  }, [defaultSelectedUsernames]);
 
   return (
     <FieldArray name={identifier}>
@@ -120,25 +78,23 @@ const WorkCreditsFields = ({
             <RenderSearchList
               apiResults={apiResults}
               push={push}
-              addSelectedUsername={addSelectedUsername}
-              selectedUsernames={selectedUsernames}
               clearTextInput={clearTextInput}
             />
           </>
-          {values.workCredits.map((p, index) => {
-            // console.log('ppppppp', p);
+          {values.workCredits.map((credit, index) => {
+            // console.log('credit', credit);
             return (
               <div
-                key={p.user}
+                key={credit.user}
                 className="work-credit-selected-search-list-item"
               >
-                <div className="username">{selectedUsernames[index]}</div>
+                <div className="username">{credit.username}</div>
 
                 {/* This input contains the users ID */}
                 <Field
                   className="user-input"
                   name={`workCredits[${index}].user`}
-                  value={p.user}
+                  value={credit.user}
                 />
                 <ErrorMessage
                   className="error-message error-text-color wc-error"
@@ -192,7 +148,7 @@ const WorkCreditsFields = ({
 // https://www.youtube.com/results?search_query=autocomplete+search+bar+react
 // https://codeytek.com/live-search-search-react-live-search-in-react-axios-autocomplete-pagination/
 // https://stackoverflow.com/questions/41074622/save-array-of-objects-in-state-reactjs
-const WorkCredits = ({ identifier, defaultSelectedUsernames }) => {
+const WorkCredits = ({ identifier }) => {
   const [textSearch, setTextSearch] = useState("");
   const [APIResults, setAPIResults] = useState([]);
 
@@ -245,7 +201,6 @@ const WorkCredits = ({ identifier, defaultSelectedUsernames }) => {
         <WorkCreditsFields
           identifier={identifier}
           apiResults={APIResults}
-          defaultSelectedUsernames={defaultSelectedUsernames}
           clearTextInput={clearTextInput}
         />
       </div>
