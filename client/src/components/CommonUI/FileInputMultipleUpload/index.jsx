@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useFormikContext } from "formik";
+import { useFormikContext, ErrorMessage } from "formik";
 import {
   imageWidthAndHeight,
   isFileSizeTooLarge,
@@ -79,7 +79,7 @@ const FileInputMultipleUpload = ({
   const [files, setFiles] = useState([]);
   const providedClassNames = className || "";
   const [prevDataIsLoaded, setPrevDataIsLoaded] = useState(false);
-  const { setFieldValue, values } = useFormikContext();
+  const { setFieldValue, values, errors: formikErrors } = useFormikContext();
 
   const fileDimensionsHelper = async (currentFile) => {
     const providedFile = currentFile;
@@ -264,6 +264,33 @@ const FileInputMultipleUpload = ({
     e.stopPropagation();
   };
 
+  const multiFileUploadErrorMessage = () => {
+    /*
+            This has been added so that only a single message will be shown in FileInputMultipleUpload at all times.
+            Even when an array of error are show (when a multiple uploaded files fail validation)
+        */
+    let FileInputMultipleUploadErrorMsg;
+
+    if (typeof formikErrors[identifier] === "string") {
+      FileInputMultipleUploadErrorMsg = (
+        <ErrorMessage
+          className="error-message error-text-color"
+          component="div"
+          name="issueAssets"
+        />
+      );
+    } else if (Array.isArray(formikErrors[identifier])) {
+      FileInputMultipleUploadErrorMsg = (
+        <div className="error-message error-text-color">
+          {formikErrors[identifier][0]}
+        </div>
+      );
+    } else {
+      FileInputMultipleUploadErrorMsg = null;
+    }
+    return FileInputMultipleUploadErrorMsg;
+  };
+
   return (
     <>
       <div
@@ -281,6 +308,7 @@ const FileInputMultipleUpload = ({
           removalOnClick={removalOnClick}
         />
       </div>
+      <div>{multiFileUploadErrorMessage()}</div>
     </>
   );
 };
