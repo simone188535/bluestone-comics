@@ -7,6 +7,7 @@ import Checkboxes from "../CommonUI/Checkboxes";
 import "./workCredits.scss";
 
 // THESE COMPONENTS WORKS WITH FORMIK.
+
 const RenderSearchList = ({ push, apiResults, clearTextInput }) => {
   // Map though APIResults state and iteratively display list items if they exist OR return nothing
 
@@ -71,76 +72,79 @@ const WorkCreditsFields = ({ identifier, apiResults, clearTextInput }) => {
   };
 
   return (
-    <FieldArray name={identifier}>
-      {({ push, remove }) => (
-        <div>
-          <>
-            <RenderSearchList
-              apiResults={apiResults}
-              push={push}
-              clearTextInput={clearTextInput}
-            />
-          </>
-          {values.workCredits.map((credit, index) => {
-            // console.log('credit', credit);
-            return (
-              <div
-                key={credit.user}
-                className="work-credit-selected-search-list-item"
-              >
-                <div className="username">{credit.username}</div>
-
-                {/* This input contains the users ID */}
-                <Field
-                  className="user-input"
-                  name={`workCredits[${index}].user`}
-                  value={credit.user}
-                />
-                <ErrorMessage
-                  className="error-message error-text-color wc-error"
-                  component="div"
-                  name={`workCredits[${index}].user`}
-                />
-                <div className="info-head">
-                  While creating this work, this user fulfilled the role(s) of:
-                  {` `}
-                </div>
-                <ul className="work-credits-checkbox-section">
-                  <Checkboxes
-                    identifier={`workCredits[${index}].credits`}
-                    type="multiple"
-                    wrapperElement="li"
-                    checkboxValue={[
-                      { name: "Writer" },
-                      { name: "Artist" },
-                      { name: "Editor" },
-                      { name: "Inker" },
-                      { name: "Letterer" },
-                      { name: "Penciller" },
-                      { name: "Colorist" },
-                      { name: "Cover Artist" },
-                    ]}
-                  />
-                </ul>
-                <ErrorMessage
-                  className="error-message error-text-color wc-error"
-                  component="div"
-                  name={`workCredits[${index}].credits`}
-                />
-
-                <button
-                  type="button"
-                  onClick={() => removeSelectedUser(remove, index)}
-                  className="delete-work-credits-button"
+    <>
+      <FieldArray name={identifier}>
+        {({ push, remove }) => (
+          <div>
+            <>
+              <RenderSearchList
+                apiResults={apiResults}
+                push={push}
+                clearTextInput={clearTextInput}
+              />
+            </>
+            {values.workCredits.map((credit, index) => {
+              // console.log('credit', credit);
+              return (
+                <div
+                  key={credit.user}
+                  className="work-credit-selected-search-list-item"
                 >
-                  <FontAwesomeIcon icon={faTimes} size="2x" />
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </FieldArray>
+                  <div className="username">{credit.username}</div>
+
+                  {/* This input contains the users ID */}
+                  <Field
+                    className="user-input"
+                    name={`workCredits[${index}].user`}
+                    value={credit.user}
+                  />
+                  <ErrorMessage
+                    className="error-message error-text-color wc-error"
+                    component="div"
+                    name={`workCredits[${index}].user`}
+                  />
+                  <div className="info-head">
+                    While creating this work, this user fulfilled the role(s)
+                    of:
+                    {` `}
+                  </div>
+                  <ul className="work-credits-checkbox-section">
+                    <Checkboxes
+                      identifier={`workCredits[${index}].credits`}
+                      type="multiple"
+                      wrapperElement="li"
+                      checkboxValue={[
+                        { name: "Writer" },
+                        { name: "Artist" },
+                        { name: "Editor" },
+                        { name: "Inker" },
+                        { name: "Letterer" },
+                        { name: "Penciller" },
+                        { name: "Colorist" },
+                        { name: "Cover Artist" },
+                      ]}
+                    />
+                  </ul>
+                  <ErrorMessage
+                    className="error-message error-text-color wc-error"
+                    component="div"
+                    name={`workCredits[${index}].credits`}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => removeSelectedUser(remove, index)}
+                    className="delete-work-credits-button"
+                  >
+                    <FontAwesomeIcon icon={faTimes} size="2x" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </FieldArray>
+    </>
   );
 };
 
@@ -151,6 +155,7 @@ const WorkCreditsFields = ({ identifier, apiResults, clearTextInput }) => {
 const WorkCredits = ({ identifier }) => {
   const [textSearch, setTextSearch] = useState("");
   const [APIResults, setAPIResults] = useState([]);
+  const { errors } = useFormikContext();
 
   useEffect(() => {
     const searchResults = async () => {
@@ -185,6 +190,21 @@ const WorkCredits = ({ identifier }) => {
     setTextSearch("");
   };
 
+  const workCreditsErrorMessage = () => {
+    /*
+            This has been added because we are using a Field Array Validation within the WorkCredits Component.
+            In order to display the outer error message for this array of objects, this conditional is needed.
+            More info here: https://formik.org/docs/api/fieldarray#fieldarray-validation-gotchas
+        */
+    return typeof errors[identifier] === "string" ? (
+      <ErrorMessage
+        className="error-message error-text-color"
+        component="div"
+        name={identifier}
+      />
+    ) : null;
+  };
+
   return (
     <div className="work-credits">
       <div className="work-credits-search-container">
@@ -204,6 +224,7 @@ const WorkCredits = ({ identifier }) => {
           clearTextInput={clearTextInput}
         />
       </div>
+      {workCreditsErrorMessage()}
     </div>
   );
 };
@@ -218,7 +239,7 @@ export default memo(WorkCredits);
     1. In its most basic form, It can be used like this: 
     (Assuming the formik initial value is this/is not populated with data: 
         initialValues={{
-        workCredits: [{ user: '', credits: [] }]
+        workCredits: [{ user: '', username: '',  credits: [] }]
     }})
     <WorkCredits identifier="workCredits"  />
 
@@ -227,13 +248,13 @@ export default memo(WorkCredits);
     
     (Assuming the formik initial value is this/ is populated with data: 
         initialValues={{
-            workCredits: [{ user: USER_ID, credits: ['horror', 'comedy'] }]
+            workCredits: [{ user: USER_ID,  username: 'USERNAME', credits: ['horror', 'comedy'] }]
         }}
     )
     <WorkCredits identifier="workCredits" defaultSelectedUsernames={defaultSelectedUsernames} />
 
     the defaultSelectedUsernames prop contains usernames and is typically connected to the state
     in the parent component. It is not added to the formik data 
-    (like these:  workCredits: [{ user: '', credits: [] }]) because it is not needed it the backend.
+    (like these:  workCredits: [{ user: '',  username: '', credits: [] }]) because it is not needed it the backend.
     It is purely cosmetic so that the user can see the username.
 */
