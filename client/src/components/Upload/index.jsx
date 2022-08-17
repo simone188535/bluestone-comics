@@ -177,9 +177,8 @@ const Upload = () => {
             bookTitle: Yup.string().required("Book Title required!"),
             bookCoverPhoto: Yup.mixed()
               .required("You need to provide a file")
-              // .imageDimensionCheck()
-              // .imageSizeCheck()
-              ,
+              .imageDimensionCheck()
+              .imageSizeCheck(),
             bookDescription: Yup.string().required(
               "Book Description required!"
             ),
@@ -193,9 +192,8 @@ const Upload = () => {
             issueTitle: Yup.string().required("Issue Title required!"),
             issueCoverPhoto: Yup.mixed()
               .required("A Issue Cover Photo is required!")
-              // .imageDimensionCheck()
-              // .imageSizeCheck()
-              ,
+              .imageDimensionCheck()
+              .imageSizeCheck(),
             issueDescription: Yup.string().required(
               "Issue Description required!"
             ),
