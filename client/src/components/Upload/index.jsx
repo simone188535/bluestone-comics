@@ -16,6 +16,24 @@ import {
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
 import "./upload.scss";
+import CONSTANTS from "../../utils/Constants";
+
+const {
+  IMAGE_UPLOAD_DIMENSIONS: {
+    THUMBNAIL: {
+      WIDTH: THUMBNAIL_WIDTH,
+      HEIGHT: THUMBNAIL_HEIGHT,
+      MAX_FILE_SIZE: THUMBNAIL_MAX_FILE_SIZE,
+      MAX_FILE_SIZE_IN_BYTES: THUMBNAIL_MAX_FILE_SIZE_IN_BYTES,
+    },
+    STANDARD_UPLOAD_SIZE: {
+      WIDTH: UPLOAD_SIZE_WIDTH,
+      HEIGHT: UPLOAD_SIZE_HEIGHT,
+      MAX_FILE_SIZE:  UPLOAD_MAX_FILE_SIZE,
+      MAX_FILE_SIZE_IN_BYTES:  UPLOAD_MAX_FILE_SIZE_IN_BYTES
+    },
+  },
+} = CONSTANTS;
 
 const ModalStatusMessage = ({ errorMessage, uploadPercentage }) => {
   const [currentUploadPercentage, setCurrentUploadPercentage] =
@@ -177,8 +195,11 @@ const Upload = () => {
             bookTitle: Yup.string().required("Book Title required!"),
             bookCoverPhoto: Yup.mixed()
               .required("You need to provide a file")
-              .imageDimensionCheck()
-              .imageSizeCheck(),
+              .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+              .imageSizeCheck(
+                THUMBNAIL_MAX_FILE_SIZE,
+                THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+              ),
             bookDescription: Yup.string().required(
               "Book Description required!"
             ),
@@ -192,8 +213,11 @@ const Upload = () => {
             issueTitle: Yup.string().required("Issue Title required!"),
             issueCoverPhoto: Yup.mixed()
               .required("A Issue Cover Photo is required!")
-              .imageDimensionCheck()
-              .imageSizeCheck(),
+              .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+              .imageSizeCheck(
+                THUMBNAIL_MAX_FILE_SIZE,
+                THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+              ),
             issueDescription: Yup.string().required(
               "Issue Description required!"
             ),
