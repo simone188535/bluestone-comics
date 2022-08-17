@@ -5,9 +5,18 @@ import Checkboxes from "../CommonUI/Checkboxes";
 import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
 import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
 import WorkCredits from "./WorkCredits";
-import IMAGE_UPLOAD_DIMENSIONS from "../../utils/Constants";
+import CONSTANTS from "../../utils/Constants";
 
-const { WIDTH, HEIGHT } = IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL;
+const {
+  IMAGE_UPLOAD_DIMENSIONS: {
+    THUMBNAIL: { WIDTH: THUMBNAIL_WIDTH, HEIGHT: THUMBNAIL_HEIGHT },
+    STANDARD_UPLOAD_SIZE: {
+      WIDTH: UPLOAD_SIZE_WIDTH,
+      HEIGHT: UPLOAD_SIZE_HEIGHT,
+    },
+  },
+} = CONSTANTS;
+
 const IssueUpload = ({
   issueCoverPhotoPrevExistingData = {
     toBeRemovedField: null,
@@ -46,7 +55,8 @@ const IssueUpload = ({
         name="issueCoverPhoto"
       />
       <div className="form-header-subtext">
-        Thumbnail size must be: <strong>{`${WIDTH} x ${HEIGHT}`}</strong>
+        Thumbnail size must be:{" "}
+        <strong>{`${THUMBNAIL_WIDTH} x ${THUMBNAIL_HEIGHT}`}</strong>
       </div>
       <Field
         className="form-input form-textarea"
@@ -107,7 +117,7 @@ const IssueUpload = ({
       />
       <FileInputMultipleUpload
         identifier="issueAssets"
-        dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.WIDTH} x ${IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE.HEIGHT})<div>`}
+        dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${UPLOAD_SIZE_WIDTH} x ${UPLOAD_SIZE_HEIGHT})<div>`}
         toBeRemovedField={multiFileUploadPrevExistingData.toBeRemovedField}
         hasPrevUploadedData={
           multiFileUploadPrevExistingData.hasPrevUploadedData

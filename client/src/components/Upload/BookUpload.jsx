@@ -3,9 +3,13 @@ import slugify from "slugify";
 import { Field, ErrorMessage, useField, useFormikContext } from "formik";
 
 import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
-import IMAGE_UPLOAD_DIMENSIONS from "../../utils/Constants";
+import CONSTANTS from "../../utils/Constants";
 
-const { WIDTH, HEIGHT } = IMAGE_UPLOAD_DIMENSIONS.THUMBNAIL;
+const {
+  IMAGE_UPLOAD_DIMENSIONS: {
+    THUMBNAIL: { WIDTH, HEIGHT },
+  },
+} = CONSTANTS;
 
 const UrlSlugifedField = (props) => {
   /*

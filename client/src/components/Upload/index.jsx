@@ -1,9 +1,49 @@
 import React, { useEffect, useState, memo } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { createBook, getBookAndIssueImagePrefix } from "../../services";
-import UploadTemplate from "./UploadTemplate";
+// import UploadTemplate from "./UploadTemplate";
+import Modal from "../CommonUI/Modal";
+import ProgressBar from "../CommonUI/ProgressBar";
+import BookUpload from "./BookUpload";
+import IssueUpload from "./IssueUpload";
+import {
+  // eslint-disable-next-line no-unused-vars
+  imageDimensionCheck,
+  // eslint-disable-next-line no-unused-vars
+  imageSizeCheck,
+} from "../../utils/Yup/yupCustomMethods";
 import "./upload.scss";
+
+const ModalStatusMessage = ({ errorMessage, uploadPercentage }) => {
+  const [currentUploadPercentage, setCurrentUploadPercentage] =
+    useState(uploadPercentage);
+
+  useEffect(() => {
+    setCurrentUploadPercentage(uploadPercentage);
+  }, [uploadPercentage]);
+
+  if (errorMessage) {
+    return (
+      <div className="error-message error-text-color modal-spacing-md-top">
+        {errorMessage}
+      </div>
+    );
+  }
+
+  const progressMessage =
+    currentUploadPercentage === 100
+      ? "Upload was successful!"
+      : "Still loading... Please wait.";
+
+  return (
+    <div className="success-text-color modal-spacing-md-top">
+      {progressMessage}
+    </div>
+  );
+};
 
 const Upload = () => {
   // redirect after completed
@@ -116,25 +156,120 @@ const Upload = () => {
   };
 
   return (
-    <UploadTemplate
-      onSubmit={onSubmit}
-      initialValues={{
-        bookTitle: "",
-        bookCoverPhoto: null,
-        bookDescription: "",
-        urlSlug: "",
-        issueTitle: "",
-        issueCoverPhoto: null,
-        issueDescription: "",
-        genres: [],
-        issueAssets: [],
-        workCredits: [{ user: currentUserId, credits: [] }],
-      }}
-      currentUsername={currentUsername}
-      toggleModal={toggleModal}
-      uploadPercentage={uploadPercentage}
-      errorMessage={errorMessage}
-    />
+    <div className="upload-page container">
+      <div className="upload-form-container">
+        <Formik
+          initialValues={{
+            bookTitle: "",
+            bookCoverPhoto: null,
+            bookDescription: "",
+            urlSlug: "",
+            issueTitle: "",
+            issueCoverPhoto: null,
+            issueDescription: "",
+            genres: [],
+            issueAssets: [],
+            workCredits: [
+              { user: currentUserId, username: currentUsername, credits: [] },
+            ],
+          }}
+          validationSchema={Yup.object().shape({
+            bookTitle: Yup.string().required("Book Title required!"),
+            bookCoverPhoto: Yup.mixed()
+              .required("You need to provide a file")
+              // .imageDimensionCheck()
+              // .imageSizeCheck()
+              ,
+            bookDescription: Yup.string().required(
+              "Book Description required!"
+            ),
+            urlSlug: Yup.string()
+              .required("URL Slug required!")
+              .test("urlSlug", "This URL Slug Invalid!", (value) => {
+                const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
+
+                return regexForValidURLSlug.test(value);
+              }),
+            issueTitle: Yup.string().required("Issue Title required!"),
+            issueCoverPhoto: Yup.mixed()
+              .required("A Issue Cover Photo is required!")
+              // .imageDimensionCheck()
+              // .imageSizeCheck()
+              ,
+            issueDescription: Yup.string().required(
+              "Issue Description required!"
+            ),
+            // issueAssets: Yup.array().of(
+            //     Yup.mixed().imageDimensionCheck()
+            // )
+            //     .required('A Issue Assets are required!'),
+            issueAssets: Yup.array().required("A Issue Assets are required!"),
+            genres: Yup.array().required("You must select a genre!"),
+            workCredits: Yup.array()
+              .of(
+                Yup.object().shape({
+                  user: Yup.string().required("A user must be selected"),
+                  username: Yup.string().required(
+                    "A user must have a username"
+                  ),
+                  credits: Yup.array().required("Please select credits"),
+                })
+              )
+              .required("Must have at least one work credit"),
+            // This workCredits validation represents an array of objects: [
+            //     {"user": "5ef2ac98a9983fc4b33c63ac", "username": 'username1', "credits": ["Writer","Artist"]},
+            //     {"user": "5f3b4020e1cdaeb34ec330f5", "username": 'username2', "credits": ["Editor"]}
+            // ]
+          })}
+          enableReinitialize
+          onSubmit={onSubmit}
+          component={() => (
+            <Form
+              className="bsc-form upload-form"
+              encType="multipart/form-data"
+              method="post"
+            >
+              <h1 className="form-header-text">
+                Upload a <strong>New Book</strong> along with its{" "}
+                <strong>First Issue</strong>
+              </h1>
+              <BookUpload />
+              <IssueUpload />
+              <Modal isOpen={modalIsOpen} onClose={toggleModal}>
+                <h2 className="modal-head">Upload Progress: </h2>
+                <ProgressBar uploadPercentage={uploadPercentage} />
+                <ModalStatusMessage
+                  errorMessage={errorMessage}
+                  uploadPercentage={uploadPercentage}
+                />
+              </Modal>
+              <button type="submit" className="form-submit form-item">
+                Submit
+              </button>
+            </Form>
+          )}
+        />
+      </div>
+    </div>
+    // <UploadTemplate
+    //   onSubmit={onSubmit}
+    //   initialValues={{
+    //     bookTitle: "",
+    //     bookCoverPhoto: null,
+    //     bookDescription: "",
+    //     urlSlug: "",
+    //     issueTitle: "",
+    //     issueCoverPhoto: null,
+    //     issueDescription: "",
+    //     genres: [],
+    //     issueAssets: [],
+    //     workCredits: [{ user: currentUserId, credits: [] }],
+    //   }}
+    //   currentUsername={currentUsername}
+    //   toggleModal={toggleModal}
+    //   uploadPercentage={uploadPercentage}
+    //   errorMessage={errorMessage}
+    // />
   );
 };
 export default memo(Upload);
