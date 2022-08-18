@@ -14,7 +14,7 @@ const RenderSearchList = ({ push, apiResults, clearTextInput }) => {
   if (apiResults.length > 0) {
     return (
       <ul className="work-credit-search-list">
-        {apiResults.map((item) => (
+        {apiResults.slice(0, 10).map((item) => (
           <SearchedUsers
             key={item.id}
             searchedListItem={item}
