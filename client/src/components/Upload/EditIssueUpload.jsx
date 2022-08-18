@@ -16,7 +16,7 @@ import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
 import WorkCredits from "./WorkCredits";
 import "./upload.scss";
 
-const EditUpload = () => {
+const EditIssueUpload = () => {
   // redirect after completed
   const history = useHistory();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -210,4 +210,4 @@ const EditUpload = () => {
   //   );
   // };
 };
-export default EditUpload;
+export default EditIssueUpload;

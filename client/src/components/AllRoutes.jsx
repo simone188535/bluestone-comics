@@ -12,7 +12,7 @@ import ComicList from "./ComicList";
 import Contest from "./Contest";
 import News from "./News";
 import Upload from "./Upload";
-import EditUpload from "./Upload/EditUpload";
+import EditIssueUpload from "./Upload/EditIssueUpload";
 import Profile from "./Profile";
 import EditProfile from "./Profile/Edit";
 import Details from "./Details";
@@ -40,7 +40,7 @@ const AllRoutes = () => {
       <ProtectedRoute path="/upload" component={Upload} />
       <ProtectedRoute
         path="/edit-upload/:urlSlug/book/:bookId/issue/:issueNumber"
-        component={EditUpload}
+        component={EditIssueUpload}
       />
       <Route path="/sign-up" component={SignUp} />
       <Route path="/login" component={Login} />
