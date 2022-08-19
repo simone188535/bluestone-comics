@@ -23,7 +23,7 @@ const UrlSlugifedField = (props) => {
   const [field] = useField(props);
 
   React.useEffect(() => {
-    setFieldValue(props.name, slugify(bookTitle));
+    setFieldValue(props.name, slugify(bookTitle || ""));
     // eslint-disable-next-line react/destructuring-assignment
   }, [bookTitle, setFieldValue, props.name]);
 
