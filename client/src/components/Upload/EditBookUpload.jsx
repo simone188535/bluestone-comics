@@ -11,8 +11,9 @@ import {
   // eslint-disable-next-line no-unused-vars
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
-import "./upload.scss";
+import LoadingSpinner from "../CommonUI/LoadingSpinner";
 import CONSTANTS from "../../utils/Constants";
+import "./upload.scss";
 
 const {
   IMAGE_UPLOAD_DIMENSIONS: {
@@ -31,6 +32,7 @@ const EditBookUpload = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [errorMessage, setErrorMessage] = useState(false);
+  const [loadingInitialData, setLoadingInitialData] = useState(true);
 
   const currentUser = useSelector((state) => state.auth.user);
   const [currentBookInfo, setCurrentBookInfo] = useState({});
@@ -62,6 +64,8 @@ const EditBookUpload = () => {
             bookDesc: bookDescData,
             bookCoverPhotoFile: bookCoverPhotoFileData,
           }));
+
+          setLoadingInitialData(false);
         } catch (err) {
           setErrorMessage(true);
         }
@@ -76,53 +80,67 @@ const EditBookUpload = () => {
   };
 
   return (
-    <div className="upload-page container">
+    <div className="upload-page container min-vh100">
       <div className="upload-form-container">
-        <Formik
-          initialValues={{
-            bookTitle: bookTitle || "",
-            bookCoverPhoto: {
-              name: bookCoverPhotoFile?.Metadata?.name || "",
-              prevFile: bookCoverPhoto || null,
-            },
-            bookCoverPhotoToBeRemoved: "",
-            bookDescription: bookDesc || "",
-            urlSlug: urlSlug || "",
-          }}
-          validationSchema={Yup.object().shape({
-            bookTitle: Yup.string().required("Book Title required!"),
-            bookCoverPhoto: Yup.mixed()
-              .required("You need to provide a file")
-              .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
-              .imageSizeCheck(
-                THUMBNAIL_MAX_FILE_SIZE,
-                THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+        {loadingInitialData ? (
+          <LoadingSpinner
+            loadingStatus={loadingInitialData}
+            spinnerType="large"
+            className="edit-upload-loading-spinner"
+          />
+        ) : (
+          <Formik
+            initialValues={{
+              bookTitle: bookTitle || "",
+              bookCoverPhoto: {
+                name: bookCoverPhotoFile?.Metadata?.name || "",
+                prevFile: bookCoverPhoto || null,
+              },
+              bookCoverPhotoToBeRemoved: "",
+              bookDescription: bookDesc || "",
+              urlSlug: urlSlug || "",
+              genres: [],
+            }}
+            validationSchema={Yup.object().shape({
+              bookTitle: Yup.string().required("Book Title required!"),
+              bookCoverPhoto: Yup.mixed()
+                .required("You need to provide a file")
+                .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+                .imageSizeCheck(
+                  THUMBNAIL_MAX_FILE_SIZE,
+                  THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+                ),
+              bookDescription: Yup.string().required(
+                "Book Description required!"
               ),
-            bookDescription: Yup.string().required(
-              "Book Description required!"
-            ),
-            urlSlug: Yup.string()
-              .required("URL Slug required!")
-              .test("urlSlug", "This URL Slug Invalid!", (value) => {
-                const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
+              urlSlug: Yup.string()
+                .required("URL Slug required!")
+                .test("urlSlug", "This URL Slug Invalid!", (value) => {
+                  const regexForValidURLSlug =
+                    /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
 
-                return regexForValidURLSlug.test(value);
-              }),
-          })}
-          onSubmit={onSubmit}
-          enableReinitialize
-        >
-          <Form
-            className="bsc-form upload-form"
-            encType="multipart/form-data"
-            method="post"
+                  return regexForValidURLSlug.test(value);
+                }),
+              genres: Yup.array().required("You must select a genre!"),
+            })}
+            onSubmit={onSubmit}
+            enableReinitialize
           >
-            <h1 className="form-header-text">
-              Edit An <strong>Existing Book</strong>
-            </h1>
-            <BookUpload />
-          </Form>
-        </Formik>
+            <Form
+              className="bsc-form upload-form"
+              encType="multipart/form-data"
+              method="post"
+            >
+              <h1 className="form-header-text">
+                Edit An <strong>Existing Book</strong>
+              </h1>
+              <BookUpload />
+              <button type="submit" className="form-submit form-item">
+                Submit
+              </button>
+            </Form>
+          </Formik>
+        )}
       </div>
     </div>
   );
