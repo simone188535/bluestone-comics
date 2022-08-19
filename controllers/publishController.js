@@ -91,6 +91,13 @@ exports.getBook = catchAsync(async (req, res, next) => {
     [bookId, res.locals.user.id]
   );
 
+  const genres = await new QueryPG(pool).find(
+    'id, genre',
+    'genres WHERE book_id = $1',
+    [bookId],
+    true
+  );
+
   if (!bookByUser) {
     return next(
       new AppError(`Existing book by the current user cannot be found.`, 404)
@@ -105,6 +112,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     book: bookByUser,
+    genres,
     bookCoverPhotoFile
   });
 });

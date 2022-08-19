@@ -38,8 +38,10 @@ const EditBookUpload = () => {
   const [currentBookInfo, setCurrentBookInfo] = useState({});
   // const [currentIssueInfo, setCurrentIssueInfo] = useState({});
   const { urlSlug, bookId } = useParams();
-  const { bookTitle, bookCoverPhoto, bookDesc, bookCoverPhotoFile } =
+  const { bookTitle, bookCoverPhoto, bookDesc, bookCoverPhotoFile, genres } =
     currentBookInfo;
+
+    console.log(genres);
 
   useEffect(() => {
     (async () => {
@@ -54,8 +56,13 @@ const EditBookUpload = () => {
                 description: bookDescData,
               },
               bookCoverPhotoFile: bookCoverPhotoFileData,
+              genres: genresData,
             },
           } = await getUsersBook(urlSlug, bookId);
+
+          const genreList = genresData.map((currentGenre) =>
+            currentGenre.genre.toUpperCase()
+          );
 
           setCurrentBookInfo((prevState) => ({
             ...prevState,
@@ -63,6 +70,7 @@ const EditBookUpload = () => {
             bookCoverPhoto: bookCoverPhotoData,
             bookDesc: bookDescData,
             bookCoverPhotoFile: bookCoverPhotoFileData,
+            genres: genreList,
           }));
 
           setLoadingInitialData(false);
@@ -99,7 +107,7 @@ const EditBookUpload = () => {
               bookCoverPhotoToBeRemoved: "",
               bookDescription: bookDesc || "",
               urlSlug: urlSlug || "",
-              genres: [],
+              genres: genres.length > 0 ? genres : [],
             }}
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),

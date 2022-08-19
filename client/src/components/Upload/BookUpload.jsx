@@ -2,6 +2,7 @@ import React from "react";
 import slugify from "slugify";
 import { Field, ErrorMessage, useField, useFormikContext } from "formik";
 
+import Checkboxes from "../CommonUI/Checkboxes";
 import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
 import CONSTANTS from "../../utils/Constants";
 
@@ -97,6 +98,52 @@ const BookUpload = ({
         className="error-message error-text-color"
         component="div"
         name="urlSlug"
+      />
+
+      <div className="form-header-text">
+        Select the applicable <strong>genres</strong>
+      </div>
+      <ul className="checkbox-group upload-checkboxes">
+        <Checkboxes
+          identifier="genres"
+          type="multiple"
+          wrapperElement="li"
+          checkboxValue={[
+            { name: "Action/Adventure" },
+            { name: "Anthropomorphic" },
+            { name: "Children" },
+            { name: "Comedy" },
+            { name: "Crime" },
+            { name: "Drama" },
+            { name: "Family" },
+            { name: "Fantasy" },
+            { name: "Graphic Novels" },
+            { name: "Historical" },
+            { name: "Horror" },
+            { name: "LGBTQ" },
+            { name: "Mature" },
+            { name: "Music" },
+            { name: "Mystery" },
+            { name: "Mythology" },
+            { name: "Psychological" },
+            { name: "Romance" },
+            { name: "School Life" },
+            { name: "Sci-Fi" },
+            { name: "Slice of Life" },
+            { name: "Sport" },
+            { name: "Superhero" },
+            { name: "Supernatural" },
+            { name: "Thriller" },
+            { name: "War" },
+            { name: "Western" },
+            { name: "Zombies" },
+          ]}
+        />
+      </ul>
+      <ErrorMessage
+        className="error-message error-text-color"
+        component="div"
+        name="genres"
       />
     </>
   );
