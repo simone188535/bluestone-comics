@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
-import { Field } from "formik";
+import { Field, useFormikContext } from "formik";
 
 // This component conditionally wraps the provided component(HOC) in the HTML Element provided
 const AddWrapperElement = ({ children, wrapperElement = React.Fragment }) => {
@@ -11,18 +11,20 @@ const AddWrapperElement = ({ children, wrapperElement = React.Fragment }) => {
 // This component conditionally maps through or displays the checkbox elements
 function DisplaySingleOrMultipleCheckboxes({
   type,
-  checkboxValue = { checked: false, disabled: false },
+  checkboxValue = { disabled: false },
   identifier,
   wrapperElement,
 }) {
+  const { values } = useFormikContext();
+
   const htmlValue = (currCheckboxValue, index = null) => (
     <AddWrapperElement wrapperElement={wrapperElement} key={index}>
       <label className="checkbox-item">
         <Field
           type="checkbox"
           name={identifier}
-          value={currCheckboxValue.name}
-          checked={currCheckboxValue.checked}
+          value={currCheckboxValue.value}
+          checked={values[identifier]?.includes(currCheckboxValue.value)}
           disabled={currCheckboxValue.disabled}
         />
         <span>{currCheckboxValue.name}</span>
@@ -70,7 +72,7 @@ export default Checkboxes;
         identifier="genres"
         type="single"
         wrapperElement="li"
-        checkboxValue={{ name: 'Action/Adventure' }} 
+        checkboxValue={{ name: 'Action', value: "action"}} 
     />
 
     How multi Checkboxes works:
@@ -79,7 +81,7 @@ export default Checkboxes;
         identifier="genres"
         type="multiple"
         wrapperElement="li"
-        checkboxValue={[{ name: 'Action/Adventure' }, { name: 'Anthropomorphic' } 
+        checkboxValue={[{ name: 'Action', value: "action"}, { name: 'anthropomorphic', value: "anthropomorphic" } 
     />
 
 */

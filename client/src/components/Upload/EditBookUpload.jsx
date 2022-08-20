@@ -61,7 +61,7 @@ const EditBookUpload = () => {
           } = await getUsersBook(urlSlug, bookId);
 
           const genreList = genresData.map((currentGenre) =>
-            currentGenre.genre.toUpperCase()
+            currentGenre.genre.toLowerCase()
           );
 
           setCurrentBookInfo((prevState) => ({
@@ -107,7 +107,7 @@ const EditBookUpload = () => {
               bookCoverPhotoToBeRemoved: "",
               bookDescription: bookDesc || "",
               urlSlug: urlSlug || "",
-              genres: genres.length > 0 ? genres : [],
+              genres: ["crime"],
             }}
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),
