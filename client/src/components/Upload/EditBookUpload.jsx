@@ -41,8 +41,6 @@ const EditBookUpload = () => {
   const { bookTitle, bookCoverPhoto, bookDesc, bookCoverPhotoFile, genres } =
     currentBookInfo;
 
-    console.log(genres);
-
   useEffect(() => {
     (async () => {
       if (currentUser) {
@@ -107,7 +105,7 @@ const EditBookUpload = () => {
               bookCoverPhotoToBeRemoved: "",
               bookDescription: bookDesc || "",
               urlSlug: urlSlug || "",
-              genres: ["crime"],
+              genres,
             }}
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),
