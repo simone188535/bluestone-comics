@@ -38,8 +38,9 @@ const EditBookUpload = () => {
   const [currentBookInfo, setCurrentBookInfo] = useState({});
   // const [currentIssueInfo, setCurrentIssueInfo] = useState({});
   const { urlSlug, bookId } = useParams();
-  const { bookTitle, bookCoverPhoto, bookDesc, bookCoverPhotoFile, genres } =
-    currentBookInfo;
+  console.log(urlSlug);
+  // const { bookTitle, bookCoverPhoto, bookDesc, bookCoverPhotoFile, genres } =
+  //   currentBookInfo;
 
   useEffect(() => {
     (async () => {
@@ -97,15 +98,15 @@ const EditBookUpload = () => {
         ) : (
           <Formik
             initialValues={{
-              bookTitle: bookTitle || "",
-              bookCoverPhoto: {
-                name: bookCoverPhotoFile?.Metadata?.name || "",
-                prevFile: bookCoverPhoto || null,
-              },
+              bookTitle: currentBookInfo.bookTitle,
+              // bookCoverPhoto: {
+              //   name: currentBookInfo.bookCoverPhotoFile?.Metadata?.name,
+              //   prevFile: currentBookInfo.bookCoverPhoto,
+              // },
               bookCoverPhotoToBeRemoved: "",
-              bookDescription: bookDesc || "",
-              urlSlug: urlSlug || "",
-              genres,
+              bookDescription: currentBookInfo.bookDesc,
+              // urlSlug: "",
+              genres: currentBookInfo.genres,
             }}
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),
@@ -131,27 +132,28 @@ const EditBookUpload = () => {
             })}
             onSubmit={onSubmit}
             enableReinitialize
-          >
-            <Form
-              className="bsc-form upload-form"
-              encType="multipart/form-data"
-              method="post"
-            >
-              <h1 className="form-header-text">
-                Edit An <strong>Existing Book</strong>
-              </h1>
+            component={() => (
+              <Form
+                className="bsc-form upload-form"
+                encType="multipart/form-data"
+                method="post"
+              >
+                <h1 className="form-header-text">
+                  Edit An <strong>Existing Book</strong>
+                </h1>
 
-              <BookUpload
-                bookCoverPhotoPrevExistingData={{
-                  toBeRemovedField: "bookCoverPhotoToBeRemoved",
-                  hasPrevUploadedData: true,
-                }}
-              />
-              <button type="submit" className="form-submit form-item">
-                Submit
-              </button>
-            </Form>
-          </Formik>
+                <BookUpload
+                  bookCoverPhotoPrevExistingData={{
+                    toBeRemovedField: "bookCoverPhotoToBeRemoved",
+                    hasPrevUploadedData: true,
+                  }}
+                />
+                <button type="submit" className="form-submit form-item">
+                  Submit
+                </button>
+              </Form>
+            )}
+          />
         )}
       </div>
     </div>
