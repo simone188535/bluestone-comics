@@ -140,7 +140,13 @@ const EditBookUpload = () => {
               <h1 className="form-header-text">
                 Edit An <strong>Existing Book</strong>
               </h1>
-              <BookUpload />
+
+              <BookUpload
+                bookCoverPhotoPrevExistingData={{
+                  toBeRemovedField: "bookCoverPhotoToBeRemoved",
+                  hasPrevUploadedData: true,
+                }}
+              />
               <button type="submit" className="form-submit form-item">
                 Submit
               </button>
