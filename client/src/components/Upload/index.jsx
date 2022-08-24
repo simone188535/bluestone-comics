@@ -1,6 +1,6 @@
 import React, { useEffect, useState, memo } from "react";
-import * as Yup from "yup";
 import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { createBook, getBookAndIssueImagePrefix } from "../../services";
@@ -10,11 +10,24 @@ import ProgressBar from "../CommonUI/ProgressBar";
 import BookUpload from "./BookUpload";
 import IssueUpload from "./IssueUpload";
 import {
-  BookUploadValidation,
-  IssueUploadValidation,
-} from "../../utils/Yup/yupUploadValidation";
-
+  // eslint-disable-next-line no-unused-vars
+  imageDimensionCheck,
+  // eslint-disable-next-line no-unused-vars
+  imageSizeCheck,
+} from "../../utils/Yup/yupCustomMethods";
 import "./upload.scss";
+import CONSTANTS from "../../utils/Constants";
+
+const {
+  IMAGE_UPLOAD_DIMENSIONS: {
+    THUMBNAIL: {
+      WIDTH: THUMBNAIL_WIDTH,
+      HEIGHT: THUMBNAIL_HEIGHT,
+      MAX_FILE_SIZE: THUMBNAIL_MAX_FILE_SIZE,
+      MAX_FILE_SIZE_IN_BYTES: THUMBNAIL_MAX_FILE_SIZE_IN_BYTES,
+    },
+  },
+} = CONSTANTS;
 
 const ModalStatusMessage = ({ errorMessage, uploadPercentage }) => {
   const [currentUploadPercentage, setCurrentUploadPercentage] =
@@ -173,8 +186,56 @@ const Upload = () => {
             ],
           }}
           validationSchema={Yup.object().shape({
-            ...BookUploadValidation,
-            ...IssueUploadValidation,
+            bookTitle: Yup.string().required("Book Title required!"),
+            bookCoverPhoto: Yup.mixed()
+              .required("You need to provide a file")
+              .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+              .imageSizeCheck(
+                THUMBNAIL_MAX_FILE_SIZE,
+                THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+              ),
+            bookDescription: Yup.string().required(
+              "Book Description required!"
+            ),
+            urlSlug: Yup.string()
+              .required("URL Slug required!")
+              .test("urlSlug", "This URL Slug Invalid!", (value) => {
+                const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
+
+                return regexForValidURLSlug.test(value);
+              }),
+            issueTitle: Yup.string().required("Issue Title required!"),
+            issueCoverPhoto: Yup.mixed()
+              .required("A Issue Cover Photo is required!")
+              .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+              .imageSizeCheck(
+                THUMBNAIL_MAX_FILE_SIZE,
+                THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+              ),
+            issueDescription: Yup.string().required(
+              "Issue Description required!"
+            ),
+            // issueAssets: Yup.array().of(
+            //     Yup.mixed().imageDimensionCheck()
+            // )
+            //     .required('A Issue Assets are required!'),
+            issueAssets: Yup.array().required("A Issue Assets are required!"),
+            genres: Yup.array().required("You must select a genre!"),
+            workCredits: Yup.array()
+              .of(
+                Yup.object().shape({
+                  user: Yup.string().required("A user must be selected"),
+                  username: Yup.string().required(
+                    "A user must have a username"
+                  ),
+                  credits: Yup.array().required("Please select credits"),
+                })
+              )
+              .required("Must have at least one work credit"),
+            // This workCredits validation represents an array of objects: [
+            //     {"user": "5ef2ac98a9983fc4b33c63ac", "username": 'username1', "credits": ["Writer","Artist"]},
+            //     {"user": "5f3b4020e1cdaeb34ec330f5", "username": 'username2', "credits": ["Editor"]}
+            // ]
           })}
           enableReinitialize
           onSubmit={onSubmit}
