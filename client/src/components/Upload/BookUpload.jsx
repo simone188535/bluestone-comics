@@ -36,7 +36,8 @@ const UrlSlugifedField = (props) => {
 };
 
 const BookUpload = ({
-  bookCoverPhotoPrevExistingData = {
+  bookCoverPhotoData = {
+    identifier: "bookCoverPhoto",
     toBeRemovedField: null,
     hasPrevUploadedData: false,
   },
@@ -56,10 +57,10 @@ const BookUpload = ({
         name="bookTitle"
       />
       <FileInputSingleUpload
-        identifier="bookCoverPhoto"
+        identifier={bookCoverPhotoData.identifier}
         triggerText="Select Book Thumbnail Photo"
-        toBeRemovedField={bookCoverPhotoPrevExistingData.toBeRemovedField}
-        hasPrevUploadedData={bookCoverPhotoPrevExistingData.hasPrevUploadedData}
+        toBeRemovedField={bookCoverPhotoData.toBeRemovedField}
+        hasPrevUploadedData={bookCoverPhotoData.hasPrevUploadedData}
       />
       <ErrorMessage
         className="error-message error-text-color"

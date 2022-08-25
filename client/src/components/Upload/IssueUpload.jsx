@@ -17,11 +17,13 @@ const {
 } = CONSTANTS;
 
 const IssueUpload = ({
-  issueCoverPhotoPrevExistingData = {
+  issueCoverPhotoData = {
+    identifier: "issueCoverPhoto",
     toBeRemovedField: null,
     hasPrevUploadedData: false,
   },
-  multiFileUploadPrevExistingData = {
+  multiFileUploadPrevData = {
+    identifier: "issueAssets",
     toBeRemovedField: null,
     hasPrevUploadedData: false,
   },
@@ -41,12 +43,10 @@ const IssueUpload = ({
         name="issueTitle"
       />
       <FileInputSingleUpload
-        identifier="issueCoverPhoto"
+        identifier={issueCoverPhotoData.identifier}
         triggerText="Select Issue Thumbnail Photo"
-        toBeRemovedField={issueCoverPhotoPrevExistingData.toBeRemovedField}
-        hasPrevUploadedData={
-          issueCoverPhotoPrevExistingData.hasPrevUploadedData
-        }
+        toBeRemovedField={issueCoverPhotoData.toBeRemovedField}
+        hasPrevUploadedData={issueCoverPhotoData.hasPrevUploadedData}
       />
       <ErrorMessage
         className="error-message error-text-color"
@@ -70,12 +70,10 @@ const IssueUpload = ({
         name="issueDescription"
       />
       <FileInputMultipleUpload
-        identifier="issueAssets"
+        identifier={multiFileUploadPrevData.identifier}
         dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${UPLOAD_SIZE_WIDTH} x ${UPLOAD_SIZE_HEIGHT})<div>`}
-        toBeRemovedField={multiFileUploadPrevExistingData.toBeRemovedField}
-        hasPrevUploadedData={
-          multiFileUploadPrevExistingData.hasPrevUploadedData
-        }
+        toBeRemovedField={multiFileUploadPrevData.toBeRemovedField}
+        hasPrevUploadedData={multiFileUploadPrevData.hasPrevUploadedData}
       />
       <div className="form-header-text">
         Give <strong>Credits</strong> to yourself and any other existing users
