@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
-import { Formik, Form } from "formik";
+import { Formik, Form, useFormikContext } from "formik";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getUsersBook } from "../../services";
@@ -99,10 +99,12 @@ const EditBookUpload = () => {
           <Formik
             initialValues={{
               bookTitle: currentBookInfo.bookTitle,
-              // bookCoverPhoto: {
-              //   name: currentBookInfo.bookCoverPhotoFile?.Metadata?.name,
-              //   prevFile: currentBookInfo.bookCoverPhoto,
-              // },
+              bookCoverPhoto: {
+                name: currentBookInfo.bookCoverPhotoFile?.Metadata?.name,
+                prevFile: currentBookInfo.bookCoverPhoto,
+                // newFile: null,
+              },
+              // newBookCoverPhoto: null,
               bookCoverPhotoToBeRemoved: "",
               bookDescription: currentBookInfo.bookDesc,
               // urlSlug: "",
@@ -111,7 +113,7 @@ const EditBookUpload = () => {
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),
               bookCoverPhoto: Yup.mixed()
-                .required("You need to provide a file")
+                // .required("You need to provide a file")
                 .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
                 .imageSizeCheck(
                   THUMBNAIL_MAX_FILE_SIZE,
@@ -143,7 +145,8 @@ const EditBookUpload = () => {
                 </h1>
 
                 <BookUpload
-                  bookCoverPhotoPrevExistingData={{
+                  bookCoverPhotoData={{
+                    identifier: "bookCoverPhoto",
                     toBeRemovedField: "bookCoverPhotoToBeRemoved",
                     hasPrevUploadedData: true,
                   }}
