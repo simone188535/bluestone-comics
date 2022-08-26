@@ -110,13 +110,23 @@ const EditBookUpload = () => {
             }}
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),
-              bookCoverPhoto: Yup.mixed()
-                .required("You need to provide a file")
-                .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
-                .imageSizeCheck(
-                  THUMBNAIL_MAX_FILE_SIZE,
-                  THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
-                ),
+              bookCoverPhoto: Yup.mixed().when("bookCoverPhotoToBeRemoved", {
+                is: (password) => Boolean(password),
+                then: Yup.mixed()
+                  .required("You need to provide a file")
+                  .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+                  .imageSizeCheck(
+                    THUMBNAIL_MAX_FILE_SIZE,
+                    THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+                  ),
+              }),
+              // bookCoverPhoto: Yup.mixed()
+              //   .required("You need to provide a file")
+              //   .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+              //   .imageSizeCheck(
+              //     THUMBNAIL_MAX_FILE_SIZE,
+              //     THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+              //   ),
               bookDescription: Yup.string().required(
                 "Book Description required!"
               ),

@@ -14,7 +14,19 @@ import UploadTextField from "./UploadTextField";
 import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
 import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
 import WorkCredits from "./WorkCredits";
+import CONSTANTS from "../../utils/Constants";
 import "./upload.scss";
+
+const {
+  IMAGE_UPLOAD_DIMENSIONS: {
+    THUMBNAIL: {
+      WIDTH: THUMBNAIL_WIDTH,
+      HEIGHT: THUMBNAIL_HEIGHT,
+      MAX_FILE_SIZE: THUMBNAIL_MAX_FILE_SIZE,
+      MAX_FILE_SIZE_IN_BYTES: THUMBNAIL_MAX_FILE_SIZE_IN_BYTES,
+    },
+  },
+} = CONSTANTS;
 
 const EditIssueUpload = () => {
   // redirect after completed
@@ -142,7 +154,16 @@ const EditIssueUpload = () => {
       }}
       validationSchema={Yup.object({
         bookTitle: Yup.string().required("Book Title required!"),
-        bookCoverPhoto: Yup.mixed().required("You need to provide a file"),
+        bookCoverPhoto: Yup.mixed().when("bookCoverPhotoToBeRemoved", {
+          is: (password) => Boolean(password),
+          then: Yup.mixed()
+            .required("You need to provide a file")
+            .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+            .imageSizeCheck(
+              THUMBNAIL_MAX_FILE_SIZE,
+              THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+            ),
+        }),
         issueAssets: Yup.array().required("A Issue Assets are required!"),
         workCredits: Yup.array()
           .of(
