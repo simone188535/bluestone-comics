@@ -52,7 +52,7 @@ const FileInputSingleUpload = ({
     const uploadedFile = event.currentTarget.files[0];
 
     // if prevUpload exists, save the removed file so that it can be deleted later
-    if (hasPrevUploadedData && toBeRemovedField) {
+    if (hasPrevUploadedData && toBeRemovedField && file.prevFile) {
       setFieldValue(toBeRemovedField, file.prevFile);
     }
 
@@ -80,7 +80,9 @@ const FileInputSingleUpload = ({
         {triggerText}
       </label>
       <div className="file-input-single-upload-name">
-        {file ? file.name || "Unknown File Name" : "No file selected"}
+        {file
+          ? file?.Metadata?.name || file.name || "Unknown File Name"
+          : "No file selected"}
       </div>
     </div>
   );
