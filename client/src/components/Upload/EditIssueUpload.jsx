@@ -52,9 +52,13 @@ const EditIssueUpload = () => {
           setCurrentBookInfo((prevState) => ({
             ...prevState,
             bookTitle,
-            bookCoverPhoto,
+            // bookCoverPhoto,
+            bookCoverPhoto: {
+              prevFile: bookCoverPhoto,
+              ...bookCoverPhotoFile,
+            },
             bookDesc,
-            bookCoverPhotoFile,
+            // bookCoverPhotoFile,
           }));
 
           // retrieve issue data and set it to state
@@ -119,10 +123,11 @@ const EditIssueUpload = () => {
     <Formik
       initialValues={{
         bookTitle: "",
-        bookCoverPhoto: {
-          name: currentBookInfo.bookCoverPhotoFile?.Metadata?.name,
-          prevFile: currentBookInfo.bookCoverPhoto,
-        },
+        // bookCoverPhoto: {
+        //   name: currentBookInfo.bookCoverPhotoFile?.Metadata?.name,
+        //   prevFile: currentBookInfo.bookCoverPhoto,
+        // },
+        bookCoverPhoto: currentBookInfo.bookCoverPhoto,
         bookCoverPhotoToBeRemoved: "",
         issueAssets: currentIssueInfo.issueAssets,
         issueAssetsToBeRemoved: [],

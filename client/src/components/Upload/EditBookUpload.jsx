@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
-import { Formik, Form, useFormikContext } from "formik";
+import { Formik, Form } from "formik";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getUsersBook } from "../../services";
@@ -39,8 +39,6 @@ const EditBookUpload = () => {
   // const [currentIssueInfo, setCurrentIssueInfo] = useState({});
   const { urlSlug, bookId } = useParams();
   console.log(urlSlug);
-  // const { bookTitle, bookCoverPhoto, bookDesc, bookCoverPhotoFile, genres } =
-  //   currentBookInfo;
 
   useEffect(() => {
     (async () => {
@@ -63,12 +61,17 @@ const EditBookUpload = () => {
             currentGenre.genre.toLowerCase()
           );
 
+          // console.log('bookCoverPhotoFileData', bookCoverPhotoFileData);
+          // console.log('bookCoverPhotoData', bookCoverPhotoData);
+
           setCurrentBookInfo((prevState) => ({
             ...prevState,
             bookTitle: bookTitleData,
-            bookCoverPhoto: bookCoverPhotoData,
+            bookCoverPhoto: {
+              prevFile: bookCoverPhotoData,
+              ...bookCoverPhotoFileData,
+            },
             bookDesc: bookDescData,
-            bookCoverPhotoFile: bookCoverPhotoFileData,
             genres: genreList,
           }));
 
@@ -99,12 +102,7 @@ const EditBookUpload = () => {
           <Formik
             initialValues={{
               bookTitle: currentBookInfo.bookTitle,
-              bookCoverPhoto: {
-                name: currentBookInfo.bookCoverPhotoFile?.Metadata?.name,
-                prevFile: currentBookInfo.bookCoverPhoto,
-                // newFile: null,
-              },
-              // newBookCoverPhoto: null,
+              bookCoverPhoto: currentBookInfo.bookCoverPhoto,
               bookCoverPhotoToBeRemoved: "",
               bookDescription: currentBookInfo.bookDesc,
               // urlSlug: "",
@@ -113,7 +111,7 @@ const EditBookUpload = () => {
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),
               bookCoverPhoto: Yup.mixed()
-                // .required("You need to provide a file")
+                .required("You need to provide a file")
                 .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
                 .imageSizeCheck(
                   THUMBNAIL_MAX_FILE_SIZE,
