@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import slugify from "slugify";
 import { Field, ErrorMessage, useField, useFormikContext } from "formik";
 
@@ -12,7 +12,7 @@ const {
   },
 } = CONSTANTS;
 
-const UrlSlugifedField = (props) => {
+const UrlSlugifedField = ({ prevSlug, name, ...props }) => {
   /*
         The default value of this field is dependent on the value of the book title field. The user
         is still able to customize it though.
@@ -21,12 +21,12 @@ const UrlSlugifedField = (props) => {
     values: { bookTitle },
     setFieldValue,
   } = useFormikContext();
-  const [field] = useField(props);
+  const [field] = useField(name);
 
-  React.useEffect(() => {
-    setFieldValue(props.name, slugify(bookTitle || ""));
-    // eslint-disable-next-line react/destructuring-assignment
-  }, [bookTitle, setFieldValue, props.name]);
+  useEffect(() => {
+    // if a prevslug is provided, set the name to it, there is no need to slugify, else slugify the book value
+    setFieldValue(name, prevSlug || slugify(bookTitle || ""));
+  }, [bookTitle, name, prevSlug, setFieldValue]);
 
   return (
     <>
