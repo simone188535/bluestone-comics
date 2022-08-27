@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import slugify from "slugify";
 import { Field, ErrorMessage, useField, useFormikContext } from "formik";
@@ -14,21 +14,35 @@ const {
 } = CONSTANTS;
 
 const UrlSlugifedField = ({ name, ...props }) => {
-  const { urlSlug } = useParams();
-  /*
-        The default value of this field is dependent on the value of the book title field. The user
-        is still able to customize it though.
-    */
   const {
     values: { bookTitle },
     setFieldValue,
   } = useFormikContext();
+
+  const { urlSlug } = useParams();
+  const [bookTitleHasBeenEmpty, setBookTitleHasBeenEmpty] = useState(
+    !bookTitle
+  );
+
+  useEffect(() => {
+    if (bookTitle === "") setBookTitleHasBeenEmpty(true);
+  }, [bookTitle]);
+  /*
+        The default value of this field is dependent on the value of the book title field. The user
+        is still able to customize it though.
+    */
   const [field] = useField(name);
 
   useEffect(() => {
+    // if the field has never been empty and a prevExisting urlSlug is present, show the current urlSlug
+    const prevExistingUrlSlug =
+      !bookTitleHasBeenEmpty && urlSlug ? urlSlug : null;
+
+      console.log(urlSlug);
+
     // if a prevslug is provided, set the name to it, there is no need to slugify, else slugify the book value
-    setFieldValue(name, urlSlug || slugify(bookTitle || ""));
-  }, [bookTitle, name, urlSlug, setFieldValue]);
+    setFieldValue(name, prevExistingUrlSlug || slugify(bookTitle || ""));
+  }, [bookTitle, name, urlSlug, setFieldValue, bookTitleHasBeenEmpty]);
 
   return (
     <>
