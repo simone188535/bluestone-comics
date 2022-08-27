@@ -20,12 +20,10 @@ const UrlSlugifedField = ({ name, ...props }) => {
   } = useFormikContext();
 
   const { urlSlug } = useParams();
-  const [bookTitleHasBeenEmpty, setBookTitleHasBeenEmpty] = useState(
-    !bookTitle
-  );
+  const [hasBookTitleBeenEmpty, setHasBookTitleBeenEmpty] = useState(null);
 
   useEffect(() => {
-    if (bookTitle === "") setBookTitleHasBeenEmpty(true);
+    if (bookTitle === "") setHasBookTitleBeenEmpty(true);
   }, [bookTitle]);
   /*
         The default value of this field is dependent on the value of the book title field. The user
@@ -36,13 +34,11 @@ const UrlSlugifedField = ({ name, ...props }) => {
   useEffect(() => {
     // if the field has never been empty and a prevExisting urlSlug is present, show the current urlSlug
     const prevExistingUrlSlug =
-      !bookTitleHasBeenEmpty && urlSlug ? urlSlug : null;
+      !hasBookTitleBeenEmpty && urlSlug ? urlSlug : null;
 
-      console.log(urlSlug);
-
-    // if a prevslug is provided, set the name to it, there is no need to slugify, else slugify the book value
+    // if a prevslug is provided, set the name to it, there is no need to slugify, else slugify the bookTitle value
     setFieldValue(name, prevExistingUrlSlug || slugify(bookTitle || ""));
-  }, [bookTitle, name, urlSlug, setFieldValue, bookTitleHasBeenEmpty]);
+  }, [bookTitle, name, urlSlug, setFieldValue, hasBookTitleBeenEmpty]);
 
   return (
     <>
