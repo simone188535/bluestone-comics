@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import slugify from "slugify";
 import { Field, ErrorMessage, useField, useFormikContext } from "formik";
 
@@ -12,7 +13,8 @@ const {
   },
 } = CONSTANTS;
 
-const UrlSlugifedField = ({ prevSlug, name, ...props }) => {
+const UrlSlugifedField = ({ name, ...props }) => {
+  const { urlSlug } = useParams();
   /*
         The default value of this field is dependent on the value of the book title field. The user
         is still able to customize it though.
@@ -25,8 +27,8 @@ const UrlSlugifedField = ({ prevSlug, name, ...props }) => {
 
   useEffect(() => {
     // if a prevslug is provided, set the name to it, there is no need to slugify, else slugify the book value
-    setFieldValue(name, prevSlug || slugify(bookTitle || ""));
-  }, [bookTitle, name, prevSlug, setFieldValue]);
+    setFieldValue(name, urlSlug || slugify(bookTitle || ""));
+  }, [bookTitle, name, urlSlug, setFieldValue]);
 
   return (
     <>
@@ -41,7 +43,6 @@ const BookUpload = ({
     toBeRemovedField: null,
     hasPrevUploadedData: false,
   },
-  prevSlug = null,
 }) => {
   const { values } = useFormikContext();
   return (
@@ -86,7 +87,6 @@ const BookUpload = ({
       <UrlSlugifedField
         className="form-input form-item slug-field"
         name="urlSlug"
-        prevSlug={prevSlug}
         type="text"
         placeholder="URL Slug"
         autoComplete="on"

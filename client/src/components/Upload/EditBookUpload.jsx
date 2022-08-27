@@ -37,7 +37,7 @@ const EditBookUpload = () => {
 
   const currentUser = useSelector((state) => state.auth.user);
   const [currentBookInfo, setCurrentBookInfo] = useState({});
-  const [currentURLSlug] = useState(urlSlug);
+  // const [currentURLSlug] = useState(urlSlug);
   // const [currentIssueInfo, setCurrentIssueInfo] = useState({});
   // console.log(urlSlug);
 
@@ -74,6 +74,7 @@ const EditBookUpload = () => {
             },
             bookDesc: bookDescData,
             genres: genreList,
+            currentURLSlug: urlSlug,
           }));
 
           setLoadingInitialData(false);
@@ -106,7 +107,7 @@ const EditBookUpload = () => {
               bookCoverPhoto: currentBookInfo.bookCoverPhoto,
               bookCoverPhotoToBeRemoved: "",
               bookDescription: currentBookInfo.bookDesc,
-              urlSlug: currentURLSlug,
+              urlSlug: currentBookInfo.currentURLSlug,
               genres: currentBookInfo.genres,
             }}
             validationSchema={Yup.object().shape({
@@ -159,7 +160,6 @@ const EditBookUpload = () => {
                     toBeRemovedField: "bookCoverPhotoToBeRemoved",
                     hasPrevUploadedData: true,
                   }}
-                  prevSlug={currentURLSlug}
                 />
                 <button type="submit" className="form-submit form-item">
                   Submit
