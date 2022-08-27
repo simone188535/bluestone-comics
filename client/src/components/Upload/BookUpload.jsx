@@ -41,6 +41,7 @@ const BookUpload = ({
     toBeRemovedField: null,
     hasPrevUploadedData: false,
   },
+  prevSlug = null,
 }) => {
   const { values } = useFormikContext();
   return (
@@ -85,6 +86,7 @@ const BookUpload = ({
       <UrlSlugifedField
         className="form-input form-item slug-field"
         name="urlSlug"
+        prevSlug={prevSlug}
         type="text"
         placeholder="URL Slug"
         autoComplete="on"
