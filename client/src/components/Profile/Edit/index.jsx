@@ -211,7 +211,7 @@ const DeactivateAccount = () => {
           results. It does not delete existing work but rather makes them
           inaccessible to all users.
         </strong>{" "}
-        In order to delete work it must be done manually from the user profile
+        In order to delete a work it must be done manually from the user profile
         page. Doing so will delete them permanently!
       </p>
       <button
