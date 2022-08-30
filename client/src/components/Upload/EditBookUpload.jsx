@@ -12,7 +12,6 @@ import {
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
-import Checkboxes from "../CommonUI/Checkboxes";
 import CONSTANTS from "../../utils/Constants";
 import "./upload.scss";
 
