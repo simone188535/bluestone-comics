@@ -5,8 +5,9 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { createBook, getBookAndIssueImagePrefix } from "../../services";
 // import UploadTemplate from "./UploadTemplate";
-import Modal from "../CommonUI/Modal";
-import ProgressBar from "../CommonUI/ProgressBar";
+// import Modal from "../CommonUI/Modal";
+// import ProgressBar from "../CommonUI/ProgressBar";
+import SubmissionProgressModal from "./SubmissionProgressModal";
 import BookUpload from "./BookUpload";
 import IssueUpload from "./IssueUpload";
 import {
@@ -29,44 +30,45 @@ const {
   },
 } = CONSTANTS;
 
-const ModalStatusMessage = ({ errorMessage, uploadPercentage }) => {
-  const [currentUploadPercentage, setCurrentUploadPercentage] =
-    useState(uploadPercentage);
+// const ModalStatusMessage = ({ errorMessage, uploadPercentage }) => {
+//   const [currentUploadPercentage, setCurrentUploadPercentage] =
+//     useState(uploadPercentage);
 
-  useEffect(() => {
-    setCurrentUploadPercentage(uploadPercentage);
-  }, [uploadPercentage]);
+//   useEffect(() => {
+//     setCurrentUploadPercentage(uploadPercentage);
+//   }, [uploadPercentage]);
 
-  if (errorMessage) {
-    return (
-      <div className="error-message error-text-color modal-spacing-md-top">
-        {errorMessage}
-      </div>
-    );
-  }
+//   if (errorMessage) {
+//     return (
+//       <div className="error-message error-text-color modal-spacing-md-top">
+//         {errorMessage}
+//       </div>
+//     );
+//   }
 
-  const progressMessage =
-    currentUploadPercentage === 100
-      ? "Upload was successful!"
-      : "Still loading... Please wait.";
+//   const progressMessage =
+//     currentUploadPercentage === 100
+//       ? "Upload was successful!"
+//       : "Still loading... Please wait.";
 
-  return (
-    <div className="success-text-color modal-spacing-md-top">
-      {progressMessage}
-    </div>
-  );
-};
+//   return (
+//     <div className="success-text-color modal-spacing-md-top">
+//       {progressMessage}
+//     </div>
+//   );
+// };
 
 const Upload = () => {
   // redirect after completed
   const history = useHistory();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [errorMessage, setErrorMessage] = useState("");
-
   const currentUser = useSelector((state) => state.auth.user);
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
+  const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
   // if currentUser is logged in/redux state is populated
   useEffect(() => {
@@ -75,8 +77,6 @@ const Upload = () => {
       setCurrentUserId(currentUser.id);
     }
   }, [currentUser]);
-
-  const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
   const onSubmit = async (values, { setSubmitting }) => {
     /*
@@ -251,14 +251,12 @@ const Upload = () => {
               </h1>
               <BookUpload />
               <IssueUpload />
-              <Modal isOpen={modalIsOpen} onClose={toggleModal}>
-                <h2 className="modal-head">Upload Progress: </h2>
-                <ProgressBar uploadPercentage={uploadPercentage} />
-                <ModalStatusMessage
-                  errorMessage={errorMessage}
-                  uploadPercentage={uploadPercentage}
-                />
-              </Modal>
+              <SubmissionProgressModal
+                modalIsOpen={modalIsOpen}
+                toggleModal={toggleModal}
+                errorMessage={errorMessage}
+                uploadPercentage={uploadPercentage}
+              />
               <button type="submit" className="form-submit form-item">
                 Submit
               </button>
