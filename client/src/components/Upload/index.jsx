@@ -4,9 +4,7 @@ import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { createBook, getBookAndIssueImagePrefix } from "../../services";
-// import UploadTemplate from "./UploadTemplate";
-// import Modal from "../CommonUI/Modal";
-// import ProgressBar from "../CommonUI/ProgressBar";
+import onUploadProgressHelper from "./onUploadProgressHelper";
 import SubmissionProgressModal from "./SubmissionProgressModal";
 import BookUpload from "./BookUpload";
 import IssueUpload from "./IssueUpload";
@@ -29,34 +27,6 @@ const {
     },
   },
 } = CONSTANTS;
-
-// const ModalStatusMessage = ({ errorMessage, uploadPercentage }) => {
-//   const [currentUploadPercentage, setCurrentUploadPercentage] =
-//     useState(uploadPercentage);
-
-//   useEffect(() => {
-//     setCurrentUploadPercentage(uploadPercentage);
-//   }, [uploadPercentage]);
-
-//   if (errorMessage) {
-//     return (
-//       <div className="error-message error-text-color modal-spacing-md-top">
-//         {errorMessage}
-//       </div>
-//     );
-//   }
-
-//   const progressMessage =
-//     currentUploadPercentage === 100
-//       ? "Upload was successful!"
-//       : "Still loading... Please wait.";
-
-//   return (
-//     <div className="success-text-color modal-spacing-md-top">
-//       {progressMessage}
-//     </div>
-//   );
-// };
 
 const Upload = () => {
   // redirect after completed
@@ -120,7 +90,7 @@ const Upload = () => {
         formData.append("issueAssets", formValue)
       );
 
-      console.log("triggered", values);
+      // console.log("triggered", values);
 
       //   return;
       // open modal
@@ -130,24 +100,11 @@ const Upload = () => {
       This is needed to show the percentage of the uploaded file. onUploadProgress is a 
       property provided by axios
       */
-      const config = {
-        onUploadProgress(progressEvent) {
-          // set setUploadPercentage hook with the upload percentage
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
+      const config = onUploadProgressHelper(setUploadPercentage);
 
-          // stop bar from filling to 100 until promise is returned.
-          if (progress > 95) {
-            setUploadPercentage(95);
-            return;
-          }
+      // const createBookRes = await createBook(formData, config);
+      await createBook(formData, config);
 
-          setUploadPercentage(progress);
-        },
-      };
-
-      const createBookRes = await createBook(formData, config);
       // Set progress bar to 100 percent upon returned promise
       setUploadPercentage(100);
 
@@ -157,9 +114,9 @@ const Upload = () => {
         history.push("/");
       }, 2000);
 
-      console.log("success", createBookRes);
+      // console.log("success", createBookRes);
     } catch (err) {
-      console.log("failed", err.response.data.message);
+      // console.log("failed", err.response.data.message);
       setErrorMessage("An Error occurred. Please try again Later.");
       setUploadPercentage(0);
     }
@@ -265,25 +222,6 @@ const Upload = () => {
         />
       </div>
     </div>
-    // <UploadTemplate
-    //   onSubmit={onSubmit}
-    //   initialValues={{
-    //     bookTitle: "",
-    //     bookCoverPhoto: null,
-    //     bookDescription: "",
-    //     urlSlug: "",
-    //     issueTitle: "",
-    //     issueCoverPhoto: null,
-    //     issueDescription: "",
-    //     genres: [],
-    //     issueAssets: [],
-    //     workCredits: [{ user: currentUserId, credits: [] }],
-    //   }}
-    //   currentUsername={currentUsername}
-    //   toggleModal={toggleModal}
-    //   uploadPercentage={uploadPercentage}
-    //   errorMessage={errorMessage}
-    // />
   );
 };
 export default memo(Upload);
