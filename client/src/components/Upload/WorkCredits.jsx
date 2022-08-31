@@ -114,14 +114,14 @@ const WorkCreditsFields = ({ identifier, apiResults, clearTextInput }) => {
                       type="multiple"
                       wrapperElement="li"
                       checkboxValue={[
-                        { name: "Writer" },
-                        { name: "Artist" },
-                        { name: "Editor" },
-                        { name: "Inker" },
-                        { name: "Letterer" },
-                        { name: "Penciller" },
-                        { name: "Colorist" },
-                        { name: "Cover Artist" },
+                        { name: "Writer", value: "Writer" },
+                        { name: "Artist", value: "Artist" },
+                        { name: "Editor", value: "Editor" },
+                        { name: "Inker", value: "Inker" },
+                        { name: "Letterer", value: "Letterer" },
+                        { name: "Penciller", value: "Penciller" },
+                        { name: "Colorist", value: "Colorist" },
+                        { name: "Cover Artist", value: "Cover Artist" },
                       ]}
                     />
                   </ul>
