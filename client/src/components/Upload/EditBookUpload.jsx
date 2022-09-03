@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Field, Formik, Form, ErrorMessage } from "formik";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getUsersBook } from "../../services";
+import { getUsersBook, getBookAndIssueImagePrefix } from "../../services";
 import BookUpload from "./BookUpload";
 import {
   // eslint-disable-next-line no-unused-vars
@@ -12,6 +12,8 @@ import {
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
+import onUploadProgressHelper from "./onUploadProgressHelper";
+import SubmissionProgressModal from "./SubmissionProgressModal";
 import CONSTANTS from "../../utils/Constants";
 import "./upload.scss";
 
@@ -30,9 +32,6 @@ const EditBookUpload = () => {
   // redirect after completed
   const history = useHistory();
   const { urlSlug, bookId } = useParams();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(false);
   const [loadingInitialData, setLoadingInitialData] = useState(true);
 
   const currentUser = useSelector((state) => state.auth.user);
@@ -40,6 +39,11 @@ const EditBookUpload = () => {
   // const [currentURLSlug] = useState(urlSlug);
   // const [currentIssueInfo, setCurrentIssueInfo] = useState({});
   // console.log(urlSlug);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
+  const toggleModal = () => setModalIsOpen(!modalIsOpen);
+
   const statusOption = ["Ongoing", "Completed", "Hiatus"];
 
   useEffect(() => {
@@ -90,9 +94,54 @@ const EditBookUpload = () => {
     })();
   }, [bookId, currentUser, urlSlug]);
 
-  const toggleModal = () => setModalIsOpen(!modalIsOpen);
-
   const onSubmit = async (values, { setSubmitting }) => {
+    try {
+      const imagePrefixesRes = await getBookAndIssueImagePrefix();
+      const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;
+      // console.log('res', res);
+      const formData = new FormData();
+
+      formData.append("bookTitle", values.bookTitle);
+      formData.append("bookDescription", values.bookDescription);
+      formData.append("urlSlug", values.urlSlug);
+      formData.append("bookImagePrefixRef", bookImagePrefixRef);
+      formData.append("issueImagePrefixRef", issueImagePrefixRef);
+      formData.append("genres", JSON.stringify(values.genres));
+      // All Files must be moved to the bottom so that multer reads them last
+      formData.append("bookCoverPhoto", values.bookCoverPhoto);
+      formData.append("issueCoverPhoto", values.issueCoverPhoto);
+
+      // console.log("triggered", values);
+
+      //   return;
+      // open modal
+      toggleModal();
+
+      /*
+      This is needed to show the percentage of the uploaded file. onUploadProgress is a 
+      property provided by axios
+      */
+      const config = onUploadProgressHelper(setUploadPercentage);
+
+      // await createBook(formData, config);
+
+      // Set progress bar to 100 percent upon returned promise
+      setUploadPercentage(100);
+
+      setTimeout(() => {
+        // after a couple of seconds close modal and redirect to new page
+        toggleModal();
+        history.push("/");
+      }, 2000);
+
+      // console.log("success", createBookRes);
+    } catch (err) {
+      // console.log("failed", err.response.data.message);
+      setErrorMessage(
+        "An Error occurred while updating the data for this work. Please try again later."
+      );
+      setUploadPercentage(0);
+    }
     setSubmitting(false);
   };
 
@@ -213,6 +262,12 @@ const EditBookUpload = () => {
                     </label>
                   </li>
                 </div>
+                <SubmissionProgressModal
+                  modalIsOpen={modalIsOpen}
+                  toggleModal={toggleModal}
+                  errorMessage={errorMessage}
+                  uploadPercentage={uploadPercentage}
+                />
                 <button type="submit" className="form-submit form-item">
                   Submit
                 </button>
