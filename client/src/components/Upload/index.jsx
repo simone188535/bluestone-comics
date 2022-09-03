@@ -117,7 +117,9 @@ const Upload = () => {
       // console.log("success", createBookRes);
     } catch (err) {
       // console.log("failed", err.response.data.message);
-      setErrorMessage("An Error occurred. Please try again Later.");
+      setErrorMessage(
+        "An Error occurred while uploading. Please try again later."
+      );
       setUploadPercentage(0);
     }
 
