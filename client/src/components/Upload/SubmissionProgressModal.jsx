@@ -42,12 +42,17 @@ const SubmissionProgressModal = ({
       onClose={toggleModal}
       doesModalBackDropClose={false}
     >
-      <h2 className="modal-head">Upload Progress: </h2>
-      <ProgressBar uploadPercentage={uploadPercentage} />
-      <ModalStatusMessage
-        errorMessage={errorMessage}
-        uploadPercentage={uploadPercentage}
-      />
+      {!errorMessage ? (
+        <>
+          <h2 className="modal-head">Upload Progress: </h2>
+          <ProgressBar uploadPercentage={uploadPercentage} />
+        </>
+      ) : (
+        <ModalStatusMessage
+          errorMessage={errorMessage}
+          uploadPercentage={uploadPercentage}
+        />
+      )}
     </Modal>
   );
 };
