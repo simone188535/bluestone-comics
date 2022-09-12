@@ -63,15 +63,16 @@ function getUsersIssues(urlSlug, bookId, pageNumber) {
   );
 }
 
-// function getUsersIssues(urlSlug, bookId, pageNumber) {
-//   const config = configObjects();
-//   const appendedConfig = configPageNumber(config, pageNumber);
+function updateBook(urlSlug, bookId, formData) {
+  const config = configObjects();
+  // const appendedConfig = configPageNumber(config, pageNumber);
 
-//   return axios.get(
-//     `/api/v1/publish/${urlSlug}/book/${bookId}/issues`,
-//     appendedConfig()
-//   );
-// }
+  return axios.update(
+    `/api/v1/publish/${urlSlug}/book/${bookId}`,
+    formData,
+    config
+  );
+}
 
 export {
   createBook,
@@ -79,4 +80,5 @@ export {
   getUsersBook,
   getUsersIssue,
   getUsersIssues,
+  updateBook,
 };

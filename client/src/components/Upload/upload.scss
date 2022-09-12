@@ -50,6 +50,18 @@
             margin: 5rem auto;
         }
 
+        .delete-book-btn-section {
+            .delete-book-btn {
+              margin: 0 auto;
+              display: block;
+
+                &-header {
+                  font-size: 16px;
+                  line-height: 1.5em;
+                }
+            }
+            margin-top: 40px;
+        }
     }
 }
 

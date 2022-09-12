@@ -36,13 +36,11 @@ const EditBookUpload = () => {
 
   const currentUser = useSelector((state) => state.auth.user);
   const [currentBookInfo, setCurrentBookInfo] = useState({});
-  // const [currentURLSlug] = useState(urlSlug);
-  // const [currentIssueInfo, setCurrentIssueInfo] = useState({});
-  // console.log(urlSlug);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const [submissionModalIsOpen, setSubmissionModalIsOpen] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
-  const toggleModal = () => setModalIsOpen(!modalIsOpen);
+  const toggleModal = () => setSubmissionModalIsOpen(!submissionModalIsOpen);
 
   const statusOption = ["Ongoing", "Completed", "Hiatus"];
 
@@ -107,9 +105,10 @@ const EditBookUpload = () => {
       formData.append("bookImagePrefixRef", bookImagePrefixRef);
       formData.append("issueImagePrefixRef", issueImagePrefixRef);
       formData.append("genres", JSON.stringify(values.genres));
+      // the removed field will need to be hooked up later. This a needed placeholder
+      formData.append("removed", values.removed);
       // All Files must be moved to the bottom so that multer reads them last
       formData.append("bookCoverPhoto", values.bookCoverPhoto);
-      formData.append("issueCoverPhoto", values.issueCoverPhoto);
 
       // console.log("triggered", values);
 
@@ -164,7 +163,7 @@ const EditBookUpload = () => {
               urlSlug: currentBookInfo.currentURLSlug,
               genres: currentBookInfo.genres,
               status: currentBookInfo.status,
-              removed: currentBookInfo.removed,
+              removed: false,
             }}
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),
@@ -202,27 +201,28 @@ const EditBookUpload = () => {
             onSubmit={onSubmit}
             enableReinitialize
             component={() => (
-              <Form
-                className="bsc-form upload-form"
-                encType="multipart/form-data"
-                method="post"
-              >
-                <h1 className="form-header-text">
-                  Edit An <strong>Existing Book</strong>
-                </h1>
+              <>
+                <Form
+                  className="bsc-form upload-form"
+                  encType="multipart/form-data"
+                  method="post"
+                >
+                  <h1 className="form-header-text">
+                    Edit An <strong>Existing Book</strong>
+                  </h1>
 
-                <BookUpload
-                  bookCoverPhotoData={{
-                    identifier: "bookCoverPhoto",
-                    toBeRemovedField: "bookCoverPhotoToBeRemoved",
-                    hasPrevUploadedData: true,
-                  }}
-                />
-                <div className="form-header-text">
-                  Select the <strong>status</strong> of this book:
-                </div>
-                <ul className="checkbox-group upload-checkboxes">
-                  {/* <Checkboxes
+                  <BookUpload
+                    bookCoverPhotoData={{
+                      identifier: "bookCoverPhoto",
+                      toBeRemovedField: "bookCoverPhotoToBeRemoved",
+                      hasPrevUploadedData: true,
+                    }}
+                  />
+                  <div className="form-header-text">
+                    Select the <strong>status</strong> of this book:
+                  </div>
+                  <ul className="checkbox-group upload-checkboxes">
+                    {/* <Checkboxes
                     identifier="status"
                     type="single"
                     wrapperElement="li"
@@ -232,26 +232,26 @@ const EditBookUpload = () => {
                       { name: "Hiatus", value: "hiatus" },
                     ]}
                   /> */}
-                  {statusOption.map((status) => (
-                    <li key={`${status}-radio-item`}>
-                      <label htmlFor="status">
-                        <Field
-                          type="radio"
-                          name="status"
-                          value={status.toLowerCase()}
-                          id={status}
-                        />
-                        {status}
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-                <ErrorMessage
-                  className="error-message error-text-color"
-                  component="div"
-                  name="status"
-                />
-                <div className="form-header-text">
+                    {statusOption.map((status) => (
+                      <li key={`${status}-radio-item`}>
+                        <label htmlFor="status">
+                          <Field
+                            type="radio"
+                            name="status"
+                            value={status.toLowerCase()}
+                            id={status}
+                          />
+                          {status}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                  <ErrorMessage
+                    className="error-message error-text-color"
+                    component="div"
+                    name="status"
+                  />
+                  {/* <div className="form-header-text">
                   Select this checkbox to <strong>Delete</strong> this work
                 </div>
                 <div className="checkbox-group upload-checkboxes">
@@ -261,17 +261,30 @@ const EditBookUpload = () => {
                       <span>Delete</span>
                     </label>
                   </li>
-                </div>
-                <SubmissionProgressModal
-                  modalIsOpen={modalIsOpen}
-                  toggleModal={toggleModal}
-                  errorMessage={errorMessage}
-                  uploadPercentage={uploadPercentage}
-                />
-                <button type="submit" className="form-submit form-item">
-                  Submit
-                </button>
-              </Form>
+                </div> */}
+                  <SubmissionProgressModal
+                    modalIsOpen={submissionModalIsOpen}
+                    toggleModal={toggleModal}
+                    errorMessage={errorMessage}
+                    uploadPercentage={uploadPercentage}
+                  />
+                  <button type="submit" className="form-submit form-item">
+                    Submit
+                  </button>
+                </Form>
+                <section className="delete-book-btn-section">
+                  <h1 className="delete-book-btn-header">
+                    <strong>Permanently Delete This Book!</strong>
+                  </h1>
+                  <button
+                    type="button"
+                    className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
+                    onClick={() => {}}
+                  >
+                    Delete Book
+                  </button>
+                </section>
+              </>
             )}
           />
         )}
