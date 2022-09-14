@@ -17,7 +17,7 @@ import {
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
-import * as ErrMsg from "../CommonUI/ErrorMessage";
+import ErrMsg from "../CommonUI/ErrorMessage";
 import onUploadProgressHelper from "./onUploadProgressHelper";
 import SubmissionProgressModal from "./SubmissionProgressModal";
 import Modal from "../CommonUI/Modal";
@@ -39,15 +39,19 @@ const {
 const DeleteWork = ({ urlSlug, bookId }) => {
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [deleteErr, setDeleteErr] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
-  const deleteHelper = async () => {
+  const deleteHelper = (e) => {
+    e.stopPropagation();
+    setDeleting(true);
     try {
-      throw new Error();
+      throw new Error("error");
       // await deleteBook(urlSlug, bookId);
     } catch (err) {
       setDeleteErr(true);
     }
     // setDeleteModalIsOpen(false);
+    setDeleting(false);
   };
 
   return (
@@ -56,14 +60,24 @@ const DeleteWork = ({ urlSlug, bookId }) => {
         <Modal
           isOpen={deleteModalIsOpen}
           onClose={() => setDeleteModalIsOpen(false)}
+          isCloseButtonPresent={false}
           className="delete-work-modal"
         >
           {!deleteErr ? (
-            <h2>
-              <strong>
-                Are you sure that you want to permanently delete this work?
-              </strong>
-            </h2>
+            <div>
+              <h2>
+                <strong>
+                  {deleting
+                    ? "Deleting...."
+                    : "Are you sure that you want to permanently delete this work?"}
+                </strong>
+              </h2>
+              {deleting ? (
+                <p>This may take a while, please be patient.</p>
+              ) : (
+                <></>
+              )}
+            </div>
           ) : (
             <ErrMsg
               errorStatus={deleteErr}
@@ -74,16 +88,21 @@ const DeleteWork = ({ urlSlug, bookId }) => {
             <button
               type="button"
               className="bsc-button action-btn transparent transparent-red prompt-btn"
-              // onClick={deleteHelper}
-              onClick={() => null}
+              disabled={deleting}
+              onClick={(e) => deleteHelper(e)}
             >
               Delete
             </button>
             <button
               type="button"
               className="bsc-button action-btn transparent transparent-blue"
-              // onClick={() => setDeleteModalIsOpen(false)}
-              onClick={(e) => e.stopPropagation()}
+              disabled={deleting}
+              onClick={() => {
+                // e.stopPropagation();
+                setDeleteModalIsOpen(false);
+                setDeleteErr(false);
+                setDeleting(false);
+              }}
             >
               Cancel
             </button>
