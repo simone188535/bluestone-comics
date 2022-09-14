@@ -36,21 +36,28 @@ const {
   },
 } = CONSTANTS;
 
-const DeleteWork = ({ urlSlug, bookId }) => {
+const DeleteWork = ({ urlSlug, bookId, history, username }) => {
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [deleteErr, setDeleteErr] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const deleteHelper = (e) => {
+  const deleteHelper = async (e) => {
     e.stopPropagation();
     setDeleting(true);
     try {
-      throw new Error("error");
-      // await deleteBook(urlSlug, bookId);
+      // throw new Error("error");
+      await deleteBook(urlSlug, bookId);
+      if (username) history.push(`/profile/${username}`);
     } catch (err) {
       setDeleteErr(true);
     }
-    // setDeleteModalIsOpen(false);
+    setDeleting(false);
+    setDeleteModalIsOpen(false);
+  };
+
+  const resetModal = () => {
+    setDeleteModalIsOpen(false);
+    setDeleteErr(false);
     setDeleting(false);
   };
 
@@ -59,8 +66,8 @@ const DeleteWork = ({ urlSlug, bookId }) => {
       {deleteModalIsOpen && (
         <Modal
           isOpen={deleteModalIsOpen}
-          onClose={() => setDeleteModalIsOpen(false)}
-          isCloseButtonPresent={false}
+          onClose={() => resetModal()}
+          isCloseButtonPresent={deleteErr}
           className="delete-work-modal"
         >
           {!deleteErr ? (
@@ -72,40 +79,35 @@ const DeleteWork = ({ urlSlug, bookId }) => {
                     : "Are you sure that you want to permanently delete this work?"}
                 </strong>
               </h2>
-              {deleting ? (
-                <p>This may take a while, please be patient.</p>
-              ) : (
-                <></>
-              )}
+              {deleting && <p>This may take a while, please be patient.</p>}
             </div>
           ) : (
             <ErrMsg
               errorStatus={deleteErr}
-              messageText="An Error occurred. Please try again later"
+              messageText="An Error occurred. Please try again later."
             />
           )}
           <section className="action-btn-container">
-            <button
-              type="button"
-              className="bsc-button action-btn transparent transparent-red prompt-btn"
-              disabled={deleting}
-              onClick={(e) => deleteHelper(e)}
-            >
-              Delete
-            </button>
-            <button
-              type="button"
-              className="bsc-button action-btn transparent transparent-blue"
-              disabled={deleting}
-              onClick={() => {
-                // e.stopPropagation();
-                setDeleteModalIsOpen(false);
-                setDeleteErr(false);
-                setDeleting(false);
-              }}
-            >
-              Cancel
-            </button>
+            {!deleteErr && (
+              <>
+                <button
+                  type="button"
+                  className="bsc-button action-btn transparent transparent-red prompt-btn"
+                  disabled={deleting}
+                  onClick={(e) => deleteHelper(e)}
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  className="bsc-button action-btn transparent transparent-blue"
+                  disabled={deleting}
+                  onClick={() => resetModal()}
+                >
+                  Cancel
+                </button>
+              </>
+            )}
           </section>
         </Modal>
       )}
@@ -366,7 +368,12 @@ const EditBookUpload = () => {
                     Submit
                   </button>
                 </Form>
-                <DeleteWork urlSlug={urlSlug} bookId={bookId} />
+                <DeleteWork
+                  urlSlug={urlSlug}
+                  bookId={bookId}
+                  history={history}
+                  username={currentUser?.username}
+                />
               </>
             )}
           />
