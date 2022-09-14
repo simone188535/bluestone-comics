@@ -74,6 +74,12 @@ function updateBook(urlSlug, bookId, formData) {
   );
 }
 
+function deleteBook(urlSlug, bookId) {
+  const config = configObjects();
+
+  return axios.delete(`/api/v1/publish/${urlSlug}/book/${bookId}`, config);
+}
+
 export {
   createBook,
   getBookAndIssueImagePrefix,
@@ -81,4 +87,5 @@ export {
   getUsersIssue,
   getUsersIssues,
   updateBook,
+  deleteBook,
 };

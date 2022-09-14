@@ -1,0 +1,15 @@
+.delete-work-modal {
+    .modal-box {
+        height: auto;
+        .action-btn {
+            &-container {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            }
+            min-width: 200px;
+            margin-bottom: 10px;
+        }
+    }
+}

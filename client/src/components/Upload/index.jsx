@@ -105,14 +105,11 @@ const Upload = () => {
       // const createBookRes = await createBook(formData, config);
       await createBook(formData, config);
 
-      // Set progress bar to 100 percent upon returned promise
-      setUploadPercentage(100);
-
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
         history.push("/");
-      }, 2000);
+      }, 500);
 
       // console.log("success", createBookRes);
     } catch (err) {

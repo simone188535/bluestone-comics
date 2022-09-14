@@ -3,7 +3,12 @@ import * as Yup from "yup";
 import { Field, Formik, Form, ErrorMessage } from "formik";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getUsersBook, getBookAndIssueImagePrefix } from "../../services";
+import {
+  getUsersBook,
+  getBookAndIssueImagePrefix,
+  createBook,
+  deleteBook,
+} from "../../services";
 import BookUpload from "./BookUpload";
 import {
   // eslint-disable-next-line no-unused-vars
@@ -12,10 +17,13 @@ import {
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
+import * as ErrMsg from "../CommonUI/ErrorMessage";
 import onUploadProgressHelper from "./onUploadProgressHelper";
 import SubmissionProgressModal from "./SubmissionProgressModal";
+import Modal from "../CommonUI/Modal";
 import CONSTANTS from "../../utils/Constants";
 import "./upload.scss";
+import "../CommonUI/Modal/styles/delete-work-modal.scss";
 
 const {
   IMAGE_UPLOAD_DIMENSIONS: {
@@ -27,6 +35,76 @@ const {
     },
   },
 } = CONSTANTS;
+
+const DeleteWork = ({ urlSlug, bookId }) => {
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+  const [deleteErr, setDeleteErr] = useState(false);
+
+  const deleteHelper = async () => {
+    try {
+      throw new Error();
+      // await deleteBook(urlSlug, bookId);
+    } catch (err) {
+      setDeleteErr(true);
+    }
+    // setDeleteModalIsOpen(false);
+  };
+
+  return (
+    <>
+      {deleteModalIsOpen && (
+        <Modal
+          isOpen={deleteModalIsOpen}
+          onClose={() => setDeleteModalIsOpen(false)}
+          className="delete-work-modal"
+        >
+          {!deleteErr ? (
+            <h2>
+              <strong>
+                Are you sure that you want to permanently delete this work?
+              </strong>
+            </h2>
+          ) : (
+            <ErrMsg
+              errorStatus={deleteErr}
+              messageText="An Error occurred. Please try again later"
+            />
+          )}
+          <section className="action-btn-container">
+            <button
+              type="button"
+              className="bsc-button action-btn transparent transparent-red prompt-btn"
+              // onClick={deleteHelper}
+              onClick={() => null}
+            >
+              Delete
+            </button>
+            <button
+              type="button"
+              className="bsc-button action-btn transparent transparent-blue"
+              // onClick={() => setDeleteModalIsOpen(false)}
+              onClick={(e) => e.stopPropagation()}
+            >
+              Cancel
+            </button>
+          </section>
+        </Modal>
+      )}
+      <section className="delete-book-btn-section">
+        <h1 className="delete-book-btn-header">
+          <strong>Permanently Delete This Book!</strong>
+        </h1>
+        <button
+          type="button"
+          className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
+          onClick={() => setDeleteModalIsOpen(true)}
+        >
+          Delete Book
+        </button>
+      </section>
+    </>
+  );
+};
 
 const EditBookUpload = () => {
   // redirect after completed
@@ -122,16 +200,13 @@ const EditBookUpload = () => {
       */
       const config = onUploadProgressHelper(setUploadPercentage);
 
-      // await createBook(formData, config);
-
-      // Set progress bar to 100 percent upon returned promise
-      setUploadPercentage(100);
+      await createBook(formData, config);
 
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
         history.push("/");
-      }, 2000);
+      }, 500);
 
       // console.log("success", createBookRes);
     } catch (err) {
@@ -272,18 +347,7 @@ const EditBookUpload = () => {
                     Submit
                   </button>
                 </Form>
-                <section className="delete-book-btn-section">
-                  <h1 className="delete-book-btn-header">
-                    <strong>Permanently Delete This Book!</strong>
-                  </h1>
-                  <button
-                    type="button"
-                    className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
-                    onClick={() => {}}
-                  >
-                    Delete Book
-                  </button>
-                </section>
+                <DeleteWork urlSlug={urlSlug} bookId={bookId} />
               </>
             )}
           />
