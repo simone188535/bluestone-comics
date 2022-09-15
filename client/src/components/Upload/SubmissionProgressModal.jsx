@@ -42,7 +42,7 @@ const SubmissionProgressModal = ({
       isOpen={modalIsOpen}
       onClose={toggleModal}
       doesModalBackDropClose={false}
-      isCloseButtonPresent={false}
+      isCloseButtonPresent={errorMessage}
       className="upload-perc-modal"
     >
       {!errorMessage ? (
