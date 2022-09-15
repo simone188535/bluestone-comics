@@ -5,9 +5,9 @@ import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   getUsersBook,
-  getBookAndIssueImagePrefix,
-  createBook,
+  updateBook,
   deleteBook,
+  updateBookCoverPhoto,
 } from "../../services";
 import BookUpload from "./BookUpload";
 import {
@@ -193,19 +193,16 @@ const EditBookUpload = () => {
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
-      const imagePrefixesRes = await getBookAndIssueImagePrefix();
-      const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;
-      // console.log('res', res);
       const formData = new FormData();
 
       formData.append("bookTitle", values.bookTitle);
       formData.append("bookDescription", values.bookDescription);
       formData.append("urlSlug", values.urlSlug);
-      formData.append("bookImagePrefixRef", bookImagePrefixRef);
-      formData.append("issueImagePrefixRef", issueImagePrefixRef);
       formData.append("genres", JSON.stringify(values.genres));
       // the removed field will need to be hooked up later. This a needed placeholder
       formData.append("removed", values.removed);
+
+      const formDataBookCoverPhoto = new FormData();
       // All Files must be moved to the bottom so that multer reads them last
       formData.append("bookCoverPhoto", values.bookCoverPhoto);
 
@@ -221,7 +218,15 @@ const EditBookUpload = () => {
       */
       const config = onUploadProgressHelper(setUploadPercentage);
 
-      await createBook(formData, config);
+      // set state should be divided by 2
+      await updateBook(urlSlug, bookId, formData);
+      // set state should be multiplied by 2
+      await updateBookCoverPhoto(
+        urlSlug,
+        bookId,
+        formDataBookCoverPhoto,
+        config
+      );
 
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
@@ -318,16 +323,6 @@ const EditBookUpload = () => {
                     Select the <strong>status</strong> of this book:
                   </div>
                   <ul className="checkbox-group upload-checkboxes">
-                    {/* <Checkboxes
-                    identifier="status"
-                    type="single"
-                    wrapperElement="li"
-                    checkboxValue={[
-                      { name: "Ongoing", value: "ongoing" },
-                      { name: "Completed", value: "completed" },
-                      { name: "Hiatus", value: "hiatus" },
-                    ]}
-                  /> */}
                     {statusOption.map((status) => (
                       <li key={`${status}-radio-item`}>
                         <label htmlFor="status">
@@ -347,17 +342,6 @@ const EditBookUpload = () => {
                     component="div"
                     name="status"
                   />
-                  {/* <div className="form-header-text">
-                  Select this checkbox to <strong>Delete</strong> this work
-                </div>
-                <div className="checkbox-group upload-checkboxes">
-                  <li>
-                    <label className="checkbox-item" htmlFor="removed">
-                      <Field type="checkbox" name="removed" id="removed" />
-                      <span>Delete</span>
-                    </label>
-                  </li>
-                </div> */}
                   <SubmissionProgressModal
                     modalIsOpen={submissionModalIsOpen}
                     toggleModal={toggleModal}

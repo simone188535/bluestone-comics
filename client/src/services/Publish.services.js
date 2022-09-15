@@ -12,17 +12,9 @@ function createBook(formData, config = {}) {
   return axios.post("/api/v1/publish", formData, config);
 }
 
-function getBookAndIssueImagePrefix(
-  bookId = "",
-  issueNumber = "",
-  config = {}
-) {
+function getBookAndIssueImagePrefix(bookId = "", issueNumber = "") {
   // send request to create a book which will contain the first issue
-  const jwtToken = localStorage.getItem("jwtToken");
-
-  config.headers = {
-    Authorization: `Bearer ${jwtToken}`,
-  };
+  const config = configObjects();
 
   let optionalBookIssue = ``;
 
@@ -63,14 +55,15 @@ function getUsersIssues(urlSlug, bookId, pageNumber) {
   );
 }
 
-function updateBook(urlSlug, bookId, formData) {
-  const config = configObjects();
+function updateBook(urlSlug, bookId, formData, config = {}) {
+  const configObj = configObjects();
+  const newConfigObj = Object.assign(config, configObj);
   // const appendedConfig = configPageNumber(config, pageNumber);
 
   return axios.update(
     `/api/v1/publish/${urlSlug}/book/${bookId}`,
     formData,
-    config
+    newConfigObj
   );
 }
 
@@ -80,6 +73,17 @@ function deleteBook(urlSlug, bookId) {
   return axios.delete(`/api/v1/publish/${urlSlug}/book/${bookId}`, config);
 }
 
+function updateBookCoverPhoto(urlSlug, bookId, formData, config = {}) {
+  // update previously existing book cover photo
+  const configObj = configObjects();
+  const newConfigObj = Object.assign(config, configObj);
+
+  return axios.patch(
+    `/api/v1/publish/${urlSlug}/book/${bookId}/book-cover-photo`,
+    formData,
+    newConfigObj
+  );
+}
 export {
   createBook,
   getBookAndIssueImagePrefix,
@@ -88,4 +92,5 @@ export {
   getUsersIssues,
   updateBook,
   deleteBook,
+  updateBookCoverPhoto,
 };
