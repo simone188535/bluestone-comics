@@ -185,7 +185,7 @@ exports.updateProfileImg = catchAsync(async (req, res, next) => {
   let updatedUser = null;
   let uploadFilePath = null;
   const userId = res.locals.user.id;
-  const { fieldname, mimetype, buffer } = req.file;
+  const { fieldname, originalname, mimetype, buffer } = req.file;
 
   const userProfilePics = await new QueryPG(pool).find(
     'user_photo',
@@ -205,7 +205,7 @@ exports.updateProfileImg = catchAsync(async (req, res, next) => {
     Body: buffer,
     ACL: 'public-read',
     ContentType: mimetype,
-    Metadata: { fieldName: fieldname }
+    Metadata: { name: originalname, fieldName: fieldname }
   });
 
   if (userProfilePics.user_photo.includes('profile-pic.jpeg')) {
@@ -231,7 +231,7 @@ exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
   let updatedUser = null;
   let uploadFilePath = null;
   const userId = res.locals.user.id;
-  const { fieldname, mimetype, buffer } = req.file;
+  const { fieldname, originalname, mimetype, buffer } = req.file;
 
   const userBackgroundProfilePic = await new QueryPG(pool).find(
     'background_user_photo',
@@ -259,7 +259,7 @@ exports.updateBackgroundProfileImg = catchAsync(async (req, res, next) => {
       Body: buffer,
       ACL: 'public-read',
       ContentType: mimetype,
-      Metadata: { fieldName: fieldname }
+      Metadata: { name: originalname, fieldName: fieldname }
     }
   );
 
