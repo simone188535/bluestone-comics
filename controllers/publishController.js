@@ -351,7 +351,10 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 
 exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
-  const { fieldname, mimetype, buffer } = req.file;
+  const existingFile = req.file;
+
+  if (!existingFile) return next(new AppError(`No File provided.`, 204));
+  const { fieldname, originalname, mimetype, buffer } = existingFile;
 
   const bookCoverPhotoByCurrentUser = await new QueryPG(pool).find(
     'cover_photo',
@@ -374,7 +377,7 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
       Body: buffer,
       ACL: 'public-read',
       ContentType: mimetype,
-      Metadata: { fieldName: fieldname }
+      Metadata: { name: originalname, fieldName: fieldname }
     }
   );
 
