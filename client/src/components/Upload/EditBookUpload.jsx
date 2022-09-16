@@ -195,16 +195,17 @@ const EditBookUpload = () => {
     try {
       const formData = new FormData();
 
-      formData.append("bookTitle", values.bookTitle);
-      formData.append("bookDescription", values.bookDescription);
+      formData.append("title", values.bookTitle);
+      formData.append("description", values.bookDescription);
       formData.append("urlSlug", values.urlSlug);
       formData.append("genres", JSON.stringify(values.genres));
+      formData.append("status", values.status);
       // the removed field will need to be hooked up later. This a needed placeholder
       formData.append("removed", values.removed);
 
       const formDataBookCoverPhoto = new FormData();
       // All Files must be moved to the bottom so that multer reads them last
-      formData.append("bookCoverPhoto", values.bookCoverPhoto);
+      formDataBookCoverPhoto.append("bookCoverPhoto", values.bookCoverPhoto);
 
       // console.log("triggered", values);
 
@@ -216,16 +217,24 @@ const EditBookUpload = () => {
       This is needed to show the percentage of the uploaded file. onUploadProgress is a 
       property provided by axios
       */
-      const config = onUploadProgressHelper(setUploadPercentage);
 
-      // set state should be divided by 2
-      await updateBook(urlSlug, bookId, formData);
-      // set state should be multiplied by 2
+      // onUploadProgressHelper is be divided by 2 because the first awaited function was first 50% of the upload and the other awaited function is the last 50% of the upload
+      const configUpdateBook = onUploadProgressHelper(setUploadPercentage, 2);
+      await updateBook(urlSlug, bookId, formData, configUpdateBook);
+
+      const setRemainingUploadPercentage = (remainingPercentage) =>
+        setUploadPercentage((prevState) => prevState + remainingPercentage);
+
+      const configUpdateBookCoverPhoto = onUploadProgressHelper(
+        setRemainingUploadPercentage,
+        2
+      );
+
       await updateBookCoverPhoto(
         urlSlug,
         bookId,
         formDataBookCoverPhoto,
-        config
+        configUpdateBookCoverPhoto
       );
 
       setTimeout(() => {

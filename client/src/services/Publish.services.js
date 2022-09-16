@@ -60,7 +60,7 @@ function updateBook(urlSlug, bookId, formData, config = {}) {
   const newConfigObj = Object.assign(config, configObj);
   // const appendedConfig = configPageNumber(config, pageNumber);
 
-  return axios.update(
+  return axios.patch(
     `/api/v1/publish/${urlSlug}/book/${bookId}`,
     formData,
     newConfigObj
