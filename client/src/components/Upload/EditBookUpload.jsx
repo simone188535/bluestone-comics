@@ -142,6 +142,7 @@ const EditBookUpload = () => {
   const toggleModal = () => setSubmissionModalIsOpen(!submissionModalIsOpen);
 
   const statusOption = ["Ongoing", "Completed", "Hiatus"];
+  const currentUserName = currentUser?.username;
 
   useEffect(() => {
     (async () => {
@@ -240,7 +241,7 @@ const EditBookUpload = () => {
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
-        history.push("/");
+        history.push(`/profile/${currentUserName}`);
       }, 500);
 
       // console.log("success", createBookRes);
@@ -365,7 +366,7 @@ const EditBookUpload = () => {
                   urlSlug={urlSlug}
                   bookId={bookId}
                   history={history}
-                  username={currentUser?.username}
+                  username={currentUserName}
                 />
               </>
             )}
