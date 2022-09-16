@@ -12,6 +12,10 @@
         &-as-normal {
             color: $pure-black;
             text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
         }
     }
 

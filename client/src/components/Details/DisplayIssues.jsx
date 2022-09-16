@@ -18,19 +18,24 @@ const DisplayIssues = ({ isIssue, urlSlug, bookId }) => {
 
   const displayIssues = issues.map(
     ({ title, issue_number: issueNumber, date_created: dateCreated }) => (
-      <Link
-        to="#"
-        key={nanoid()}
-        className="row issues-list-table-item desc-detail link-as-normal"
-      >
-        <div className="col left-col desc-detail bold">{title}</div>
+      <div key={nanoid()} className="row issues-list-table-item desc-detail">
+        <div className="col left-col desc-detail bold">
+          <Link to="#" className="desc-detail link-as-normal">
+            {title}
+          </Link>
+        </div>
         <div className="col mid-col desc-detail bold">
-          Issue#:&nbsp;{issueNumber}
+          <Link
+            to={`/details/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
+            className="desc-detail link-as-normal"
+          >
+            Issue#:&nbsp;{issueNumber}
+          </Link>
         </div>
         <div className="col right-col desc-detail bold">
           {moment(dateCreated).format("MMMM D, YYYY")}
         </div>
-      </Link>
+      </div>
     )
   );
   return (
