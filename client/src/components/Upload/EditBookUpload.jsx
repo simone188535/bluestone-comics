@@ -279,7 +279,7 @@ const EditBookUpload = () => {
             validationSchema={Yup.object().shape({
               bookTitle: Yup.string().required("Book Title required!"),
               bookCoverPhoto: Yup.mixed().when("bookCoverPhotoToBeRemoved", {
-                is: (password) => Boolean(password),
+                is: (val) => Boolean(val),
                 then: Yup.mixed()
                   .required("You need to provide a file")
                   .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
