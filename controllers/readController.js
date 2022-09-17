@@ -99,7 +99,8 @@ exports.getIssues = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    allIssues: issues
+    allIssues: issues,
+    issueTotal: issues.length
   });
 });
 
