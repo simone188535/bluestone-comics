@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import moment from "moment";
 import { getIssues } from "../../services";
 
-const DisplayIssues = ({ isIssue, urlSlug, bookId }) => {
+const DisplayIssues = ({ isIssue, urlSlug, bookId, belongsToUser }) => {
   const [issues, setIssues] = useState([]);
 
   useEffect(() => {
@@ -32,9 +32,32 @@ const DisplayIssues = ({ isIssue, urlSlug, bookId }) => {
             Issue#:&nbsp;{issueNumber}
           </Link>
         </div>
-        <div className="col right-col desc-detail bold">
-          {moment(dateCreated).format("MMMM D, YYYY")}
-        </div>
+        {belongsToUser && (
+          <>
+            <div className="col right-col desc-detail bold">
+              {moment(dateCreated).format("MMMM D, YYYY")}
+            </div>
+            <div className="col right-col desc-detail user-owned-col double-btn">
+              <Link
+                to={`/edit-upload/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
+                className="desc-detail link-as-normal"
+              >
+                <button
+                  type="button"
+                  className="bsc-button user-owned-btn transparent transparent-blue"
+                >
+                  Edit
+                </button>
+              </Link>
+              <button
+                type="button"
+                className="bsc-button user-owned-btn transparent transparent-red"
+              >
+                Delete
+              </button>
+            </div>
+          </>
+        )}
       </div>
     )
   );

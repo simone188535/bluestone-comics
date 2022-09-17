@@ -296,6 +296,23 @@
                 flex: 1;
                 margin: 0 1rem;
             }
+
+            .user-owned {
+                &-col {
+                    &.double-btn {
+                        justify-content: start;
+                        .user-owned-btn {
+                            &:first-child {
+                            margin-right: 10px;
+                            }
+                        }
+                    }
+                }
+                
+                &-btn {
+                  min-width: 100px;
+                }
+            }
         }
     }
 }

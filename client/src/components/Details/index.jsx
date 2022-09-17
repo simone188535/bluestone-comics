@@ -262,7 +262,12 @@ const Details = () => {
         issueNum={issueNum}
         totalIssuePages={totalIssuePages}
       />
-      <DisplayIssues isIssue={isIssue} bookId={bookId} urlSlug={urlSlug} />
+      <DisplayIssues
+        isIssue={isIssue}
+        bookId={bookId}
+        urlSlug={urlSlug}
+        belongsToUser={belongsToUser}
+      />
       {/* Add comment section in the future */}
     </div>
   );
