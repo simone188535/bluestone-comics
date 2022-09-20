@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { nanoid } from "nanoid";
 import moment from "moment";
 import { getIssues } from "../../services";
 import useIsLatestIssue from "../../hooks/useIsLatestIssue";
@@ -14,6 +13,8 @@ const MappedIssue = ({
   belongsToUser,
 }) => {
   const isLatestIssue = useIsLatestIssue(urlSlug, bookId, issueNumber);
+
+  const btnClass = isLatestIssue ? "double-btn" : "";
 
   return (
     <div className="row issues-list-table-item desc-detail">
@@ -35,7 +36,7 @@ const MappedIssue = ({
           <div className="col right-col desc-detail bold">
             {moment(dateCreated).format("MMMM D, YYYY")}
           </div>
-          <div className="col right-col desc-detail user-owned-col double-btn">
+          <div className={`col desc-detail user-owned-col ${btnClass}`}>
             <Link
               to={`/edit-upload/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
               className="desc-detail link-as-normal"

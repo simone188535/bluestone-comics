@@ -269,13 +269,18 @@
         .row {
             display: flex;
 
+            &.issues-list-table-item {
+                flex-wrap: wrap;
+            }
+
             &:first-child {
                 border-top: 2px dotted $white-gray;
             }
 
-            border-bottom: 2px dotted $white-gray;
-            padding: 10px 0;
-
+            [class*="col"] {
+                margin: 10px 0;
+              }
+  
             .col {
                 display: flex;
                 justify-content: center;
@@ -299,8 +304,9 @@
 
             .user-owned {
                 &-col {
+                    justify-content: center;
+                    flex-basis: 100%;
                     &.double-btn {
-                        justify-content: start;
                         .user-owned-btn {
                             &:first-child {
                             margin-right: 10px;
@@ -313,6 +319,8 @@
                   min-width: 100px;
                 }
             }
+            border-bottom: 2px dotted $white-gray;
+            padding: 10px 0;
         }
     }
 }
@@ -350,6 +358,18 @@
                             flex: 1 1 50%;
                         }
                     }
+                }
+            }
+        }
+
+        .issues-list-table {
+            .row { 
+                [class*="col"] {
+                  margin: 0;
+                }
+    
+                .user-owned-col {
+                    flex: 3;
                 }
             }
         }
