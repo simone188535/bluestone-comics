@@ -220,19 +220,33 @@ const Details = () => {
       );
 
     return (
-      <section className="action-btns-container action-btn-spacing secondary-info">
-        <Link to="#" className="action-btn-link">
-          <button
-            type="button"
-            className="action-btn sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
-            onClick={() => {}}
-          >
-            Read Now
-          </button>
-        </Link>
+      <>
+        <section className="action-btns-container action-btn-spacing secondary-info">
+          <Link to="#" className="action-btn-link">
+            <button
+              type="button"
+              className="action-btn sub-edit-unsub-btn bsc-button primary primary-round primary-glow"
+            >
+              Read Now
+            </button>
+          </Link>
 
-        {editOrBookmarkBtn()}
-      </section>
+          {editOrBookmarkBtn()}
+        </section>
+        {/* if book and belongs to user, show this button */}
+        {!isIssue && belongsToUser && (
+          <section className="action-btns-container secondary-info">
+            <Link to="#" className="action-btn-link">
+              <button
+                type="button"
+                className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-red"
+              >
+                Add Issue
+              </button>
+            </Link>
+          </section>
+        )}
+      </>
     );
   };
 
