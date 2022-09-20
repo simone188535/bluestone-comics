@@ -12,10 +12,11 @@ import useBelongsToCurrentUser from "../../hooks/useBelongsToCurrentUser";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import useIsBookmarked from "../../hooks/useIsBookmarked";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
+import ErrMsg from "../CommonUI/ErrorMessage";
 import "./details.scss";
 
 const Details = () => {
-  const [setErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState("");
   const [detailInfo, setDetailInfo] = useState({});
   const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
   const [isBookmarked, isBookmarkedCB] = useIsBookmarked();
@@ -253,22 +254,33 @@ const Details = () => {
           </article>
         </div>
       </div>
-      {displayPrimaryInfo("show-at-lg")}
-      {actionBtns()}
-      <ExtraInfo
-        isIssue={isIssue}
-        dateCreated={dateCreated}
-        lastUpdated={lastUpdated}
-        issueNum={issueNum}
-        totalIssuePages={totalIssuePages}
-      />
-      <DisplayIssues
-        isIssue={isIssue}
-        bookId={bookId}
-        urlSlug={urlSlug}
-        belongsToUser={belongsToUser}
-      />
-      {/* Add comment section in the future */}
+      {errMsg ? (
+        <div className="text-center mt-50">
+          <ErrMsg
+            errorStatus={errMsg}
+            messageText="An Error occurred. Please try again later."
+          />
+        </div>
+      ) : (
+        <>
+          {displayPrimaryInfo("show-at-lg")}
+          {actionBtns()}
+          <ExtraInfo
+            isIssue={isIssue}
+            dateCreated={dateCreated}
+            lastUpdated={lastUpdated}
+            issueNum={issueNum}
+            totalIssuePages={totalIssuePages}
+          />
+          <DisplayIssues
+            isIssue={isIssue}
+            bookId={bookId}
+            urlSlug={urlSlug}
+            belongsToUser={belongsToUser}
+          />
+          {/* Add comment section in the future */}
+        </>
+      )}
     </div>
   );
 };
