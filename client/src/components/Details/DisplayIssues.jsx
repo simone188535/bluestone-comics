@@ -82,7 +82,7 @@ const DisplayIssues = ({ isIssue, urlSlug, bookId, belongsToUser }) => {
         urlSlug={urlSlug}
         bookId={bookId}
         belongsToUser={belongsToUser}
-        key={nanoid()}
+        key={`mapped-issue-${dateCreated}`}
       />
     )
   );
