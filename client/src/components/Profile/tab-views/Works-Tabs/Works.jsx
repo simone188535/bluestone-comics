@@ -38,7 +38,11 @@ const Accredited = ({ filteredResults }) => {
         (worksUserParticipatedIn) => {
           return {
             id: `${accreditedWorkKeyAsString}-${worksUserParticipatedIn.book_id}-${worksUserParticipatedIn.issue_id}`,
-            listItem: `<ul class="accredited-work-group"><li class="accredited-work-group-item">Issue: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.issue_title}</a></li> <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> <li class="accredited-work-group-item">Book: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_title}</a></li></ul>`,
+            listItem: `<ul class="accredited-work-group">
+            <li class="accredited-work-group-item">Issue: <a href="/details/test-upload/book/${worksUserParticipatedIn.book_id}/issue/${worksUserParticipatedIn.issue_number}" class="accredited-work-group-item-link">${worksUserParticipatedIn.issue_title}</a></li>
+            <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> 
+            <li class="accredited-work-group-item">Book: <a href="/details/test-upload/book/${worksUserParticipatedIn.book_id}" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_title}</a></li>
+            </ul>`,
           };
         }
       );
