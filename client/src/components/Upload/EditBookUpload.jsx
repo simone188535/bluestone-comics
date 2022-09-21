@@ -10,6 +10,7 @@ import {
   updateBookCoverPhoto,
 } from "../../services";
 import BookUpload from "./BookUpload";
+import DeleteWorkModal from "./DeleteWorkModal";
 import {
   // eslint-disable-next-line no-unused-vars
   imageDimensionCheck,
@@ -17,10 +18,8 @@ import {
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
-import ErrMsg from "../CommonUI/ErrorMessage";
 import onUploadProgressHelper from "./onUploadProgressHelper";
 import SubmissionProgressModal from "./SubmissionProgressModal";
-import Modal from "../CommonUI/Modal";
 import CONSTANTS from "../../utils/Constants";
 import "./upload.scss";
 import "../CommonUI/Modal/styles/delete-work-modal.scss";
@@ -36,97 +35,6 @@ const {
   },
 } = CONSTANTS;
 
-const DeleteWork = ({ urlSlug, bookId, history, username }) => {
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
-  const [deleteErr, setDeleteErr] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-
-  const deleteHelper = async (e) => {
-    e.stopPropagation();
-    setDeleting(true);
-    try {
-      // throw new Error("error");
-      await deleteBook(urlSlug, bookId);
-      if (username) history.push(`/profile/${username}`);
-    } catch (err) {
-      setDeleteErr(true);
-    }
-    setDeleting(false);
-    setDeleteModalIsOpen(false);
-  };
-
-  const resetModal = () => {
-    setDeleteModalIsOpen(false);
-    setDeleteErr(false);
-    setDeleting(false);
-  };
-
-  return (
-    <>
-      {deleteModalIsOpen && (
-        <Modal
-          isOpen={deleteModalIsOpen}
-          onClose={() => resetModal()}
-          isCloseButtonPresent={deleteErr}
-          className="delete-work-modal"
-        >
-          {!deleteErr ? (
-            <div>
-              <h2>
-                <strong>
-                  {deleting
-                    ? "Deleting...."
-                    : "Are you sure that you want to permanently delete this work?"}
-                </strong>
-              </h2>
-              {deleting && <p>This may take a while, please be patient.</p>}
-            </div>
-          ) : (
-            <ErrMsg
-              errorStatus={deleteErr}
-              messageText="An Error occurred. Please try again later."
-            />
-          )}
-          <section className="action-btn-container">
-            {!deleteErr && (
-              <>
-                <button
-                  type="button"
-                  className="bsc-button action-btn transparent transparent-red prompt-btn"
-                  disabled={deleting}
-                  onClick={(e) => deleteHelper(e)}
-                >
-                  Delete
-                </button>
-                <button
-                  type="button"
-                  className="bsc-button action-btn transparent transparent-blue"
-                  disabled={deleting}
-                  onClick={() => resetModal()}
-                >
-                  Cancel
-                </button>
-              </>
-            )}
-          </section>
-        </Modal>
-      )}
-      <section className="delete-book-btn-section">
-        <h1 className="delete-book-btn-header">
-          <strong>Permanently Delete This Book!</strong>
-        </h1>
-        <button
-          type="button"
-          className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
-          onClick={() => setDeleteModalIsOpen(true)}
-        >
-          Delete Book
-        </button>
-      </section>
-    </>
-  );
-};
-
 const EditBookUpload = () => {
   // redirect after completed
   const history = useHistory();
@@ -137,6 +45,7 @@ const EditBookUpload = () => {
   const [currentBookInfo, setCurrentBookInfo] = useState({});
 
   const [submissionModalIsOpen, setSubmissionModalIsOpen] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const toggleModal = () => setSubmissionModalIsOpen(!submissionModalIsOpen);
@@ -255,6 +164,11 @@ const EditBookUpload = () => {
     setSubmitting(false);
   };
 
+  const deleteModal = async () => {
+    await deleteBook(urlSlug, bookId);
+    history.push(`/profile/${currentUserName}`);
+  };
+
   return (
     <div className="upload-page container min-vh100">
       <div className="upload-form-container">
@@ -362,12 +276,23 @@ const EditBookUpload = () => {
                     Submit
                   </button>
                 </Form>
-                <DeleteWork
-                  urlSlug={urlSlug}
-                  bookId={bookId}
-                  history={history}
-                  username={currentUserName}
+                <DeleteWorkModal
+                  deleteModalIsOpen={deleteModalIsOpen}
+                  setDeleteModalIsOpen={setDeleteModalIsOpen}
+                  deleteMethod={deleteModal}
                 />
+                <section className="delete-book-btn-section">
+                  <h1 className="delete-book-btn-header">
+                    <strong>Permanently Delete This Book!</strong>
+                  </h1>
+                  <button
+                    type="button"
+                    className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
+                    onClick={() => setDeleteModalIsOpen(true)}
+                  >
+                    Delete Book
+                  </button>
+                </section>
               </>
             )}
           />
