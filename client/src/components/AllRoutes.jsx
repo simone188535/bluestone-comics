@@ -12,6 +12,7 @@ import ComicList from "./ComicList";
 import Contest from "./Contest";
 import News from "./News";
 import Upload from "./Upload";
+import UploadNewIssue from "./Upload/UploadNewIssue";
 import EditIssueUpload from "./Upload/EditIssueUpload";
 import EditBookUpload from "./Upload/EditBookUpload";
 import Profile from "./Profile";
@@ -38,6 +39,10 @@ const AllRoutes = () => {
       <Route path="/contest" component={Contest} />
       <Route path="/comic-list" component={ComicList} />
       <Route path="/news" component={News} />
+      <ProtectedRoute
+        path="/upload-issue/:urlSlug/book/:bookId"
+        component={UploadNewIssue}
+      />
       <ProtectedRoute path="/upload" component={Upload} />
       <ProtectedRoute
         path="/edit-upload/:urlSlug/book/:bookId/issue/:issueNumber"

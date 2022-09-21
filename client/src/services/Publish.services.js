@@ -67,6 +67,17 @@ function updateBook(urlSlug, bookId, formData, config = {}) {
   );
 }
 
+function createIssue(urlSlug, bookId, formData, config = {}) {
+  const configObj = configObjects();
+  const newConfigObj = Object.assign(config, configObj);
+
+  return axios.post(
+    `/api/v1/publish/${urlSlug}/book/${bookId}`,
+    formData,
+    newConfigObj
+  );
+}
+
 function deleteBook(urlSlug, bookId) {
   const config = configObjects();
 
@@ -91,6 +102,7 @@ export {
   getUsersIssue,
   getUsersIssues,
   updateBook,
+  createIssue,
   deleteBook,
   updateBookCoverPhoto,
 };

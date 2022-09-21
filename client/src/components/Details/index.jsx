@@ -236,7 +236,10 @@ const Details = () => {
         {/* if book and belongs to user, show this button */}
         {!isIssue && belongsToUser && (
           <section className="action-btns-container secondary-info">
-            <Link to="#" className="action-btn-link">
+            <Link
+              to={`/upload-issue/${urlSlug}/book/${bookId}`}
+              className="action-btn-link"
+            >
               <button
                 type="button"
                 className="action-btn sub-edit-unsub-btn bsc-button transparent transparent-red"
