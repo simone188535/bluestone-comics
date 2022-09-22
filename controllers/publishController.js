@@ -41,6 +41,15 @@ const addWorkCredits = async (workCredits, publisherId, bookId, issueId) => {
   return newWorkCredits;
 };
 
+const deleteAllIssueAssets = async (issueAssets) => {
+  const issueAssetsToDelete = issueAssets.map((issueAsset) => {
+    return { Key: AmazonSDKS3.getS3FilePath(issueAsset.photo_url) };
+  });
+
+  // delete issue assets
+  await AmazonSDKS3.deleteMultipleS3Objects(issueAssetsToDelete);
+};
+
 /*
   This method inserts the uploaded Issue Assets (By Multer/S3) into the issue_assets table
 */
@@ -261,12 +270,8 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
       true
     );
 
-    const issueAssetsToDelete = issueAssets.map((issueAsset) => {
-      return { Key: AmazonSDKS3.getS3FilePath(issueAsset.photo_url) };
-    });
-
     // delete issue assets
-    await AmazonSDKS3.deleteMultipleS3Objects(issueAssetsToDelete);
+    await deleteAllIssueAssets(issueAssets);
 
     // delete issue cover photo
     await AmazonSDKS3.deleteSingleS3Object(
@@ -644,6 +649,25 @@ exports.createIssue = catchAsync(async (req, res, next) => {
 exports.deleteIssue = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
 
+  // get issue id
+  const issueId = await new QueryPG(pool).find(
+    'id',
+    'issues WHERE book_id = ($1) AND issue_number = ($2)',
+    [bookId, issueNumber]
+  );
+
+  // find Issue assets
+  const issueAssetsToBeDeleted = await new QueryPG(pool).find(
+    '*',
+    'issue_assets WHERE book_id = ($1) AND publisher_id = ($2) AND issue_id = ($3)',
+    [bookId, res.locals.user.id, issueId.id],
+    true
+  );
+
+  // delete issue assets in AWS
+  await deleteAllIssueAssets(issueAssetsToBeDeleted);
+
+  // delete issue, issue assets will be deleted on cascade
   const deletedIssue = await new QueryPG(pool).delete(
     'issues',
     'book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
@@ -681,7 +705,8 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     deletedIssue,
-    deletedBook
+    deletedBook,
+    deletedIssueAssets: issueAssetsToBeDeleted
   });
 });
 
