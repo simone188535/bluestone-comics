@@ -13,8 +13,9 @@ const MappedIssue = ({
   bookId,
   belongsToUser,
   setDeleteModalIsOpen,
+  totalIssues,
 }) => {
-  const isLatestIssue = useIsLatestIssue(urlSlug, bookId, issueNumber);
+  const isLatestIssue = issueNumber === totalIssues;
 
   const btnClass = isLatestIssue ? "double-btn" : "";
 
@@ -97,6 +98,7 @@ const DisplayIssues = ({ isIssue, urlSlug, bookId, belongsToUser }) => {
         bookId={bookId}
         belongsToUser={belongsToUser}
         setDeleteModalIsOpen={setDeleteModalIsOpen}
+        totalIssues={issues.length}
         key={`mapped-issue-${dateCreated}`}
       />
     )
