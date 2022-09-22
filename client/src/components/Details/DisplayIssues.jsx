@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { getIssues, deleteIssue } from "../../services";
@@ -12,7 +12,6 @@ const MappedIssue = ({
   urlSlug,
   bookId,
   belongsToUser,
-  setIssueNumberToDelete,
   setDeleteModalIsOpen,
 }) => {
   const isLatestIssue = useIsLatestIssue(urlSlug, bookId, issueNumber);
@@ -55,10 +54,7 @@ const MappedIssue = ({
               <button
                 type="button"
                 className="bsc-button user-owned-btn transparent transparent-red"
-                onClick={() => {
-                  setIssueNumberToDelete(issueNumber);
-                  setDeleteModalIsOpen(true);
-                }}
+                onClick={() => setDeleteModalIsOpen(true)}
               >
                 Delete
               </button>
@@ -69,18 +65,11 @@ const MappedIssue = ({
     </div>
   );
 };
-const DisplayIssues = ({
-  isIssue,
-  urlSlug,
-  bookId,
-  belongsToUser,
-  fetchBookData,
-}) => {
+const DisplayIssues = ({ isIssue, urlSlug, bookId, belongsToUser }) => {
   const [issues, setIssues] = useState([]);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
-  const [issueNumberToDelete, setIssueNumberToDelete] = useState(0);
 
-  useEffect(() => {
+  const fetchIssue = useCallback(() => {
     (async () => {
       const issuesRes = await getIssues(urlSlug, bookId);
       const { allIssues } = issuesRes.data;
@@ -89,12 +78,13 @@ const DisplayIssues = ({
     })();
   }, [bookId, urlSlug]);
 
+  useEffect(() => {
+    fetchIssue();
+  }, [fetchIssue]);
+
   const deleteModal = async () => {
-    if (issueNumberToDelete) {
-      await deleteIssue(urlSlug, bookId, issueNumberToDelete);
-      setIssueNumberToDelete(0);
-      fetchBookData();
-    }
+    await deleteIssue(urlSlug, bookId, issues.length);
+    fetchIssue();
   };
 
   const displayIssues = issues.map(
@@ -106,7 +96,6 @@ const DisplayIssues = ({
         urlSlug={urlSlug}
         bookId={bookId}
         belongsToUser={belongsToUser}
-        setIssueNumberToDelete={setIssueNumberToDelete}
         setDeleteModalIsOpen={setDeleteModalIsOpen}
         key={`mapped-issue-${dateCreated}`}
       />
