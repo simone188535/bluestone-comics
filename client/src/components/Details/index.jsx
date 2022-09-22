@@ -91,6 +91,7 @@ const Details = () => {
     })();
   }, [bookId, isIssue, issueNumber, setErrMsg, urlSlug]);
 
+  // check if the work belongs to the current user
   useEffect(() => {
     if (publisherId) {
       setBelongsToUserCB(publisherId);
