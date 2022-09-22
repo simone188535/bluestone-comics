@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { getIssues } from "../../services";
+import { getIssues, deleteIssue } from "../../services";
+import DeleteWorkModal from "../Upload/DeleteWorkModal";
 import useIsLatestIssue from "../../hooks/useIsLatestIssue";
 
 const MappedIssue = ({
@@ -11,6 +12,8 @@ const MappedIssue = ({
   urlSlug,
   bookId,
   belongsToUser,
+  setIssueNumberToDelete,
+  setDeleteModalIsOpen,
 }) => {
   const isLatestIssue = useIsLatestIssue(urlSlug, bookId, issueNumber);
 
@@ -52,6 +55,10 @@ const MappedIssue = ({
               <button
                 type="button"
                 className="bsc-button user-owned-btn transparent transparent-red"
+                onClick={() => {
+                  setIssueNumberToDelete(issueNumber);
+                  setDeleteModalIsOpen(true);
+                }}
               >
                 Delete
               </button>
@@ -62,8 +69,16 @@ const MappedIssue = ({
     </div>
   );
 };
-const DisplayIssues = ({ isIssue, urlSlug, bookId, belongsToUser }) => {
+const DisplayIssues = ({
+  isIssue,
+  urlSlug,
+  bookId,
+  belongsToUser,
+  fetchBookData,
+}) => {
   const [issues, setIssues] = useState([]);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+  const [issueNumberToDelete, setIssueNumberToDelete] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -74,6 +89,14 @@ const DisplayIssues = ({ isIssue, urlSlug, bookId, belongsToUser }) => {
     })();
   }, [bookId, urlSlug]);
 
+  const deleteModal = async () => {
+    if (issueNumberToDelete) {
+      await deleteIssue(urlSlug, bookId, issueNumberToDelete);
+      setIssueNumberToDelete(0);
+      fetchBookData();
+    }
+  };
+
   const displayIssues = issues.map(
     ({ title, issue_number: issueNumber, date_created: dateCreated }) => (
       <MappedIssue
@@ -83,20 +106,29 @@ const DisplayIssues = ({ isIssue, urlSlug, bookId, belongsToUser }) => {
         urlSlug={urlSlug}
         bookId={bookId}
         belongsToUser={belongsToUser}
+        setIssueNumberToDelete={setIssueNumberToDelete}
+        setDeleteModalIsOpen={setDeleteModalIsOpen}
         key={`mapped-issue-${dateCreated}`}
       />
     )
   );
   return (
     !isIssue && (
-      <section className="extra-info-container mt-50">
-        <section className="secondary-info">
-          <h2 className="desc-detail bold text-center secondary-header">
-            Issues
-          </h2>
-          <section className="issues-list-table">{displayIssues}</section>
+      <>
+        <section className="extra-info-container mt-50">
+          <section className="secondary-info">
+            <h2 className="desc-detail bold text-center secondary-header">
+              Issues
+            </h2>
+            <section className="issues-list-table">{displayIssues}</section>
+          </section>
         </section>
-      </section>
+        <DeleteWorkModal
+          deleteModalIsOpen={deleteModalIsOpen}
+          setDeleteModalIsOpen={setDeleteModalIsOpen}
+          deleteMethod={deleteModal}
+        />
+      </>
     )
   );
 };

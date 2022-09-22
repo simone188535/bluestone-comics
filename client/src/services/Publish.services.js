@@ -84,6 +84,15 @@ function deleteBook(urlSlug, bookId) {
   return axios.delete(`/api/v1/publish/${urlSlug}/book/${bookId}`, config);
 }
 
+function deleteIssue(urlSlug, bookId, issueNumber) {
+  const config = configObjects();
+
+  return axios.delete(
+    `/api/v1/publish/${urlSlug}/book/${bookId}/issue/${issueNumber}`,
+    config
+  );
+}
+
 function updateBookCoverPhoto(urlSlug, bookId, formData, config = {}) {
   // update previously existing book cover photo
   const configObj = configObjects();
@@ -104,5 +113,6 @@ export {
   updateBook,
   createIssue,
   deleteBook,
+  deleteIssue,
   updateBookCoverPhoto,
 };
