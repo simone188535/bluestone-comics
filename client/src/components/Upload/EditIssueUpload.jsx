@@ -78,55 +78,55 @@ const EditIssueUpload = () => {
   }, [bookId, currentUser, issueNumber, urlSlug]);
 
   const onSubmit = async (values, { setSubmitting }) => {
-    // try {
-    //   const formData = new FormData();
-    //   formData.append("title", values.bookTitle);
-    //   formData.append("description", values.bookDescription);
-    //   formData.append("urlSlug", values.urlSlug);
-    //   formData.append("genres", JSON.stringify(values.genres));
-    //   formData.append("status", values.status);
-    //   // the removed field will need to be hooked up later. This a needed placeholder
-    //   formData.append("removed", values.removed);
-    //   const formDataBookCoverPhoto = new FormData();
-    //   // All Files must be moved to the bottom so that multer reads them last
-    //   formDataBookCoverPhoto.append("bookCoverPhoto", values.bookCoverPhoto);
-    //   // console.log("triggered", values);
-    //   //   return;
-    //   // open modal
-    //   toggleModal();
-    //   /*
-    //   This is needed to show the percentage of the uploaded file. onUploadProgress is a
-    //   property provided by axios
-    //   */
-    //   // onUploadProgressHelper is be divided by 2 because the first awaited function was first 50% of the upload and the other awaited function is the last 50% of the upload
-    //   const configUpdateBook = onUploadProgressHelper(setUploadPercentage, 2);
-    //   await updateBook(urlSlug, bookId, formData, configUpdateBook);
-    //   const setRemainingUploadPercentage = (remainingPercentage) =>
-    //     setUploadPercentage((prevState) => prevState + remainingPercentage);
-    //   const configUpdateBookCoverPhoto = onUploadProgressHelper(
-    //     setRemainingUploadPercentage,
-    //     2
-    //   );
-    //   await updateBookCoverPhoto(
-    //     urlSlug,
-    //     bookId,
-    //     formDataBookCoverPhoto,
-    //     configUpdateBookCoverPhoto
-    //   );
-    //   setTimeout(() => {
-    //     // after a couple of seconds close modal and redirect to new page
-    //     toggleModal();
-    //     history.push(`/profile/${currentUserName}`);
-    //   }, 500);
-    //   // console.log("success", createBookRes);
-    // } catch (err) {
-    //   // console.log("failed", err.response.data.message);
-    //   setErrorMessage(
-    //     "An Error occurred while updating the data for this work. Please try again later."
-    //   );
-    //   setUploadPercentage(0);
-    // }
-    // setSubmitting(false);
+    try {
+      //   const formData = new FormData();
+      //   formData.append("title", values.bookTitle);
+      //   formData.append("description", values.bookDescription);
+      //   formData.append("urlSlug", values.urlSlug);
+      //   formData.append("genres", JSON.stringify(values.genres));
+      //   formData.append("status", values.status);
+      //   // the removed field will need to be hooked up later. This a needed placeholder
+      //   formData.append("removed", values.removed);
+      //   const formDataBookCoverPhoto = new FormData();
+      //   // All Files must be moved to the bottom so that multer reads them last
+      //   formDataBookCoverPhoto.append("bookCoverPhoto", values.bookCoverPhoto);
+      //   // console.log("triggered", values);
+      //   //   return;
+      //   // open modal
+      //   toggleModal();
+      //   /*
+      //   This is needed to show the percentage of the uploaded file. onUploadProgress is a
+      //   property provided by axios
+      //   */
+      //   // onUploadProgressHelper is be divided by 2 because the first awaited function was first 50% of the upload and the other awaited function is the last 50% of the upload
+      //   const configUpdateBook = onUploadProgressHelper(setUploadPercentage, 2);
+      //   await updateBook(urlSlug, bookId, formData, configUpdateBook);
+      //   const setRemainingUploadPercentage = (remainingPercentage) =>
+      //     setUploadPercentage((prevState) => prevState + remainingPercentage);
+      //   const configUpdateBookCoverPhoto = onUploadProgressHelper(
+      //     setRemainingUploadPercentage,
+      //     2
+      //   );
+      //   await updateBookCoverPhoto(
+      //     urlSlug,
+      //     bookId,
+      //     formDataBookCoverPhoto,
+      //     configUpdateBookCoverPhoto
+      //   );
+      //   setTimeout(() => {
+      //     // after a couple of seconds close modal and redirect to new page
+      //     toggleModal();
+      //     history.push(`/profile/${currentUserName}`);
+      //   }, 500);
+      //   // console.log("success", createBookRes);
+    } catch (err) {
+      //   // console.log("failed", err.response.data.message);
+      setErrorMessage(
+        "An Error occurred while updating the data for this work. Please try again later."
+      );
+      setUploadPercentage(0);
+    }
+    setSubmitting(false);
   };
 
   const deleteModal = async () => {
