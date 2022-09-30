@@ -104,6 +104,16 @@ function updateBookCoverPhoto(urlSlug, bookId, formData, config = {}) {
     newConfigObj
   );
 }
+
+function getPrevExistingIssueWorkCredits(urlSlug, bookId, issueNumber) {
+  const configObj = configObjects();
+
+  return axios.get(
+    `/api/v1/publish/${urlSlug}/book/${bookId}/issue/${issueNumber}/prev-issue-work-credits`,
+    configObj
+  );
+}
+
 export {
   createBook,
   getBookAndIssueImagePrefix,
@@ -115,4 +125,5 @@ export {
   deleteBook,
   deleteIssue,
   updateBookCoverPhoto,
+  getPrevExistingIssueWorkCredits,
 };
