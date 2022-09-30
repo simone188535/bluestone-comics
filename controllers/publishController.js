@@ -767,7 +767,6 @@ exports.prevExistingIssueWorkCredits = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
 
   const formattedWorkCredits = [];
-  // if object with user exists, simply push the work credits to the credits array, no need for a nested for loop
 
   const { id: issueId } = await new QueryPG(pool).find(
     'id',
