@@ -58,6 +58,10 @@ router.route('/issue/:issueNumber/issue-assets').patch(
 );
 
 router
+  .route('/issue/:issueNumber/prev-issue-work-credits')
+  .get(publishController.prevExistingIssueWorkCredits);
+
+router
   .route('/issue/:issueNumber')
   .get(publishController.getIssue)
   .patch(upload.none(), publishController.updateIssue)

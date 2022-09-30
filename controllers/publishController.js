@@ -762,3 +762,58 @@ exports.updateIssue = catchAsync(async (req, res, next) => {
     updatedWorkCredits: newWorkCredits
   });
 });
+
+exports.prevExistingIssueWorkCredits = catchAsync(async (req, res, next) => {
+  const { bookId, issueNumber } = req.params;
+
+  const formattedWorkCredits = [];
+  // if object with user exists, simply push the work credits to the credits array, no need for a nested for loop
+
+  const { id: issueId } = await new QueryPG(pool).find(
+    'id',
+    'issues WHERE book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
+    [bookId, issueNumber, res.locals.user.id]
+  );
+
+  const workCredits = await new QueryPG(pool).find(
+    'users.username, work_credits.creator_id, work_credits.creator_credit',
+    'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND issue_id = ($2) AND publisher_id = ($3)',
+    [bookId, issueId, res.locals.user.id],
+    true
+  );
+
+  // check if the user Id (aka user) is already present in the formattedWorkCredits array of objects
+  const isUserInWorkCredits = (objId) =>
+    formattedWorkCredits.find(({ user }) => user === objId);
+
+  // helper to capitalize credits
+  const toTitleCase = (str) =>
+    str.replace(
+      /\w\S*/g,
+      (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    );
+
+  // if the user is already added to formattedWorkCredits, simply push the credits array, else add a new object to formattedWorkCredits
+  workCredits.forEach(
+    ({ username, creator_id: creatorId, creator_credit: credit }) => {
+      const foundUserId = isUserInWorkCredits(creatorId);
+      const creditCapitalized = toTitleCase(credit);
+
+      if (foundUserId) {
+        foundUserId.credits.push(creditCapitalized);
+      } else {
+        formattedWorkCredits.push({
+          user: creatorId,
+          username: username,
+          credits: [creditCapitalized]
+        });
+      }
+    }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    // workCredits,
+    workCredits: formattedWorkCredits
+  });
+});
