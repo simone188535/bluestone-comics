@@ -616,7 +616,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
       req.files.issueCoverPhoto[0].location,
       newIssueNumber,
       issueDescription,
-      AWSPrefixArray[1] // issue path
+      AWSPrefixArray[2] // issue path
     ]
   );
 
