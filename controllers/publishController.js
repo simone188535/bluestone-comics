@@ -785,26 +785,18 @@ exports.prevExistingIssueWorkCredits = catchAsync(async (req, res, next) => {
   const isUserInWorkCredits = (objId) =>
     formattedWorkCredits.find(({ user }) => user === objId);
 
-  // helper to capitalize credits
-  const toTitleCase = (str) =>
-    str.replace(
-      /\w\S*/g,
-      (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-    );
-
   // if the user is already added to formattedWorkCredits, simply push the credits array, else add a new object to formattedWorkCredits
   workCredits.forEach(
     ({ username, creator_id: creatorId, creator_credit: credit }) => {
       const foundUserId = isUserInWorkCredits(creatorId);
-      const creditCapitalized = toTitleCase(credit);
 
       if (foundUserId) {
-        foundUserId.credits.push(creditCapitalized);
+        foundUserId.credits.push(credit);
       } else {
         formattedWorkCredits.push({
           user: creatorId,
           username: username,
-          credits: [creditCapitalized]
+          credits: [credit]
         });
       }
     }

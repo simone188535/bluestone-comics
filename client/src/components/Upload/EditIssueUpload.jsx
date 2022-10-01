@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getUsersIssue, getIssueWorkCredits } from "../../services";
+import { getUsersIssue, getPrevExistingIssueWorkCredits } from "../../services";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
 import onUploadProgressHelper from "./onUploadProgressHelper";
 import SubmissionProgressModal from "./SubmissionProgressModal";
@@ -28,6 +28,7 @@ const EditIssueUpload = () => {
   const history = useHistory();
   const { urlSlug, bookId, issueNumber } = useParams();
   const [loadingInitialData, setLoadingInitialData] = useState(true);
+  const [prevExistingWorkCredits, setPrevExistingWorkCredits] = useState([]);
   const [submissionModalIsOpen, setSubmissionModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -69,6 +70,15 @@ const EditIssueUpload = () => {
             issueDesc,
             issueAssets,
           }));
+
+          const {
+            data: { workCredits },
+          } = await getPrevExistingIssueWorkCredits(
+            urlSlug,
+            bookId,
+            issueNumber
+          );
+          setPrevExistingWorkCredits(workCredits);
           setLoadingInitialData(false);
         } catch (err) {
           setErrorMessage(true);
@@ -152,9 +162,19 @@ const EditIssueUpload = () => {
               issueDescription: currentIssueInfo.issueDesc,
               issueAssets: currentIssueInfo.issueAssets,
               issueAssetsToBeRemoved: [],
-              workCredits: [
-                { user: currentUserId, username: currentUsername, credits: [] },
-              ],
+              workCredits: prevExistingWorkCredits,
+              // workCredits: [
+              //   {
+              //     user: "82",
+              //     username: "super9cookie",
+              //     credits: ["colorist", "penciller"],
+              //   },
+              //   {
+              //     user: "80",
+              //     username: "supercookie",
+              //     credits: ["artist", "cover artist"],
+              //   },
+              // ],
             }}
             validationSchema={Yup.object().shape({
               issueTitle: Yup.string().required("Issue Title required!"),

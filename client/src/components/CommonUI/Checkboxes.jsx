@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 import { Field, useFormikContext } from "formik";
 
 // This component conditionally wraps the provided component(HOC) in the HTML Element provided
@@ -15,6 +16,7 @@ function DisplaySingleOrMultipleCheckboxes({
   wrapperElement,
 }) {
   const { values } = useFormikContext();
+  const checkVal = _.get(values, identifier);
 
   const htmlValue = (currCheckboxValue, index = null) => (
     <AddWrapperElement wrapperElement={wrapperElement} key={index}>
@@ -23,7 +25,7 @@ function DisplaySingleOrMultipleCheckboxes({
           type="checkbox"
           name={identifier}
           value={currCheckboxValue.value}
-          checked={values[identifier]?.includes(currCheckboxValue.value)}
+          checked={checkVal?.includes(currCheckboxValue.value)}
           disabled={currCheckboxValue.disabled}
         />
         <span>{currCheckboxValue.name}</span>
