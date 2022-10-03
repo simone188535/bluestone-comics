@@ -114,6 +114,24 @@ function getPrevExistingIssueWorkCredits(urlSlug, bookId, issueNumber) {
   );
 }
 
+function updateIssueAssets(
+  urlSlug,
+  bookId,
+  issueNumber,
+  formData,
+  config = {}
+) {
+  // update previously existing book cover photo
+  const configObj = configObjects();
+  const newConfigObj = Object.assign(config, configObj);
+
+  return axios.patch(
+    `/api/v1/publish/${urlSlug}/book/${bookId}/issue/${issueNumber}/issue-assets`,
+    formData,
+    newConfigObj
+  );
+}
+
 export {
   createBook,
   getBookAndIssueImagePrefix,
@@ -126,4 +144,5 @@ export {
   deleteIssue,
   updateBookCoverPhoto,
   getPrevExistingIssueWorkCredits,
+  updateIssueAssets,
 };
