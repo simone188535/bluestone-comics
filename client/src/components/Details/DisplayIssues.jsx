@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { getIssues, deleteIssue } from "../../services";
 import DeleteWorkModal from "../Upload/DeleteWorkModal";
-import useIsLatestIssue from "../../hooks/useIsLatestIssue";
 
 const MappedIssue = ({
   title,
