@@ -452,20 +452,59 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
 });
 
 exports.updateIssueAssets = catchAsync(async (req, res, next) => {
-  // const { bookId, issueNumber } = req.;
-  // const issueCoverPhoto = req.file.location;
+  const {
+    bookImagePrefixRef,
+    issueImagePrefixRef,
+    issueAssets: prevIssueAssets,
+    newFilePageNums,
+    existingFileUpdatedPageNums,
+    issueAssetsToBeRemoved
+  } = req.body;
+  const { issueAssets: newIssueAssets } = req.files;
 
-  // // update cover photo of issue
-  // dont forget date field
-  // const updatedIssue = await new QueryPG(pool).update(
-  //   'issues',
-  //   'cover_photo = ($1)',
-  //   'book_id = ($2) AND issue_number = ($3) AND publisher_id = ($4)',
-  //   [issueCoverPhoto, bookId, issueNumber, res.locals.user.id]
+  const newFilePageNumsParsed = JSON.parse(newFilePageNums);
+
+  const prevIssueAssetsParsed = JSON.parse(prevIssueAssets);
+  const existingFileUpdatedPageNumsParsed = JSON.parse(
+    existingFileUpdatedPageNums
+  );
+
+  // const issueAssetsToBeRemovedParsed = JSON.parse(issueAssetsToBeRemoved);
+
+  // upload all the new images (newIssueAssets) to S3
+
+  // save each new image to db along with their new page numbers (newFilePageNums)
+  // const newBook = await new QueryPG(pool).insert(
+  //   'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference)',
+  //   '$1, $2, $3, $4, $5, $6',
+  //   [
+  //     res.locals.user.id,
+  //     bookTitle,
+  //     urlSlug,
+  //     req.files.bookCoverPhoto[0].location,
+  //     bookDescription,
+  //     AWSPrefixArray[1] // book path
+  //   ]
   // );
 
+  // update the existing File (existingFileUpdatedPageNumsParsed) with their new page orders if needed (prevIssueAssetsParsed)
+
+  // delete the removed pages
+
+  // console.log('issueAssetsToBeRemovedParsed', issueAssetsToBeRemovedParsed);
+  
+  // console.log(req.body);
+  // console.log('bookImagePrefixRef', bookImagePrefixRef);
+  // console.log('issueImagePrefixRef', issueImagePrefixRef);
+  // console.log('newFilePageNums', newFilePageNums);
+  // console.log('existingFileUpdatedPageNums', existingFileUpdatedPageNums);
+  // console.log('issueAssets', req.files);
+
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    bookImagePrefixRef,
+    issueImagePrefixRef
+    // issueAssets
     // updatedIssue
   });
 });

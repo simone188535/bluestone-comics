@@ -5,7 +5,7 @@ const router = express.Router({ mergeParams: true });
 const multer = require('multer');
 
 const upload = multer();
-// const upload = multer({ dest: 'uploads/' });
+
 const AmazonSDKS3 = require('../../utils/AmazonSDKS3');
 
 const uploadS3 = AmazonSDKS3.uploadS3();
@@ -51,11 +51,11 @@ router
     upload.single('issueCoverPhoto'),
     publishController.updateIssueCoverPhoto
   );
-router.route('/issue/:issueNumber/issue-assets').patch(
-  // add a middleware that checks the S3 book prefix
-  uploadS3.fields([{ name: 'issueAssets' }]),
-  publishController.updateIssueAssets
-);
+router
+  .route('/issue/:issueNumber/issue-assets')
+  // .patch(uploadS3.array('issueAssets'), publishController.updateIssueAssets);
+  .patch(upload.array('issueAssets'), publishController.updateIssueAssets);
+// .patch(upload.any(), publishController.updateIssueAssets);
 
 router
   .route('/issue/:issueNumber/prev-issue-work-credits')

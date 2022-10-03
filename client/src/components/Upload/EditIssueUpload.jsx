@@ -3,7 +3,12 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getUsersIssue, getPrevExistingIssueWorkCredits } from "../../services";
+import {
+  getUsersIssue,
+  getPrevExistingIssueWorkCredits,
+  getBookAndIssueImagePrefix,
+  updateIssueAssets,
+} from "../../services";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
 import onUploadProgressHelper from "./onUploadProgressHelper";
 import SubmissionProgressModal from "./SubmissionProgressModal";
@@ -89,6 +94,67 @@ const EditIssueUpload = () => {
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
+      const newlyAddedFilePageNums = [];
+      const existingFileUpdatedPageNums = [];
+
+      const imagePrefixesRes = await getBookAndIssueImagePrefix(
+        bookId,
+        issueNumber
+      );
+      const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;
+      // console.log(bookImagePrefixRef, issueImagePrefixRef);
+
+      const issueAssetsFormData = new FormData();
+
+      issueAssetsFormData.append("bookImagePrefixRef", bookImagePrefixRef);
+      issueAssetsFormData.append("issueImagePrefixRef", issueImagePrefixRef);
+
+      // console.log('issueAssets', values.issueAssets);
+
+      // if the issueAssets file is preexisting/is an object, stringify it, else just use the newly uploaded file
+      values.issueAssets.forEach((formValue, index) => {
+        let issueAssetVal;
+        const currentPageNum = index + 1;
+        if (formValue instanceof File) {
+          issueAssetVal = formValue;
+          // add page number
+          newlyAddedFilePageNums.push(currentPageNum);
+        } else {
+          issueAssetVal = JSON.stringify(formValue);
+          // add page number
+          existingFileUpdatedPageNums.push(currentPageNum);
+        }
+        issueAssetsFormData.append("issueAssets", issueAssetVal);
+      });
+
+      issueAssetsFormData.append(
+        "newFilePageNums",
+        JSON.stringify(newlyAddedFilePageNums)
+      );
+      issueAssetsFormData.append(
+        "existingFileUpdatedPageNums",
+        JSON.stringify(existingFileUpdatedPageNums)
+      );
+
+      // issueAssetsFormData.append(
+      //   "issueAssetsToBeRemoved",
+      //   JSON.stringify(values.issueAssetsToBeRemoved)
+      // );
+      console.log(values.issueAssetsToBeRemoved);
+
+      // TODO: dont forget to add the progress helper
+      await updateIssueAssets(
+        urlSlug,
+        bookId,
+        issueNumber,
+        issueAssetsFormData
+      );
+
+      // for (const pair of issueAssetsFormData.entries()) {
+      //   console.log(`${pair[0]}, ${pair[1]}`);
+      // }
+      // console.log('issueAssetsFormData', issueAssetsFormData.getAll('issueAssets'));
+
       //   const formData = new FormData();
       //   formData.append("title", values.bookTitle);
       //   formData.append("description", values.bookDescription);
