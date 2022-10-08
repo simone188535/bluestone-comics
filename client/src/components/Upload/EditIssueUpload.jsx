@@ -95,7 +95,7 @@ const EditIssueUpload = () => {
   const onSubmit = async (values, { setSubmitting }) => {
     try {
       const newlyAddedFilePageNums = [];
-      const existingFileUpdatedPageNums = [];
+      const prevIssueAssetsUpdatedPageNums = [];
 
       const imagePrefixesRes = await getBookAndIssueImagePrefix(
         bookId,
@@ -122,25 +122,24 @@ const EditIssueUpload = () => {
         } else {
           issueAssetVal = JSON.stringify(formValue);
           // add page number
-          existingFileUpdatedPageNums.push(currentPageNum);
+          prevIssueAssetsUpdatedPageNums.push(currentPageNum);
         }
         issueAssetsFormData.append("issueAssets", issueAssetVal);
       });
 
       issueAssetsFormData.append(
-        "newFilePageNums",
+        "newIssueAssetsPageNums",
         JSON.stringify(newlyAddedFilePageNums)
       );
       issueAssetsFormData.append(
-        "existingFileUpdatedPageNums",
-        JSON.stringify(existingFileUpdatedPageNums)
+        "prevIssueAssetsUpdatedPageNums",
+        JSON.stringify(prevIssueAssetsUpdatedPageNums)
       );
 
-      // issueAssetsFormData.append(
-      //   "issueAssetsToBeRemoved",
-      //   JSON.stringify(values.issueAssetsToBeRemoved)
-      // );
-      console.log(values.issueAssetsToBeRemoved);
+      issueAssetsFormData.append(
+        "issueAssetsToBeRemoved",
+        JSON.stringify(values.issueAssetsToBeRemoved)
+      );
 
       // TODO: dont forget to add the progress helper
       await updateIssueAssets(

@@ -53,8 +53,8 @@ router
   );
 router
   .route('/issue/:issueNumber/issue-assets')
-  // .patch(uploadS3.array('issueAssets'), publishController.updateIssueAssets);
-  .patch(upload.array('issueAssets'), publishController.updateIssueAssets);
+  .patch(uploadS3.array('issueAssets'), publishController.updateIssueAssets);
+// .patch(upload.array('issueAssets'), publishController.updateIssueAssets);
 // .patch(upload.any(), publishController.updateIssueAssets);
 
 router
