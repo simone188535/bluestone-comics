@@ -460,6 +460,7 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
 exports.updateIssueAssets = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
   const {
+    // prevIssueAssets is an array of previously added issue assets that are already in the DB, it does not include the new files uploaded to AWS S3
     issueAssets: prevIssueAssets,
     newIssueAssetsPageNums,
     prevIssueAssetsUpdatedPageNums,
@@ -470,8 +471,6 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
   // array of the new page numbers of the for the new issue assets uploaded to AWS
   const newIssueAssetsPageNumsParsed = JSON.parse(newIssueAssetsPageNums);
 
-  // array of previously added issue assets that are already in the DB
-  const prevIssueAssetsParsed = prevIssueAssets;
   // array of the new page numbers of the previously added issue assets (that are already in the DB)
   const prevIssueAssetsUpdatedPageNumsParsed = JSON.parse(
     prevIssueAssetsUpdatedPageNums
@@ -496,11 +495,11 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
     newIssueAssetsPageNumsParsed
   );
 
-  // update the existing File (prevIssueAssetsUpdatedPageNumsParsed) with their new page orders if needed (prevIssueAssetsParsed)
+  // update the existing File (prevIssueAssetsUpdatedPageNumsParsed) with their new page orders if needed (prevIssueAssets)
   const updatedIssueAssets = [];
-  // console.log('prevIssueAssetsParsed', prevIssueAssetsParsed);
+  // console.log('prevIssueAssets', prevIssueAssets);
   await Promise.all(
-    prevIssueAssetsParsed.map(async (issueAsset, index) => {
+    prevIssueAssets.map(async (issueAsset, index) => {
       // this object must be parsed because it was sent as a stringified obj of arrays
       const parsedIssueAsset = JSON.parse(issueAsset);
 
@@ -529,33 +528,30 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
   );
 
   // delete the removed pages
+  const deletedIssueAssets = [];
+  // console.log('issueAssetsToBeRemovedParsed', issueAssetsToBeRemovedParsed);
+  await Promise.all(
+    issueAssetsToBeRemovedParsed.map(async (issueAssetToDelete) => {
+      // delete issue asset in AWS
+      await AmazonSDKS3.deleteSingleS3Object(
+        AmazonSDKS3.getS3FilePath(issueAssetToDelete.photo_url)
+      );
 
-  // const deletedIssueAssets = [];
-  // // console.log('issueAssetsToBeRemovedParsed', issueAssetsToBeRemovedParsed);
-  // await Promise.all(
-  //   issueAssetsToBeRemovedParsed.map(async (issueAssetToDelete) => {
-  //     const deletedIssueAsset = await new QueryPG(pool).delete(
-  //       'issue_assets',
-  //       'book_id = ($1) AND issue_id = ($2) AND publisher_id = ($3) AND photo_url = ($4)',
-  //       [bookId, getIssue.id, res.locals.user.id, issueAssetToDelete.photo_url]
-  //     );
+      const deletedIssueAsset = await new QueryPG(pool).delete(
+        'issue_assets',
+        'book_id = ($1) AND issue_id = ($2) AND publisher_id = ($3) AND photo_url = ($4)',
+        [bookId, getIssue.id, res.locals.user.id, issueAssetToDelete.photo_url]
+      );
 
-  //     deletedIssueAssets.push(deletedIssueAsset);
-  //   })
-  // );
-
-  // console.log(req.body);
-  // console.log('bookImagePrefixRef', bookImagePrefixRef);
-  // console.log('issueImagePrefixRef', issueImagePrefixRef);
-  // console.log('newIssueAssetsPageNums', newIssueAssetsPageNums);
-  // console.log('prevIssueAssetsUpdatedPageNums', prevIssueAssetsUpdatedPageNums);
-  // console.log('issueAssets', req.files);
+      deletedIssueAssets.push(deletedIssueAsset);
+    })
+  );
 
   res.status(201).json({
     status: 'success',
     newIssueAssets: newIssueAssetsArr,
     updatedIssueAssets,
-    // deletedIssueAssets
+    deletedIssueAssets
   });
 });
 
