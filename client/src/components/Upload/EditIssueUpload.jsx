@@ -102,14 +102,12 @@ const EditIssueUpload = () => {
         issueNumber
       );
       const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;
-      // console.log(bookImagePrefixRef, issueImagePrefixRef);
 
       const issueAssetsFormData = new FormData();
 
       issueAssetsFormData.append("bookImagePrefixRef", bookImagePrefixRef);
       issueAssetsFormData.append("issueImagePrefixRef", issueImagePrefixRef);
 
-      // console.log('issueAssets', values.issueAssets);
       const prevIssueAssets = [];
 
       // if the issueAssets file is preexisting/is an object, stringify it, else just use the newly uploaded file
