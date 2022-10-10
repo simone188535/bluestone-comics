@@ -110,32 +110,42 @@ const EditIssueUpload = () => {
       issueAssetsFormData.append("issueImagePrefixRef", issueImagePrefixRef);
 
       // console.log('issueAssets', values.issueAssets);
+      const prevIssueAssets = [];
 
       // if the issueAssets file is preexisting/is an object, stringify it, else just use the newly uploaded file
       values.issueAssets.forEach((formValue, index) => {
-        let issueAssetVal;
         const currentPageNum = index + 1;
         if (formValue instanceof File) {
-          issueAssetVal = formValue;
+          // add file to new issue assets
+          issueAssetsFormData.append("issueAssets", formValue);
           // add page number
           newlyAddedFilePageNums.push(currentPageNum);
         } else {
-          issueAssetVal = JSON.stringify(formValue);
+          // add file to prev/existing issue assets
+          prevIssueAssets.push(formValue);
           // add page number
           prevIssueAssetsUpdatedPageNums.push(currentPageNum);
         }
-        issueAssetsFormData.append("issueAssets", issueAssetVal);
       });
 
+      // page numbers for (newly uploaded) issueAssets
       issueAssetsFormData.append(
         "newIssueAssetsPageNums",
         JSON.stringify(newlyAddedFilePageNums)
       );
+
+      // array of obj for prev/existing issue assets
+      issueAssetsFormData.append(
+        "prevIssueAssets",
+        JSON.stringify(prevIssueAssets)
+      );
+      // updated page numbers for prev/existing issue assets
       issueAssetsFormData.append(
         "prevIssueAssetsUpdatedPageNums",
         JSON.stringify(prevIssueAssetsUpdatedPageNums)
       );
 
+      // array of obj for issue assets that need to be removed
       issueAssetsFormData.append(
         "issueAssetsToBeRemoved",
         JSON.stringify(values.issueAssetsToBeRemoved)

@@ -63,7 +63,7 @@ const addIssueAssets = async (
   const newIssueAssets = [];
 
   await Promise.all(
-    issueAssets.map(async (issueAsset, index) => {
+    issueAssets?.map(async (issueAsset, index) => {
       const pageNumber = pageNumArr ? pageNumArr[index] : index + 1;
       const addedIssueAsset = await new QueryPG(pool).insert(
         'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
@@ -461,7 +461,7 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
   const {
     // prevIssueAssets is an array of previously added issue assets that are already in the DB, it does not include the new files uploaded to AWS S3
-    issueAssets: prevIssueAssets,
+    prevIssueAssets,
     newIssueAssetsPageNums,
     prevIssueAssetsUpdatedPageNums,
     issueAssetsToBeRemoved
@@ -471,6 +471,8 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
   // array of the new page numbers of the for the new issue assets uploaded to AWS
   const newIssueAssetsPageNumsParsed = JSON.parse(newIssueAssetsPageNums);
 
+  // array of obj for prev/existing issue assets
+  const prevIssueAssetsParsed = JSON.parse(prevIssueAssets);
   // array of the new page numbers of the previously added issue assets (that are already in the DB)
   const prevIssueAssetsUpdatedPageNumsParsed = JSON.parse(
     prevIssueAssetsUpdatedPageNums
@@ -497,16 +499,13 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
 
   // update the existing File (prevIssueAssetsUpdatedPageNumsParsed) with their new page orders if needed (prevIssueAssets)
   const updatedIssueAssets = [];
-  // console.log('prevIssueAssets', prevIssueAssets);
+  // console.log('prevIssueAssetsParsed', prevIssueAssetsParsed);
   await Promise.all(
-    prevIssueAssets.map(async (issueAsset, index) => {
-      // this object must be parsed because it was sent as a stringified obj of arrays
-      const parsedIssueAsset = JSON.parse(issueAsset);
-
+    prevIssueAssetsParsed?.map(async (issueAsset, index) => {
       // if the current page number is different than the new page number, update it
       if (
         prevIssueAssetsUpdatedPageNumsParsed[index] !==
-        parsedIssueAsset.page_number
+        issueAsset.page_number
       ) {
         const updatedIssueAsset = await new QueryPG(pool).update(
           'issue_assets',
@@ -518,7 +517,7 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
             bookId,
             getIssue.id,
             res.locals.user.id,
-            parsedIssueAsset.photo_url
+            issueAsset.photo_url
           ]
         );
 
@@ -531,7 +530,7 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
   const deletedIssueAssets = [];
   // console.log('issueAssetsToBeRemovedParsed', issueAssetsToBeRemovedParsed);
   await Promise.all(
-    issueAssetsToBeRemovedParsed.map(async (issueAssetToDelete) => {
+    issueAssetsToBeRemovedParsed?.map(async (issueAssetToDelete) => {
       // delete issue asset in AWS
       await AmazonSDKS3.deleteSingleS3Object(
         AmazonSDKS3.getS3FilePath(issueAssetToDelete.photo_url)
