@@ -207,6 +207,8 @@ const EditIssueUpload = () => {
         configUpdateIssue
       );
 
+      setUploadPercentage(100);
+
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
