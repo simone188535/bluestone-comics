@@ -129,9 +129,6 @@ const EditBookUpload = () => {
       */
 
       // onUploadProgressHelper is be divided by 2 because the first awaited function was first 50% of the upload and the other awaited function is the last 50% of the upload
-      const configUpdateBook = onUploadProgressHelper(setUploadPercentage, 2);
-      await updateBook(urlSlug, bookId, formData, configUpdateBook);
-
       const setRemainingUploadPercentage = (remainingPercentage) =>
         setUploadPercentage((prevState) => prevState + remainingPercentage);
 
@@ -139,6 +136,8 @@ const EditBookUpload = () => {
         setRemainingUploadPercentage,
         2
       );
+
+      await updateBook(urlSlug, bookId, formData, configUpdateBookCoverPhoto);
 
       await updateBookCoverPhoto(
         urlSlug,
