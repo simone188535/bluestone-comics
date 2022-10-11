@@ -214,9 +214,7 @@ const EditIssueUpload = () => {
         toggleModal();
         history.push(`/profile/${currentUsername}`);
       }, 500);
-      //   // console.log("success", createBookRes);
     } catch (err) {
-      //   // console.log("failed", err.response.data.message);
       setErrorMessage(
         "An Error occurred while updating the data for this work. Please try again later."
       );
@@ -314,22 +312,6 @@ const EditIssueUpload = () => {
                       hasPrevUploadedData: true,
                     }}
                   />
-                  {/* <UploadTextField name="bookTitle" placeholder="Book Title" />
-            <FileInputSingleUpload
-              identifier="bookCoverPhoto"
-              triggerText="Select Book Thumbnail Photo"
-              toBeRemovedField="bookCoverPhotoToBeRemoved"
-              hasPrevUploadedData
-            />
-            <FileInputMultipleUpload
-              identifier="issueAssets"
-              dropzoneInnerText="Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files"
-              toBeRemovedField="issueAssetsToBeRemoved"
-              hasPrevUploadedData
-            />
-
-            <WorkCredits identifier="workCredits" /> */}
-                  {/* {workCreditsErrorMessage(errors)} */}
                   <SubmissionProgressModal
                     modalIsOpen={submissionModalIsOpen}
                     toggleModal={toggleModal}
@@ -354,7 +336,7 @@ const EditIssueUpload = () => {
                     className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
                     onClick={() => setDeleteModalIsOpen(true)}
                   >
-                    Delete Book
+                    Delete Issue
                   </button>
                 </section>
               </>
