@@ -8,14 +8,14 @@ import {
   getUsersIssue,
   // createBook,
   // getBookAndIssueImagePrefix,
-} from "../../services";
+} from "../../../services";
 // import UploadTemplate from "./UploadTemplate";
-import UploadTextField from "./UploadTextField";
-import FileInputSingleUpload from "../CommonUI/FileInputSingleUpload";
-import FileInputMultipleUpload from "../CommonUI/FileInputMultipleUpload";
-import WorkCredits from "./WorkCredits";
-import CONSTANTS from "../../utils/Constants";
-import "./upload.scss";
+import UploadTextField from "../UploadTextField";
+import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
+import FileInputMultipleUpload from "../../CommonUI/FileInputMultipleUpload";
+import WorkCredits from "../WorkCredits";
+import CONSTANTS from "../../../utils/Constants";
+import "../upload.scss";
 
 const {
   IMAGE_UPLOAD_DIMENSIONS: {
