@@ -7,7 +7,9 @@ import {
   getUsersIssue,
   getPrevExistingIssueWorkCredits,
   getBookAndIssueImagePrefix,
+  updateIssue,
   updateIssueAssets,
+  updateIssueCoverPhoto,
 } from "../../services";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
 import onUploadProgressHelper from "./onUploadProgressHelper";
@@ -42,7 +44,6 @@ const EditIssueUpload = () => {
 
   const currentUser = useSelector((state) => state.auth.user);
   const [currentUsername, setCurrentUsername] = useState("");
-  const [currentUserId, setCurrentUserId] = useState("");
   const [currentIssueInfo, setCurrentIssueInfo] = useState({});
 
   useEffect(() => {
@@ -50,7 +51,6 @@ const EditIssueUpload = () => {
       if (currentUser) {
         try {
           setCurrentUsername(currentUser.username);
-          setCurrentUserId(currentUser.id);
 
           // retrieve issue data and set it to state
           const {
@@ -94,14 +94,26 @@ const EditIssueUpload = () => {
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
-      const newlyAddedFilePageNums = [];
-      const prevIssueAssetsUpdatedPageNums = [];
-
       const imagePrefixesRes = await getBookAndIssueImagePrefix(
         bookId,
         issueNumber
       );
       const { bookImagePrefixRef, issueImagePrefixRef } = imagePrefixesRes.data;
+
+      // START edit issue data
+      const editIssueFormData = new FormData();
+
+      editIssueFormData.append("title", values.issueTitle);
+      editIssueFormData.append("issueDescription", values.issueDescription);
+      editIssueFormData.append(
+        "workCredits",
+        JSON.stringify(values.workCredits)
+      );
+      // END edit issue data
+
+      // START edit issue asset data
+      const newlyAddedFilePageNums = [];
+      const prevIssueAssetsUpdatedPageNums = [];
 
       const issueAssetsFormData = new FormData();
 
@@ -148,59 +160,58 @@ const EditIssueUpload = () => {
         "issueAssetsToBeRemoved",
         JSON.stringify(values.issueAssetsToBeRemoved)
       );
+      // END edit issue asset data
 
-      // TODO: dont forget to add the progress helper
+      // START edit issue cover photo data
+      const issueCoverPhotoFormData = new FormData();
+
+      issueCoverPhotoFormData.append("issueCoverPhoto", values.issueCoverPhoto);
+      // END edit issue cover photo data
+
+      // open modal
+      toggleModal();
+      /*
+        This is needed to show the percentage of the uploaded file. onUploadProgress is a
+        property provided by axios
+        */
+      // onUploadProgressHelper is be divided by 3 because the first awaited function was first 33% of the upload and the other 2 awaited functions are the last 66% of the upload
+      const setRemainingUploadPercentage = (remainingPercentage) =>
+        setUploadPercentage((prevState) => prevState + remainingPercentage);
+
+      const configUpdateIssue = onUploadProgressHelper(
+        setRemainingUploadPercentage,
+        3
+      );
+
+      await updateIssue(
+        urlSlug,
+        bookId,
+        issueNumber,
+        editIssueFormData,
+        configUpdateIssue
+      );
+
       await updateIssueAssets(
         urlSlug,
         bookId,
         issueNumber,
-        issueAssetsFormData
+        issueAssetsFormData,
+        configUpdateIssue
       );
 
-      // for (const pair of issueAssetsFormData.entries()) {
-      //   console.log(`${pair[0]}, ${pair[1]}`);
-      // }
-      // console.log('issueAssetsFormData', issueAssetsFormData.getAll('issueAssets'));
+      await updateIssueCoverPhoto(
+        urlSlug,
+        bookId,
+        issueNumber,
+        issueCoverPhotoFormData,
+        configUpdateIssue
+      );
 
-      //   const formData = new FormData();
-      //   formData.append("title", values.bookTitle);
-      //   formData.append("description", values.bookDescription);
-      //   formData.append("urlSlug", values.urlSlug);
-      //   formData.append("genres", JSON.stringify(values.genres));
-      //   formData.append("status", values.status);
-      //   // the removed field will need to be hooked up later. This a needed placeholder
-      //   formData.append("removed", values.removed);
-      //   const formDataBookCoverPhoto = new FormData();
-      //   // All Files must be moved to the bottom so that multer reads them last
-      //   formDataBookCoverPhoto.append("bookCoverPhoto", values.bookCoverPhoto);
-      //   // console.log("triggered", values);
-      //   //   return;
-      //   // open modal
-      //   toggleModal();
-      //   /*
-      //   This is needed to show the percentage of the uploaded file. onUploadProgress is a
-      //   property provided by axios
-      //   */
-      //   // onUploadProgressHelper is be divided by 2 because the first awaited function was first 50% of the upload and the other awaited function is the last 50% of the upload
-      //   const configUpdateBook = onUploadProgressHelper(setUploadPercentage, 2);
-      //   await updateBook(urlSlug, bookId, formData, configUpdateBook);
-      //   const setRemainingUploadPercentage = (remainingPercentage) =>
-      //     setUploadPercentage((prevState) => prevState + remainingPercentage);
-      //   const configUpdateBookCoverPhoto = onUploadProgressHelper(
-      //     setRemainingUploadPercentage,
-      //     2
-      //   );
-      //   await updateBookCoverPhoto(
-      //     urlSlug,
-      //     bookId,
-      //     formDataBookCoverPhoto,
-      //     configUpdateBookCoverPhoto
-      //   );
-      //   setTimeout(() => {
-      //     // after a couple of seconds close modal and redirect to new page
-      //     toggleModal();
-      //     history.push(`/profile/${currentUserName}`);
-      //   }, 500);
+      setTimeout(() => {
+        // after a couple of seconds close modal and redirect to new page
+        toggleModal();
+        history.push(`/profile/${currentUsername}`);
+      }, 500);
       //   // console.log("success", createBookRes);
     } catch (err) {
       //   // console.log("failed", err.response.data.message);

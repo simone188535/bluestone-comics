@@ -67,6 +67,17 @@ function updateBook(urlSlug, bookId, formData, config = {}) {
   );
 }
 
+function updateIssue(urlSlug, bookId, issueNum, formData, config = {}) {
+  const configObj = configObjects();
+  const newConfigObj = Object.assign(config, configObj);
+
+  return axios.patch(
+    `/api/v1/publish/${urlSlug}/book/${bookId}/issue/${issueNum}`,
+    formData,
+    newConfigObj
+  );
+}
+
 function createIssue(urlSlug, bookId, formData, config = {}) {
   const configObj = configObjects();
   const newConfigObj = Object.assign(config, configObj);
@@ -100,6 +111,24 @@ function updateBookCoverPhoto(urlSlug, bookId, formData, config = {}) {
 
   return axios.patch(
     `/api/v1/publish/${urlSlug}/book/${bookId}/book-cover-photo`,
+    formData,
+    newConfigObj
+  );
+}
+
+function updateIssueCoverPhoto(
+  urlSlug,
+  bookId,
+  issueNum,
+  formData,
+  config = {}
+) {
+  // update previously existing book cover photo
+  const configObj = configObjects();
+  const newConfigObj = Object.assign(config, configObj);
+
+  return axios.patch(
+    `/api/v1/publish/${urlSlug}/book/${bookId}/issue/${issueNum}/issue-cover-photo`,
     formData,
     newConfigObj
   );
@@ -139,10 +168,12 @@ export {
   getUsersIssue,
   getUsersIssues,
   updateBook,
+  updateIssue,
   createIssue,
   deleteBook,
   deleteIssue,
   updateBookCoverPhoto,
+  updateIssueCoverPhoto,
   getPrevExistingIssueWorkCredits,
   updateIssueAssets,
 };
