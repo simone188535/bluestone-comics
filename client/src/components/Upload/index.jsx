@@ -65,6 +65,7 @@ const Upload = () => {
       formData.append("bookTitle", values.bookTitle);
       formData.append("bookDescription", values.bookDescription);
       formData.append("urlSlug", values.urlSlug);
+      formData.append("contentRating", values.contentRating);
       formData.append("issueTitle", values.issueTitle);
       formData.append("issueDescription", values.issueDescription);
       // formData cannot contain plain objects, so it must be stringified
@@ -132,6 +133,7 @@ const Upload = () => {
             bookCoverPhoto: null,
             bookDescription: "",
             urlSlug: "",
+            contentRating: "",
             issueTitle: "",
             issueCoverPhoto: null,
             issueDescription: "",
@@ -160,6 +162,7 @@ const Upload = () => {
 
                 return regexForValidURLSlug.test(value);
               }),
+            contentRating: Yup.string().required("Content Rating required!"),
             issueTitle: Yup.string().required("Issue Title required!"),
             issueCoverPhoto: Yup.mixed()
               .required("A Issue Cover Photo is required!")

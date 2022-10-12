@@ -161,7 +161,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
     genres,
     issueTitle,
     issueDescription,
-    workCredits
+    workCredits,
+    contentRating
   } = req.body;
 
   // grab AWS file path (where the file is saved in aws) and save it to the db (each of these files should share path/location in aws)
@@ -169,15 +170,16 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   // create new Book
   const newBook = await new QueryPG(pool).insert(
-    'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference)',
-    '$1, $2, $3, $4, $5, $6',
+    'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference, content_rating)',
+    '$1, $2, $3, $4, $5, $6, $7',
     [
       res.locals.user.id,
       bookTitle,
       urlSlug,
       req.files.bookCoverPhoto[0].location,
       bookDescription,
-      AWSPrefixArray[1] // book path
+      AWSPrefixArray[1], // book path
+      contentRating
     ]
   );
 
@@ -313,7 +315,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 exports.updateBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
-  const { title, genres, description, urlSlug, status, removed } = req.body;
+  const { title, genres, description, urlSlug, status, removed, contentRating } = req.body;
 
   const existingBookByCurrentUser = await new QueryPG(pool).find(
     '*',
@@ -333,8 +335,8 @@ exports.updateBook = catchAsync(async (req, res, next) => {
   // update book values
   const updatedBook = await new QueryPG(pool).update(
     'books',
-    'title = ($1), description = ($2), url_slug = ($3), status = ($4), removed = ($5), last_updated = ($6)',
-    'id = ($7) AND publisher_id = ($8)',
+    'title = ($1), description = ($2), url_slug = ($3), status = ($4), removed = ($5), last_updated = ($6), content_rating = ($7)',
+    'id = ($8) AND publisher_id = ($9)',
     [
       title,
       description,
@@ -342,6 +344,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
       status,
       removed,
       new Date(),
+      contentRating,
       bookId,
       res.locals.user.id
     ]

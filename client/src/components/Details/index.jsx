@@ -36,6 +36,7 @@ const Details = () => {
     issueNum,
     totalIssuePages,
     publisherId,
+    contentRating,
   } = detailInfo;
 
   // If issueId does not exist then the provided URL and the data on this page is for a book.
@@ -83,6 +84,7 @@ const Details = () => {
           issueBookId: issue?.book_id || null,
           issueNum: issue?.issue_number || null,
           totalIssuePages: totalIssueAssets || null,
+          contentRating: book?.content_rating || issue?.content_rating,
         });
       } catch (err) {
         // setErrMsg("Something went wrong! Please try again later.");
@@ -128,6 +130,10 @@ const Details = () => {
                 </Link>
               </div>
             )}
+            <div className="desc-detail bold">
+              Rating:{" "}
+              <span className="desc-detail normal">{contentRating}</span>
+            </div>
             <div className="desc-detail bold">
               Status: <span className="desc-detail normal">{status}</span>
             </div>

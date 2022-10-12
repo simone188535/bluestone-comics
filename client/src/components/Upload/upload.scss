@@ -36,10 +36,14 @@
                 }
             }
 
-            input[type=radio] {
-                margin-right: 5px;
+            .radio-btn-group {
+              .radio-label {
+                .radio-btn {
+                    margin-right: 5px;
+                }
+                margin-right: 10px;
+              }
             }
-
         }
 
         .slug-field {

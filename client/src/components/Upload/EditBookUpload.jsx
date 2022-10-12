@@ -66,6 +66,7 @@ const EditBookUpload = () => {
                 description: bookDescData,
                 status: statusData,
                 removed: removedData,
+                content_rating: contentRatingData,
               },
               bookCoverPhotoFile: bookCoverPhotoFileData,
               genres: genresData,
@@ -91,6 +92,7 @@ const EditBookUpload = () => {
             currentURLSlug: urlSlug,
             status: statusData,
             removed: removedData,
+            contentRating: contentRatingData,
           }));
 
           setLoadingInitialData(false);
@@ -108,6 +110,7 @@ const EditBookUpload = () => {
       formData.append("title", values.bookTitle);
       formData.append("description", values.bookDescription);
       formData.append("urlSlug", values.urlSlug);
+      formData.append("contentRating", values.contentRating);
       formData.append("genres", JSON.stringify(values.genres));
       formData.append("status", values.status);
       // the removed field will need to be hooked up later. This a needed placeholder
@@ -185,6 +188,7 @@ const EditBookUpload = () => {
               bookCoverPhotoToBeRemoved: "",
               bookDescription: currentBookInfo.bookDesc,
               urlSlug: currentBookInfo.currentURLSlug,
+              contentRating: currentBookInfo.contentRating,
               genres: currentBookInfo.genres,
               status: currentBookInfo.status,
               removed: false,
@@ -219,6 +223,7 @@ const EditBookUpload = () => {
 
                   return regexForValidURLSlug.test(value);
                 }),
+              contentRating: Yup.string().required("Content Rating required!"),
               genres: Yup.array().required("You must select a genre!"),
               status: Yup.string().required("Status required!"),
             })}

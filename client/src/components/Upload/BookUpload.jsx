@@ -47,6 +47,18 @@ const UrlSlugifedField = ({ name, ...props }) => {
   );
 };
 
+const ratingsRadioBtn = ["G", "T", "M", "E"].map((val) => (
+  <label className="radio-label" key={`rating-radio-btn-${val}`}>
+    <Field
+      type="radio"
+      name="contentRating"
+      className="radio-btn"
+      value={val}
+    />
+    {val}
+  </label>
+));
+
 const BookUpload = ({
   bookCoverPhotoData = {
     identifier: "bookCoverPhoto",
@@ -112,9 +124,18 @@ const BookUpload = ({
         component="div"
         name="urlSlug"
       />
+      <div className="form-header-text">
+        Select the applicable <strong>content rating</strong>:
+      </div>
+      <div className="radio-btn-group">{ratingsRadioBtn}</div>
+      <ErrorMessage
+        className="error-message error-text-color"
+        component="div"
+        name="contentRating"
+      />
 
       <div className="form-header-text">
-        Select the applicable <strong>genres</strong>
+        Select the applicable <strong>genres</strong>:
       </div>
       <ul className="checkbox-group upload-checkboxes">
         <Checkboxes
