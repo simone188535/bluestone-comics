@@ -329,7 +329,7 @@ const EditIssueUpload = () => {
                 />
                 <section className="delete-book-btn-section">
                   <h1 className="delete-book-btn-header">
-                    <strong>Permanently Delete This Book!</strong>
+                    <strong>Permanently Delete This Issue!</strong>
                   </h1>
                   <button
                     type="button"
