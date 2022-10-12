@@ -250,11 +250,12 @@ const EditBookUpload = () => {
                   <div className="form-header-text">
                     Select the <strong>status</strong> of this book:
                   </div>
-                  <ul className="checkbox-group upload-checkboxes">
+                  <ul className="checkbox-group upload-checkboxes radio-btn-group">
                     {statusOption.map((status) => (
                       <li key={`${status}-radio-item`}>
-                        <label htmlFor="status">
+                        <label htmlFor="status" className="radio-label">
                           <Field
+                            className="radio-btn"
                             type="radio"
                             name="status"
                             value={status.toLowerCase()}

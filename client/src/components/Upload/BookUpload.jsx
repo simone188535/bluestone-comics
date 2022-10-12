@@ -47,15 +47,20 @@ const UrlSlugifedField = ({ name, ...props }) => {
   );
 };
 
-const ratingsRadioBtn = ["G", "T", "M", "E"].map((val) => (
-  <label className="radio-label" key={`rating-radio-btn-${val}`}>
+const ratingsRadioBtn = [
+  { option: "General", value: "G" },
+  { option: "Teen", value: "T" },
+  { option: "Mature", value: "M" },
+  // { option: "Explicit", value: "E" },
+].map((rating) => (
+  <label className="radio-label" key={`rating-radio-btn-${rating.value}`}>
     <Field
       type="radio"
       name="contentRating"
       className="radio-btn"
-      value={val}
+      value={rating.value}
     />
-    {val}
+    {rating.option}
   </label>
 ));
 
