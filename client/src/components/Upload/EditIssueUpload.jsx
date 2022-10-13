@@ -10,7 +10,9 @@ import {
   updateIssue,
   updateIssueAssets,
   updateIssueCoverPhoto,
+  deleteIssue,
 } from "../../services";
+import useIsLatestIssue from "../../hooks/useIsLatestIssue";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
 import onUploadProgressHelper from "./onUploadProgressHelper";
 import SubmissionProgressModal from "./SubmissionProgressModal";
@@ -45,6 +47,8 @@ const EditIssueUpload = () => {
   const currentUser = useSelector((state) => state.auth.user);
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentIssueInfo, setCurrentIssueInfo] = useState({});
+
+  const isLatestIssue = useIsLatestIssue(urlSlug, bookId, issueNumber);
 
   useEffect(() => {
     (async () => {
@@ -224,8 +228,8 @@ const EditIssueUpload = () => {
   };
 
   const deleteModal = async () => {
-    // await deleteBook(urlSlug, bookId);
-    // history.push(`/profile/${currentUserName}`);
+    await deleteIssue(urlSlug, bookId, issueNumber);
+    history.push(`/profile/${currentUsername}`);
   };
 
   return (
@@ -247,18 +251,6 @@ const EditIssueUpload = () => {
               issueAssets: currentIssueInfo.issueAssets,
               issueAssetsToBeRemoved: [],
               workCredits: prevExistingWorkCredits,
-              // workCredits: [
-              //   {
-              //     user: "82",
-              //     username: "super9cookie",
-              //     credits: ["colorist", "penciller"],
-              //   },
-              //   {
-              //     user: "80",
-              //     username: "supercookie",
-              //     credits: ["artist", "cover artist"],
-              //   },
-              // ],
             }}
             validationSchema={Yup.object().shape({
               issueTitle: Yup.string().required("Issue Title required!"),
@@ -322,23 +314,27 @@ const EditIssueUpload = () => {
                     Submit
                   </button>
                 </Form>
-                <DeleteWorkModal
-                  deleteModalIsOpen={deleteModalIsOpen}
-                  setDeleteModalIsOpen={setDeleteModalIsOpen}
-                  deleteMethod={deleteModal}
-                />
-                <section className="delete-book-btn-section">
-                  <h1 className="delete-book-btn-header">
-                    <strong>Permanently Delete This Issue!</strong>
-                  </h1>
-                  <button
-                    type="button"
-                    className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
-                    onClick={() => setDeleteModalIsOpen(true)}
-                  >
-                    Delete Issue
-                  </button>
-                </section>
+                {isLatestIssue && (
+                  <>
+                    <DeleteWorkModal
+                      deleteModalIsOpen={deleteModalIsOpen}
+                      setDeleteModalIsOpen={setDeleteModalIsOpen}
+                      deleteMethod={deleteModal}
+                    />
+                    <section className="delete-book-btn-section">
+                      <h1 className="delete-book-btn-header">
+                        <strong>Permanently Delete This Issue!</strong>
+                      </h1>
+                      <button
+                        type="button"
+                        className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
+                        onClick={() => setDeleteModalIsOpen(true)}
+                      >
+                        Delete Issue
+                      </button>
+                    </section>
+                  </>
+                )}
               </>
             )}
           />

@@ -11,7 +11,7 @@ function useIsLatestIssue(urlSlug, bookId, IssueNum) {
           data: { issueTotal },
         } = await getIssues(urlSlug, bookId);
 
-        setIsLatestIssue(issueTotal === IssueNum);
+        setIsLatestIssue(issueTotal === Number(IssueNum));
       } catch (err) {
         setIsLatestIssue(null);
       }

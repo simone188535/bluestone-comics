@@ -2,6 +2,7 @@ import React, { useState } from "react";
 // import { useHistory, useParams } from "react-router-dom";
 import ErrMsg from "../CommonUI/ErrorMessage";
 import Modal from "../CommonUI/Modal";
+import "../CommonUI/Modal/styles/delete-work-modal.scss";
 
 const DeleteWorkModal = ({
   deleteModalIsOpen,
@@ -11,11 +12,11 @@ const DeleteWorkModal = ({
   const [deleteErr, setDeleteErr] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const deleteHelper = (e) => {
+  const deleteHelper = async (e) => {
     e.stopPropagation();
     setDeleting(true);
     try {
-      deleteMethod();
+      await deleteMethod();
     } catch (err) {
       setDeleteErr(true);
     }
@@ -35,12 +36,12 @@ const DeleteWorkModal = ({
         <Modal
           isOpen={deleteModalIsOpen}
           onClose={() => resetModal()}
-          isCloseButtonPresent={deleteErr}
+          isCloseButtonPresent={!deleting}
           className="delete-work-modal"
         >
           {!deleteErr ? (
             <div>
-              <h2>
+              <h2 className="delete-work-modal-header">
                 <strong>
                   {deleting
                     ? "Deleting...."
@@ -56,16 +57,8 @@ const DeleteWorkModal = ({
             />
           )}
           <section className="action-btn-container">
-            {!deleteErr && (
+            {!deleteErr && !deleting && (
               <>
-                <button
-                  type="button"
-                  className="bsc-button action-btn transparent transparent-red prompt-btn"
-                  disabled={deleting}
-                  onClick={(e) => deleteHelper(e)}
-                >
-                  Delete
-                </button>
                 <button
                   type="button"
                   className="bsc-button action-btn transparent transparent-blue"
@@ -73,6 +66,14 @@ const DeleteWorkModal = ({
                   onClick={() => resetModal()}
                 >
                   Cancel
+                </button>
+                <button
+                  type="button"
+                  className="bsc-button action-btn transparent transparent-red prompt-btn"
+                  disabled={deleting}
+                  onClick={(e) => deleteHelper(e)}
+                >
+                  Delete
                 </button>
               </>
             )}

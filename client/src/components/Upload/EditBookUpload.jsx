@@ -22,7 +22,6 @@ import onUploadProgressHelper from "./onUploadProgressHelper";
 import SubmissionProgressModal from "./SubmissionProgressModal";
 import CONSTANTS from "../../utils/Constants";
 import "./upload.scss";
-import "../CommonUI/Modal/styles/delete-work-modal.scss";
 
 const {
   IMAGE_UPLOAD_DIMENSIONS: {
