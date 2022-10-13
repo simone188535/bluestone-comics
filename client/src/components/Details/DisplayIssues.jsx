@@ -87,6 +87,10 @@ const DisplayIssues = ({ isIssue, urlSlug, bookId, belongsToUser }) => {
     fetchIssue();
   };
 
+  /*
+  TODO: There is alot of prop drilling here, perhaps a better way to right this is with render props:
+  https://www.patterns.dev/posts/render-props-pattern/
+  */
   const displayIssues = issues.map(
     ({ title, issue_number: issueNumber, date_created: dateCreated }) => (
       <MappedIssue
