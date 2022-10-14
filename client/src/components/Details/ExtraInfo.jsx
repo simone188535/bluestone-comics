@@ -111,16 +111,18 @@ const ExtraInfo = ({
       // Reduce the time complexity of this. It is terrible
       return filterOutEmptyWorkCreditsObj().map((workCredit) => {
         const header = `${Object.keys(workCredit)[0].replace("_", " ")}`;
-        const creators = Object.values(workCredit).map((workCreditVal) => (
-          <li key={nanoid()} className="creator-list-item">
-            <Link
-              className="desc-detail link normal"
-              to={`/profile/${workCreditVal}`}
-            >
-              {workCreditVal}
-            </Link>
-          </li>
-        ));
+        const creators = Object.values(workCredit).map((workCreditVal) =>
+          workCreditVal.map((username) => (
+            <li key={nanoid()} className="creator-list-item">
+              <Link
+                className="desc-detail link normal"
+                to={`/profile/${username}`}
+              >
+                {username}
+              </Link>
+            </li>
+          ))
+        );
         return (
           <div key={nanoid()} className="credit-section">
             <h3 className="tertiary-header creator-header">{header}</h3>
