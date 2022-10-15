@@ -21,7 +21,10 @@ const MappedIssue = ({
   return (
     <div className="row issues-list-table-item desc-detail">
       <div className="col left-col desc-detail bold">
-        <Link to="#" className="desc-detail link-as-normal">
+        <Link
+          to={`/read/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
+          className="desc-detail link-as-normal"
+        >
           {title}
         </Link>
       </div>
