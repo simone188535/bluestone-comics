@@ -1,41 +1,59 @@
-import React from 'react';
-import { Field } from 'formik';
-
+import React from "react";
+import _ from "lodash";
+import { Field, useFormikContext } from "formik";
 
 // This component conditionally wraps the provided component(HOC) in the HTML Element provided
-const AddWrapperElement = ({ children, wrapperElement }) => {
-
-    let WrappingHTMLElement = wrapperElement ? wrapperElement : React.Fragment; // fallback in case you dont want to wrap your components
-    return <WrappingHTMLElement>{children}</WrappingHTMLElement>
+const AddWrapperElement = ({ children, wrapperElement = React.Fragment }) => {
+  const WrappingHTMLElement = wrapperElement;
+  return <WrappingHTMLElement>{children}</WrappingHTMLElement>;
 };
 
 // This component conditionally maps through or displays the checkbox elements
-const DisplaySingleOrMultipleCheckboxes = ({ type, checkboxValue = {checked: false, disabled: false}, identifier, wrapperElement }) => {
-    
-    const htmlValue = (checkboxValue, index = null ) => (
-        <AddWrapperElement wrapperElement={wrapperElement} key={index}>
-            <label className="checkbox-item">
-                <Field type="checkbox" name={identifier} value={checkboxValue.name} checked={checkboxValue.checked} disabled={checkboxValue.disabled}/>
-                <span>
-                    {checkboxValue.name}
-                </span>
-            </label>
-        </AddWrapperElement>
+function DisplaySingleOrMultipleCheckboxes({
+  type,
+  checkboxValue = { disabled: false },
+  identifier,
+  wrapperElement,
+}) {
+  const { values } = useFormikContext();
+  const checkVal = _.get(values, identifier);
+
+  const htmlValue = (currCheckboxValue, index = null) => (
+    <AddWrapperElement wrapperElement={wrapperElement} key={index}>
+      <label className="checkbox-item">
+        <Field
+          type="checkbox"
+          name={identifier}
+          value={currCheckboxValue.value}
+          checked={checkVal?.includes(currCheckboxValue.value)}
+          disabled={currCheckboxValue.disabled}
+        />
+        <span>{currCheckboxValue.name}</span>
+      </label>
+    </AddWrapperElement>
+  );
+
+  if (type === "single") {
+    return htmlValue(checkboxValue);
+  }
+
+  if (type === "multiple") {
+    return checkboxValue.map((singleCheckboxVal, index) =>
+      htmlValue(singleCheckboxVal, index)
     );
-
-    if (type === 'single') {
-        return htmlValue(checkboxValue)
-
-    } else if (type === 'multiple') {
-        return checkboxValue.map((singleCheckboxVal, index) => htmlValue(singleCheckboxVal, index));
-    }
+  }
 }
 // this is using a formik checkbox: https://formik.org/docs/examples/checkboxes
 const Checkboxes = ({ identifier, type, checkboxValue, wrapperElement }) => {
-    return (
-        <DisplaySingleOrMultipleCheckboxes identifier={identifier} checkboxValue={checkboxValue} type={type} wrapperElement={wrapperElement} />
-    );
-}
+  return (
+    <DisplaySingleOrMultipleCheckboxes
+      identifier={identifier}
+      checkboxValue={checkboxValue}
+      type={type}
+      wrapperElement={wrapperElement}
+    />
+  );
+};
 
 export default Checkboxes;
 
@@ -55,7 +73,7 @@ export default Checkboxes;
         identifier="genres"
         type="single"
         wrapperElement="li"
-        checkboxValue={{ name: 'Action/Adventure' }} 
+        checkboxValue={{ name: 'Action', value: "action"}} 
     />
 
     How multi Checkboxes works:
@@ -64,7 +82,7 @@ export default Checkboxes;
         identifier="genres"
         type="multiple"
         wrapperElement="li"
-        checkboxValue={[{ name: 'Action/Adventure' }, { name: 'Anthropomorphic' } 
+        checkboxValue={[{ name: 'Action', value: "action"}, { name: 'anthropomorphic', value: "anthropomorphic" } 
     />
 
 */

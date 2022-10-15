@@ -12,8 +12,9 @@ import LoadingSpinner from "../../../CommonUI/LoadingSpinner";
 import ErrorMessage from "../../../CommonUI/ErrorMessage";
 import Accordion from "../../../CommonUI/Accordion";
 import "./works.scss";
+import CONSTANTS from "../../../../utils/Constants";
 
-const PAGINATION_LIMIT = 12;
+const { PAGINATION_LIMIT } = CONSTANTS;
 
 const Accredited = ({ filteredResults }) => {
   // TODO: reduce the time complexity of this function, it is 0(n) + 0(n^2). It can be more efficient
@@ -37,7 +38,11 @@ const Accredited = ({ filteredResults }) => {
         (worksUserParticipatedIn) => {
           return {
             id: `${accreditedWorkKeyAsString}-${worksUserParticipatedIn.book_id}-${worksUserParticipatedIn.issue_id}`,
-            listItem: `<ul class="accredited-work-group"><li class="accredited-work-group-item">Issue: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.issue_title}</a></li> <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> <li class="accredited-work-group-item">Book: <a href="#" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_title}</a></li></ul>`,
+            listItem: `<ul class="accredited-work-group">
+            <li class="accredited-work-group-item">Issue: <a href="/details/test-upload/book/${worksUserParticipatedIn.book_id}/issue/${worksUserParticipatedIn.issue_number}" class="accredited-work-group-item-link">${worksUserParticipatedIn.issue_title}</a></li>
+            <li class="class="accredited-work-group-item">Issue # : ${worksUserParticipatedIn.issue_number}</li> 
+            <li class="accredited-work-group-item">Book: <a href="/details/test-upload/book/${worksUserParticipatedIn.book_id}" class="accredited-work-group-item-link">${worksUserParticipatedIn.book_title}</a></li>
+            </ul>`,
           };
         }
       );
@@ -83,6 +88,22 @@ const BooksOrIssues = ({
   );
 
   const searchResults = currentResultsDisplayed?.map((currentResult) => {
+    const imgThumbnailURL = () => {
+      let detailsURL;
+
+      if (filterType === "Books") {
+        detailsURL = `/details/${currentResult.url_slug}/book/${currentResult.book_id}`;
+      }
+
+      if (filterType === "Issues") {
+        detailsURL = `/details/${currentResult.url_slug}/book/${currentResult.book_id}/issue/${currentResult.issue_number}`;
+      }
+      return detailsURL;
+    };
+
+    const bookIdOrIssueId =
+      filterType === "Books" ? currentResult.book_id : currentResult.issue_id;
+
     const showFirstHeaderWithBooksorIssueTitle =
       filterType === "Books" ? (
         <h3 className="grid-info-box-header">
@@ -107,18 +128,13 @@ const BooksOrIssues = ({
         </h4>
       ) : null;
     return (
-      <li
-        className="grid-list-item"
-        key={`filtered-result-${
-          currentResult.book_id || currentResult.issue_id
-        }`}
-      >
+      <li className="grid-list-item" key={`filtered-result-${bookIdOrIssueId}`}>
         <div className="grid-image-container">
-          <Link to="#">
+          <Link to={imgThumbnailURL()}>
             <img
               className="grid-image"
               src={currentResult.cover_photo}
-              alt={`${currentResult.title}`}
+              alt={`${currentResult.book_title}`}
             />
           </Link>
         </div>
@@ -135,12 +151,6 @@ const BooksOrIssues = ({
     );
   });
 
-  const showCurrentSearchPageDataIfPresent = filteredResults ? (
-    <ul className="display-work-grid col-4">{searchResults}</ul>
-  ) : (
-    <span>This user has not created this yet.</span>
-  );
-
   return (
     <>
       {
@@ -150,7 +160,7 @@ const BooksOrIssues = ({
         ) : (
           <>
             <div className="filtered-results">
-              {showCurrentSearchPageDataIfPresent}
+              <ul className="display-work-grid col-4">{searchResults}</ul>
             </div>
             <Pagination
               className="pagination-bar"
@@ -245,6 +255,7 @@ const Works = ({ profilePageUser }) => {
           setFilteredResults([
             { artist },
             { colorist },
+            // eslint-disable-next-line camelcase
             { cover_Artist: coverArtist },
             { editor },
             { inker },
@@ -312,7 +323,7 @@ const Works = ({ profilePageUser }) => {
       renderStatusOfDataRetrieval = (
         <ErrorMessage
           errorStatus={errorMessageStatus}
-          MessageText="An error occurred. Please try again later."
+          messageText="An error occurred. Please try again later."
           className="description-err-msg centered-err-msg"
         />
       );

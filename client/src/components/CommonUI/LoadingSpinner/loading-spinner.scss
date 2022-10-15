@@ -3,15 +3,13 @@
 .loading-spinner {
   .loading {
     &-content {
-      width: 200px;
-      height: 200px;
       display: flex;
       position: relative;
       align-items: center;
       justify-content: center;
       margin: auto;
     }
-
+    
     &-circle {
       top: 0;
       width: 200px;
@@ -27,11 +25,6 @@
       -webkit-transform-origin: 50% 100%;
       animation: loading 1.5s linear infinite;
       -webkit-animation: loading 1.5s linear infinite;
-      
-      &.small {
-        width: 25px;
-        height: 12px;
-      }
     }
 
     &-name {
@@ -68,5 +61,15 @@
       -webkit-transform: rotate(360deg);
       transform: rotate(360deg);
     }
+  }
+
+  &.small .loading-content .loading-circle {
+    width: 25px;
+    height: 12px;
+  }
+
+  &.large .loading-content {
+    width: 200px;
+    height: 200px;
   }
 }

@@ -25,4 +25,44 @@ function updateMe(formData) {
     },
   });
 }
-export { getUser, updateMe };
+
+function updateProfilePhoto(formData) {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  return axios.patch(`/api/v1/users/update-profile-photo`, formData, {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`,
+    },
+  });
+}
+
+function updateBackgroundProfilePhoto(formData) {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  return axios.patch(
+    `/api/v1/users/update-background-profile-photo`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    }
+  );
+}
+
+function deleteMe() {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  return axios.delete(`/api/v1/users/delete-me`, {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`,
+    },
+  });
+}
+export {
+  getUser,
+  updateMe,
+  updateProfilePhoto,
+  updateBackgroundProfilePhoto,
+  deleteMe,
+};

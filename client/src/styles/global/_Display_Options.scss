@@ -1,0 +1,37 @@
+.hide-until-md {
+    display: none;
+}
+
+.show-at-md {
+    display: block;
+}
+
+.hide-until-lg {
+    display: none;
+}
+
+.show-at-lg {
+    display: block;
+}
+
+
+@media only screen and (min-width: $medium) {
+    .hide-until-md {
+        display: block;
+    }
+
+    .show-at-md {
+        display: none;
+    }
+
+}
+
+@media only screen and (min-width: $large) {
+    .hide-until-lg {
+        display: block;
+    }
+
+    .show-at-lg {
+        display: none;
+    }
+}

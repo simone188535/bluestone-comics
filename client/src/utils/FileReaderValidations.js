@@ -1,22 +1,21 @@
 export const imageWidthAndHeight = (providedFile) => {
   // take the given file (which should be an image) and return the width and height
-  const imgDimensions = { width: null, height: null };
 
   return new Promise((resolve) => {
-    const reader = new FileReader();
+    const copiedFile = new File([providedFile], providedFile.name, {
+      type: providedFile.type,
+    });
+    const image = new Image();
 
-    reader.readAsDataURL(providedFile);
-    reader.onload = function () {
-      const img = new Image();
-      img.src = reader.result;
+    image.onload = function () {
+      copiedFile.width = image.width;
+      copiedFile.height = image.height;
 
-      img.onload = function () {
-        imgDimensions.width = img.width;
-        imgDimensions.height = img.height;
-
-        resolve(imgDimensions);
-      };
+      resolve({ width: copiedFile.width, height: copiedFile.height });
     };
+
+    const url = URL.createObjectURL(copiedFile);
+    image.src = url;
   });
 };
 

@@ -1,5 +1,6 @@
 @import '../../../styles/abstracts/variables';
 
+// basic accordian styling
 .accordian {
     display: flex;
     flex-direction: column;
@@ -15,8 +16,6 @@
         text-align: center;
         cursor: pointer;
         border: 1px solid $mid-gray;
-        // color: #325191;
-        // color: #273586;
         color: #3143A8;
         background-color: $white-light-grey;
         &:not(:last-child) {
@@ -26,6 +25,7 @@
         .accordian-header {
             padding: 2rem;
             font-size: 1.4rem;
+            text-transform: capitalize;
         }
 
         .accordian-icon {
@@ -44,12 +44,83 @@
         padding: 0rem 2rem 2rem;
         font-weight: 300;
         font-size: 1rem;
+        border: 1px solid #ddd;
+        border-top: 0;
+
+        &:not(:last-child) {
+            border-bottom: 0;
+        }
 
         ul.accordian-list {
-            list-style-position: inside;
+            list-style-type: none;
+            flex: 1;
             
             li {
                 margin-bottom: .5rem;
+            }
+        }
+    }
+}
+
+
+// accredited grid layout 
+.accredited-works-accordian {
+
+    .dropdown {
+        justify-content: center;
+
+
+        .accordian-list {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 2rem 0rem;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+
+            & > li.accordian-list-item {
+                word-break: break-word;
+                
+                .accredited-work-group {
+                    list-style-type: none;
+
+                    &-item-link {
+                        color: $dark-violet-blue;
+                        text-decoration: none;
+
+                        &:hover {
+                            color: $violet-blue;
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $small) {
+    .accredited-works-accordian {
+
+        .dropdown {
+            .accordian-list {
+                grid-template-columns: repeat(2, 1fr);
+
+                & > li.accordian-list-item {
+                    padding-left: 2rem;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .accredited-works-accordian {
+
+        .dropdown {
+            .accordian-list {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem 0rem;
             }
         }
     }

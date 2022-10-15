@@ -12,8 +12,13 @@ import ComicList from "./ComicList";
 import Contest from "./Contest";
 import News from "./News";
 import Upload from "./Upload";
+import UploadNewIssue from "./Upload/UploadNewIssue";
+import EditIssueUpload from "./Upload/EditIssueUpload";
+import EditBookUpload from "./Upload/EditBookUpload";
 import Profile from "./Profile";
 import EditProfile from "./Profile/Edit";
+import Details from "./Details";
+import Read from "./Read";
 import ProtectedRoute from "./Auth/ProtectedRoute";
 
 import store from "../store";
@@ -34,13 +39,35 @@ const AllRoutes = () => {
       <Route path="/contest" component={Contest} />
       <Route path="/comic-list" component={ComicList} />
       <Route path="/news" component={News} />
+      <ProtectedRoute
+        path="/upload-issue/:urlSlug/book/:bookId"
+        component={UploadNewIssue}
+      />
       <ProtectedRoute path="/upload" component={Upload} />
+      <ProtectedRoute
+        path="/edit-upload/:urlSlug/book/:bookId/issue/:issueNumber"
+        component={EditIssueUpload}
+      />
+      <ProtectedRoute
+        path="/edit-upload/:urlSlug/book/:bookId"
+        component={EditBookUpload}
+      />
       <Route path="/sign-up" component={SignUp} />
       <Route path="/login" component={Login} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password/:resetToken" component={ResetPassword} />
       <ProtectedRoute path="/profile/:username/edit" component={EditProfile} />
       <Route path="/profile/:username" component={Profile} />
+      <Route
+        path="/details/:urlSlug/book/:bookId/issue/:issueNumber"
+        component={Details}
+      />
+      <Route path="/details/:urlSlug/book/:bookId" component={Details} />
+      <Route
+        path="/read/:urlSlug/book/:bookId/issue/:issueNumber"
+        component={Read}
+      />
+      <Route path="/read/:urlSlug/book/:bookId" component={Read} />
       <Route path="/" component={Home} />
     </Switch>
   );

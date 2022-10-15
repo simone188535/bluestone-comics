@@ -84,7 +84,9 @@ exports.searchIssues = catchAsync(async (req, res) => {
     issues.cover_photo,
     issues.issue_number,
     issues.date_created,
-    books.title AS book_title
+    books.id AS book_id,
+    books.title AS book_title,
+    books.url_slug
     `,
     query,
     parameterizedValues,

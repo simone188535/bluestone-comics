@@ -41,15 +41,30 @@ const addWorkCredits = async (workCredits, publisherId, bookId, issueId) => {
   return newWorkCredits;
 };
 
+const deleteAllIssueAssets = async (issueAssets) => {
+  const issueAssetsToDelete = issueAssets.map((issueAsset) => {
+    return { Key: AmazonSDKS3.getS3FilePath(issueAsset.photo_url) };
+  });
+
+  // delete issue assets
+  await AmazonSDKS3.deleteMultipleS3Objects(issueAssetsToDelete);
+};
+
 /*
   This method inserts the uploaded Issue Assets (By Multer/S3) into the issue_assets table
 */
-const addIssueAssets = async (issueAssets, publisherId, bookId, issueId) => {
+const addIssueAssets = async (
+  issueAssets,
+  publisherId,
+  bookId,
+  issueId,
+  pageNumArr = null
+) => {
   const newIssueAssets = [];
 
   await Promise.all(
-    issueAssets.map(async (issueAsset, index) => {
-      const pageNumber = index + 1;
+    issueAssets?.map(async (issueAsset, index) => {
+      const pageNumber = pageNumArr ? pageNumArr[index] : index + 1;
       const addedIssueAsset = await new QueryPG(pool).insert(
         'issue_assets(publisher_id, book_id, issue_id, page_number, photo_url)',
         '$1, $2, $3, $4, $5',
@@ -91,13 +106,20 @@ exports.getBook = catchAsync(async (req, res, next) => {
     [bookId, res.locals.user.id]
   );
 
+  const genres = await new QueryPG(pool).find(
+    'id, genre',
+    'genres WHERE book_id = $1',
+    [bookId],
+    true
+  );
+
   if (!bookByUser) {
     return next(
       new AppError(`Existing book by the current user cannot be found.`, 404)
     );
   }
   // Get the book cover photo file in AWS associated with this book
-  const bookCoverPhoto = await AmazonSDKS3.getSingleS3Object(
+  const bookCoverPhotoFile = await AmazonSDKS3.getSingleS3Object(
     AmazonSDKS3.getS3FilePath(bookByUser.cover_photo)
   );
 
@@ -105,7 +127,8 @@ exports.getBook = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     book: bookByUser,
-    bookCoverPhoto
+    genres,
+    bookCoverPhotoFile
   });
 });
 
@@ -113,7 +136,7 @@ exports.getIssues = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
   const { page } = req.query;
 
-  const offset = pageOffset(page);
+  const offset = pageOffset(page, 20);
 
   const issuesOfBookByUser = await new QueryPG(pool).find(
     '*',
@@ -138,7 +161,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
     genres,
     issueTitle,
     issueDescription,
-    workCredits
+    workCredits,
+    contentRating
   } = req.body;
 
   // grab AWS file path (where the file is saved in aws) and save it to the db (each of these files should share path/location in aws)
@@ -146,15 +170,16 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   // create new Book
   const newBook = await new QueryPG(pool).insert(
-    'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference)',
-    '$1, $2, $3, $4, $5, $6',
+    'books(publisher_id, title, url_slug, cover_photo, description, image_prefix_reference, content_rating)',
+    '$1, $2, $3, $4, $5, $6, $7',
     [
       res.locals.user.id,
       bookTitle,
       urlSlug,
       req.files.bookCoverPhoto[0].location,
       bookDescription,
-      AWSPrefixArray[1] // book path
+      AWSPrefixArray[1], // book path
+      contentRating
     ]
   );
 
@@ -253,12 +278,8 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
       true
     );
 
-    const issueAssetsToDelete = issueAssets.map((issueAsset) => {
-      return { Key: AmazonSDKS3.getS3FilePath(issueAsset.photo_url) };
-    });
-
     // delete issue assets
-    await AmazonSDKS3.deleteMultipleS3Objects(issueAssetsToDelete);
+    await deleteAllIssueAssets(issueAssets);
 
     // delete issue cover photo
     await AmazonSDKS3.deleteSingleS3Object(
@@ -294,7 +315,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 exports.updateBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
-  const { title, genres, description, urlSlug, status, removed } = req.body;
+  const { title, genres, description, urlSlug, status, removed, contentRating } = req.body;
 
   const existingBookByCurrentUser = await new QueryPG(pool).find(
     '*',
@@ -314,8 +335,8 @@ exports.updateBook = catchAsync(async (req, res, next) => {
   // update book values
   const updatedBook = await new QueryPG(pool).update(
     'books',
-    'title = ($1), description = ($2), url_slug = ($3), status = ($4), removed = ($5), last_updated = ($6)',
-    'id = ($7) AND publisher_id = ($8)',
+    'title = ($1), description = ($2), url_slug = ($3), status = ($4), removed = ($5), last_updated = ($6), content_rating = ($7)',
+    'id = ($8) AND publisher_id = ($9)',
     [
       title,
       description,
@@ -323,6 +344,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
       status,
       removed,
       new Date(),
+      contentRating,
       bookId,
       res.locals.user.id
     ]
@@ -343,7 +365,10 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 
 exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
-  const { fieldname, mimetype, buffer } = req.file;
+  const existingFile = req.file;
+
+  if (!existingFile) return next(new AppError(`No File provided.`, 204));
+  const { fieldname, originalname, mimetype, buffer } = existingFile;
 
   const bookCoverPhotoByCurrentUser = await new QueryPG(pool).find(
     'cover_photo',
@@ -366,7 +391,7 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
       Body: buffer,
       ACL: 'public-read',
       ContentType: mimetype,
-      Metadata: { fieldName: fieldname }
+      Metadata: { name: originalname, fieldName: fieldname }
     }
   );
 
@@ -394,7 +419,10 @@ exports.updateBookCoverPhoto = catchAsync(async (req, res, next) => {
 
 exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
-  const { fieldname, mimetype, buffer } = req.file;
+  const existingFile = req.file;
+
+  if (!existingFile) return next(new AppError(`No File provided.`, 204));
+  const { fieldname, originalname, mimetype, buffer } = existingFile;
 
   const issueToUpdate = await new QueryPG(pool).find(
     'cover_photo',
@@ -417,7 +445,7 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
       Body: buffer,
       ACL: 'public-read',
       ContentType: mimetype,
-      Metadata: { fieldName: fieldname }
+      Metadata: { name: originalname, fieldName: fieldname }
     }
   );
 
@@ -436,21 +464,99 @@ exports.updateIssueCoverPhoto = catchAsync(async (req, res, next) => {
 });
 
 exports.updateIssueAssets = catchAsync(async (req, res, next) => {
-  // const { bookId, issueNumber } = req.;
-  // const issueCoverPhoto = req.file.location;
+  const { bookId, issueNumber } = req.params;
+  const {
+    // prevIssueAssets is an array of previously added issue assets that are already in the DB, it does not include the new files uploaded to AWS S3
+    prevIssueAssets,
+    newIssueAssetsPageNums,
+    prevIssueAssetsUpdatedPageNums,
+    issueAssetsToBeRemoved
+  } = req.body;
+  // array of new issue assets uploaded to AWS
+  const newIssueAssets = req.files;
+  // array of the new page numbers of the for the new issue assets uploaded to AWS
+  const newIssueAssetsPageNumsParsed = JSON.parse(newIssueAssetsPageNums);
 
-  // // update cover photo of issue
-  // dont forget date field
-  // const updatedIssue = await new QueryPG(pool).update(
-  //   'issues',
-  //   'cover_photo = ($1)',
-  //   'book_id = ($2) AND issue_number = ($3) AND publisher_id = ($4)',
-  //   [issueCoverPhoto, bookId, issueNumber, res.locals.user.id]
-  // );
+  // array of obj for prev/existing issue assets
+  const prevIssueAssetsParsed = JSON.parse(prevIssueAssets);
+  // array of the new page numbers of the previously added issue assets (that are already in the DB)
+  const prevIssueAssetsUpdatedPageNumsParsed = JSON.parse(
+    prevIssueAssetsUpdatedPageNums
+  );
 
-  res.status(200).json({
-    status: 'success'
-    // updatedIssue
+  const issueAssetsToBeRemovedParsed = JSON.parse(issueAssetsToBeRemoved);
+
+  // get book and issue id
+  const getIssue = await new QueryPG(pool).find(
+    'id',
+    'issues WHERE book_id = ($1) AND publisher_id = ($2) AND issue_number = ($3)',
+    [bookId, res.locals.user.id, issueNumber]
+  );
+
+  // console.log('req.files', req.files);
+  // save each new image to db along with their new page numbers (newIssueAssetsPageNumsParsed)
+  const newIssueAssetsArr = await addIssueAssets(
+    newIssueAssets,
+    res.locals.user.id,
+    bookId,
+    getIssue.id,
+    newIssueAssetsPageNumsParsed
+  );
+
+  // update the existing File (prevIssueAssetsUpdatedPageNumsParsed) with their new page orders if needed (prevIssueAssets)
+  const updatedIssueAssets = [];
+  // console.log('prevIssueAssetsParsed', prevIssueAssetsParsed);
+  await Promise.all(
+    prevIssueAssetsParsed?.map(async (issueAsset, index) => {
+      // if the current page number is different than the new page number, update it
+      if (
+        prevIssueAssetsUpdatedPageNumsParsed[index] !==
+        issueAsset.page_number
+      ) {
+        const updatedIssueAsset = await new QueryPG(pool).update(
+          'issue_assets',
+          'page_number = ($1), last_updated = ($2)',
+          'book_id = ($3) AND issue_id = ($4) AND publisher_id = ($5) AND photo_url = ($6)',
+          [
+            prevIssueAssetsUpdatedPageNumsParsed[index],
+            new Date(),
+            bookId,
+            getIssue.id,
+            res.locals.user.id,
+            issueAsset.photo_url
+          ]
+        );
+
+        updatedIssueAssets.push(updatedIssueAsset);
+      }
+    })
+  );
+
+  // delete the removed pages
+  const deletedIssueAssets = [];
+  // console.log('issueAssetsToBeRemovedParsed', issueAssetsToBeRemovedParsed);
+  await Promise.all(
+    issueAssetsToBeRemovedParsed?.map(async (issueAssetToDelete) => {
+      // delete issue asset in AWS
+      await AmazonSDKS3.deleteSingleS3Object(
+        AmazonSDKS3.getS3FilePath(issueAssetToDelete.photo_url)
+      );
+
+      const deletedIssueAsset = await new QueryPG(pool).delete(
+        'issue_assets',
+        'book_id = ($1) AND issue_id = ($2) AND publisher_id = ($3) AND photo_url = ($4)',
+        [bookId, getIssue.id, res.locals.user.id, issueAssetToDelete.photo_url]
+      );
+
+      deletedIssueAssets.push(deletedIssueAsset);
+    })
+  );
+
+  res.status(201).json({
+    status: 'success',
+    newIssueAssets: newIssueAssetsArr,
+    updatedIssueAssets,
+    deletedIssueAssets
   });
 });
 
@@ -473,21 +579,26 @@ exports.getIssue = catchAsync(async (req, res, next) => {
     true
   );
 
-  // Get all AWS Objects for issue assets
-  const issueAssetFiles = await Promise.all(
-    issueAssets.map(
-      async (issueAsset) =>
-        await AmazonSDKS3.getSingleS3Object(
-          AmazonSDKS3.getS3FilePath(issueAsset.photo_url)
-        )
-    )
+  const issueCoverPhotoFile = await AmazonSDKS3.getSingleS3Object(
+    AmazonSDKS3.getS3FilePath(issueOfBookByUser.cover_photo)
   );
+
+  // Get all AWS Objects (Files) for issue assets
+  // const issueAssetFiles = await Promise.all(
+  //   issueAssets.map(
+  //     async (issueAsset) =>
+  //       await AmazonSDKS3.getSingleS3Object(
+  //         AmazonSDKS3.getS3FilePath(issueAsset.photo_url)
+  //       )
+  //   )
+  // );
 
   res.status(200).json({
     status: 'success',
     issue: issueOfBookByUser,
-    issueAssets,
-    issueAssetFiles
+    issueCoverPhotoFile,
+    issueAssets
+    // issueAssetFiles
   });
 });
 
@@ -595,7 +706,7 @@ exports.createIssue = catchAsync(async (req, res, next) => {
       req.files.issueCoverPhoto[0].location,
       newIssueNumber,
       issueDescription,
-      AWSPrefixArray[1] // issue path
+      AWSPrefixArray[2] // issue path
     ]
   );
 
@@ -628,6 +739,25 @@ exports.createIssue = catchAsync(async (req, res, next) => {
 exports.deleteIssue = catchAsync(async (req, res, next) => {
   const { bookId, issueNumber } = req.params;
 
+  // get issue id
+  const issueId = await new QueryPG(pool).find(
+    'id',
+    'issues WHERE book_id = ($1) AND issue_number = ($2)',
+    [bookId, issueNumber]
+  );
+
+  // find Issue assets
+  const issueAssetsToBeDeleted = await new QueryPG(pool).find(
+    '*',
+    'issue_assets WHERE book_id = ($1) AND publisher_id = ($2) AND issue_id = ($3)',
+    [bookId, res.locals.user.id, issueId.id],
+    true
+  );
+
+  // delete issue assets in AWS
+  await deleteAllIssueAssets(issueAssetsToBeDeleted);
+
+  // delete issue, issue assets will be deleted on cascade
   const deletedIssue = await new QueryPG(pool).delete(
     'issues',
     'book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
@@ -665,7 +795,8 @@ exports.deleteIssue = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     deletedIssue,
-    deletedBook
+    deletedBook,
+    deletedIssueAssets: issueAssetsToBeDeleted
   });
 });
 
@@ -719,5 +850,51 @@ exports.updateIssue = catchAsync(async (req, res, next) => {
     status: 'success',
     updatedIssue,
     updatedWorkCredits: newWorkCredits
+  });
+});
+
+exports.prevExistingIssueWorkCredits = catchAsync(async (req, res, next) => {
+  const { bookId, issueNumber } = req.params;
+
+  const formattedWorkCredits = [];
+
+  const { id: issueId } = await new QueryPG(pool).find(
+    'id',
+    'issues WHERE book_id = ($1) AND issue_number = ($2) AND publisher_id = ($3)',
+    [bookId, issueNumber, res.locals.user.id]
+  );
+
+  const workCredits = await new QueryPG(pool).find(
+    'users.username, work_credits.creator_id, work_credits.creator_credit',
+    'work_credits INNER JOIN users ON users.id = work_credits.creator_id WHERE book_id = ($1) AND issue_id = ($2) AND publisher_id = ($3)',
+    [bookId, issueId, res.locals.user.id],
+    true
+  );
+
+  // check if the user Id (aka user) is already present in the formattedWorkCredits array of objects
+  const isUserInWorkCredits = (objId) =>
+    formattedWorkCredits.find(({ user }) => user === objId);
+
+  // if the user is already added to formattedWorkCredits, simply push the credits array, else add a new object to formattedWorkCredits
+  workCredits.forEach(
+    ({ username, creator_id: creatorId, creator_credit: credit }) => {
+      const foundUserId = isUserInWorkCredits(creatorId);
+
+      if (foundUserId) {
+        foundUserId.credits.push(credit);
+      } else {
+        formattedWorkCredits.push({
+          user: creatorId,
+          username: username,
+          credits: [credit]
+        });
+      }
+    }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    // workCredits,
+    workCredits: formattedWorkCredits
   });
 });

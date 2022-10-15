@@ -1,14 +1,71 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import {
+  Formik,
+  Field,
+  Form,
+  ErrorMessage as FormikErrorMessage,
+} from "formik";
 import * as Yup from "yup";
-import { updateMe } from "../../../services";
+import {
+  updateMe,
+  updateProfilePhoto,
+  updateBackgroundProfilePhoto,
+  deleteMe,
+} from "../../../services";
+import ErrorMessage from "../../CommonUI/ErrorMessage";
 import { authActions } from "../../../actions";
 import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
 import FormikSubmissionStatus from "../../CommonUI/FormikSubmissionStatus";
+import Modal from "../../CommonUI/Modal";
+import "./edit-profile.scss";
+import "../../CommonUI/Modal/styles/user-accept-reject-prompt.scss";
 
 const ChangeProfilePics = () => {
-  const [hasErrMsg, setHasErrMsg] = useState(null);
+  const [hasErrMsg, setHasErrMsg] = useState(false);
+  const dispatch = useDispatch();
+
+  const onSubmit = async (
+    { profilePhoto, backgroundPhoto },
+    { setSubmitting, resetForm }
+  ) => {
+    try {
+      if (hasErrMsg) setHasErrMsg(false);
+
+      if (profilePhoto) {
+        const profilePhotoFormData = new FormData();
+        profilePhotoFormData.append("profilePhoto", profilePhoto);
+
+        await updateProfilePhoto(profilePhotoFormData);
+      }
+
+      if (backgroundPhoto) {
+        const backgroundProfilePhotoFormData = new FormData();
+        backgroundProfilePhotoFormData.append(
+          "backgroundProfilePhoto",
+          backgroundPhoto
+        );
+        await updateBackgroundProfilePhoto(backgroundProfilePhotoFormData);
+      }
+
+      dispatch(authActions.refetchUser());
+      // reset form after 3 seconds
+      setTimeout(() => {
+        resetForm({
+          values: {
+            profilePhoto: null,
+            backgroundPhoto: null,
+          },
+        });
+      }, 2000);
+
+      setSubmitting(false);
+    } catch (err) {
+      setHasErrMsg(true);
+    }
+  };
+
   return (
     <div className="upload-page container">
       <div className="upload-form-container">
@@ -33,12 +90,7 @@ const ChangeProfilePics = () => {
             },
             ["profilePhoto", "backgroundPhoto"]
           )}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 1000);
-          }}
+          onSubmit={onSubmit}
         >
           {({ isValid }) => (
             <Form className="bsc-form upload-form">
@@ -50,7 +102,7 @@ const ChangeProfilePics = () => {
                 identifier="profilePhoto"
                 triggerText="Select a profile Photo"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 className="error-message error-text-color"
                 component="div"
                 name="profilePhoto"
@@ -60,7 +112,7 @@ const ChangeProfilePics = () => {
                 identifier="backgroundPhoto"
                 triggerText="Select a Background Photo"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 className="error-message error-text-color"
                 component="div"
                 name="backgroundPhoto"
@@ -73,9 +125,15 @@ const ChangeProfilePics = () => {
               >
                 Submit
               </button>
+              <p>
+                <strong>
+                  * Changing the profile pictures may take some time to update
+                  on the profile page. Please be patient.
+                </strong>
+              </p>
               <FormikSubmissionStatus
                 err={hasErrMsg}
-                successMessage="Profile Pic updated!"
+                successMessage="Profile pic updated!"
                 errMsg="Something went wrong. Please try again later."
               />
             </Form>
@@ -86,28 +144,126 @@ const ChangeProfilePics = () => {
   );
 };
 
-const DeleteAccount = () => {
-  return <p>DeleteAccount</p>;
+const DeactivateAccountModalContent = ({
+  hasErrMsg,
+  setHasErrMsg,
+  toggleModal,
+}) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const triggerDeactivateAccount = async () => {
+    try {
+      if (hasErrMsg) setHasErrMsg(false);
+      // delete current user
+      await deleteMe();
+
+      // logout
+      dispatch(authActions.logout());
+
+      // go to home page
+      history.push("/");
+
+      // close modal
+      toggleModal();
+    } catch (err) {
+      setHasErrMsg(true);
+    }
+  };
+
+  return (
+    <div className="user-accept-reject-prompt">
+      <h2 className="prompt-header">
+        <strong>Are you sure you want to deactivate your account?</strong>
+      </h2>
+      <div className="prompt-btn-container">
+        <button
+          type="button"
+          className="bsc-button transparent transparent-red deactivation-btn prompt-btn"
+          onClick={triggerDeactivateAccount}
+        >
+          Deactivate Account
+        </button>
+        <button
+          type="button"
+          className="bsc-button transparent transparent-blue prompt-btn"
+          onClick={toggleModal}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const DeactivateAccount = () => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [hasErrMsg, setHasErrMsg] = useState(false);
+  const toggleModal = () => setModalIsOpen(!modalIsOpen);
+
+  return (
+    <div className="edit-profile-page container">
+      <h1 className="header-text">
+        <strong>Deactivate Account</strong>
+      </h1>
+      <p className="error-text-color warning">
+        <strong>
+          * Deactivating your account will remove your work from all search
+          results. It does not delete existing work but rather makes them
+          inaccessible to all users.
+        </strong>{" "}
+        In order to delete a work it must be done manually from the user profile
+        page. Doing so will delete them permanently!
+      </p>
+      <button
+        type="button"
+        className="bsc-button transparent transparent-red deactivation-btn"
+        onClick={toggleModal}
+      >
+        Deactivate Account
+      </button>
+      <Modal
+        isOpen={modalIsOpen}
+        doesModalBackDropClose={false}
+        onClose={toggleModal}
+      >
+        <DeactivateAccountModalContent
+          hasErrMsg={hasErrMsg}
+          toggleModal={toggleModal}
+          setHasErrMsg={setHasErrMsg}
+        />
+      </Modal>
+      {hasErrMsg && (
+        <ErrorMessage
+          errorStatus={hasErrMsg}
+          messageText="An error occurred. Please try again later."
+          className="description-err-msg centered-err-msg"
+        />
+      )}
+    </div>
+  );
 };
 
 const AboutYou = () => {
   const [hasErrMsg, setHasErrMsg] = useState(false);
   const dispatch = useDispatch();
 
-  // eslint-disable-next-line camelcase
-  const { first_name, last_name, username, email, bio } = useSelector(
-    (state) => state.auth?.user
-  );
+  const {
+    first_name: userFirstName,
+    last_name: userLastName,
+    username,
+    email,
+    bio,
+  } = useSelector((state) => state.auth?.user);
 
   const onSubmit = async (
     {
       firstName,
       lastName,
-      email: userEmail,
       username: userUsername,
+      email: userEmail,
       bio: userBio,
     },
-    { setSubmitting }
+    { setSubmitting, resetForm }
   ) => {
     try {
       if (hasErrMsg) setHasErrMsg(false);
@@ -115,12 +271,26 @@ const AboutYou = () => {
       await updateMe({
         firstName,
         lastName,
-        email: userEmail,
         username: userUsername,
+        email: userEmail,
         bio: userBio,
       });
 
       dispatch(authActions.refetchUser());
+
+      // reset form after 2 seconds so that the formik context in FormikSubmissionStatus can also be reset and remove the success msg
+      setTimeout(() => {
+        resetForm({
+          values: {
+            firstName,
+            lastName,
+            username: userUsername,
+            email: userEmail,
+            bio: userBio,
+          },
+        });
+      }, 2000);
+
       setSubmitting(false);
     } catch (err) {
       setHasErrMsg(true);
@@ -132,8 +302,8 @@ const AboutYou = () => {
       <div className="upload-form-container">
         <Formik
           initialValues={{
-            firstName: first_name,
-            lastName: last_name,
+            firstName: userFirstName,
+            lastName: userLastName,
             username,
             email,
             bio,
@@ -148,7 +318,6 @@ const AboutYou = () => {
             bio: Yup.string(),
           })}
           onSubmit={onSubmit}
-          enableReinitialize
         >
           {({ isValid }) => (
             <Form className="bsc-form upload-form">
@@ -162,7 +331,7 @@ const AboutYou = () => {
                 placeholder="First Name"
                 className="form-input form-item"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 name="firstName"
                 className="error-message error-text-color"
                 component="div"
@@ -174,7 +343,7 @@ const AboutYou = () => {
                 placeholder="Last Name"
                 className="form-input form-item"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 name="lastName"
                 className="error-message error-text-color"
                 component="div"
@@ -186,7 +355,7 @@ const AboutYou = () => {
                 className="form-input form-item"
                 placeholder="Username"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 name="username"
                 className="error-message error-text-color"
                 component="div"
@@ -198,7 +367,7 @@ const AboutYou = () => {
                 className="form-input form-item"
                 placeholder="Email"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 name="email"
                 className="error-message error-text-color"
                 component="div"
@@ -211,7 +380,7 @@ const AboutYou = () => {
                 placeholder="Book Description"
                 autoComplete="on"
               />
-              <ErrorMessage
+              <FormikErrorMessage
                 className="error-message error-text-color"
                 component="div"
                 name="bio"
@@ -241,7 +410,7 @@ const EditProfile = () => {
     <>
       <ChangeProfilePics />
       <AboutYou />
-      <DeleteAccount />
+      <DeactivateAccount />
     </>
   );
 };

@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { getAllSubscribedTo, getAllSubscribers } from "../../../services";
 import ErrorMessage from "../../CommonUI/ErrorMessage";
 import LoadingSpinner from "../../CommonUI/LoadingSpinner";
 import abbreviateNumber from "../../../utils/abbreviateNumber";
 import "../subscription.scss";
 
-const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
-  const { id } = profilePageUser;
+const SubscribedOrSubscribedTo = ({ profilePageUserId, type }) => {
+  // const { id } = profilePageUserId;
+  const [id, setId] = useState(profilePageUserId);
   const [errorMessage, setErrorMessage] = useState(false);
   const [pageType, setPageType] = useState(type);
   const [loading, setLoading] = useState(false);
@@ -18,6 +20,12 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
   useEffect(() => {
     setPageType(type);
   }, [type]);
+
+  useEffect(() => {
+    setId(profilePageUserId);
+    // reset sub list when the profilePageUserId is changed
+    setAllSubscribedList([]);
+  }, [profilePageUserId]);
 
   useEffect(() => {
     async function getAllSubscriptionToAPI() {
@@ -76,7 +84,7 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
   const renderError = errorMessage ? (
     <ErrorMessage
       errorStatus={errorMessage}
-      MessageText="An error occurred. Please try again later."
+      messageText="An error occurred. Please try again later."
       className="description-err-msg centered-err-msg"
     />
   ) : null;
@@ -88,35 +96,56 @@ const SubscribedOrSubscribedTo = ({ profilePageUser, type }) => {
   const renderAllSubscribedList =
     allSubscribedList.length > 0 ? (
       <ul className="display-work-grid subscription-list col-sm-2 col-5">
-        {allSubscribedList.map((subscriber, index) => (
-          <li
-            ref={
-              allSubscribedList.length === index + 1
-                ? lastSubElementRef
-                : undefined
-            }
-            key={subscriber.publisher_id}
-            className="subscription-list-item grid-list-item"
-          >
-            <div className="grid-image-container">
-              <img
-                className="subscription-profile-img grid-image"
-                src={subscriber.user_photo}
-                alt={subscriber.username}
-              />
-            </div>
-            <div className="grid-info-box subscription-general-info">
-              <div className="grid-info-box-header">
-                {`${abbreviateNumber(
-                  subscriber.subscribers_sub_count
-                )} subscribers`}
-              </div>
-              <div className="grid-info-box-header">{subscriber.username}</div>
-            </div>
-          </li>
-        ))}
+        {allSubscribedList.map(
+          (
+            {
+              publisher_id: publisherId,
+              subscriber_id: subscriberId,
+              username,
+              user_photo: userPhoto,
+              subscribers_sub_count,
+            },
+            index
+          ) => (
+            <li
+              ref={
+                allSubscribedList.length === index + 1
+                  ? lastSubElementRef
+                  : undefined
+              }
+              key={
+                type === "getAllSubscribers"
+                  ? `subscriber-id-${subscriberId}`
+                  : `publisher-id-${publisherId}`
+              }
+              className="subscription-list-item grid-list-item"
+            >
+              {" "}
+              <Link to={`/profile/${username}`} className="subscription-link">
+                <div className="grid-image-container">
+                  <img
+                    className="subscription-profile-img grid-image"
+                    src={userPhoto}
+                    alt={username}
+                  />
+                </div>
+                <div className="grid-info-box subscription-general-info">
+                  <div className="grid-info-box-header">
+                    {`${abbreviateNumber(subscribers_sub_count)} subscribers`}
+                  </div>
+                  <div className="grid-info-box-header">{username}</div>
+                </div>
+              </Link>
+            </li>
+          )
+        )}
       </ul>
-    ) : null;
+    ) : (
+      // if not loading, show description mark up
+      !loading && (
+        <p className="description">There are no subscriptions present.</p>
+      )
+    );
 
   return (
     <>

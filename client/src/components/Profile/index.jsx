@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import {
   getUser,
@@ -32,7 +32,6 @@ const SubUnsubBtnOrEdit = ({
   const [belongsToUser, setBelongsToUserCB] = useBelongsToCurrentUser();
   const [userIsSubscribed, setUserIsSubscribedCB] = useIsUserSubscribed();
   const [btnIsLoading, setBtnIsLoading] = useState(false);
-  const history = useHistory();
 
   useEffect(() => {
     // set initial state to check if this profile page belongsToUser or if userIsSubscribed to it
@@ -56,7 +55,7 @@ const SubUnsubBtnOrEdit = ({
       btnVal: " Edit",
       btnClick: async () => {
         // go to edit profile page
-        history.push(`/profile/${username}/edit`);
+        window.location = `/profile/${username}/edit`;
       },
     },
     {
@@ -170,7 +169,12 @@ const Profile = () => {
 
   return (
     <div className="container-fluid profile-page">
-      <div className="profile-page-header">
+      <div
+        className="profile-page-header"
+        style={{
+          backgroundImage: `url(${profilePageUser.background_user_photo})`,
+        }}
+      >
         <div className="background-overlay">
           <img
             className="profile-pic"
@@ -198,7 +202,7 @@ const Profile = () => {
       <main className="profile-page-body">
         <ErrorMessage
           errorStatus={errorMessage}
-          MessageText="An error occurred. Please try again later."
+          messageText="An error occurred. Please try again later."
           className="description-err-msg centered-err-msg"
         />
         <section className="container subscribe-edit">
@@ -228,17 +232,17 @@ const Profile = () => {
                 <Works profilePageUser={profilePageUser} />
               </TabPanel>
               <TabPanel>
-                <Bookmarks profilePageUser={profilePageUser} />
+                <Bookmarks profilePageUserId={profilePageUser.id} />
               </TabPanel>
               <TabPanel>
                 <SubscribedOrSubscribedTo
-                  profilePageUser={profilePageUser}
+                  profilePageUserId={profilePageUser.id}
                   type="getAllSubscribers"
                 />
               </TabPanel>
               <TabPanel>
                 <SubscribedOrSubscribedTo
-                  profilePageUser={profilePageUser}
+                  profilePageUserId={profilePageUser.id}
                   type="getAllSubscribedTo"
                 />
               </TabPanel>

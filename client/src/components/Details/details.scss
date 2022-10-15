@@ -1,0 +1,425 @@
+@import '../../styles/abstracts/variables.scss';
+
+.details-page {
+    overflow: auto;
+    background-color: $bg-color;
+
+    .primary-info,
+    .secondary-info {
+        width: 90%;
+        margin: 0 auto;
+        max-width: 1010px;
+    }
+
+    .primary-header {
+        font-size: 2rem;
+        color: $violet-blue;
+        font-weight: $normal;
+        overflow-wrap: anywhere;
+        font-weight: $semibold;
+    }
+
+    .secondary-header {
+        font-size: 1.7rem;
+        margin-bottom: 25px;
+    }
+
+    .tertiary-header {
+        font-size: 1rem;
+        font-weight: $normal;
+        letter-spacing: 1px;
+    }
+
+    .genres {
+        display: flex;
+        list-style: none;
+        max-width: 300px;
+        margin: 0 auto;
+        justify-content: center;
+        flex-wrap: wrap;
+        color: $white-gray;
+        text-transform: capitalize;
+        letter-spacing: 1.2px;
+
+        .genre-item {
+            flex: 1 1 100%;
+            padding: 10px;
+            background: $kinda-gray-kinda-black;
+            margin: 10px;
+            text-align: center;
+        }
+    }
+
+    .bg-overlay {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+
+        .blur {
+            backdrop-filter: blur(8px); // This be the blur
+            width: 100%;
+            overflow: auto;
+            background-color: rgba(80, 80, 80, 0.5);
+
+            .primary-info {
+                display: flex;
+                flex-direction: column;
+                margin: 30px auto;
+            }
+        }
+    }
+
+    .detail {
+        &-img {
+            display: block;
+            width: 250px;
+            align-self: center;
+
+            &-container {
+                flex: 1 1 100%;
+                display: flex;
+                justify-content: center;
+                align-content: center;
+                padding: 20px;
+            }
+        }
+
+        &-description {
+            flex: 1 1 100%;
+            padding: 2rem 2rem 1rem;
+
+            .extra-info-content-block {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+
+
+    .secondary-info {
+        &.action-btns-container {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+
+            &.action-btn-spacing {
+                margin: 20px auto 0;
+            }
+
+            .action-btn-link .action-btn {
+                min-width: 200px;
+                margin: .5rem;
+
+                .detail-spinner {
+                    height: 13px;
+                    .loading-circle {
+                        top: -5px;
+                    }
+                }
+            }
+        }
+
+        .panel-container {
+            display: flex;
+
+            &.whole-view,
+            &.half-view {
+                .whole-panel {
+                    flex: 1 1 100%;
+                }
+            }
+
+            &.whole-view {
+                flex-direction: column;
+                text-align: center;
+
+                .whole-panel {
+                    .view-whole-field {
+                        margin-bottom: 25px;
+                    }
+
+                    .tertiary-header {
+                        margin-bottom: 10px;
+                    }
+
+                    .detail-accordian {
+                        margin: 2rem auto 4rem;
+                        max-width: 500px;
+
+                        .accordian-header {
+                            color: $kinda-gray-kinda-black;
+                            font-size: 1.1rem;
+                            letter-spacing: 1.2px;
+                        }
+
+                        .accordian-icon {
+                            color: $mid-dark-gray;
+                        }
+
+                        .dropdown .accordian-list .accordian-list-item {
+                            text-align: left;
+                        }
+
+                    }
+                }
+            }
+
+            &.half-view {
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                .half-panel {
+                    flex: 1 1 100%;
+
+                    &:nth-child(2) {
+                        order: 1;
+                    }
+
+                    &:nth-child(1) {
+                        order: 2;
+
+                        .tertiary-header {
+                            text-align: center;
+                        }
+                    }
+
+                    .view-whole-field,
+                    .view-half-field {
+                        margin-bottom: 25px;
+                    }
+
+                    .view-half-field {
+                        display: flex;
+                        align-items: baseline;
+
+                        >* {
+                            flex: 1 1 50%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                    }
+
+                    .view-whole-field {
+                        .accredited-issue {
+                            &-row {
+                                margin-bottom: 25px;
+                            }
+
+                            &-info {
+                                display: flex;
+                                align-items: flex-start;
+                                flex-wrap: wrap;
+                                max-width: 700px;
+                                margin: 0 auto;
+
+
+                                .creator-header {
+                                    text-transform: capitalize;
+                                }
+
+                                .creator-list {
+                                    list-style-type: none;
+
+                                    &-item {
+                                        margin: 10px auto;
+                                        text-align: center;
+                                    }
+                                }
+
+                                .credit-section {
+                                    flex: 1 1 100%;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    word-break: break-word;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .whole-panel {
+                    .view-whole-field {
+                        .tertiary-header {
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+
+                .last-order {
+                    order: 3;
+                }
+            }
+        }
+    }
+
+    .mt-50 {
+        margin-top: 50px;
+    }
+
+    .issues-list-table {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0 auto;
+
+        .row {
+            display: flex;
+
+            &.issues-list-table-item {
+                flex-wrap: wrap;
+            }
+
+            &:first-child {
+                border-top: 2px dotted $white-gray;
+            }
+
+            [class*="col"] {
+                margin: 10px 0;
+              }
+  
+            .col {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            .left-col,
+            .right-col {
+                flex: 3;
+            }
+
+            .left-col {
+                font-style: italic;
+            }
+
+            .mid-col {
+                flex: 1;
+                margin: 0 1rem;
+            }
+
+            .user-owned {
+                &-col {
+                    justify-content: center;
+                    flex-basis: 100%;
+                    &.double-btn {
+                        .user-owned-btn {
+                            &:first-child {
+                            margin-right: 10px;
+                            }
+                        }
+                    }
+                }
+                
+                &-btn {
+                  min-width: 100px;
+                }
+            }
+            border-bottom: 2px dotted $white-gray;
+            padding: 10px 0;
+        }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .details-page {
+        .genres {
+            max-width: 560px;
+
+            .genre-item {
+                flex: 0 1 150px;
+            }
+        }
+
+        .secondary-info {
+            &.action-btns-container {
+                flex-direction: row;
+
+                &.action-btn-spacing {
+                    margin-top: 50px;
+                }
+
+                .action-btn-link .action-btn {
+                    margin: 1rem;
+                }
+            }
+
+            .panel-container {
+                &.half-view .half-panel .view-whole-field .accredited-issue {
+                    &-info {
+                        max-width: unset;
+                        margin: unset;
+
+                        .credit-section {
+                            flex: 1 1 50%;
+                        }
+                    }
+                }
+            }
+        }
+
+        .issues-list-table {
+            .row { 
+                [class*="col"] {
+                  margin: 0;
+                }
+    
+                .user-owned-col {
+                    flex: 3;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $large) {
+    .details-page {
+        .bg-overlay {
+            .blur {
+                .primary-info {
+                    flex-direction: row;
+                    background-color: $bg-color;
+                }
+            }
+        }
+
+        .detail {
+            &-img-container {
+                flex: 1 1 30%;
+            }
+
+            &-description {
+                flex: 1 1 70%;
+                padding: 1rem 2rem 1rem 0;
+
+                .extra-info-content-block {
+                    justify-content: normal;
+                }
+            }
+        }
+
+        .secondary-info {
+            .panel-container {
+                &.half-view {
+                    flex-direction: row;
+
+                    .half-panel {
+                        flex: 1 1 50%;
+
+                        &:nth-child(2) {
+                            order: 2;
+                        }
+
+                        &:nth-child(1) {
+                            order: 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

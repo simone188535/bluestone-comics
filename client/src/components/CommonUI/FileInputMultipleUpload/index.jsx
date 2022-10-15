@@ -3,44 +3,48 @@ import { useDropzone } from "react-dropzone";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useFormikContext } from "formik";
+import { useFormikContext, ErrorMessage } from "formik";
 import {
   imageWidthAndHeight,
   isFileSizeTooLarge,
 } from "../../../utils/FileReaderValidations";
-import IMAGE_UPLOAD_DIMENSIONS from "../../../utils/Constants";
+import CONSTANTS from "../../../utils/Constants";
+
+const { IMAGE_UPLOAD_DIMENSIONS } = CONSTANTS;
 
 const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
   // This maps the current file state and implements react-beautiful-dnd so that the images uploaded can be sorted in order
-  const draggableImageThumbnails = files.map((uploadedFile, index) => (
-    <Draggable
-      key={uploadedFile.name}
-      draggableId={uploadedFile.name}
-      index={index}
-    >
-      {(provided) => (
-        <li
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <button
-            type="button"
-            className="thumb-nail-remove-icon"
-            onClick={(e) => removalOnClick(e, index)}
+  const draggableImageThumbnails = files.map(
+    ({ id, name, preview, photo_url: photoURL }, index) => (
+      <Draggable
+        key={name || `book-img-${id}`}
+        draggableId={name || `book-img-${id}`}
+        index={index}
+      >
+        {(provided) => (
+          <li
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
           >
-            <FontAwesomeIcon icon={faTimes} size="sm" />
-          </button>
-          <p className="thumb-nail-caption">Page {index + 1}</p>
-          <img
-            className="thumb-nail-img"
-            alt={uploadedFile.name}
-            src={uploadedFile.preview}
-          />
-        </li>
-      )}
-    </Draggable>
-  ));
+            <button
+              type="button"
+              className="thumb-nail-remove-icon"
+              onClick={(e) => removalOnClick(e, index)}
+            >
+              <FontAwesomeIcon icon={faTimes} size="sm" />
+            </button>
+            <p className="thumb-nail-caption">Page {index + 1}</p>
+            <img
+              className="thumb-nail-img"
+              alt={name}
+              src={preview || photoURL}
+            />
+          </li>
+        )}
+      </Draggable>
+    )
+  );
 
   if (!files.length) return <></>;
 
@@ -69,13 +73,26 @@ const FileInputMultipleUpload = ({
   dropzoneInnerText,
   identifier,
   className,
+  hasPrevUploadedData = false,
+  toBeRemovedField = null,
 }) => {
   const [files, setFiles] = useState([]);
   const providedClassNames = className || "";
-  const { setFieldValue } = useFormikContext();
+  const [prevDataIsLoaded, setPrevDataIsLoaded] = useState(false);
+  const { setFieldValue, values, errors: formikErrors } = useFormikContext();
+
+  const fileDimensionsHelper = async (currentFile) => {
+    const providedFile = currentFile;
+    const imageDimensions = await imageWidthAndHeight(providedFile);
+    providedFile.width = imageDimensions.width;
+    providedFile.height = imageDimensions.height;
+
+    return providedFile;
+  };
 
   const getFilesFromEvent = async (event) => {
-    const allFiles = [];
+    // add width and height to all files before validating: https://stackoverflow.com/a/66254988/6195136
+    const promises = [];
     const fileList = event.target.files;
 
     for (let i = 0; i < fileList.length; i += 1) {
@@ -83,18 +100,16 @@ const FileInputMultipleUpload = ({
       // add width, and height properties to the current file
       if (file.width && file.height) return false;
 
-      const imageDimensions = imageWidthAndHeight(file);
-      file.width = imageDimensions.width;
-      file.height = imageDimensions.height;
-
-      allFiles.push(file);
+      const imageDimensions = fileDimensionsHelper(file);
+      promises.push(imageDimensions);
     }
 
-    await Promise.all(allFiles);
-    return allFiles;
+    const res = await Promise.all(promises);
+    return res;
   };
+
   const validator = (providedFile) => {
-    const { WIDTH, HEIGHT, MAX_FILE, MAX_FILE_IN_BYTES } =
+    const { WIDTH, HEIGHT, MAX_FILE_SIZE, MAX_FILE_SIZE_IN_BYTES } =
       IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE;
 
     // validation 1. check width and height of file
@@ -106,31 +121,37 @@ const FileInputMultipleUpload = ({
     }
 
     // validation 2. check if file size is too large / above 2MB
-    if (isFileSizeTooLarge(providedFile, MAX_FILE)) {
+    if (isFileSizeTooLarge(providedFile, MAX_FILE_SIZE)) {
       return {
         code: "file-size-too-large",
-        message: `This file is too large! The file size cannot be larger than: ${MAX_FILE_IN_BYTES}`,
+        message: `This file is too large! The file size cannot be larger than: ${MAX_FILE_SIZE_IN_BYTES}`,
       };
     }
     return null;
   };
   const onDrop = useCallback((acceptedFiles) => {
     /* 
-            the drag and drop functionality is modeled after this article: 
-            https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
-       */
+        the drag and drop functionality is modeled after this article: 
+        https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
+    */
 
-    // REJECT FILES THAT ARE NOT THE CORRECT SIZE
     acceptedFiles.forEach((acceptedFile) => {
       // rename inserted files (to avoid duplicate keys in list item): https://github.com/react-dropzone/react-dropzone/issues/583#issuecomment-496458314
       const renamedAcceptedFile = new File(
         [acceptedFile],
         `${new Date()}_${acceptedFile.name}`,
-        { type: acceptedFile.type }
+        {
+          type: acceptedFile.type,
+        }
       );
 
+      /* 
+        this preview properties is added to make the file viewable as an image
+        the fileType property makes it  easier to identify in the backend
+       */
       Object.assign(renamedAcceptedFile, {
         preview: URL.createObjectURL(renamedAcceptedFile),
+        fileType: "newFile",
       });
 
       // this prevents the new files from overriding/erasing the old ones. Instead, new files are concatinated to the old ones in the hook
@@ -142,6 +163,27 @@ const FileInputMultipleUpload = ({
     // This sets the formik form value to the files hook in the parent component when the files hook is updated
     setFieldValue(identifier, files);
   }, [files, identifier, setFieldValue]);
+
+  useEffect(() => {
+    /*
+      only on initial render, if files have previously existing files have been uploaded (when values[identifier] is populated), 
+      add those files to the file state 
+    */
+    if (
+      values[identifier]?.length > 0 &&
+      !prevDataIsLoaded &&
+      hasPrevUploadedData
+    ) {
+      // add a file type of existingFile to file state so that is easier to identify
+      const existingFiles = values[identifier].map((file) => {
+        const copiedFile = file;
+        copiedFile.fileType = "existingFile";
+        return copiedFile;
+      });
+      setFiles(existingFiles);
+      setPrevDataIsLoaded(true);
+    }
+  }, [hasPrevUploadedData, identifier, prevDataIsLoaded, values]);
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept: "image/*",
@@ -181,7 +223,7 @@ const FileInputMultipleUpload = ({
         
         If you want to know how works, the drag and drop functionality was modelled after 
         this article: https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
-        */
+    */
 
     // Preventing errors from dragging a list item out of bounds of draggable
     if (!result.destination) return;
@@ -194,18 +236,59 @@ const FileInputMultipleUpload = ({
   };
   const removalOnClick = (e, currentElementIndex) => {
     /* 
-            This allows for deleteing images withing the preview section. 
-            When the user selects an image to remove.
-        */
+        This allows for deleting images withing the preview section. 
+        When the user selects an image to remove.
+    */
 
     // removes selected element from files hook and sets updated file to the hook
 
     const items = Array.from(files);
 
+    /* 
+      if the file was previously uploaded (in the Edit Upload flow) give it a fileType 
+      of fileToRemove, remove the it file state and save it the formik toBeRemovedField field
+    */
+    const fileToDelete = items[currentElementIndex];
+    if (fileToDelete.fileType === "existingFile") {
+      fileToDelete.fileType = "fileToRemove";
+
+      setFieldValue(toBeRemovedField, [
+        ...values[toBeRemovedField],
+        fileToDelete,
+      ]);
+    }
+
     items.splice(currentElementIndex, 1);
 
     setFiles(items);
     e.stopPropagation();
+  };
+
+  const multiFileUploadErrorMessage = () => {
+    /*
+            This has been added so that only a single message will be shown in FileInputMultipleUpload at all times.
+            Even when an array of error are show (when a multiple uploaded files fail validation)
+        */
+    let FileInputMultipleUploadErrorMsg;
+
+    if (typeof formikErrors[identifier] === "string") {
+      FileInputMultipleUploadErrorMsg = (
+        <ErrorMessage
+          className="error-message error-text-color"
+          component="div"
+          name="issueAssets"
+        />
+      );
+    } else if (Array.isArray(formikErrors[identifier])) {
+      FileInputMultipleUploadErrorMsg = (
+        <div className="error-message error-text-color">
+          {formikErrors[identifier][0]}
+        </div>
+      );
+    } else {
+      FileInputMultipleUploadErrorMsg = null;
+    }
+    return FileInputMultipleUploadErrorMsg;
   };
 
   return (
@@ -225,6 +308,7 @@ const FileInputMultipleUpload = ({
           removalOnClick={removalOnClick}
         />
       </div>
+      <div>{multiFileUploadErrorMessage()}</div>
     </>
   );
 };

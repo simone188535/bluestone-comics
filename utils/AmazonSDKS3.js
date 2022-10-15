@@ -25,7 +25,8 @@ exports.uploadS3 = () => {
       contentType: multerS3.AUTO_CONTENT_TYPE,
       bucket: `${AWS_S3_BUCKET_NAME}`,
       metadata: (req, file, cb) => {
-        cb(null, { fieldName: file.fieldname });
+        console.log('file', file);
+        cb(null, { name: file.originalname, fieldName: file.fieldname });
       },
       key: (req, file, cb) => {
         /*
