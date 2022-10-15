@@ -48,6 +48,12 @@ const SubmissionProgressModal = ({
       {!errorMessage ? (
         <>
           <h2 className="modal-head">Upload Progress: {uploadPercentage}%</h2>
+          <p className="upload-perc-para">
+            This may take a while. Please do not reload the page.
+          </p>
+          <p className="upload-perc-para">
+            This page will redirect to the book/issue when it is finished.
+          </p>
           {/* <ProgressBar uploadPercentage={uploadPercentage} /> */}
         </>
       ) : (
