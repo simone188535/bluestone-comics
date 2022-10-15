@@ -151,7 +151,7 @@ const EditBookUpload = () => {
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
-        history.push(`/profile/${currentUserName}`);
+        history.push(`/details/${urlSlug}/book/${bookId}`);
       }, 500);
 
       // console.log("success", createBookRes);

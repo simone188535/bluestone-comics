@@ -216,7 +216,7 @@ const EditIssueUpload = () => {
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
-        history.push(`/profile/${currentUsername}`);
+        history.push(`/details/${urlSlug}/book/${bookId}/issue/${issueNumber}`);
       }, 500);
     } catch (err) {
       setErrorMessage(

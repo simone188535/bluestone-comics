@@ -79,12 +79,16 @@ const UploadNewIssue = () => {
       */
       const config = onUploadProgressHelper(setUploadPercentage);
 
-      await createIssue(urlSlug, bookId, formData, config);
+      const {
+        data: {
+          issue: { issue_number: issueNumber },
+        },
+      } = await createIssue(urlSlug, bookId, formData, config);
 
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
-        history.push(`/details/${urlSlug}/book/${bookId}`);
+        history.push(`/details/${urlSlug}/book/${bookId}/issue/${issueNumber}`);
       }, 500);
     } catch (err) {
       // console.log("failed", err.response.data.message);

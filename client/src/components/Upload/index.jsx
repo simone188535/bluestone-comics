@@ -104,12 +104,16 @@ const Upload = () => {
       const config = onUploadProgressHelper(setUploadPercentage);
 
       // const createBookRes = await createBook(formData, config);
-      await createBook(formData, config);
+      const {
+        data: {
+          book: { id },
+        },
+      } = await createBook(formData, config);
 
       setTimeout(() => {
         // after a couple of seconds close modal and redirect to new page
         toggleModal();
-        history.push("/");
+        history.push(`/details/${values.urlSlug}/book/${id}`);
       }, 500);
 
       // console.log("success", createBookRes);
