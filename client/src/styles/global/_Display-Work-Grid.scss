@@ -6,6 +6,7 @@
     max-width: 90%;
     margin: 0 auto;
     grid-gap: 50px;
+    place-items: center;
 
 
     // mimics bootstrap column sizes
@@ -26,12 +27,13 @@
         flex-wrap: wrap;
         flex-direction: column;
         height: max-content;
+        align-content: center;
+        max-width: 300px;
 
         .grid-image-container {
             img.grid-image {
                 display: block;
                 width: 100%;
-                // object-fit: contain;
             }
         }
 
@@ -85,7 +87,6 @@
 @media only screen and (min-width: $medium) {
 
     .display-work-grid {
-        // max-width: 88%;
         grid-gap: 35px;
 
         &.col-2 {
