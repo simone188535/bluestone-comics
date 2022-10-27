@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDoubleRight,
@@ -67,29 +67,54 @@ const IssuePagination = ({ setDeleteErr }) => {
     <section className="read-nav-sticky-footer">
       <div className="control-panel">
         <button type="button" title="first Issue" className="control-panel-btn">
-          <FontAwesomeIcon icon={faAngleDoubleLeft} />
+          <Link
+            to={`/read/${urlSlug}/book/${bookId}/issue/${issuePagination.firstIssueNum}`}
+            className="control-panel-btn-link"
+          >
+            <FontAwesomeIcon icon={faAngleDoubleLeft} />
+          </Link>
         </button>
         <button type="button" title="Prev Issue" className="control-panel-btn">
-          <FontAwesomeIcon icon={faAngleLeft} />
-          <span className="control-panel-btn-text">Prev</span>
+          <Link
+            to={`/read/${urlSlug}/book/${bookId}/issue/${issuePagination.prevIssueNum}`}
+            className="control-panel-btn-link"
+          >
+            <FontAwesomeIcon icon={faAngleLeft} />
+            <span className="control-panel-btn-text">Prev</span>
+          </Link>
         </button>
         <button
           type="button"
           title="Issue details"
           className="bsc-button transparent transparent-black control-panel-btn center-btn"
         >
-          <span className="center-btn-text">Issue {`${issueNumber}`}</span>
+          <Link
+            to={`/details/${urlSlug}/book/${bookId}/issue/${issuePagination.firstIssueNum}`}
+            className="control-panel-btn-link center-btn-text"
+          >
+            Issue {`${issueNumber}`}
+          </Link>
         </button>
         <button type="button" title="Next Issue" className="control-panel-btn">
-          <span className="control-panel-btn-text">Next</span>
-          <FontAwesomeIcon icon={faAngleRight} />
+          <Link
+            to={`/read/${urlSlug}/book/${bookId}/issue/${issuePagination.nextIssueNum}`}
+            className="control-panel-btn-link"
+          >
+            <span className="control-panel-btn-text">Next</span>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </Link>
         </button>
         <button
           type="button"
           title="Latest Issue"
           className="control-panel-btn"
         >
-          <FontAwesomeIcon icon={faAngleDoubleRight} />
+          <Link
+            to={`/read/${urlSlug}/book/${bookId}/issue/${issuePagination.lastIssueNum}`}
+            className="control-panel-btn-link"
+          >
+            <FontAwesomeIcon icon={faAngleDoubleRight} />
+          </Link>
         </button>
       </div>
     </section>

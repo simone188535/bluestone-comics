@@ -64,6 +64,11 @@
                     cursor: pointer;
                 }
 
+                &-link {
+                    text-decoration: none;
+                    color: inherit;
+                }
+
                 &.center-btn {
                     min-height: 10px;
                     padding: 5px;
