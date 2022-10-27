@@ -53,12 +53,32 @@
             display: flex;
             
             &-btn {
-                flex: 1;
+                all: unset;
                 display: flex;
+                flex: 1;
                 justify-content: center;
-            }
-            .center-btn {
-                color: $off-black;
+                align-items: center;
+                font-weight: $light;
+                font-size: 1rem;
+                
+                &:hover {
+                    cursor: pointer;
+                }
+
+                &.center-btn {
+                    color: $off-black;
+                    &-text {
+                        border-bottom: 1px solid $off-black;
+                    }
+                }
+
+                &-text {
+                    margin: 0 5px;
+                }
+
+                &:not(.center-btn):hover {
+                    color: $off-black;
+                }
             }
         }
     }
@@ -77,6 +97,16 @@
     .read-page {
         ul.issue-page-list-container {
             padding: 0 2.5rem;
+        }
+
+        .read-nav-sticky-footer {
+            .control-panel {
+                flex: 0 0 500px;
+
+                &-btn {
+                    font-size: 1.1rem;
+                }
+            }
         }
     }
 }

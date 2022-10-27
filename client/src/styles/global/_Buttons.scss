@@ -51,6 +51,17 @@
                 border-color: $violet-blue;
             }
         }
+
+        &.transparent-black {
+            color: $dark-violet-blue;
+            border-color: $dark-violet-blue;
+    
+            &:hover,
+            &.active {
+                color: $violet-blue;
+                border-color: $violet-blue;
+            }
+        }
     }
 
     &.primary-link {

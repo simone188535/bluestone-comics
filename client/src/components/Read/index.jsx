@@ -66,25 +66,31 @@ const IssuePagination = ({ setDeleteErr }) => {
   return (
     <section className="read-nav-sticky-footer">
       <div className="control-panel">
-        <span className="control-panel-btn">
+        <button type="button" title="first Issue" className="control-panel-btn">
           <FontAwesomeIcon icon={faAngleDoubleLeft} />
-        </span>
-        <span className="control-panel-btn">
+        </button>
+        <button type="button" title="Prev Issue" className="control-panel-btn">
           <FontAwesomeIcon icon={faAngleLeft} />
-          {` `}
-          Prev
-        </span>
-        <span className="control-panel-btn center-btn">
-          Issue {`${issueNumber}`}
-        </span>
-        <span className="control-panel-btn">
-          Next {` `} <FontAwesomeIcon icon={faAngleRight} />
-        </span>
-        <span className="control-panel-btn">
+          <span className="control-panel-btn-text">Prev</span>
+        </button>
+        <button
+          type="button"
+          title="Issue details"
+          className="bsc-button transparent transparent-black control-panel-btn center-btn"
+        >
+          <span className="center-btn-text">Issue {`${issueNumber}`}</span>
+        </button>
+        <button type="button" title="Next Issue" className="control-panel-btn">
+          <span className="control-panel-btn-text">Next</span>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </button>
+        <button
+          type="button"
+          title="Latest Issue"
+          className="control-panel-btn"
+        >
           <FontAwesomeIcon icon={faAngleDoubleRight} />
-        </span>
-        {/* <div>??</div>
-        <div>%</div> */}
+        </button>
       </div>
     </section>
   );
