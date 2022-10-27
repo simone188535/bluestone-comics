@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAngleDoubleRight,
+  faAngleRight,
+  faAngleDoubleLeft,
+  faAngleLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import { getIssue, getIssues } from "../../services";
 import ErrMsg from "../CommonUI/ErrorMessage";
 import "./read.scss";
@@ -56,7 +63,31 @@ const IssuePagination = ({ setDeleteErr }) => {
     console.log(issuePagination);
   }, [issuePagination]);
 
-  return <section className="read-nav-sticky-footer">??</section>;
+  return (
+    <section className="read-nav-sticky-footer">
+      <div className="control-panel">
+        <span className="control-panel-btn">
+          <FontAwesomeIcon icon={faAngleDoubleLeft} />
+        </span>
+        <span className="control-panel-btn">
+          <FontAwesomeIcon icon={faAngleLeft} />
+          {` `}
+          Prev
+        </span>
+        <span className="control-panel-btn center-btn">
+          Issue {`${issueNumber}`}
+        </span>
+        <span className="control-panel-btn">
+          Next {` `} <FontAwesomeIcon icon={faAngleRight} />
+        </span>
+        <span className="control-panel-btn">
+          <FontAwesomeIcon icon={faAngleDoubleRight} />
+        </span>
+        {/* <div>??</div>
+        <div>%</div> */}
+      </div>
+    </section>
+  );
 };
 
 const Read = () => {

@@ -12,6 +12,14 @@
         list-style-type: none;
 
         li.issue-page {
+            &:first-of-type {
+                margin-top: 45px;
+            }
+    
+            &:last-of-type {
+                margin-bottom: 45px;
+            }
+
             img.issue-page-img {
                 display: block;
                 max-width: 1200px;
@@ -27,11 +35,32 @@
 
     .read-nav-sticky-footer {
         display: flex;
+        position: -webkit-sticky;
         position: sticky;
         bottom: 0;
-        background: red;
+        // background: #989997; this will be the :disabled color
+        background: #F0F1F3;
+        // border: 2px solid #C3C6D1;
+        // color: $white-light-grey;
+        color: $violet-blue;
         width: 100%;
-        height: 40px;
+        height: 50px;
+        align-items: center;
+        justify-content: center;
+        .control-panel {
+            flex: 1 1 300px;
+            justify-content: center;
+            display: flex;
+            
+            &-btn {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+            }
+            .center-btn {
+                color: $off-black;
+            }
+        }
     }
 }
 
