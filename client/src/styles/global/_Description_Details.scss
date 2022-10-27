@@ -10,11 +10,11 @@
             text-decoration: underline;
         }
         &-as-normal {
-            color: $violet-blue;
-            text-decoration: none;
+            color: $off-black;
+            text-decoration: underline;
 
             &:hover {
-                text-decoration: underline;
+                text-decoration: none;
             }
         }
     }
