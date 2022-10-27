@@ -38,22 +38,21 @@
         position: -webkit-sticky;
         position: sticky;
         bottom: 0;
-        // background: #989997; this will be the :disabled color
-        background: #F0F1F3;
-        // border: 2px solid #C3C6D1;
-        // color: $white-light-grey;
+        background: $sea-shell;
         color: $violet-blue;
         width: 100%;
-        height: 50px;
+        min-height: 30px;
         align-items: center;
         justify-content: center;
+        padding: 10px 0;
+
         .control-panel {
             flex: 1 1 300px;
             justify-content: center;
             display: flex;
             
             &-btn {
-                all: unset;
+                font-family: $Roboto, $base-font;
                 display: flex;
                 flex: 1;
                 justify-content: center;
@@ -66,7 +65,8 @@
                 }
 
                 &.center-btn {
-                    color: $off-black;
+                    min-height: 10px;
+                    padding: 5px;
                     &-text {
                         border-bottom: 1px solid $off-black;
                     }
@@ -76,9 +76,15 @@
                     margin: 0 5px;
                 }
 
-                &:not(.center-btn):hover {
-                    color: $off-black;
-                }
+                &:not(.center-btn) {
+                    border: none;
+                    color: inherit;
+                    background: transparent;
+                    
+                    &:hover {
+                        color: $gray-black;
+                    }
+            }
             }
         }
     }

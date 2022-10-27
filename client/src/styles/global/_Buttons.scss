@@ -53,13 +53,13 @@
         }
 
         &.transparent-black {
-            color: $dark-violet-blue;
-            border-color: $dark-violet-blue;
+            color: $gray-black;
+            border-color: $gray-black;
     
             &:hover,
             &.active {
-                color: $violet-blue;
-                border-color: $violet-blue;
+                color: $white-light-grey;
+                background-color: $gray-black;
             }
         }
     }
