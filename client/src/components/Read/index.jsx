@@ -13,8 +13,9 @@ import "./read.scss";
 
 const IssuePagination = ({ setDeleteErr }) => {
   const { urlSlug, bookId, issueNumber } = useParams();
+  const [totalIssue, setTotalIssue] = useState(null);
   const [issuePagination, setIssuePagination] = useState({
-    firstIssueNum: 1,
+    firstIssueNum: null,
     prevIssueNum: null,
     nextIssueNum: null,
     lastIssueNum: null,
@@ -28,36 +29,48 @@ const IssuePagination = ({ setDeleteErr }) => {
           data: { issueTotal },
         } = await getIssues(urlSlug, bookId, issueNumber);
 
-        setIssuePagination((prevState) => ({
-          ...prevState,
-          lastIssueNum: issueTotal,
-        }));
+        setTotalIssue(issueTotal);
       })();
     } catch (err) {
       setDeleteErr(true);
     }
   }, [bookId, issueNumber, setDeleteErr, urlSlug]);
 
-  // if a issueNumber is present use it to set state in prevIssueNum, nextIssueNum
+  // if a issueNumber is present use it to set state in issuePagination
   useEffect(() => {
     if (issueNumber) {
       const issueNum = Number(issueNumber);
       setIssuePagination((prevState) => ({
         ...prevState,
-        /* prevIssueNum should never be less than 1 (because there are no issues  
+        /*
+          if the current page number equals one, this should be null in order to disable the button
+          when the user is already on the first issue, else it should be one
+        */
+        firstIssueNum: issueNum !== 1 ? 1 : null,
+        /* 
+        prevIssueNum should never be less than 1 (because there are no issues  
         with issue numbers lower than 1), if the value is less than 1, prevIssueNum 
-        should be null
+        should be null, this indicates the user is already on the first issue and there
+        are no more prev issues
         */
         prevIssueNum: issueNum - 1 > 0 ? issueNum - 1 : null,
         /*
-          nextIssueNum should never be greater than lastIssueNum, if it is
-          lastIssueNum should be null
+          nextIssueNum should never be greater than totalIssue, if it is
+          totalIssue should be null, this indicates the user is already
+          on the most recent issue
         */
-        nextIssueNum:
-          issueNum + 1 <= issuePagination.lastIssueNum ? issueNum + 1 : null,
+        nextIssueNum: issueNum + 1 <= totalIssue ? issueNum + 1 : null,
+
+        /* 
+          if the current issueNumber is not on the latest issue (totalIssue),
+          then return totalIssue, if the current issueNumber is on the lastest issue,
+          lastIssueNum should be null, this indicates the user is already on the latest
+          issue 
+        */
+        lastIssueNum: issueNum !== totalIssue ? totalIssue : null,
       }));
     }
-  }, [issueNumber, issuePagination.lastIssueNum]);
+  }, [issueNumber, totalIssue]);
 
   useEffect(() => {
     console.log(issuePagination);
@@ -110,7 +123,7 @@ const IssuePagination = ({ setDeleteErr }) => {
           className="control-panel-btn"
         >
           <Link
-            to={`/read/${urlSlug}/book/${bookId}/issue/${issuePagination.lastIssueNum}`}
+            to={`/read/${urlSlug}/book/${bookId}/issue/${totalIssue}`}
             className="control-panel-btn-link"
           >
             <FontAwesomeIcon icon={faAngleDoubleRight} />
