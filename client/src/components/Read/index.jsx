@@ -22,14 +22,13 @@ const IssuePaginationBtn = ({ children, btnProps, linkProps, disabled }) => {
       <>{children}</>
     );
 
-  // let currButto
-  // // add disabled classNamed to btnProps
-  // if (disabled) {
-  // btnProps = { ...btnProps, className: true };
-  // }
+  // add disabled className to btnProps when the button is disabled
+  const buttonProps = disabled
+    ? { ...btnProps, className: `${btnProps.className} disabled` }
+    : btnProps;
 
   return (
-    <button type="button" {...btnProps}>
+    <button type="button" {...buttonProps}>
       {conditionalLink}
     </button>
   );

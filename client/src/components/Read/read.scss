@@ -89,7 +89,13 @@
                     &:hover {
                         color: $violet-blue;
                     }
-            }
+                }
+                &.disabled {
+                    color: $mid-dark-gray;
+                 &:hover {
+                    color: $mid-dark-gray;
+                 }
+                }
             }
         }
     }
