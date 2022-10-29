@@ -11,6 +11,30 @@ import { getIssue, getIssues } from "../../services";
 import ErrMsg from "../CommonUI/ErrorMessage";
 import "./read.scss";
 
+const IssuePaginationBtn = ({ children, btnProps, linkProps, disabled }) => {
+  // console.log(disabled);
+
+  // show a link if the button is not disabled and a link is present
+  const conditionalLink =
+    !disabled && linkProps?.to ? (
+      <Link {...linkProps}>{children}</Link>
+    ) : (
+      <>{children}</>
+    );
+
+  // let currButto
+  // // add disabled classNamed to btnProps
+  // if (disabled) {
+  // btnProps = { ...btnProps, className: true };
+  // }
+
+  return (
+    <button type="button" {...btnProps}>
+      {conditionalLink}
+    </button>
+  );
+};
+
 const IssuePagination = ({ setDeleteErr }) => {
   const { urlSlug, bookId, issueNumber } = useParams();
   const [totalIssue, setTotalIssue] = useState(null);
@@ -79,56 +103,62 @@ const IssuePagination = ({ setDeleteErr }) => {
   return (
     <section className="read-nav-sticky-footer">
       <div className="control-panel">
-        <button type="button" title="first Issue" className="control-panel-btn">
-          <Link
-            to={`/read/${urlSlug}/book/${bookId}/issue/${issuePagination.firstIssueNum}`}
-            className="control-panel-btn-link"
-          >
-            <FontAwesomeIcon icon={faAngleDoubleLeft} />
-          </Link>
-        </button>
-        <button type="button" title="Prev Issue" className="control-panel-btn">
-          <Link
-            to={`/read/${urlSlug}/book/${bookId}/issue/${issuePagination.prevIssueNum}`}
-            className="control-panel-btn-link"
-          >
-            <FontAwesomeIcon icon={faAngleLeft} />
-            <span className="control-panel-btn-text">Prev</span>
-          </Link>
-        </button>
-        <button
-          type="button"
-          title="Issue details"
-          className="bsc-button transparent transparent-black control-panel-btn center-btn"
+        <IssuePaginationBtn
+          disabled={!issuePagination.firstIssueNum}
+          btnProps={{ title: "First Issue", className: "control-panel-btn" }}
+          linkProps={{
+            to: `/read/${urlSlug}/book/${bookId}/issue/${issuePagination.firstIssueNum}`,
+            className: "control-panel-btn-link",
+          }}
         >
-          <Link
-            to={`/details/${urlSlug}/book/${bookId}/issue/${issuePagination.firstIssueNum}`}
-            className="control-panel-btn-link center-btn-text"
-          >
-            Issue {`${issueNumber}`}
-          </Link>
-        </button>
-        <button type="button" title="Next Issue" className="control-panel-btn">
-          <Link
-            to={`/read/${urlSlug}/book/${bookId}/issue/${issuePagination.nextIssueNum}`}
-            className="control-panel-btn-link"
-          >
-            <span className="control-panel-btn-text">Next</span>
-            <FontAwesomeIcon icon={faAngleRight} />
-          </Link>
-        </button>
-        <button
-          type="button"
-          title="Latest Issue"
-          className="control-panel-btn"
+          <FontAwesomeIcon icon={faAngleDoubleLeft} />
+        </IssuePaginationBtn>
+        <IssuePaginationBtn
+          disabled={!issuePagination.prevIssueNum}
+          btnProps={{ title: "Prev Issue", className: "control-panel-btn" }}
+          linkProps={{
+            to: `/read/${urlSlug}/book/${bookId}/issue/${issuePagination.prevIssueNum}`,
+            className: "control-panel-btn-link",
+          }}
         >
-          <Link
-            to={`/read/${urlSlug}/book/${bookId}/issue/${totalIssue}`}
-            className="control-panel-btn-link"
-          >
-            <FontAwesomeIcon icon={faAngleDoubleRight} />
-          </Link>
-        </button>
+          <FontAwesomeIcon icon={faAngleLeft} />
+          <span className="control-panel-btn-text">Prev</span>
+        </IssuePaginationBtn>
+        <IssuePaginationBtn
+          disabled={false}
+          btnProps={{
+            title: "Issue details",
+            className:
+              "bsc-button transparent transparent-black control-panel-btn center-btn",
+          }}
+          linkProps={{
+            to: `/details/${urlSlug}/book/${bookId}/issue/${issueNumber}`,
+            className: "control-panel-btn-link center-btn-text",
+          }}
+        >
+          Issue {`${issueNumber}`}
+        </IssuePaginationBtn>
+        <IssuePaginationBtn
+          disabled={!issuePagination.nextIssueNum}
+          btnProps={{ title: "Next Issue", className: "control-panel-btn" }}
+          linkProps={{
+            to: `/read/${urlSlug}/book/${bookId}/issue/${issuePagination.nextIssueNum}`,
+            className: "control-panel-btn-link",
+          }}
+        >
+          <span className="control-panel-btn-text">Next</span>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </IssuePaginationBtn>
+        <IssuePaginationBtn
+          disabled={!issuePagination.lastIssueNum}
+          btnProps={{ title: "Latest Issue", className: "control-panel-btn" }}
+          linkProps={{
+            to: `/read/${urlSlug}/book/${bookId}/issue/${totalIssue}`,
+            className: "control-panel-btn-link",
+          }}
+        >
+          <FontAwesomeIcon icon={faAngleDoubleRight} />
+        </IssuePaginationBtn>
       </div>
     </section>
   );
