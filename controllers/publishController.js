@@ -315,7 +315,15 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 exports.updateBook = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;
 
-  const { title, genres, description, urlSlug, status, removed, contentRating } = req.body;
+  const {
+    title,
+    genres,
+    description,
+    urlSlug,
+    status,
+    removed,
+    contentRating
+  } = req.body;
 
   const existingBookByCurrentUser = await new QueryPG(pool).find(
     '*',
@@ -510,8 +518,7 @@ exports.updateIssueAssets = catchAsync(async (req, res, next) => {
     prevIssueAssetsParsed?.map(async (issueAsset, index) => {
       // if the current page number is different than the new page number, update it
       if (
-        prevIssueAssetsUpdatedPageNumsParsed[index] !==
-        issueAsset.page_number
+        prevIssueAssetsUpdatedPageNumsParsed[index] !== issueAsset.page_number
       ) {
         const updatedIssueAsset = await new QueryPG(pool).update(
           'issue_assets',
