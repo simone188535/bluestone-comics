@@ -67,7 +67,6 @@ const AllRoutes = () => {
         path="/read/:urlSlug/book/:bookId/issue/:issueNumber"
         component={Read}
       />
-      <Route path="/read/:urlSlug/book/:bookId" component={Read} />
       <Route path="/" component={Home} />
     </Switch>
   );

@@ -43,20 +43,23 @@ const Bookmarks = ({ profilePageUserId }) => {
     ({
       book_id: bookId,
       book_title: bookTitle,
-      url_slug: urlSLug,
+      url_slug: urlSlug,
       cover_photo: coverPhoto,
       date_created: dateCreated,
     }) => (
-      <li className="grid-list-item">
+      <li className="grid-list-item" key={`bookmark-${bookId}`}>
         <div className="grid-image-container">
-          <Link to={`/details/${urlSLug}/book/${bookId}`}>
+          <Link to={`/details/${urlSlug}/book/${bookId}`}>
             <img className="grid-image" src={coverPhoto} alt={bookTitle} />
           </Link>
         </div>
         <div className="grid-info-box">
           <div className="grid-info-box-header-container">
             <h3 className="grid-info-box-header">
-              <Link to="#" className="grid-info-box-header-link">
+              <Link
+                to={`/read/${urlSlug}/book/${bookId}/issue/1`}
+                className="grid-info-box-header-link"
+              >
                 {bookTitle}
               </Link>
             </h3>

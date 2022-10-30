@@ -21,7 +21,10 @@ const MappedIssue = ({
   return (
     <div className="row issues-list-table-item desc-detail">
       <div className="col left-col desc-detail bold">
-        <Link to="#" className="desc-detail link-as-normal">
+        <Link
+          to={`/read/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
+          className="desc-detail link-as-normal"
+        >
           {title}
         </Link>
       </div>
@@ -33,11 +36,11 @@ const MappedIssue = ({
           Issue#:&nbsp;{issueNumber}
         </Link>
       </div>
+      <div className="col right-col desc-detail bold">
+        {moment(dateCreated).format("MMMM D, YYYY")}
+      </div>
       {belongsToUser && (
         <>
-          <div className="col right-col desc-detail bold">
-            {moment(dateCreated).format("MMMM D, YYYY")}
-          </div>
           <div className={`col desc-detail user-owned-col ${btnClass}`}>
             <Link
               to={`/edit-upload/${urlSlug}/book/${bookId}/issue/${issueNumber}`}

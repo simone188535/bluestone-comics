@@ -51,6 +51,17 @@
                 border-color: $violet-blue;
             }
         }
+
+        &.transparent-black {
+            color: $gray-black;
+            border-color: $gray-black;
+    
+            &:hover,
+            &.active {
+                color: $white-light-grey;
+                background-color: $gray-black;
+            }
+        }
     }
 
     &.primary-link {

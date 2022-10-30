@@ -3,18 +3,18 @@
     line-height: 1.5;
 
     &.link {
-        color: $pure-black;
+        color: $violet-blue;
         text-decoration: none;
         
         &:hover {
             text-decoration: underline;
         }
         &-as-normal {
-            color: $pure-black;
-            text-decoration: none;
+            color: $off-black;
+            text-decoration: underline;
 
             &:hover {
-                text-decoration: underline;
+                text-decoration: none;
             }
         }
     }

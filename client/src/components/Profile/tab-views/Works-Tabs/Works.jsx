@@ -107,13 +107,19 @@ const BooksOrIssues = ({
     const showFirstHeaderWithBooksorIssueTitle =
       filterType === "Books" ? (
         <h3 className="grid-info-box-header">
-          <Link to="#" className="grid-info-box-header-link">
+          <Link
+            to={`/read/${currentResult.url_slug}/book/${currentResult.book_id}/issue/1`}
+            className="grid-info-box-header-link"
+          >
             {currentResult.book_title}
           </Link>
         </h3>
       ) : (
         <h3 className="grid-info-box-header">
-          <Link to="#" className="grid-info-box-header-link">
+          <Link
+            to={`/read/${currentResult.url_slug}/book/${currentResult.book_id}/issue/${currentResult.issue_number}`}
+            className="grid-info-box-header-link"
+          >
             {currentResult.issue_title}
           </Link>
         </h3>
@@ -122,7 +128,10 @@ const BooksOrIssues = ({
     const showSecondHeaderWithBookTitle =
       filterType === "Issues" ? (
         <h4 className="grid-info-box-header">
-          <Link to="#" className="grid-info-box-header-link">
+          <Link
+            to={`/details/${currentResult.url_slug}/book/${currentResult.book_id}`}
+            className="grid-info-box-header-link"
+          >
             {currentResult.book_title}
           </Link>
         </h4>

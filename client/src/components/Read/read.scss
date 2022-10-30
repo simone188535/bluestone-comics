@@ -1,1 +1,132 @@
-.read-page {}
+@import '../../styles/abstracts/variables.scss';
+
+.read-page {
+    background-color: $gray-black;
+    display: flex;
+    flex-direction: column;
+
+    ul.issue-page-list-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style-type: none;
+
+        li.issue-page {
+            &:first-of-type {
+                margin-top: 45px;
+            }
+    
+            &:last-of-type {
+                margin-bottom: 45px;
+            }
+
+            img.issue-page-img {
+                display: block;
+                max-width: 1200px;
+                width: 100%;
+                padding: 0 .7rem;
+            }
+        }
+    }
+
+    .read-err-msg {
+        margin-top: 50px;
+    }
+
+    .read-nav-sticky-footer {
+        display: flex;
+        position: -webkit-sticky;
+        position: sticky;
+        bottom: 0;
+        background: $sea-shell;
+        width: 100%;
+        min-height: 30px;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0;
+
+        .control-panel {
+            flex: 1 1 300px;
+            justify-content: center;
+            display: flex;
+            
+            &-btn {
+                font-family: $Roboto, $base-font;
+                display: flex;
+                flex: 1;
+                justify-content: center;
+                align-items: center;
+                font-weight: $light;
+                font-size: 1rem;
+                
+                &:hover {
+                    cursor: pointer;
+                }
+
+                &-link {
+                    text-decoration: none;
+                    color: $gray-black;
+                    
+                    &:hover {
+                        color: $violet-blue;
+                    }
+                }
+
+                &:not(.center-btn) {
+                    border: none;
+                    background: transparent;
+                }
+
+                &.center-btn {
+                    min-height: 10px;
+                    padding: 5px;
+                    &-text {
+                        border-bottom: 1px solid $off-black;
+                    }
+
+                     &:hover .center-btn-text{
+                        color: $white-light-grey;
+                    }
+                }
+
+                &-text {
+                    margin: 0 5px;
+                }
+
+                &.disabled {
+                    color: $mid-dark-gray;
+                 &:hover {
+                    color: $mid-dark-gray;
+                 }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $small) {
+    .read-page {
+        ul.issue-page-list-container {
+            padding: 0 1.2rem;
+        }
+    }
+
+}
+
+@media only screen and (min-width: $medium) {
+    .read-page {
+        ul.issue-page-list-container {
+            padding: 0 2.5rem;
+        }
+
+        .read-nav-sticky-footer {
+            .control-panel {
+                flex: 0 0 500px;
+
+                &-btn {
+                    font-size: 1.1rem;
+                }
+            }
+        }
+    }
+}
