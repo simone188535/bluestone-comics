@@ -39,7 +39,6 @@
         position: sticky;
         bottom: 0;
         background: $sea-shell;
-        color: $gray-black;
         width: 100%;
         min-height: 30px;
         align-items: center;
@@ -66,7 +65,16 @@
 
                 &-link {
                     text-decoration: none;
-                    color: inherit;
+                    color: $gray-black;
+                    
+                    &:hover {
+                        color: $violet-blue;
+                    }
+                }
+
+                &:not(.center-btn) {
+                    border: none;
+                    background: transparent;
                 }
 
                 &.center-btn {
@@ -75,21 +83,16 @@
                     &-text {
                         border-bottom: 1px solid $off-black;
                     }
+
+                     &:hover .center-btn-text{
+                        color: $white-light-grey;
+                    }
                 }
 
                 &-text {
                     margin: 0 5px;
                 }
 
-                &:not(.center-btn) {
-                    border: none;
-                    color: inherit;
-                    background: transparent;
-                    
-                    &:hover {
-                        color: $violet-blue;
-                    }
-                }
                 &.disabled {
                     color: $mid-dark-gray;
                  &:hover {
