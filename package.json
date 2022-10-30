@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "engines": {
-    "node": "15.14.0",
-    "npm": "7.7.6"
+    "node": "16.10.0",
+    "npm": "7.24.0"
   },
   "scripts": {
     "start": "node server.js",
@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.746.0",
-    "bcrypt": "^5.0.0",
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.19.0",
     "busboy": "^0.3.1",
     "concurrently": "^5.2.0",
@@ -44,8 +44,7 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.19.1",
-    "eslint": "^6.8.0",
+    "eslint": "^7.5.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.24.2",
