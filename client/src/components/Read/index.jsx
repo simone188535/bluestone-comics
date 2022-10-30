@@ -95,10 +95,6 @@ const IssuePagination = ({ setDeleteErr }) => {
     }
   }, [issueNumber, totalIssue]);
 
-  useEffect(() => {
-    console.log(issuePagination);
-  }, [issuePagination]);
-
   return (
     <section className="read-nav-sticky-footer">
       <div className="control-panel">
@@ -111,6 +107,7 @@ const IssuePagination = ({ setDeleteErr }) => {
           }}
         >
           <FontAwesomeIcon icon={faAngleDoubleLeft} />
+          <span className="control-panel-btn-text">First</span>
         </IssuePaginationBtn>
         <IssuePaginationBtn
           disabled={!issuePagination.prevIssueNum}
@@ -156,6 +153,7 @@ const IssuePagination = ({ setDeleteErr }) => {
             className: "control-panel-btn-link",
           }}
         >
+          <span className="control-panel-btn-text">Last</span>
           <FontAwesomeIcon icon={faAngleDoubleRight} />
         </IssuePaginationBtn>
       </div>
