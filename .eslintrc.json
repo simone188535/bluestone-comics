@@ -2,6 +2,9 @@
   "root": true,
   "extends": ["airbnb-base", "prettier", "plugin:node/recommended"],
   "plugins": ["prettier"],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
   "rules": {
     "prettier/prettier": ["error", {"trailingComma": "none", "singleQuote": true}],
     "spaced-comment": "off",
