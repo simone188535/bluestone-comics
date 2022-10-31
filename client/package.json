@@ -39,7 +39,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "heroku-postbuild": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "heroku-prebuild": "DISABLE_ESLINT_PLUGIN=true && NPM_CONFIG_PRODUCTION=false",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
