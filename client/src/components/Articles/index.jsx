@@ -1,5 +1,5 @@
-import React from 'react';
-import './articles.scss';
+import React from "react";
+import "./articles.scss";
 
 const Articles = () => {
   return (
