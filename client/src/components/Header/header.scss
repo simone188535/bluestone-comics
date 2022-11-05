@@ -191,6 +191,10 @@
                     z-index: 1;
                 }
             }
+
+            &.active .nav-menu-item {
+                display: flex;
+            }
         }
 
         .logo {
