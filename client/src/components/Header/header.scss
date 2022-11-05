@@ -54,12 +54,23 @@
         padding: 0px 10px;
         height: unset;
 
+        li {
+            .link-button  {
+                border: none;
+                background: transparent;
+                font-family: $Roboto, $base-font;
+                font-size: inherit;
+                width: 100%;
+            }
+        }
+        
         .nav-menu-item {
             width: 100%;
             text-align: center;
             display: none;
             height: 100%;
             padding: 20px;
+            
         }
 
         &.active .nav-menu-item {
@@ -151,9 +162,12 @@
             width: auto;
             height: 60px;
 
-            li a {
-                color: $gray-black;
-                font-weight: $light;
+            li {
+
+                a, .link-button {
+                    color: $gray-black;
+                    font-weight: $light;
+                }
             }
 
             .nav-menu-item {
@@ -164,6 +178,7 @@
 
 
             li.has-submenu {
+                display: flex;
                 position: relative;
 
                 .submenu {
