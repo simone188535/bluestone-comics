@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
 
+import Search from "./Search";
 import Home from "./Home";
 import SignUp from "./Auth/SignUp";
 import Login from "./Auth/Login";
@@ -35,6 +36,7 @@ const AllRoutes = () => {
   return (
     <Switch>
       <Route path="/about" component={About} />
+      <Route path="/search" component={Search} />
       <Route path="/articles" component={Articles} />
       <Route path="/contest" component={Contest} />
       <Route path="/comic-list" component={ComicList} />
