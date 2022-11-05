@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -106,7 +106,13 @@ const SearchIconToggle = ({ searchToggle }) => {
   return toggleIcon;
 };
 
-const ShowSearchBar = ({ searchToggle }) => {
+const ShowSearchBar = ({ textSearch, setTextSearch, searchToggle }) => {
+  const history = useHistory();
+
+  const onSearch = () => {
+    history.pushState(`/search?q=${textSearch}`);
+  };
+
   return (
     searchToggle && (
       <div className="global-nav-item searchbar-container">
@@ -117,6 +123,8 @@ const ShowSearchBar = ({ searchToggle }) => {
             className="nav-searchbar"
             placeholder="What are you look for?"
             autoComplete="off"
+            onChange={(e) => setTextSearch(e.target.value)}
+            onSubmit={onSearch}
           />
         </form>
       </div>
@@ -126,11 +134,19 @@ const ShowSearchBar = ({ searchToggle }) => {
 
 const Header = () => {
   const [searchToggle, setSearchToggle] = useState(false);
+  const [textSearch, setTextSearch] = useState("");
 
   const searchButtonClicked = (e) => {
     toggleMenu(e, "searchIcon");
     setSearchToggle(!searchToggle);
   };
+
+  useEffect(() => {
+    // if the search toggle is closed and text is present, remove the text
+    if (!searchToggle && textSearch) {
+      setTextSearch("");
+    }
+  }, [searchToggle, textSearch]);
 
   return (
     <nav className="global-nav">
@@ -167,9 +183,16 @@ const Header = () => {
         className="global-nav-item search"
         onClick={(e) => searchButtonClicked(e)}
       >
-        <SearchIconToggle searchToggle={searchToggle} />
+        <SearchIconToggle
+          setTextSearch={setTextSearch}
+          searchToggle={searchToggle}
+        />
       </button>
-      <ShowSearchBar searchToggle={searchToggle} />
+      <ShowSearchBar
+        textSearch={textSearch}
+        setTextSearch={setTextSearch}
+        searchToggle={searchToggle}
+      />
     </nav>
   );
 };
