@@ -135,6 +135,7 @@ const ShowSearchBar = ({
         >
           <input
             type="text"
+            name="search-bar"
             className="nav-searchbar"
             placeholder="What are you look for?"
             autoComplete="off"
