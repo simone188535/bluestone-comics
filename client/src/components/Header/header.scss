@@ -125,10 +125,10 @@
     width: calc(100% - 60px);
     top: 0;
 
-    form {
+    .search-form {
         height: 100%;
 
-        input[type="search"].nav-searchbar {
+        input[type="text"].nav-searchbar {
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
@@ -216,8 +216,8 @@
 
     .searchbar-container {
 
-        form {
-            input[type="search"].nav-searchbar {
+        .search-form {
+            input[type="text"].nav-searchbar {
                 font-size: 1.2em;
             }
         }

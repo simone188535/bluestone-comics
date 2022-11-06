@@ -106,25 +106,39 @@ const SearchIconToggle = ({ searchToggle }) => {
   return toggleIcon;
 };
 
-const ShowSearchBar = ({ textSearch, setTextSearch, searchToggle }) => {
+const ShowSearchBar = ({
+  textSearch,
+  setTextSearch,
+  searchToggle,
+  setSearchToggle,
+}) => {
   const history = useHistory();
 
-  const onSearch = () => {
-    history.pushState(`/search?q=${textSearch}`);
+  const onSearch = (e) => {
+    e.preventDefault();
+    // go to search page
+    history.push(`/search?q=${textSearch}`);
+    // close and clear out global nav
+    setTextSearch("");
+    toggleMenu(e, "searchIcon");
+    setSearchToggle(!searchToggle);
   };
 
   return (
     searchToggle && (
       <div className="global-nav-item searchbar-container">
-        <form id="searchform" method="get" action="#">
+        <form
+          className="search-form"
+          method="get"
+          action="#"
+          onSubmit={onSearch}
+        >
           <input
-            type="search"
-            name="nav-searchbar"
+            type="text"
             className="nav-searchbar"
             placeholder="What are you look for?"
             autoComplete="off"
             onChange={(e) => setTextSearch(e.target.value)}
-            onSubmit={onSearch}
           />
         </form>
       </div>
@@ -192,6 +206,7 @@ const Header = () => {
         textSearch={textSearch}
         setTextSearch={setTextSearch}
         searchToggle={searchToggle}
+        setSearchToggle={setSearchToggle}
       />
     </nav>
   );
