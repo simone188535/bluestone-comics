@@ -1,0 +1,55 @@
+@import '../../styles/abstracts/variables.scss';
+
+.search-page {
+    form.search-filter-form {
+
+        .search-features {
+            display: flex;
+            max-width: 90%;
+            margin: 45px auto;
+            flex-wrap: wrap;
+
+                .search-bar-container {
+                  display: flex;
+                  justify-content: center;
+                  flex: 1 1 100%;
+
+                    .search-bar {
+                      flex: 1 1 auto;
+                      padding: 10px;
+                    }
+
+                    .search-button-btn {
+                      flex: 0 0 50px;
+                    }
+                }
+            
+                .filter-btn {
+                    flex: 0 0 150px;
+                }
+
+                .search-bar-container, .filter-btn {
+                    height: 50px;
+                }
+        }
+    }
+}
+
+@media only screen and (min-width: $large) {
+
+    .search-page {
+        form.search-filter-form {
+
+            .search-features {
+
+                .search-bar-container {
+                    flex: 1 1 auto;
+                  }
+
+                .filter-btn {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }     
+}

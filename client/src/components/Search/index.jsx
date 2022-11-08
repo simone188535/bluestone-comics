@@ -7,6 +7,9 @@ import {
 } from "formik";
 // import { useParams } from "react-router-dom";
 import * as Yup from "yup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import "./search.scss";
 
 // const SearchBar = () => {
 // return (<>
@@ -36,8 +39,8 @@ const Search = () => {
   //   }, [initQueryStr]);
 
   return (
-    <>
-      <h1>Search</h1>
+    <div className="container-fluid search-page">
+      {/* <h1>Search</h1> */}
       <Formik
         initialValues={{
           queryStr: initQueryStr?.q || "",
@@ -48,12 +51,22 @@ const Search = () => {
         }}
         enableReinitialize
       >
-        <Form>
-          <Field type="text" name="queryStr" className="search-bar" />
+        <Form className="search-filter-form">
+          <section className="search-features">
+            <div className="search-bar-container">
+              <Field type="text" name="queryStr" className="search-bar" />
+              <button type="button" className="search-button-btn">
+                <FontAwesomeIcon icon={faSearch} size="lg" />
+              </button>
+            </div>
+            <button type="button" className="filter-btn">
+              Advanced Filter
+            </button>
+          </section>
           {/* <SearchBar /> */}
         </Form>
       </Formik>
-    </>
+    </div>
   );
 };
 
