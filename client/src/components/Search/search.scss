@@ -27,7 +27,7 @@
                       &::placeholder {
                         font-weight: $light;
                         font-family: $Roboto, $base-font;
-                    }
+                      }
                     }
 
                     .search-button-btn {
@@ -45,8 +45,9 @@
             
                 .btn-option-container {
                     .filter-btn {
-                        flex: 0 0 50px;
-                        font-size: .7rem;
+                        margin: 20px 0;
+                        width: 150px;
+                        font-size: .8rem;
                     }
                 }
 
@@ -74,7 +75,9 @@
 
                 .btn-option-container {
                     .filter-btn {
-                        margin-left: 20px;
+                        font-size: .7rem;
+                        width: 90px;
+                        margin: 0 0 0 20px;
                     }
                 }
             }
