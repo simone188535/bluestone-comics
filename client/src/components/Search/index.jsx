@@ -21,6 +21,7 @@ import "./search.scss";
 // }
 const Search = () => {
   const [initQueryStr, setInitQueryStr] = useState({});
+  const [advancedFilter, setAdvancedFilter] = useState(false);
 
   useEffect(() => {
     // access the current query params in the url
@@ -54,14 +55,25 @@ const Search = () => {
         <Form className="search-filter-form">
           <section className="search-features">
             <div className="search-bar-container">
-              <Field type="text" name="queryStr" className="search-bar" />
+              <Field
+                type="text"
+                name="queryStr"
+                className="search-bar"
+                placeholder="Search..."
+              />
               <button type="button" className="search-button-btn">
                 <FontAwesomeIcon icon={faSearch} size="lg" />
               </button>
             </div>
-            <button type="button" className="filter-btn">
-              Advanced Filter
-            </button>
+            <div className="btn-option-container">
+              <button
+                type="button"
+                className="filter-btn bsc-button transparent transparent-blue"
+                onClick={() => setAdvancedFilter(!advancedFilter)}
+              >
+                Filter
+              </button>
+            </div>
           </section>
           {/* <SearchBar /> */}
         </Form>

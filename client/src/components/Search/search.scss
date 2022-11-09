@@ -5,27 +5,49 @@
 
         .search-features {
             display: flex;
-            max-width: 90%;
+            max-width: 700px;
+            width: 90%;
             margin: 45px auto;
             flex-wrap: wrap;
 
+            .search-bar-container, .btn-option-container {
+                display: flex;
+                flex: 1 1 100%;
+                justify-content: center;
+            }
                 .search-bar-container {
-                  display: flex;
-                  justify-content: center;
-                  flex: 1 1 100%;
 
                     .search-bar {
                       flex: 1 1 auto;
                       padding: 10px;
+                    //   border: 1px solid $mid-dark-gray;
+                      border: 1px solid $disabled-violet-blue;
+                      font-family: $Roboto, $base-font;
+
+                      &::placeholder {
+                        font-weight: $light;
+                        font-family: $Roboto, $base-font;
+                    }
                     }
 
                     .search-button-btn {
                       flex: 0 0 50px;
+                      border-left: none;
+                      color: $pure-white;
+                      background-color: $violet-blue;
+                      border: none;
+
+                      &:hover {
+                        background-color: $dark-violet-blue;
+                      }
                     }
                 }
             
-                .filter-btn {
-                    flex: 0 0 150px;
+                .btn-option-container {
+                    .filter-btn {
+                        flex: 0 0 50px;
+                        font-size: .7rem;
+                    }
                 }
 
                 .search-bar-container, .filter-btn {
@@ -44,10 +66,16 @@
 
                 .search-bar-container {
                     flex: 1 1 auto;
-                  }
+                }
 
-                .filter-btn {
-                    margin-left: 10px;
+                  .btn-option-container {
+                    flex: 0 0 auto;
+                }
+
+                .btn-option-container {
+                    .filter-btn {
+                        margin-left: 20px;
+                    }
                 }
             }
         }
