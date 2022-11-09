@@ -46,8 +46,8 @@
                 .btn-option-container {
                     .filter-btn {
                         margin: 20px 0;
-                        width: 90px;
-                        font-size: .8rem;
+                        width: 50%;
+                        font-size: 1rem;
                     }
                 }
 
@@ -58,7 +58,7 @@
     }
 }
 
-@media only screen and (min-width: $large) {
+@media only screen and (min-width: $small) {
 
     .search-page {
         form.search-filter-form {
@@ -76,6 +76,7 @@
                 .btn-option-container {
                     .filter-btn {
                         font-size: .7rem;
+                        width: 90px;
                         margin: 0 0 0 20px;
                     }
                 }
