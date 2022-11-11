@@ -157,7 +157,7 @@ const BookUpload = ({
             { name: "Drama", value: "drama" },
             { name: "Family", value: "family" },
             { name: "Fantasy", value: "fantasy" },
-            { name: "Graphic Novels", value: "graphic novels" },
+            { name: "Graphic Novel", value: "graphic novel" },
             { name: "Historical", value: "historical" },
             { name: "Horror", value: "horror" },
             { name: "LGBTQ", value: "lgbtq" },
