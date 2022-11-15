@@ -88,6 +88,23 @@
                         height: 35px;
                         margin: 10px 0px;
                         border: 1px solid $mid-dark-gray;
+                        // position: relative;
+
+                        &.include {
+                            background-color: $tea-green;
+                        }
+
+                        &.exclude {
+                            background-color: $mauvelous;
+                        }
+
+                        // .inclu-exclu-icon {
+                        //     position: absolute;
+                        //     top: 5px;
+                        //     right: 10px;
+                        //     font-size: 10px;
+
+                        // }
                     }
                 }
             }

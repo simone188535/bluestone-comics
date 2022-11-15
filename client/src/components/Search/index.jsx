@@ -9,7 +9,7 @@ import {
 // import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 // import { searchBooks, searchIssues, searchUser } from "../../../../services";
 import CONSTANTS from "../../utils/Constants";
 import "./search.scss";
@@ -29,6 +29,12 @@ import "./search.scss";
 const GenreInclusion = ({ genre }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const classOptions = { include: "include", exclude: "exclude" };
+  //   const iconOptions = {
+  //     include: <FontAwesomeIcon icon={faCheck} />,
+  //     exclude: <FontAwesomeIcon icon={faTimes} />,
+  //   };
+
   // increments the index and restart from 0 if the selected index is 2
   const inclusionToggle = () =>
     selectedIndex === 2
@@ -40,11 +46,28 @@ const GenreInclusion = ({ genre }) => {
   //   useEffect(() => {
   //     console.log(genre, INCLUSION_TYPES[selectedIndex], selectedIndex);
   //   }, [genre, selectedIndex]);
+  const includeExcludeClassIcons = ({ include, exclude }) => {
+    if (selectedIndex === 1) {
+      return include;
+    }
+    if (selectedIndex === 2) {
+      return exclude;
+    }
+
+    return "";
+  };
 
   return (
     <div className="genre-holder">
-      <button type="button" className="genre-button" onClick={inclusionToggle}>
+      <button
+        type="button"
+        className={`genre-button ${includeExcludeClassIcons(classOptions)}`}
+        onClick={inclusionToggle}
+      >
         {genre}
+        {/* <span className="inclu-exclu-icon">
+          {includeExcludeClassIcons(iconOptions)}
+        </span> */}
       </button>
     </div>
   );
