@@ -9,7 +9,7 @@ import {
 // import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 // import { searchBooks, searchIssues, searchUser } from "../../../../services";
 import CONSTANTS from "../../utils/Constants";
 import "./search.scss";
@@ -25,10 +25,24 @@ import "./search.scss";
 
 // }
 
-// create a three way toggle for all the genre buttons;
-const GenreInclusion = ({ genre }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+// create initial genre dynamic state
+const genreObj = {};
+CONSTANTS.GENRES.forEach((genre) => {
+  genreObj[genre] = {
+    selectedIndex: 0,
+  };
+});
+
+const GenreExInclusion = () => {
+  // const [selectedIndex, setSelectedIndex] = useState(0);
+  const [genres, setGenres] = useState(genreObj);
   const { values, setValues } = useFormikContext();
+
+  const classOptions = { include: "include", exclude: "exclude" };
+
+  // useEffect(() => {
+  //   console.log("genres", genres);
+  // }, [genres]);
 
   useEffect(() => {
     console.log("values", values);
@@ -36,12 +50,12 @@ const GenreInclusion = ({ genre }) => {
 
   useEffect(() => {
     // if selectedIndex is 0 (neutral), remove the current value from the genreExclude arr
-    if (selectedIndex === 0) {
-      console.log("?");
-      //   setValues({
-      //     genreExclude: values.genreExclude.filter((value) => value !== genre),
-      //   });
-    }
+    // if (selectedIndex === 0) {
+    //   console.log("?");
+    //   setValues({
+    //     genreExclude: values.genreExclude.filter((value) => value !== genre),
+    //   });
+    // }
     //   // if selectedIndex is 1 (include), add current value to the genreInclude arr
     //   else if (selectedIndex === 1) {
     //     setValues({ genreInclude: [...values.genreInclude, genre] });
@@ -53,54 +67,85 @@ const GenreInclusion = ({ genre }) => {
     //       genreExclude: [...values.genreExclude, genre],
     //     });
     //   }
-  }, [genre, selectedIndex, setValues, values.genreExclude]);
+  }, []);
 
-  const classOptions = { include: "include", exclude: "exclude" };
-  //   const iconOptions = {
-  //     include: <FontAwesomeIcon icon={faCheck} />,
-  //     exclude: <FontAwesomeIcon icon={faTimes} />,
-  //   };
+  // const updateFormikState = (selectedIndex, genre) => {
+  //   // if selectedIndex is 0 (neutral), remove the current value from the genreExclude arr
+  //   if (selectedIndex === 0) {
+  //     console.log("?");
+  //     setValues({
+  //       genreExclude: values.genreExclude.filter((value) => value !== genre),
+  //     });
+  //   }
+  //   // if selectedIndex is 1 (include), add current value to the genreInclude arr
+  //   else if (selectedIndex === 1) {
+  //     setValues({ genreInclude: [...values.genreInclude, genre] });
+  //   }
+  //   // if selectedIndex is 2 (exclude), remove the current value from the genreInclude arr and add it to the genreExclude arr
+  //   else if (selectedIndex === 2) {
+  //     setValues({
+  //       genreInclude: values.genreInclude.filter((value) => value !== genre),
+  //       genreExclude: [...values.genreExclude, genre],
+  //     });
+  //   }
+  // };
 
+  // create a three way toggle for all the genre buttons
   // increments the index and restart from 0 if the selected index is 2
-  const inclusionToggle = () =>
-    selectedIndex === 2
-      ? setSelectedIndex(0)
-      : setSelectedIndex(selectedIndex + 1);
+  const exInclusionToggle = (key) => {
+    const currGenreSelectedIndex = genres[key]?.selectedIndex;
+
+    if (!currGenreSelectedIndex && typeof currGenreSelectedIndex !== "number")
+      return null;
+
+    const setGenreHelper = (newSelectedIndex) =>
+      setGenres((prevState) => ({
+        ...prevState,
+        [key]: {
+          ...prevState[genres[key]],
+          selectedIndex: newSelectedIndex,
+        },
+      }));
+
+    return currGenreSelectedIndex === 2
+      ? setGenreHelper(0)
+      : setGenreHelper(currGenreSelectedIndex + 1);
+  };
 
   //   const type = INCLUSION_TYPES[selectedIndex];
 
   //   useEffect(() => {
   //     console.log(genre, INCLUSION_TYPES[selectedIndex], selectedIndex);
   //   }, [genre, selectedIndex]);
-  const includeExcludeClassIcons = ({ include, exclude }) => {
-    if (selectedIndex === 1) {
+  const inExcludeClassIcons = ({ include, exclude }, genre) => {
+    const genreSelectedIndex = genres[genre]?.selectedIndex;
+    if (genreSelectedIndex === 1) {
       return include;
     }
-    if (selectedIndex === 2) {
+    if (genreSelectedIndex === 2) {
       return exclude;
     }
 
     return "";
   };
 
-  return (
-    <div className="genre-holder">
+  const allGenres = Object.keys(genres).map((genre) => (
+    <div className="genre-holder" key={`genre-inclusion-${genre}`}>
       <button
         type="button"
-        className={`genre-button ${includeExcludeClassIcons(classOptions)}`}
-        onClick={inclusionToggle}
+        className={`genre-button ${inExcludeClassIcons(classOptions, genre)}`}
+        onClick={() => exInclusionToggle(genre)}
       >
         {genre}
-        {/* <span className="inclu-exclu-icon">
-          {includeExcludeClassIcons(iconOptions)}
-        </span> */}
       </button>
     </div>
-  );
+  ));
+
+  return allGenres;
 };
 
 const SearchForm = () => {
-  //   const [advancedFilter, setAdvancedFilter] = useState(false);
+  const [advancedFilter, setAdvancedFilter] = useState(false);
   //   const { values } = useFormikContext();
 
   //   const baseURLHelper = () => {
@@ -137,10 +182,6 @@ const SearchForm = () => {
     </label>
   ));
 
-  const allGenres = CONSTANTS.GENRES.map((genre) => (
-    <GenreInclusion genre={genre} key={`genre-Inclusion-${genre}`} />
-  ));
-
   return (
     <Form className="search-filter-form">
       <section className="search-bar-container">
@@ -154,13 +195,13 @@ const SearchForm = () => {
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
       </section>
-      {/* <button
-                type="button"
-                className="filter-btn bsc-button transparent transparent-blue"
-                onClick={() => setAdvancedFilter(!advancedFilter)}
-              >
-                Filter
-              </button> */}
+      <button
+        type="button"
+        className="filter-btn bsc-button transparent transparent-blue"
+        onClick={() => setAdvancedFilter(!advancedFilter)}
+      >
+        Filter
+      </button>
       <section className="filter-section">
         <div className="search-type-container">
           <p className="filter-section-header">
@@ -170,7 +211,9 @@ const SearchForm = () => {
           <p className="filter-section-header">
             Select <strong>genre inclusion/exclusion</strong>:{" "}
           </p>
-          <section className="genre-container">{allGenres}</section>
+          <section className="genre-container">
+            <GenreExInclusion />
+          </section>
         </div>
       </section>
     </Form>
