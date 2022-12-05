@@ -3,7 +3,7 @@ import {
   Formik,
   Field,
   Form,
-  //   useFormikContext,
+  useFormikContext,
   // , ErrorMessage
 } from "formik";
 // import { useParams } from "react-router-dom";
@@ -28,6 +28,32 @@ import "./search.scss";
 // create a three way toggle for all the genre buttons;
 const GenreInclusion = ({ genre }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { values, setValues } = useFormikContext();
+
+  useEffect(() => {
+    console.log("values", values);
+  }, [values]);
+
+  useEffect(() => {
+    // if selectedIndex is 0 (neutral), remove the current value from the genreExclude arr
+    if (selectedIndex === 0) {
+      console.log("?");
+      //   setValues({
+      //     genreExclude: values.genreExclude.filter((value) => value !== genre),
+      //   });
+    }
+    //   // if selectedIndex is 1 (include), add current value to the genreInclude arr
+    //   else if (selectedIndex === 1) {
+    //     setValues({ genreInclude: [...values.genreInclude, genre] });
+    //   }
+    //   // if selectedIndex is 2 (exclude), remove the current value from the genreInclude arr and add it to the genreExclude arr
+    //   else if (selectedIndex === 2) {
+    //     setValues({
+    //       genreInclude: values.genreInclude.filter((value) => value !== genre),
+    //       genreExclude: [...values.genreExclude, genre],
+    //     });
+    //   }
+  }, [genre, selectedIndex, setValues, values.genreExclude]);
 
   const classOptions = { include: "include", exclude: "exclude" };
   //   const iconOptions = {
@@ -73,22 +99,9 @@ const GenreInclusion = ({ genre }) => {
   );
 };
 
-const Search = () => {
-  const [initQueryStr, setInitQueryStr] = useState({});
+const SearchForm = () => {
   //   const [advancedFilter, setAdvancedFilter] = useState(false);
   //   const { values } = useFormikContext();
-
-  useEffect(() => {
-    // access the current query params in the url
-    const params = new URLSearchParams(window.location.search);
-
-    const searchParams = params.entries();
-
-    // add all the query param values from the url to the initQueryStr state object
-    [...searchParams].forEach((row) => {
-      setInitQueryStr((prevState) => ({ ...prevState, [row[0]]: row[1] }));
-    });
-  }, []);
 
   //   const baseURLHelper = () => {
   //     const { searchType } = values;
@@ -108,6 +121,10 @@ const Search = () => {
   //     console.log(initQueryStr);
   //   }, [initQueryStr]);
 
+  //   useEffect(() => {
+  //     console.log("values", values);
+  //   }, [values]);
+
   const searchTypeRadioBtn = ["books", "issues", "users"].map((type) => (
     <label key={`radio-btn-type-${type}`} className="radio-btn-label">
       <Field
@@ -125,6 +142,57 @@ const Search = () => {
   ));
 
   return (
+    <Form className="search-filter-form">
+      <section className="search-bar-container">
+        <Field
+          type="text"
+          name="queryStr"
+          className="search-bar"
+          placeholder="Search..."
+        />
+        <button type="submit" className="search-button-btn">
+          <FontAwesomeIcon icon={faSearch} size="lg" />
+        </button>
+      </section>
+      {/* <button
+                type="button"
+                className="filter-btn bsc-button transparent transparent-blue"
+                onClick={() => setAdvancedFilter(!advancedFilter)}
+              >
+                Filter
+              </button> */}
+      <section className="filter-section">
+        <div className="search-type-container">
+          <p className="filter-section-header">
+            Select a <strong>search type</strong>:{" "}
+          </p>
+          <div className="search-type">{searchTypeRadioBtn}</div>
+          <p className="filter-section-header">
+            Select <strong>genre inclusion/exclusion</strong>:{" "}
+          </p>
+          <section className="genre-container">{allGenres}</section>
+        </div>
+      </section>
+    </Form>
+  );
+};
+
+const Search = () => {
+  const [initQueryStr, setInitQueryStr] = useState({});
+
+  useEffect(() => {
+    // access the current query params in the url
+    const params = new URLSearchParams(window.location.search);
+
+    const searchParams = params.entries();
+
+    // add all the query param values from the url to the initQueryStr state object
+    [...searchParams].forEach((row) => {
+      setInitQueryStr((prevState) => ({ ...prevState, [row[0]]: row[1] }));
+    });
+  }, []);
+
+  return (
     <div className="container-fluid search-page min-vh100">
       <Formik
         initialValues={{
@@ -139,40 +207,8 @@ const Search = () => {
           alert(JSON.stringify(values, null, 2));
         }}
         enableReinitialize
-      >
-        <Form className="search-filter-form">
-          <section className="search-bar-container">
-            <Field
-              type="text"
-              name="queryStr"
-              className="search-bar"
-              placeholder="Search..."
-            />
-            <button type="button" className="search-button-btn">
-              <FontAwesomeIcon icon={faSearch} size="lg" />
-            </button>
-          </section>
-          {/* <button
-                type="button"
-                className="filter-btn bsc-button transparent transparent-blue"
-                onClick={() => setAdvancedFilter(!advancedFilter)}
-              >
-                Filter
-              </button> */}
-          <section className="filter-section">
-            <div className="search-type-container">
-              <p className="filter-section-header">
-                Select a <strong>search type</strong>:{" "}
-              </p>
-              <div className="search-type">{searchTypeRadioBtn}</div>
-              <p className="filter-section-header">
-                Select <strong>genre inclusion/exclusion</strong>:{" "}
-              </p>
-              <section className="genre-container">{allGenres}</section>
-            </div>
-          </section>
-        </Form>
-      </Formik>
+        component={SearchForm}
+      />
     </div>
   );
 };
