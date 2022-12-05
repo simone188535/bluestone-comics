@@ -35,8 +35,8 @@ CONSTANTS.GENRES.forEach((genre) => {
 
 const GenreExInclusion = () => {
   // const [selectedIndex, setSelectedIndex] = useState(0);
-  const [genres, setGenres] = useState(genreObj);
-  const { values, setValues } = useFormikContext();
+  // const [genres, setGenres] = useState(genreObj);
+  const { values, setValues, setFieldValue } = useFormikContext();
 
   const classOptions = { include: "include", exclude: "exclude" };
 
@@ -92,44 +92,56 @@ const GenreExInclusion = () => {
 
   // create a three way toggle for all the genre buttons
   // increments the index and restart from 0 if the selected index is 2
-  const exInclusionToggle = (key) => {
-    const currGenreSelectedIndex = genres[key]?.selectedIndex;
+  const exInclusionToggle = (genre) => {
+    const genreIncluded = values.genreInclude.includes(genre);
+    const genreExcluded = values.genreExclude.includes(genre);
 
-    if (!currGenreSelectedIndex && typeof currGenreSelectedIndex !== "number")
-      return null;
+    // if NOT genreIncluded and NOT genreExcluded (neutral), add current value to the genreInclude arr
+    if (!genreIncluded && !genreExcluded) {
+      // setValues({ genreInclude: [...values.genreInclude, genre] });
 
-    const setGenreHelper = (newSelectedIndex) =>
-      setGenres((prevState) => ({
-        ...prevState,
-        [key]: {
-          ...prevState[genres[key]],
-          selectedIndex: newSelectedIndex,
-        },
-      }));
+      setFieldValue("genreInclude", [...values.genreInclude, genre]);
+    }
+    // if the genre is already in (include), remove the current value from the genreInclude arr and add it to the genreExclude arr
+    else if (genreIncluded) {
+      // setValues({
+      //   genreInclude: values.genreInclude.filter((value) => value !== genre),
+      //   genreExclude: [...values.genreExclude, genre],
+      // });
 
-    return currGenreSelectedIndex === 2
-      ? setGenreHelper(0)
-      : setGenreHelper(currGenreSelectedIndex + 1);
+      setFieldValue(
+        "genreInclude",
+        values.genreInclude.filter((value) => value !== genre)
+      );
+      setFieldValue("genreExclude", [...values.genreExclude, genre]);
+    }
+    // if the genre is already in genreExcluded (exclude), remove the current value from the genreExclude arr
+    else if (genreExcluded) {
+      // setValues({
+      //   genreExclude: values.genreExclude.filter((value) => value !== genre),
+      // });
+
+      setFieldValue(
+        "genreExclude",
+        values.genreExclude.filter((value) => value !== genre)
+      );
+    }
   };
 
-  //   const type = INCLUSION_TYPES[selectedIndex];
-
-  //   useEffect(() => {
-  //     console.log(genre, INCLUSION_TYPES[selectedIndex], selectedIndex);
-  //   }, [genre, selectedIndex]);
   const inExcludeClassIcons = ({ include, exclude }, genre) => {
-    const genreSelectedIndex = genres[genre]?.selectedIndex;
-    if (genreSelectedIndex === 1) {
+    // const genreSelectedIndex = genres[genre]?.selectedIndex;
+    // console.log(genre);
+    if (values?.genreInclude?.includes(genre)) {
       return include;
     }
-    if (genreSelectedIndex === 2) {
+    if (values?.genreExclude?.includes(genre)) {
       return exclude;
     }
 
     return "";
   };
 
-  const allGenres = Object.keys(genres).map((genre) => (
+  const allGenres = CONSTANTS.GENRES.map((genre) => (
     <div className="genre-holder" key={`genre-inclusion-${genre}`}>
       <button
         type="button"
