@@ -85,6 +85,31 @@ const GenreExInclusion = () => {
   return allGenres;
 };
 
+const RadioFilter = ({ fieldName, option, headerText }) => {
+  const searchTypeRadioBtn = option.map(({ opt, value }) => (
+    <label key={`radio-btn-type-${opt}`} className="radio-btn-label">
+      <Field
+        type="radio"
+        name={fieldName}
+        value={value}
+        className="radio-btn"
+      />
+      {opt}
+    </label>
+  ));
+
+  return (
+    <>
+      <p className="filter-section-header">
+        Select a <strong>{headerText}</strong>:
+      </p>
+      <div className="search-type filter-section-body">
+        {searchTypeRadioBtn}
+      </div>
+    </>
+  );
+};
+
 const SearchForm = () => {
   const [advancedFilter, setAdvancedFilter] = useState(false);
   //   const { values } = useFormikContext();
@@ -111,18 +136,6 @@ const SearchForm = () => {
   //     console.log("values", values);
   //   }, [values]);
 
-  const searchTypeRadioBtn = ["books", "issues", "users"].map((type) => (
-    <label key={`radio-btn-type-${type}`} className="radio-btn-label">
-      <Field
-        type="radio"
-        name="searchType"
-        value={type}
-        className="radio-btn"
-      />
-      {type}
-    </label>
-  ));
-
   return (
     <Form className="search-filter-form">
       <section className="search-bar-container">
@@ -145,18 +158,45 @@ const SearchForm = () => {
       </button>
       <section className="filter-section">
         <div className="search-type-container">
-          <p className="filter-section-header">
-            Select a <strong>search type</strong>:{" "}
-          </p>
-          <div className="search-type filter-section-body">
-            {searchTypeRadioBtn}
-          </div>
+          <RadioFilter
+            fieldName="searchType"
+            option={[
+              { opt: "Books", value: "books" },
+              { opt: "Issues", value: "issues" },
+              { opt: "Users", value: "users" },
+            ]}
+            headerText="search type"
+          />
+
           <p className="filter-section-header">
             Select <strong>genre inclusion/exclusion</strong>:{" "}
           </p>
           <section className="genre-container filter-section-body">
             <GenreExInclusion />
           </section>
+
+          <RadioFilter
+            fieldName="status"
+            option={[
+              { opt: "All", value: "" },
+              { opt: "Ongoing", value: "ongoing" },
+              { opt: "Completed", value: "completed" },
+              { opt: "Hiatus", value: "hiatus" },
+            ]}
+            headerText="status"
+          />
+
+          <RadioFilter
+            fieldName="contentRating"
+            option={[
+              { opt: "All", value: "" },
+              { opt: "General", value: "G" },
+              { opt: "Teen", value: "T" },
+              { opt: "Mature", value: "M" },
+              { opt: "Explicit", value: "E" },
+            ]}
+            headerText="content rating"
+          />
         </div>
       </section>
     </Form>
@@ -186,7 +226,8 @@ const Search = () => {
           searchType: initQueryStr?.type || "books",
           genreInclude: initQueryStr?.include?.split(",") || [],
           genreExclude: initQueryStr?.exclude?.split(",") || [],
-          status: initQueryStr?.status || null,
+          status: initQueryStr?.status || "",
+          contentRating: initQueryStr?.rating || "",
           validationSchema: Yup.object({}),
         }}
         onSubmit={(values) => {
