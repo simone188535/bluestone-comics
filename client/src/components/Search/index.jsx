@@ -179,8 +179,8 @@ const Search = () => {
         initialValues={{
           queryStr: initQueryStr?.q || "",
           searchType: initQueryStr?.type || "books",
-          genreInclude: initQueryStr?.include.split(",") || [],
-          genreExclude: initQueryStr?.exclude.split(",") || [],
+          genreInclude: initQueryStr?.include?.split(",") || [],
+          genreExclude: initQueryStr?.exclude?.split(",") || [],
           status: initQueryStr?.status || null,
           validationSchema: Yup.object({}),
         }}
