@@ -58,7 +58,7 @@
             border-radius: 10px;
             font-weight: $light;
 
-            .filter-section-header {
+            &-header, &-body {
                 margin-bottom: 10px;
             }
 

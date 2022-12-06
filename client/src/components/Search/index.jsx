@@ -71,8 +71,11 @@ const GenreExInclusion = () => {
     <div className="genre-holder" key={`genre-inclusion-${genre}`}>
       <button
         type="button"
-        className={`genre-button ${inExcludeClassIcons(classOptions, genre)}`}
-        onClick={() => exInclusionToggle(genre)}
+        className={`genre-button ${inExcludeClassIcons(
+          classOptions,
+          genre.toLowerCase()
+        )}`}
+        onClick={() => exInclusionToggle(genre.toLowerCase())}
       >
         {genre}
       </button>
@@ -145,11 +148,13 @@ const SearchForm = () => {
           <p className="filter-section-header">
             Select a <strong>search type</strong>:{" "}
           </p>
-          <div className="search-type">{searchTypeRadioBtn}</div>
+          <div className="search-type filter-section-body">
+            {searchTypeRadioBtn}
+          </div>
           <p className="filter-section-header">
             Select <strong>genre inclusion/exclusion</strong>:{" "}
           </p>
-          <section className="genre-container">
+          <section className="genre-container filter-section-body">
             <GenreExInclusion />
           </section>
         </div>
