@@ -166,7 +166,7 @@ const FileInputMultipleUpload = ({
 
   useEffect(() => {
     /*
-      only on initial render, if files have previously existing files have been uploaded (when values[identifier] is populated), 
+      only on initial render, if previously existing files have been uploaded (when values[identifier] is populated), 
       add those files to the file state 
     */
     if (
