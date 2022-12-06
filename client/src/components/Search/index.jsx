@@ -25,70 +25,9 @@ import "./search.scss";
 
 // }
 
-// create initial genre dynamic state
-const genreObj = {};
-CONSTANTS.GENRES.forEach((genre) => {
-  genreObj[genre] = {
-    selectedIndex: 0,
-  };
-});
-
 const GenreExInclusion = () => {
-  // const [selectedIndex, setSelectedIndex] = useState(0);
-  // const [genres, setGenres] = useState(genreObj);
-  const { values, setValues, setFieldValue } = useFormikContext();
-
+  const { values, setFieldValue } = useFormikContext();
   const classOptions = { include: "include", exclude: "exclude" };
-
-  // useEffect(() => {
-  //   console.log("genres", genres);
-  // }, [genres]);
-
-  useEffect(() => {
-    console.log("values", values);
-  }, [values]);
-
-  useEffect(() => {
-    // if selectedIndex is 0 (neutral), remove the current value from the genreExclude arr
-    // if (selectedIndex === 0) {
-    //   console.log("?");
-    //   setValues({
-    //     genreExclude: values.genreExclude.filter((value) => value !== genre),
-    //   });
-    // }
-    //   // if selectedIndex is 1 (include), add current value to the genreInclude arr
-    //   else if (selectedIndex === 1) {
-    //     setValues({ genreInclude: [...values.genreInclude, genre] });
-    //   }
-    //   // if selectedIndex is 2 (exclude), remove the current value from the genreInclude arr and add it to the genreExclude arr
-    //   else if (selectedIndex === 2) {
-    //     setValues({
-    //       genreInclude: values.genreInclude.filter((value) => value !== genre),
-    //       genreExclude: [...values.genreExclude, genre],
-    //     });
-    //   }
-  }, []);
-
-  // const updateFormikState = (selectedIndex, genre) => {
-  //   // if selectedIndex is 0 (neutral), remove the current value from the genreExclude arr
-  //   if (selectedIndex === 0) {
-  //     console.log("?");
-  //     setValues({
-  //       genreExclude: values.genreExclude.filter((value) => value !== genre),
-  //     });
-  //   }
-  //   // if selectedIndex is 1 (include), add current value to the genreInclude arr
-  //   else if (selectedIndex === 1) {
-  //     setValues({ genreInclude: [...values.genreInclude, genre] });
-  //   }
-  //   // if selectedIndex is 2 (exclude), remove the current value from the genreInclude arr and add it to the genreExclude arr
-  //   else if (selectedIndex === 2) {
-  //     setValues({
-  //       genreInclude: values.genreInclude.filter((value) => value !== genre),
-  //       genreExclude: [...values.genreExclude, genre],
-  //     });
-  //   }
-  // };
 
   // create a three way toggle for all the genre buttons
   // increments the index and restart from 0 if the selected index is 2
@@ -98,17 +37,10 @@ const GenreExInclusion = () => {
 
     // if NOT genreIncluded and NOT genreExcluded (neutral), add current value to the genreInclude arr
     if (!genreIncluded && !genreExcluded) {
-      // setValues({ genreInclude: [...values.genreInclude, genre] });
-
       setFieldValue("genreInclude", [...values.genreInclude, genre]);
     }
     // if the genre is already in (include), remove the current value from the genreInclude arr and add it to the genreExclude arr
     else if (genreIncluded) {
-      // setValues({
-      //   genreInclude: values.genreInclude.filter((value) => value !== genre),
-      //   genreExclude: [...values.genreExclude, genre],
-      // });
-
       setFieldValue(
         "genreInclude",
         values.genreInclude.filter((value) => value !== genre)
@@ -117,10 +49,6 @@ const GenreExInclusion = () => {
     }
     // if the genre is already in genreExcluded (exclude), remove the current value from the genreExclude arr
     else if (genreExcluded) {
-      // setValues({
-      //   genreExclude: values.genreExclude.filter((value) => value !== genre),
-      // });
-
       setFieldValue(
         "genreExclude",
         values.genreExclude.filter((value) => value !== genre)
@@ -129,8 +57,6 @@ const GenreExInclusion = () => {
   };
 
   const inExcludeClassIcons = ({ include, exclude }, genre) => {
-    // const genreSelectedIndex = genres[genre]?.selectedIndex;
-    // console.log(genre);
     if (values?.genreInclude?.includes(genre)) {
       return include;
     }
@@ -253,8 +179,8 @@ const Search = () => {
         initialValues={{
           queryStr: initQueryStr?.q || "",
           searchType: initQueryStr?.type || "books",
-          genreInclude: initQueryStr?.include || [],
-          genreExclude: initQueryStr?.exclude || [],
+          genreInclude: initQueryStr?.include.split(",") || [],
+          genreExclude: initQueryStr?.exclude.split(",") || [],
           status: initQueryStr?.status || null,
           validationSchema: Yup.object({}),
         }}
