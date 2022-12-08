@@ -85,38 +85,49 @@ const GenreExInclusion = () => {
   return allGenres;
 };
 
-const RadioFilter = ({
+const RadioBtn = ({ fieldName, opt, value }) => (
+  <label key={`radio-btn-type-${opt}`} className="radio-btn-label">
+    <Field name={fieldName} value={value} type="radio" className="radio-btn" />
+    {opt}
+  </label>
+);
+
+const DropDown = ({ opt, value }) => (
+  <option value={value} className="dropdown-btn">
+    {opt}
+  </option>
+);
+
+const FilterOptions = ({
   fieldName,
   option,
   headerText,
-  fieldProps = {},
-  labelProps = {},
+  isDropdown = false,
+  component: Component,
 }) => {
-  const searchTypeRadioBtn = option.map(({ opt, value }) => (
-    <label
-      key={`filter-btn-type-${opt}`}
-      className="radio-btn-label"
-      {...labelProps}
-    >
-      <Field
-        // type="radio"
-        name={fieldName}
-        value={value}
-        // className="radio-btn"
-        {...fieldProps}
-      />
-      {opt}
-    </label>
+  const searchType = option.map(({ opt, value }) => (
+    <Component
+      key={`search-type-${opt}`}
+      fieldName={!isDropdown ? fieldName : undefined}
+      opt={opt}
+      value={value}
+    />
   ));
+
+  const wrap = isDropdown ? (
+    <Field as="select" name={fieldName}>
+      {searchType}
+    </Field>
+  ) : (
+    searchType
+  );
 
   return (
     <>
       <p className="filter-section-header">
         Select a <strong>{headerText}</strong>:
       </p>
-      <div className="search-type-radio filter-section-body">
-        {searchTypeRadioBtn}
-      </div>
+      <div className="search-type-radio filter-section-body">{wrap}</div>
     </>
   );
 };
@@ -169,7 +180,7 @@ const SearchForm = () => {
       </button>
       <section className="filter-section">
         <div className="search-type-container">
-          <RadioFilter
+          <FilterOptions
             fieldName="searchType"
             option={[
               { opt: "Books", value: "books" },
@@ -177,7 +188,7 @@ const SearchForm = () => {
               { opt: "Users", value: "users" },
             ]}
             headerText="search type"
-            fieldProps={{ type: "radio", className: "radio-btn" }}
+            component={RadioBtn}
           />
 
           <p className="filter-section-header">
@@ -187,7 +198,7 @@ const SearchForm = () => {
             <GenreExInclusion />
           </section>
 
-          <RadioFilter
+          <FilterOptions
             fieldName="status"
             option={[
               { opt: "All", value: "" },
@@ -196,10 +207,10 @@ const SearchForm = () => {
               { opt: "Hiatus", value: "hiatus" },
             ]}
             headerText="status"
-            fieldProps={{ type: "radio", className: "radio-btn" }}
+            component={RadioBtn}
           />
 
-          <RadioFilter
+          <FilterOptions
             fieldName="contentRating"
             option={[
               { opt: "All", value: "" },
@@ -209,10 +220,10 @@ const SearchForm = () => {
               { opt: "Explicit", value: "E" },
             ]}
             headerText="content rating"
-            fieldProps={{ type: "radio", className: "radio-btn" }}
+            component={RadioBtn}
           />
 
-          <RadioFilter
+          <FilterOptions
             fieldName="sortBy"
             option={[
               { opt: "Select Sort", value: "" },
@@ -220,7 +231,8 @@ const SearchForm = () => {
               { opt: "Oldest to Newest", value: "DESC" },
             ]}
             headerText="date range"
-            fieldProps={{ as: "select" }}
+            isDropdown
+            component={DropDown}
           />
         </div>
       </section>
@@ -253,7 +265,7 @@ const Search = () => {
           genreExclude: initQueryStr?.exclude?.split(",") || [],
           status: initQueryStr?.status || "",
           contentRating: initQueryStr?.rating || "",
-          sortBy: initQueryStr?.sort || null,
+          sortBy: initQueryStr?.sort || "",
           validationSchema: Yup.object({}),
         }}
         onSubmit={(values) => {
