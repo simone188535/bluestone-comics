@@ -85,14 +85,25 @@ const GenreExInclusion = () => {
   return allGenres;
 };
 
-const RadioFilter = ({ fieldName, option, headerText }) => {
+const RadioFilter = ({
+  fieldName,
+  option,
+  headerText,
+  fieldProps = {},
+  labelProps = {},
+}) => {
   const searchTypeRadioBtn = option.map(({ opt, value }) => (
-    <label key={`radio-btn-type-${opt}`} className="radio-btn-label">
+    <label
+      key={`filter-btn-type-${opt}`}
+      className="radio-btn-label"
+      {...labelProps}
+    >
       <Field
-        type="radio"
+        // type="radio"
         name={fieldName}
         value={value}
-        className="radio-btn"
+        // className="radio-btn"
+        {...fieldProps}
       />
       {opt}
     </label>
@@ -103,7 +114,7 @@ const RadioFilter = ({ fieldName, option, headerText }) => {
       <p className="filter-section-header">
         Select a <strong>{headerText}</strong>:
       </p>
-      <div className="search-type filter-section-body">
+      <div className="search-type-radio filter-section-body">
         {searchTypeRadioBtn}
       </div>
     </>
@@ -166,6 +177,7 @@ const SearchForm = () => {
               { opt: "Users", value: "users" },
             ]}
             headerText="search type"
+            fieldProps={{ type: "radio", className: "radio-btn" }}
           />
 
           <p className="filter-section-header">
@@ -184,6 +196,7 @@ const SearchForm = () => {
               { opt: "Hiatus", value: "hiatus" },
             ]}
             headerText="status"
+            fieldProps={{ type: "radio", className: "radio-btn" }}
           />
 
           <RadioFilter
@@ -196,6 +209,18 @@ const SearchForm = () => {
               { opt: "Explicit", value: "E" },
             ]}
             headerText="content rating"
+            fieldProps={{ type: "radio", className: "radio-btn" }}
+          />
+
+          <RadioFilter
+            fieldName="sortBy"
+            option={[
+              { opt: "Select Sort", value: "" },
+              { opt: "Newest to Oldest", value: "ASC" },
+              { opt: "Oldest to Newest", value: "DESC" },
+            ]}
+            headerText="date range"
+            fieldProps={{ as: "select" }}
           />
         </div>
       </section>
@@ -228,6 +253,7 @@ const Search = () => {
           genreExclude: initQueryStr?.exclude?.split(",") || [],
           status: initQueryStr?.status || "",
           contentRating: initQueryStr?.rating || "",
+          sortBy: initQueryStr?.sort || null,
           validationSchema: Yup.object({}),
         }}
         onSubmit={(values) => {
