@@ -155,6 +155,10 @@ const Search = () => {
     console.log("refresh?");
   }, [location]);
 
+  useEffect(() => {
+    console.log("initQueryStr", initQueryStr);
+  }, [initQueryStr]);
+
   const onSubmit = (values, { setSubmitting }) => {
     let newQueryString = "";
 
@@ -167,6 +171,9 @@ const Search = () => {
       { contentRating: "content-rating" },
       { sortBy: "sort" },
     ];
+
+    // reset initial state for incoming data
+    setInitQueryStr({});
 
     // create a dynamic string based off the key value pair
     queryOrderArr.forEach((obj) => {
