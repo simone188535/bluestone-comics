@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Field, Form, useFormikContext } from "formik";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -134,10 +134,12 @@ const SearchForm = () => {
 };
 
 const Search = () => {
+  const location = useLocation();
   const history = useHistory();
   const [initQueryStr, setInitQueryStr] = useState({});
   const [results, setResults] = useState([]);
 
+  // on init and when the url changes, iterate over the query params and add it to initQueryStr state
   useEffect(() => {
     // access the current query params in the url
     const params = new URLSearchParams(window.location.search);
@@ -149,8 +151,9 @@ const Search = () => {
       setInitQueryStr((prevState) => ({ ...prevState, [row[0]]: row[1] }));
     });
 
-    // search and setResults
-  }, []);
+    // search api request and setResults
+    console.log("refresh?");
+  }, [location]);
 
   const onSubmit = (values, { setSubmitting }) => {
     let newQueryString = "";
