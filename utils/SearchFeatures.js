@@ -11,12 +11,12 @@ class SearchFeatures {
   filter(tableToSearch) {
     // add comic type: oneshot, graphic novel, comic still needs to be added here
 
-    let whereClause = '';
+    let appendedQueryStr = '';
     // if a text search/q is present
     if (this.queryString.q) {
       if (tableToSearch === 'books' || tableToSearch === 'issues') {
-        // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
-        whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) OR ${tableToSearch}.description ILIKE ($${this.parameterizedIndexInc()}) `;
+        // appendedQueryStr += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
+        appendedQueryStr += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) OR ${tableToSearch}.description ILIKE ($${this.parameterizedIndexInc()}) `;
         // append where clause values for title and description
         this.parameterizedValues.push(
           `${this.queryString.q}%`,
@@ -24,7 +24,7 @@ class SearchFeatures {
         );
         // append where clause text search value
       } else if (tableToSearch === 'users') {
-        whereClause += `${tableToSearch}.username ILIKE ($${this.parameterizedIndexInc()}) `;
+        appendedQueryStr += `${tableToSearch}.username ILIKE ($${this.parameterizedIndexInc()}) `;
         // append where clause values for title and description
         this.parameterizedValues.push(`${this.queryString.q}%`);
       }
@@ -32,8 +32,8 @@ class SearchFeatures {
 
     if (this.queryString.status) {
       // if the where clause is not empty, add an AND clause to the beginning of the string
-      whereClause += `${this.appendAndOrClause(
-        whereClause,
+      appendedQueryStr += `${this.appendAndOrClause(
+        appendedQueryStr,
         'AND'
       )} status = ($${this.parameterizedIndexInc()})`;
       // append where clause values for status
@@ -41,8 +41,8 @@ class SearchFeatures {
     }
 
     if (this.queryString.username) {
-      whereClause += `${this.appendAndOrClause(
-        whereClause,
+      appendedQueryStr += `${this.appendAndOrClause(
+        appendedQueryStr,
         'AND'
       )} username = ($${this.parameterizedIndexInc()})`;
 
@@ -52,8 +52,8 @@ class SearchFeatures {
 
     // By default, only the works of users who have active accounts are shown
     if (!this.queryString.allowDeactivatedUserResults) {
-      whereClause += `${this.appendAndOrClause(
-        whereClause,
+      appendedQueryStr += `${this.appendAndOrClause(
+        appendedQueryStr,
         'AND'
       )} users.active = ($${this.parameterizedIndexInc()})`;
 
@@ -61,12 +61,12 @@ class SearchFeatures {
       this.parameterizedValues.push(true);
     }
 
-    // if whereClause string is populated, add WHERE in the beginning of the string
-    if (whereClause !== '') {
-      whereClause = `WHERE ${whereClause}`;
+    // if appendedQueryStr string is populated, add WHERE in the beginning of the string
+    if (appendedQueryStr !== '') {
+      appendedQueryStr = `WHERE ${appendedQueryStr}`;
     }
 
-    this.query = `${this.query} ${whereClause}`;
+    this.query = `${this.query} ${appendedQueryStr}`;
 
     return this;
   }
