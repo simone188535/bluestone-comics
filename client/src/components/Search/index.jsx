@@ -23,9 +23,11 @@ import "./search.scss";
 
 // }
 
+const SearchResult = ({ results }) => {};
+
 const SearchForm = () => {
   const [advancedFilter, setAdvancedFilter] = useState(false);
-  //   const { values } = useFormikContext();
+  // const { values } = useFormikContext();
 
   //   const baseURLHelper = () => {
   //     const { searchType } = values;
@@ -133,6 +135,7 @@ const SearchForm = () => {
 
 const Search = () => {
   const [initQueryStr, setInitQueryStr] = useState({});
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
     // access the current query params in the url
@@ -146,16 +149,30 @@ const Search = () => {
     });
   }, []);
 
+  const onSubmit = async (values) => {
+    const newQueryString = "";
+
+    const queryOrderArr = [
+      { queryStr: "q" },
+      { searchType: "search-type" },
+      { genreInclude: "include" },
+      { genreExclude: "exclude" },
+      { status: "status" },
+      { contentRating: "content-rating" },
+      { sortBy: "sort" },
+    ];
+  };
+
   return (
     <div className="container-fluid search-page min-vh100">
       <Formik
         initialValues={{
           queryStr: initQueryStr?.q || "",
-          searchType: initQueryStr?.type || "books",
+          searchType: initQueryStr?.["search-type"] || "books",
           genreInclude: initQueryStr?.include?.split(",") || [],
           genreExclude: initQueryStr?.exclude?.split(",") || [],
           status: initQueryStr?.status || "",
-          contentRating: initQueryStr?.rating || "",
+          contentRating: initQueryStr?.["content-rating"] || "",
           sortBy: initQueryStr?.sort || "",
           validationSchema: Yup.object({}),
         }}
