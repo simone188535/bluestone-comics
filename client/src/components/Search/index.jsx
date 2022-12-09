@@ -210,6 +210,7 @@ const Search = () => {
         enableReinitialize
         component={SearchForm}
       />
+      {/* <SearchResult results={[]} /> */}
     </div>
   );
 };
