@@ -150,7 +150,7 @@ const Search = () => {
   }, []);
 
   const onSubmit = async (values) => {
-    const newQueryString = "";
+    let newQueryString = "";
 
     const queryOrderArr = [
       { queryStr: "q" },
@@ -161,6 +161,31 @@ const Search = () => {
       { contentRating: "content-rating" },
       { sortBy: "sort" },
     ];
+
+    // create a dynamic string based off the key value pair
+    queryOrderArr.forEach((obj) => {
+      /*
+       if the current object key has a value in formik, append the 
+        object value and the formik value to the new query string
+      */
+      const formikObjStateVal = values[Object.keys(obj)];
+      /* if the current obj val is an array, check that the length of the array is
+      greater than 0, else just check if the string has value
+      */
+      const hasValue = Array.isArray(formikObjStateVal)
+        ? formikObjStateVal.length > 0
+        : formikObjStateVal;
+
+      // add and ampersand for all key val pairs except the first
+      const addAmpersand = newQueryString ? "&" : "";
+
+      if (hasValue)
+        newQueryString += `${addAmpersand}${Object.values(
+          obj
+        )}=${formikObjStateVal}`;
+    });
+
+    console.log("newQueryString", newQueryString);
   };
 
   return (
@@ -176,9 +201,7 @@ const Search = () => {
           sortBy: initQueryStr?.sort || "",
           validationSchema: Yup.object({}),
         }}
-        onSubmit={(values) => {
-          alert(JSON.stringify(values, null, 2));
-        }}
+        onSubmit={onSubmit}
         enableReinitialize
         component={SearchForm}
       />
