@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Field, Form, useFormikContext } from "formik";
-// import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -134,6 +134,7 @@ const SearchForm = () => {
 };
 
 const Search = () => {
+  const history = useHistory();
   const [initQueryStr, setInitQueryStr] = useState({});
   const [results, setResults] = useState([]);
 
@@ -147,9 +148,11 @@ const Search = () => {
     [...searchParams].forEach((row) => {
       setInitQueryStr((prevState) => ({ ...prevState, [row[0]]: row[1] }));
     });
+
+    // search and setResults
   }, []);
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values, { setSubmitting }) => {
     let newQueryString = "";
 
     const queryOrderArr = [
@@ -185,7 +188,9 @@ const Search = () => {
         )}=${formikObjStateVal}`;
     });
 
-    console.log("newQueryString", newQueryString);
+    // update url
+    history.push(`/search?${newQueryString}`);
+    setSubmitting(false);
   };
 
   return (
