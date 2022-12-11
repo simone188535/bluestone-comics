@@ -8,26 +8,40 @@ class SearchFeatures {
     this.parameterizedIndex = 0;
   }
 
-  filter(tableToSearch) {
+  filter(
+    // tableToSearch,
+    qTextFilterQuery = ''
+    // qTextFilterQueryParamValues = []
+  ) {
     // add comic type: oneshot, graphic novel, comic still needs to be added here
 
     let appendedQueryStr = '';
     // if a text search/q is present
     if (this.queryString.q) {
-      if (tableToSearch === 'books' || tableToSearch === 'issues') {
-        // appendedQueryStr += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
-        appendedQueryStr += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) OR ${tableToSearch}.description ILIKE ($${this.parameterizedIndexInc()}) `;
-        // append where clause values for title and description
-        this.parameterizedValues.push(
-          `${this.queryString.q}%`,
-          `${this.queryString.q}%`
-        );
-        // append where clause text search value
-      } else if (tableToSearch === 'users') {
-        appendedQueryStr += `${tableToSearch}.username ILIKE ($${this.parameterizedIndexInc()}) `;
-        // append where clause values for title and description
-        this.parameterizedValues.push(`${this.queryString.q}%`);
-      }
+      appendedQueryStr += qTextFilterQuery;
+
+      // for every dollar sign found in qTextFilterQuery, push the q value to parameterizedValues, increment parameterizedIndex
+      [...qTextFilterQuery].forEach((element) => {
+        if (element === '$') {
+          this.parameterizedValues.push(`${this.queryString.q}%`);
+          this.incrementParameterizedIndex();
+        }
+      });
+
+      // if (tableToSearch === 'books' || tableToSearch === 'issues') {
+      //   // appendedQueryStr += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english',${this.parameterizedIndexIncStr()} `;
+      //   appendedQueryStr += `${tableToSearch}.title ILIKE ${this.parameterizedIndexIncStr()} OR ${tableToSearch}.description ILIKE ${this.parameterizedIndexIncStr()}`;
+      //   // append where clause values for title and description
+      //   this.parameterizedValues.push(
+      //     `${this.queryString.q}%`,
+      //     `${this.queryString.q}%`
+      //   );
+      //   // append where clause text search value
+      // } else if (tableToSearch === 'users') {
+      //   appendedQueryStr += `${tableToSearch}.username ILIKE ${this.parameterizedIndexIncStr()} `;
+      //   // append where clause values for title and description
+      //   this.parameterizedValues.push(`${this.queryString.q}%`);
+      // }
     }
 
     if (this.queryString.status) {
@@ -35,7 +49,7 @@ class SearchFeatures {
       appendedQueryStr += `${this.appendAndOrClause(
         appendedQueryStr,
         'AND'
-      )} status = ($${this.parameterizedIndexInc()})`;
+      )} status = ${this.parameterizedIndexIncStr()}`;
       // append where clause values for status
       this.parameterizedValues.push(`${this.queryString.status}`);
     }
@@ -44,7 +58,7 @@ class SearchFeatures {
       appendedQueryStr += `${this.appendAndOrClause(
         appendedQueryStr,
         'AND'
-      )} username = ($${this.parameterizedIndexInc()})`;
+      )} username = ${this.parameterizedIndexIncStr()}`;
 
       // append where clause values for username
       this.parameterizedValues.push(`${this.queryString.username}`);
@@ -55,7 +69,7 @@ class SearchFeatures {
       appendedQueryStr += `${this.appendAndOrClause(
         appendedQueryStr,
         'AND'
-      )} users.active = ($${this.parameterizedIndexInc()})`;
+      )} users.active = ${this.parameterizedIndexIncStr()}`;
 
       // append where clause values for users with active accounts
       this.parameterizedValues.push(true);
@@ -88,7 +102,7 @@ class SearchFeatures {
         ascOrDesc = 'ASC';
     }
 
-    this.query = `${this.query} ORDER BY ${tableColumnPrefix}${sort} ${ascOrDesc}`;
+    this.query = `${this.query} ORDER BY ${tableColumnPrefix}.${sort} ${ascOrDesc}`;
 
     return this;
   }
@@ -108,13 +122,21 @@ class SearchFeatures {
     return stringToCheck !== '' ? pgKeywordToAppend : '';
   }
 
-  parameterizedIndexInc() {
+  parameterizedIndexVal() {
+    return this.parameterizedIndex;
+  }
+
+  incrementParameterizedIndex() {
+    this.parameterizedIndex += 1;
+  }
+
+  parameterizedIndexIncStr() {
     // This increments parameterizedIndex so that Parameterized query statements can be added dynamically ie ($3) or ($1)
     // later a function may need to be added that counts how many $ are in the given query expression so that the correct Parameterized query value can be added
     // let parameterizedIndex = this.query.match(/\$/g).length;
 
-    this.parameterizedIndex += 1;
-    return this.parameterizedIndex;
+    this.incrementParameterizedIndex();
+    return `($${this.parameterizedIndexVal()})`;
   }
 }
 

@@ -14,8 +14,8 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   // }
 
   const searchedBooks = new SearchFeatures(parameterizedQuery, req.query, [])
-    .filter('books')
-    .sort('books.')
+    .filter('books.title ILIKE ($1) OR books.description ILIKE ($2) ')
+    .sort('books')
     .paginate(20);
 
   // example of ts rank cd shown here: https://linuxgazette.net/164/sephton.html
@@ -68,8 +68,8 @@ exports.searchIssues = catchAsync(async (req, res) => {
     req.query,
     []
   )
-    .filter('issues')
-    .sort('issues.')
+    .filter('issues.title ILIKE ($1) OR issues.description ILIKE ($2) ')
+    .sort('issues')
     .paginate(20);
 
   //  ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) AS rank
@@ -110,8 +110,8 @@ exports.searchUsers = catchAsync(async (req, res) => {
     req.query,
     []
   )
-    .filter('users')
-    .sort('users.')
+    .filter('users.username ILIKE ($1) ')
+    .sort('users')
     .paginate(20);
 
   const users = await new QueryPG(pool).find(
