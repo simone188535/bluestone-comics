@@ -3,22 +3,18 @@ class SearchFeatures {
     // these are the query values passed in from node AKA req.query
     this.query = query;
     this.queryString = queryString;
+    this.filterString = '';
     this.parameterizedValues = parameterizedValues;
 
     this.parameterizedIndex = 0;
   }
 
-  filter(
-    // tableToSearch,
-    qTextFilterQuery = ''
-    // qTextFilterQueryParamValues = []
-  ) {
+  filter(qTextFilterQuery = '') {
     // add comic type: oneshot, graphic novel, comic still needs to be added here
 
-    let appendedQueryStr = '';
     // if a text search/q is present
     if (this.queryString.q) {
-      appendedQueryStr += qTextFilterQuery;
+      this.filterString += qTextFilterQuery;
 
       // for every dollar sign found in qTextFilterQuery, push the q value to parameterizedValues, increment parameterizedIndex
       [...qTextFilterQuery].forEach((element) => {
@@ -27,60 +23,28 @@ class SearchFeatures {
           this.incrementParameterizedIndex();
         }
       });
-
-      // if (tableToSearch === 'books' || tableToSearch === 'issues') {
-      //   // appendedQueryStr += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english',${this.parameterizedIndexIncStr()} `;
-      //   appendedQueryStr += `${tableToSearch}.title ILIKE ${this.parameterizedIndexIncStr()} OR ${tableToSearch}.description ILIKE ${this.parameterizedIndexIncStr()}`;
-      //   // append where clause values for title and description
-      //   this.parameterizedValues.push(
-      //     `${this.queryString.q}%`,
-      //     `${this.queryString.q}%`
-      //   );
-      //   // append where clause text search value
-      // } else if (tableToSearch === 'users') {
-      //   appendedQueryStr += `${tableToSearch}.username ILIKE ${this.parameterizedIndexIncStr()} `;
-      //   // append where clause values for title and description
-      //   this.parameterizedValues.push(`${this.queryString.q}%`);
-      // }
     }
 
     if (this.queryString.status) {
       // if the where clause is not empty, add an AND clause to the beginning of the string
-      appendedQueryStr += `${this.appendAndOrClause(
-        appendedQueryStr,
-        'AND'
-      )} status = ${this.parameterizedIndexIncStr()}`;
-      // append where clause values for status
-      this.parameterizedValues.push(`${this.queryString.status}`);
+      this.appendAndOrClause('AND', 'status', this.queryString.status);
     }
 
     if (this.queryString.username) {
-      appendedQueryStr += `${this.appendAndOrClause(
-        appendedQueryStr,
-        'AND'
-      )} username = ${this.parameterizedIndexIncStr()}`;
-
-      // append where clause values for username
-      this.parameterizedValues.push(`${this.queryString.username}`);
+      this.appendAndOrClause('AND', 'username', this.queryString.username);
     }
 
     // By default, only the works of users who have active accounts are shown
     if (!this.queryString.allowDeactivatedUserResults) {
-      appendedQueryStr += `${this.appendAndOrClause(
-        appendedQueryStr,
-        'AND'
-      )} users.active = ${this.parameterizedIndexIncStr()}`;
-
-      // append where clause values for users with active accounts
-      this.parameterizedValues.push(true);
+      this.appendAndOrClause('AND', 'users.active', true);
     }
 
-    // if appendedQueryStr string is populated, add WHERE in the beginning of the string
-    if (appendedQueryStr !== '') {
-      appendedQueryStr = `WHERE ${appendedQueryStr}`;
+    // if this.filterString string is populated, add WHERE in the beginning of the string
+    if (this.filterString !== '') {
+      this.filterString = `WHERE ${this.filterString}`;
     }
 
-    this.query = `${this.query} ${appendedQueryStr}`;
+    this.query = `${this.query} ${this.filterString}`;
 
     return this;
   }
@@ -117,9 +81,13 @@ class SearchFeatures {
     return this;
   }
 
-  appendAndOrClause(stringToCheck, pgKeywordToAppend) {
+  appendAndOrClause(pgKeywordToAppend, column, paramVal) {
     // If the provided string empty, add the pgKeywordToAppend ie AND or OR, else return an empty string
-    return stringToCheck !== '' ? pgKeywordToAppend : '';
+
+    const addAndOrClause = this.filterString !== '' ? pgKeywordToAppend : '';
+    this.filterString += `${addAndOrClause} ${column} = ${this.parameterizedIndexIncStr()}`;
+    // return stringToCheck !== '' ? pgKeywordToAppend : '';
+    this.parameterizedValues.push(paramVal);
   }
 
   parameterizedIndexVal() {
