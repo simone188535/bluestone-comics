@@ -11,32 +11,61 @@ class SearchFeatures {
 
   filter(qTextFilterQuery = '') {
     // add comic type: oneshot, graphic novel, comic still needs to be added here
+    const {
+      q,
+      status,
+      contentRating,
+      username,
+      include,
+      exclude,
+      allowDeactivatedUserResults
+    } = this.queryString;
 
     // if a text search/q is present
-    if (this.queryString.q) {
+    if (q) {
       this.filterString += qTextFilterQuery;
 
       // for every dollar sign found in qTextFilterQuery, push the q value to parameterizedValues, increment parameterizedIndex
       [...qTextFilterQuery].forEach((element) => {
         if (element === '$') {
-          this.parameterizedValues.push(`${this.queryString.q}%`);
+          this.parameterizedValues.push(`${q}%`);
           this.incrementParameterizedIndex();
         }
       });
     }
 
-    if (this.queryString.status) {
+    if (status) {
       // if the where clause is not empty, add an AND clause to the beginning of the string
-      this.appendAndOrClause('AND', 'status', this.queryString.status);
+      this.appendClauseAndDataInsert('AND', `status`, status);
     }
 
-    if (this.queryString.username) {
-      this.appendAndOrClause('AND', 'username', this.queryString.username);
+    if (contentRating) {
+      this.appendClauseAndDataInsert('AND', `content_rating`, contentRating);
+    }
+
+    if (username) {
+      this.appendClauseAndDataInsert('AND', `username`, username);
     }
 
     // By default, only the works of users who have active accounts are shown
-    if (!this.queryString.allowDeactivatedUserResults) {
-      this.appendAndOrClause('AND', 'users.active', true);
+    if (!allowDeactivatedUserResults) {
+      this.appendClauseAndDataInsert('AND', `users.active`, true);
+    }
+
+    if (include) {
+      // const params = [];
+
+      // include.split(',').forEach((val) => {
+      //   params.push(this.parameterizedIndexIncStr());
+      //   this.appendToParameterizedValues(val);
+      // });
+
+      // this.appendAndOrClause('AND', `genres.genre IN (${params.join(',')})`);
+      this.multiValQStrAppend(include, 'IN');
+    }
+
+    if (exclude) {
+      this.multiValQStrAppend(exclude, 'NOT IN');
     }
 
     // if this.filterString string is populated, add WHERE in the beginning of the string
@@ -81,15 +110,6 @@ class SearchFeatures {
     return this;
   }
 
-  appendAndOrClause(pgKeywordToAppend, column, paramVal) {
-    // If the provided string empty, add the pgKeywordToAppend ie AND or OR, else return an empty string
-
-    const addAndOrClause = this.filterString !== '' ? pgKeywordToAppend : '';
-    this.filterString += `${addAndOrClause} ${column} = ${this.parameterizedIndexIncStr()}`;
-    // return stringToCheck !== '' ? pgKeywordToAppend : '';
-    this.parameterizedValues.push(paramVal);
-  }
-
   parameterizedIndexVal() {
     return this.parameterizedIndex;
   }
@@ -99,12 +119,56 @@ class SearchFeatures {
   }
 
   parameterizedIndexIncStr() {
-    // This increments parameterizedIndex so that Parameterized query statements can be added dynamically ie ($3) or ($1)
-    // later a function may need to be added that counts how many $ are in the given query expression so that the correct Parameterized query value can be added
-    // let parameterizedIndex = this.query.match(/\$/g).length;
+    /* 
+      This increments parameterizedIndex so that Parameterized query statements can be added dynamically ie ($3) or ($1)
+      later a function may need to be added that counts how many $ are in the given query expression so that the correct Parameterized query value can be added
+      let parameterizedIndex = this.query.match(/\$/g).length;
+    */
 
     this.incrementParameterizedIndex();
+    // increment the Parameterized Index and return that value in a string for parameterizedValues to use later
     return `($${this.parameterizedIndexVal()})`;
+  }
+
+  appendToParameterizedValues(paramVal) {
+    // add a value to the param values array
+    this.parameterizedValues.push(paramVal);
+  }
+
+  appendAndOrClause(pgKeywordToAppend, columnCondition) {
+    // If the provided string empty, add the pgKeywordToAppend ie AND or OR, else return an empty string
+
+    const addAndOrClause = this.filterString !== '' ? pgKeywordToAppend : '';
+    this.filterString += ` ${addAndOrClause} ${columnCondition}`;
+    // return stringToCheck !== '' ? pgKeywordToAppend : '';
+  }
+
+  appendClauseAndDataInsert(pgKeyword, column, paramVal) {
+    // this method not only appends AND or OR to the filtered string, but it also adds a compares the column to the paramVal
+    this.appendAndOrClause(
+      pgKeyword,
+      `${column} = ${this.parameterizedIndexIncStr()}`
+    );
+
+    this.appendToParameterizedValues(paramVal);
+  }
+
+  multiValQStrAppend(strMultiVal, inClause) {
+    /*
+      this method iterates over query str with multiple values ie action,adventure appends to the query str
+      by separating the string it an array and mapping over them
+     */
+    const params = [];
+
+    strMultiVal.split(',').forEach((val) => {
+      params.push(this.parameterizedIndexIncStr());
+      this.appendToParameterizedValues(val);
+    });
+
+    this.appendAndOrClause(
+      'AND',
+      `genres.genre ${inClause} (${params.join(',')})`
+    );
   }
 }
 
