@@ -32,7 +32,8 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.description, 
     books.status, 
     books.last_updated, 
-    books.date_created
+    books.date_created,
+    array(SELECT genre from genres WHERE genres.book_id = books.id) as genres
    `,
     searchedBooks.query,
     searchedBooks.parameterizedValues,
