@@ -63,7 +63,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 });
 
 exports.searchIssues = catchAsync(async (req, res) => {
-  const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id)`;
+  const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id) INNER JOIN genres ON (books.id = genres.book_id)`;
   const { query, parameterizedValues } = new SearchFeatures(
     parameterizedQuery,
     req.query,
@@ -75,7 +75,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
 
   //  ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const issues = await new QueryPG(pool).find(
-    `users.id AS user_id,
+    `DISTINCT users.id AS user_id,
     users.username,
     users.email,
     users.user_photo,
