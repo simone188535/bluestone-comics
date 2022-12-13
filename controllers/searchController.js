@@ -7,7 +7,7 @@ const SearchFeatures = require('../utils/SearchFeatures');
 
 // TODO: may implement this in our pagination later: https://ivopereira.net/efficient-pagination-dont-use-offset-limit , https://medium.com/swlh/how-to-implement-cursor-pagination-like-a-pro-513140b65f32
 exports.searchBooks = catchAsync(async (req, res, next) => {
-  const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id)`;
+  const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id) INNER JOIN genres ON (books.id = genres.book_id)`;
 
   // if (req.query.displayCredits) {
   //   parameterizedQuery = `${parameterizedQuery} INNER JOIN work_credits ON (work_credits.book_id = books.id)`;
@@ -22,7 +22,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   // https://stackoverflow.com/questions/32903988/postgres-ts-rank-cd-different-result-for-same-tsvector
   // ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce( books.title,'')), 'A') || setweight(to_tsvector('english', coalesce(books.description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) AS rank
   const books = await new QueryPG(pool).find(
-    `users.id AS user_id,
+    `DISTINCT users.id AS user_id,
     users.username,
     users.user_photo,
     books.id AS book_id,
@@ -32,7 +32,8 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.description, 
     books.status, 
     books.last_updated, 
-    books.date_created
+    books.date_created,
+    array(SELECT DISTINCT genre from genres INNER JOIN books ON (books.id = genres.book_id))
    `,
     searchedBooks.query,
     searchedBooks.parameterizedValues,
