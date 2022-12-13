@@ -32,13 +32,15 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.description, 
     books.status, 
     books.last_updated, 
-    books.date_created,
-    array(SELECT DISTINCT genre from genres INNER JOIN books ON (books.id = genres.book_id))
+    books.date_created
    `,
     searchedBooks.query,
     searchedBooks.parameterizedValues,
     true
   );
+
+  // genres.genre
+  // array(SELECT DISTINCT genre from genres INNER JOIN books ON (books.id = genres.book_id)) as genres
 
   // const searchedBookstotalCount = new SearchFeatures(
   //   parameterizedQuery,
