@@ -28,8 +28,8 @@ class SearchFeatures {
       // for every dollar sign found in qTextFilterQuery, push the q value to parameterizedValues, increment parameterizedIndex
       [...qTextFilterQuery].forEach((element) => {
         if (element === '$') {
+          element = this.parameterizedIndexIncStr();
           this.parameterizedValues.push(`${q}%`);
-          this.incrementParameterizedIndex();
         }
       });
     }

@@ -72,7 +72,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     req.query,
     []
   )
-    .filter('issues.title ILIKE ($1) OR issues.description ILIKE ($2)')
+    .filter('issues.title ILIKE $ OR issues.description ILIKE $')
     .sort('issues')
     .paginate(20);
 
@@ -115,7 +115,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
     req.query,
     []
   )
-    .filter('users.username ILIKE ($1)')
+    .filter('users.username ILIKE $')
     .sort('users')
     .paginate(20);
 
@@ -139,7 +139,7 @@ exports.searchAccreditedWorks = catchAsync(async (req, res) => {
 
   // issue_id, creator_credit
   const accreditedWorksQuery =
-    'work_credits INNER JOIN issues ON (work_credits.issue_id = issues.id) INNER JOIN books ON (work_credits.book_id = books.id) WHERE creator_id = ($1) AND creator_credit = ($2)';
+    'work_credits INNER JOIN issues ON (work_credits.issue_id = issues.id) INNER JOIN books ON (work_credits.book_id = books.id) WHERE creator_id = $ AND creator_credit = $';
 
   const accreditedWorksSelectedData =
     'issues.book_id, issues.date_created, issues.issue_number, issues.title AS issue_title, work_credits.issue_id, work_credits.creator_credit, books.id, books.title AS book_title';
