@@ -14,7 +14,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   // }
 
   const searchedBooks = new SearchFeatures(parameterizedQuery, req.query, [])
-    .filter('books.title ILIKE ($1) OR books.description ILIKE ($2) ')
+    .filter('books.title ILIKE ($1) OR books.description ILIKE ($2)')
     .sort('books')
     .paginate(20);
 
@@ -72,7 +72,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     req.query,
     []
   )
-    .filter('issues.title ILIKE ($1) OR issues.description ILIKE ($2) ')
+    .filter('issues.title ILIKE ($1) OR issues.description ILIKE ($2)')
     .sort('issues')
     .paginate(20);
 
@@ -115,7 +115,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
     req.query,
     []
   )
-    .filter('users.username ILIKE ($1) ')
+    .filter('users.username ILIKE ($1)')
     .sort('users')
     .paginate(20);
 

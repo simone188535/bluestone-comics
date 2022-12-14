@@ -23,7 +23,7 @@ class SearchFeatures {
 
     // if a text search/q is present
     if (q) {
-      this.filterString += qTextFilterQuery;
+      this.filterString += `${qTextFilterQuery} `;
 
       // for every dollar sign found in qTextFilterQuery, push the q value to parameterizedValues, increment parameterizedIndex
       [...qTextFilterQuery].forEach((element) => {
