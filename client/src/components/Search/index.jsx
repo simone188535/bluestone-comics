@@ -162,13 +162,21 @@ const Search = () => {
   const onSubmit = (values, { setSubmitting }) => {
     let newQueryString = "";
 
+    // if the selected searchTypes is not users, add the rest of the optional queries
+    const optionalQueries =
+      values.searchType !== "users"
+        ? [
+            { genreInclude: "include" },
+            { genreExclude: "exclude" },
+            { status: "status" },
+            { contentRating: "content-rating" },
+          ]
+        : [{}];
+
     const queryOrderArr = [
       { queryStr: "q" },
       { searchType: "search-type" },
-      { genreInclude: "include" },
-      { genreExclude: "exclude" },
-      { status: "status" },
-      { contentRating: "content-rating" },
+      ...optionalQueries,
       { sortBy: "sort" },
     ];
 
