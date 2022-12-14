@@ -53,14 +53,6 @@ class SearchFeatures {
     }
 
     if (include) {
-      // const params = [];
-
-      // include.split(',').forEach((val) => {
-      //   params.push(this.parameterizedIndexIncStr());
-      //   this.appendToParameterizedValues(val);
-      // });
-
-      // this.appendAndOrClause('AND', `genres.genre IN (${params.join(',')})`);
       this.multiValQStrAppend(include, 'IN');
     }
 
@@ -144,7 +136,7 @@ class SearchFeatures {
   }
 
   appendClauseAndDataInsert(pgKeyword, column, paramVal) {
-    // this method not only appends AND or OR to the filtered string, but it also adds a compares the column to the paramVal
+    // this method not only appends AND or OR to the filtered string, but it also adds and compares the column to paramVal and inserts the data into the parameterizedValues array
     this.appendAndOrClause(
       pgKeyword,
       `${column} = ${this.parameterizedIndexIncStr()}`
@@ -155,7 +147,7 @@ class SearchFeatures {
 
   multiValQStrAppend(strMultiVal, inClause) {
     /*
-      this method iterates over query str with multiple values ie action,adventure appends to the query str
+      this method iterates over a query str with multiple values ie action,adventure appends to the query str
       by separating the string it an array and mapping over them
      */
     const params = [];

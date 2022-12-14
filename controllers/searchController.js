@@ -90,7 +90,8 @@ exports.searchIssues = catchAsync(async (req, res) => {
     issues.date_created,
     books.id AS book_id,
     books.title AS book_title,
-    books.url_slug
+    books.url_slug,
+    array(SELECT genre from genres WHERE genres.book_id = books.id) as genres
     `,
     query,
     parameterizedValues,
