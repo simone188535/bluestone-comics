@@ -23,15 +23,19 @@ class SearchFeatures {
 
     // if a text search/q is present
     if (q) {
-      this.filterString += `${qTextFilterQuery} `;
-
       // for every dollar sign found in qTextFilterQuery, push the q value to parameterizedValues, increment parameterizedIndex
-      [...qTextFilterQuery].forEach((element) => {
-        if (element === '$') {
-          element = this.parameterizedIndexIncStr();
-          this.parameterizedValues.push(`${q}%`);
-        }
-      });
+      const newQString = [...qTextFilterQuery]
+        .map((element) => {
+          if (element === '$') {
+            this.parameterizedValues.push(`${q}%`);
+            element = this.parameterizedIndexIncStr();
+          }
+
+          return element;
+        })
+        .join('');
+
+      this.filterString += `${newQString} `;
     }
 
     if (status) {

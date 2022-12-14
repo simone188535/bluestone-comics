@@ -14,7 +14,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   // }
 
   const searchedBooks = new SearchFeatures(parameterizedQuery, req.query, [])
-    .filter('books.title ILIKE ($1) OR books.description ILIKE ($2)')
+    .filter('books.title ILIKE $ OR books.description ILIKE $')
     .sort('books')
     .paginate(20);
 
