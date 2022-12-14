@@ -4,12 +4,13 @@ import { useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-// import { searchBooks, searchIssues, searchUser } from "../../../../services";
+import { querySearchType } from "../../services";
 // import CONSTANTS from "../../utils/Constants";
 import GenreExInclusion from "./GenreExInclusion";
 import FilterOptions from "./FilterOptions";
 import RadioBtn from "./RadioBtn";
 import DropDown from "./DropDown";
+import ErrMsg from "../CommonUI/ErrorMessage";
 import "./search.scss";
 
 // const INCLUSION_TYPES = ["NEUTRAL", "INCLUSION", "EXCLUSION"];
@@ -23,7 +24,9 @@ import "./search.scss";
 
 // }
 
-const SearchResult = ({ results }) => {};
+const SearchResult = ({ results }) => {
+  return <div>results</div>;
+};
 
 const SearchForm = ({ values }) => {
   const [advancedFilter, setAdvancedFilter] = useState(false);
@@ -138,10 +141,11 @@ const SearchForm = ({ values }) => {
 };
 
 const Search = () => {
-  const location = useLocation();
-  const history = useHistory();
   const [initQueryStr, setInitQueryStr] = useState({});
   const [results, setResults] = useState([]);
+  const [error, setError] = useState(false);
+  const location = useLocation();
+  const history = useHistory();
 
   // on init and when the url changes, iterate over the query params and add it to initQueryStr state
   useEffect(() => {
@@ -155,13 +159,23 @@ const Search = () => {
       setInitQueryStr((prevState) => ({ ...prevState, [row[0]]: row[1] }));
     });
 
-    // search api request and setResults
-    console.log("refresh?");
+    (async () => {
+      try {
+        const searchType = params.get("search-type") || "issues";
+        // search api request and setResults
+        const {
+          data: { books, issues, users },
+        } = await querySearchType(searchType, window.location.search);
+        setResults(books || issues || users);
+      } catch (err) {
+        setError(true);
+      }
+    })();
   }, [location]);
 
-  useEffect(() => {
-    console.log("initQueryStr", initQueryStr);
-  }, [initQueryStr]);
+  // useEffect(() => {
+  //   console.log("initQueryStr", initQueryStr);
+  // }, [initQueryStr]);
 
   const onSubmit = (values, { setSubmitting }) => {
     let newQueryString = "";
@@ -232,7 +246,16 @@ const Search = () => {
         enableReinitialize
         component={SearchForm}
       />
-      {/* <SearchResult results={[]} /> */}
+      {error ? (
+        <div className="text-center mt-50">
+          <ErrMsg
+            errorStatus={error}
+            messageText="An Error occurred. Please try again later."
+          />
+        </div>
+      ) : (
+        <SearchResult results={results} />
+      )}
     </div>
   );
 };
