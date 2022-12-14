@@ -2,7 +2,7 @@ import React from "react";
 import { useFormikContext } from "formik";
 import CONSTANTS from "../../utils/Constants";
 
-const GenreExInclusion = () => {
+const GenreExInclusion = ({ disabled }) => {
   const { values, setFieldValue } = useFormikContext();
   const classOptions = { include: "include", exclude: "exclude" };
 
@@ -53,6 +53,7 @@ const GenreExInclusion = () => {
           genre.toLowerCase()
         )}`}
         onClick={() => exInclusionToggle(genre.toLowerCase())}
+        disabled={disabled}
       >
         {genre}
       </button>

@@ -7,6 +7,7 @@ const FilterOptions = ({
   headerText,
   isDropdown = false,
   component: Component,
+  disabled = false,
 }) => {
   const searchType = option.map(({ opt, value }) => (
     <Component
@@ -14,6 +15,7 @@ const FilterOptions = ({
       fieldName={!isDropdown ? fieldName : undefined}
       opt={opt}
       value={value}
+      disabled={disabled}
     />
   ));
 

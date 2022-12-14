@@ -25,8 +25,10 @@ import "./search.scss";
 
 const SearchResult = ({ results }) => {};
 
-const SearchForm = () => {
+const SearchForm = ({ values }) => {
   const [advancedFilter, setAdvancedFilter] = useState(false);
+
+  const userSearchTypeDisable = values.searchType === "users";
   // const { values } = useFormikContext();
 
   //   const baseURLHelper = () => {
@@ -76,8 +78,8 @@ const SearchForm = () => {
           <FilterOptions
             fieldName="searchType"
             option={[
-              { opt: "Books", value: "books" },
               { opt: "Issues", value: "issues" },
+              { opt: "Books", value: "books" },
               { opt: "Users", value: "users" },
             ]}
             headerText="search type"
@@ -88,7 +90,7 @@ const SearchForm = () => {
             Select <strong>genre inclusion/exclusion</strong>:{" "}
           </p>
           <section className="genre-container filter-section-body">
-            <GenreExInclusion />
+            <GenreExInclusion disabled={userSearchTypeDisable} />
           </section>
 
           <FilterOptions
@@ -101,6 +103,7 @@ const SearchForm = () => {
             ]}
             headerText="status"
             component={RadioBtn}
+            disabled={userSearchTypeDisable}
           />
 
           <FilterOptions
@@ -114,6 +117,7 @@ const SearchForm = () => {
             ]}
             headerText="content rating"
             component={RadioBtn}
+            disabled={userSearchTypeDisable}
           />
 
           <FilterOptions
@@ -216,7 +220,7 @@ const Search = () => {
       <Formik
         initialValues={{
           queryStr: initQueryStr?.q || "",
-          searchType: initQueryStr?.["search-type"] || "books",
+          searchType: initQueryStr?.["search-type"] || "issues",
           genreInclude: initQueryStr?.include?.split(",") || [],
           genreExclude: initQueryStr?.exclude?.split(",") || [],
           status: initQueryStr?.status || "",
