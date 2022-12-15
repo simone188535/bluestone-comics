@@ -139,7 +139,7 @@ exports.searchAccreditedWorks = catchAsync(async (req, res) => {
 
   // issue_id, creator_credit
   const accreditedWorksQuery =
-    'work_credits INNER JOIN issues ON (work_credits.issue_id = issues.id) INNER JOIN books ON (work_credits.book_id = books.id) WHERE creator_id = $ AND creator_credit = $';
+    'work_credits INNER JOIN issues ON (work_credits.issue_id = issues.id) INNER JOIN books ON (work_credits.book_id = books.id) WHERE creator_id = ($1) AND creator_credit = ($2)';
 
   const accreditedWorksSelectedData =
     'issues.book_id, issues.date_created, issues.issue_number, issues.title AS issue_title, work_credits.issue_id, work_credits.creator_credit, books.id, books.title AS book_title';
