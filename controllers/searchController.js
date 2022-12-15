@@ -53,9 +53,10 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 
   // Send Response
   res.status(200).json({
+    type: 'books',
     totalResultCount: Number(count),
     currentResultCount: books.length,
-    books,
+    result: books,
     status: 'success'
   });
 });
@@ -101,9 +102,10 @@ exports.searchIssues = catchAsync(async (req, res) => {
 
   // Send Response
   res.status(200).json({
+    type: 'issues',
     totalResultCount: Number(count),
     currentResultCount: issues.length,
-    issues,
+    result: issues,
     status: 'success'
   });
 });
@@ -136,9 +138,10 @@ exports.searchUsers = catchAsync(async (req, res) => {
 
   // Send Response
   res.status(200).json({
+    type: 'users',
     totalResultCount: Number(count),
     currentResultCount: users.length,
-    users,
+    result: users,
     status: 'success'
   });
 });
