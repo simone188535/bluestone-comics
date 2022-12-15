@@ -9,20 +9,29 @@ const SearchFeatures = require('../utils/SearchFeatures');
 exports.searchBooks = catchAsync(async (req, res, next) => {
   const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id) INNER JOIN genres ON (books.id = genres.book_id)`;
 
-  // if (req.query.displayCredits) {
-  //   parameterizedQuery = `${parameterizedQuery} INNER JOIN work_credits ON (work_credits.book_id = books.id)`;
-  // }
+  // const searchBookFilter = new SearchFeatures(
+  //   parameterizedQuery,
+  //   req.query,
+  //   []
+  // ).filter('books.title ILIKE $ OR books.description ILIKE $')
+  // .sort('books')
+  // .paginate(20);
 
-  const filterStr = 'books.title ILIKE $ OR books.description ILIKE $';
+  const searchBookFilter = new SearchFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  ).filter('books.title ILIKE $ OR books.description ILIKE $');
 
-  const searchBook = new SearchFeatures(parameterizedQuery, req.query, [])
-    .filter(filterStr)
-    .sort('books')
-    .paginate(20);
+  const { count } = await new QueryPG(pool).find(
+    `COUNT(*)`,
+    searchBookFilter.query,
+    searchBookFilter.parameterizedValues,
+    false
+  );
 
-  // example of ts rank cd shown here: https://linuxgazette.net/164/sephton.html
-  // https://stackoverflow.com/questions/32903988/postgres-ts-rank-cd-different-result-for-same-tsvector
-  // ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce( books.title,'')), 'A') || setweight(to_tsvector('english', coalesce(books.description,'')), 'B'), plainto_tsquery('english', '${req.query.q}')) AS rank
+  const searchBook = searchBookFilter.sort('books').paginate(20);
+
   const books = await new QueryPG(pool).find(
     `DISTINCT users.id AS user_id,
     users.username,
@@ -42,19 +51,6 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     true
   );
 
-  const countBooks = new SearchFeatures(
-    parameterizedQuery,
-    req.query,
-    []
-  ).filter(filterStr);
-
-  const { count } = await new QueryPG(pool).find(
-    `COUNT(*)`,
-    countBooks.query,
-    countBooks.parameterizedValues,
-    false
-  );
-
   // Send Response
   res.status(200).json({
     totalResultCount: Number(count),
@@ -66,17 +62,22 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 
 exports.searchIssues = catchAsync(async (req, res) => {
   const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id) INNER JOIN genres ON (books.id = genres.book_id)`;
-  const filterStr = 'issues.title ILIKE $ OR issues.description ILIKE $';
-  const { query, parameterizedValues } = new SearchFeatures(
+
+  const searchIssueFilter = new SearchFeatures(
     parameterizedQuery,
     req.query,
     []
-  )
-    .filter(filterStr)
-    .sort('issues')
-    .paginate(20);
+  ).filter('issues.title ILIKE $ OR issues.description ILIKE $');
 
-  //  ts_rank_cd('{0.1, 0.2, 0.4, 1.0}', setweight(to_tsvector('english', coalesce(issues.title,'')), 'A'), plainto_tsquery('english', '${req.query.q}')) AS rank
+  const { count } = await new QueryPG(pool).find(
+    `COUNT(*)`,
+    searchIssueFilter.query,
+    searchIssueFilter.parameterizedValues,
+    false
+  );
+
+  const searchIssue = searchIssueFilter.sort('issues').paginate(20);
+
   const issues = await new QueryPG(pool).find(
     `DISTINCT users.id AS user_id,
     users.username,
@@ -93,22 +94,9 @@ exports.searchIssues = catchAsync(async (req, res) => {
     books.url_slug,
     array(SELECT genre from genres WHERE genres.book_id = books.id) as genres
     `,
-    query,
-    parameterizedValues,
+    searchIssue.query,
+    searchIssue.parameterizedValues,
     true
-  );
-
-  const countIssues = new SearchFeatures(
-    parameterizedQuery,
-    req.query,
-    []
-  ).filter(filterStr);
-
-  const { count } = await new QueryPG(pool).find(
-    `COUNT(*)`,
-    countIssues.query,
-    countIssues.parameterizedValues,
-    false
   );
 
   // Send Response
@@ -124,35 +112,28 @@ exports.search = catchAsync(async (req, res) => {});
 
 exports.searchUsers = catchAsync(async (req, res) => {
   const parameterizedQuery = `users`;
-  const filterStr = 'users.username ILIKE $';
-  const { query, parameterizedValues } = new SearchFeatures(
+  const searchUsersFilter = new SearchFeatures(
     parameterizedQuery,
     req.query,
     []
-  )
-    .filter(filterStr)
-    .sort('users')
-    .paginate(20);
-
-  const users = await new QueryPG(pool).find(
-    'id, username, user_photo, date_created',
-    query,
-    parameterizedValues,
-    true
-  );
-
-  const countIssues = new SearchFeatures(
-    parameterizedQuery,
-    req.query,
-    []
-  ).filter(filterStr);
+  ).filter('users.username ILIKE $');
 
   const { count } = await new QueryPG(pool).find(
     `COUNT(*)`,
-    countIssues.query,
-    countIssues.parameterizedValues,
+    searchUsersFilter.query,
+    searchUsersFilter.parameterizedValues,
     false
   );
+
+  const searchUsers = searchUsersFilter.sort('users').paginate(20);
+
+  const users = await new QueryPG(pool).find(
+    'id, username, user_photo, date_created',
+    searchUsers.query,
+    searchUsers.parameterizedValues,
+    true
+  );
+
   // Send Response
   res.status(200).json({
     totalResultCount: Number(count),
