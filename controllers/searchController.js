@@ -13,8 +13,10 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   //   parameterizedQuery = `${parameterizedQuery} INNER JOIN work_credits ON (work_credits.book_id = books.id)`;
   // }
 
-  const searchedBooks = new SearchFeatures(parameterizedQuery, req.query, [])
-    .filter('books.title ILIKE $ OR books.description ILIKE $')
+  const filterStr = 'books.title ILIKE $ OR books.description ILIKE $';
+
+  const searchBook = new SearchFeatures(parameterizedQuery, req.query, [])
+    .filter(filterStr)
     .sort('books')
     .paginate(20);
 
@@ -35,31 +37,28 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.date_created,
     array(SELECT genre from genres WHERE genres.book_id = books.id) as genres
    `,
-    searchedBooks.query,
-    searchedBooks.parameterizedValues,
+    searchBook.query,
+    searchBook.parameterizedValues,
     true
   );
 
-  // genres.genre
-  // array(SELECT DISTINCT genre from genres INNER JOIN books ON (books.id = genres.book_id)) as genres
+  const countBooks = new SearchFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  ).filter(filterStr);
 
-  // const searchedBookstotalCount = new SearchFeatures(
-  //   parameterizedQuery,
-  //   req.query,
-  //   []
-  // ).filter('books');
-
-  // const totalBooksSearched = await new QueryPG(pool).find(
-  //   `COUNT(*)`,
-  //   searchedBookstotalCount.query,
-  //   searchedBookstotalCount.parameterizedValues,
-  //   false
-  // );
+  const { count } = await new QueryPG(pool).find(
+    `COUNT(*)`,
+    countBooks.query,
+    countBooks.parameterizedValues,
+    false
+  );
 
   // Send Response
   res.status(200).json({
-    // totalResultCount: Number(totalBooksSearched.count),
-    resultCount: books.length,
+    totalResultCount: Number(count),
+    currentResultCount: books.length,
     books,
     status: 'success'
   });
@@ -67,12 +66,13 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 
 exports.searchIssues = catchAsync(async (req, res) => {
   const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id) INNER JOIN genres ON (books.id = genres.book_id)`;
+  const filterStr = 'issues.title ILIKE $ OR issues.description ILIKE $';
   const { query, parameterizedValues } = new SearchFeatures(
     parameterizedQuery,
     req.query,
     []
   )
-    .filter('issues.title ILIKE $ OR issues.description ILIKE $')
+    .filter(filterStr)
     .sort('issues')
     .paginate(20);
 
@@ -98,9 +98,23 @@ exports.searchIssues = catchAsync(async (req, res) => {
     true
   );
 
+  const countIssues = new SearchFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  ).filter(filterStr);
+
+  const { count } = await new QueryPG(pool).find(
+    `COUNT(*)`,
+    countIssues.query,
+    countIssues.parameterizedValues,
+    false
+  );
+
   // Send Response
   res.status(200).json({
-    resultCount: issues.length,
+    totalResultCount: Number(count),
+    currentResultCount: issues.length,
     issues,
     status: 'success'
   });
@@ -110,12 +124,13 @@ exports.search = catchAsync(async (req, res) => {});
 
 exports.searchUsers = catchAsync(async (req, res) => {
   const parameterizedQuery = `users`;
+  const filterStr = 'users.username ILIKE $';
   const { query, parameterizedValues } = new SearchFeatures(
     parameterizedQuery,
     req.query,
     []
   )
-    .filter('users.username ILIKE $')
+    .filter(filterStr)
     .sort('users')
     .paginate(20);
 
@@ -126,9 +141,22 @@ exports.searchUsers = catchAsync(async (req, res) => {
     true
   );
 
+  const countIssues = new SearchFeatures(
+    parameterizedQuery,
+    req.query,
+    []
+  ).filter(filterStr);
+
+  const { count } = await new QueryPG(pool).find(
+    `COUNT(*)`,
+    countIssues.query,
+    countIssues.parameterizedValues,
+    false
+  );
   // Send Response
   res.status(200).json({
-    resultCount: users.length,
+    totalResultCount: Number(count),
+    currentResultCount: users.length,
     users,
     status: 'success'
   });
