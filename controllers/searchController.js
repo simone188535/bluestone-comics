@@ -56,7 +56,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     type: 'books',
     totalResultCount: Number(count),
     currentResultCount: books.length,
-    result: books,
+    searchResults: books,
     status: 'success'
   });
 });
@@ -105,7 +105,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     type: 'issues',
     totalResultCount: Number(count),
     currentResultCount: issues.length,
-    result: issues,
+    searchResults: issues,
     status: 'success'
   });
 });
@@ -141,7 +141,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
     type: 'users',
     totalResultCount: Number(count),
     currentResultCount: users.length,
-    result: users,
+    searchResults: users,
     status: 'success'
   });
 });
