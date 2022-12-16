@@ -3,6 +3,7 @@ import { Formik, Field, Form, useFormikContext } from "formik";
 import { useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import _ from "lodash";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { querySearchType } from "../../services";
 // import CONSTANTS from "../../utils/Constants";
@@ -10,6 +11,7 @@ import GenreExInclusion from "./GenreExInclusion";
 import FilterOptions from "./FilterOptions";
 import RadioBtn from "./RadioBtn";
 import DropDown from "./DropDown";
+import Pagination from "../CommonUI/Pagination";
 import ErrMsg from "../CommonUI/ErrorMessage";
 import "./search.scss";
 
@@ -24,30 +26,29 @@ import "./search.scss";
 
 // }
 
-const SearchResult = ({ results }) => {
-  return <div>results</div>;
+const SearchResult = ({ results, currentPage, setCurrentPage }) => {
+  console.log("currentPage", currentPage);
+  const setPage = (page) => setCurrentPage(page);
+
+  return (
+    <>
+      <div>results</div>
+
+      <Pagination
+        className="pagination-bar"
+        currentPage={currentPage}
+        totalCount={results.totalResultCount || 0}
+        pageSize={12}
+        onPageChange={setPage}
+      />
+    </>
+  );
 };
 
 const SearchForm = ({ values }) => {
   const [advancedFilter, setAdvancedFilter] = useState(false);
 
   const userSearchTypeDisable = values.searchType === "users";
-  // const { values } = useFormikContext();
-
-  //   const baseURLHelper = () => {
-  //     const { searchType } = values;
-  //     let baseURL = "";
-  //     if (searchType === "books") {
-  //       baseURL = searchBooks;
-  //     } else if (searchType === "issues") {
-  //       baseURL = searchIssues;
-  //     } else if (searchType === "users") {
-  //       baseURL = searchUser;
-  //     }
-
-  //     return baseURL(values);
-  //   };
-
   //   useEffect(() => {
   //     console.log(initQueryStr);
   //   }, [initQueryStr]);
@@ -142,7 +143,8 @@ const SearchForm = ({ values }) => {
 
 const Search = () => {
   const [initQueryStr, setInitQueryStr] = useState({});
-  const [results, setResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [results, setResults] = useState({});
   const [error, setError] = useState(false);
   const location = useLocation();
   const history = useHistory();
@@ -162,11 +164,20 @@ const Search = () => {
     (async () => {
       try {
         const searchType = params.get("search-type") || "issues";
+        const pageNum = params.get("page") || 1;
+
         // search api request and setResults
         const {
-          data: { books, issues, users },
+          data: { type, totalResultCount, currentResultCount, searchResults },
         } = await querySearchType(searchType, window.location.search);
-        setResults(books || issues || users);
+
+        setCurrentPage(pageNum);
+        setResults({
+          type,
+          totalResultCount,
+          currentResultCount,
+          searchResults,
+        });
       } catch (err) {
         setError(true);
       }
@@ -195,6 +206,8 @@ const Search = () => {
       { queryStr: "q" },
       { searchType: "search-type" },
       ...optionalQueries,
+      { limit: "limit" },
+      { page: "page" },
       { sortBy: "sort" },
     ];
 
@@ -240,6 +253,8 @@ const Search = () => {
           status: initQueryStr?.status || "",
           contentRating: initQueryStr?.["content-rating"] || "",
           sortBy: initQueryStr?.sort || "",
+          limit: initQueryStr?.limit || null,
+          page: initQueryStr?.page || null,
           validationSchema: Yup.object({}),
         }}
         onSubmit={onSubmit}
@@ -254,7 +269,11 @@ const Search = () => {
           />
         </div>
       ) : (
-        <SearchResult results={results} />
+        <SearchResult
+          results={results}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       )}
     </div>
   );
