@@ -26,7 +26,48 @@ import "./search.scss";
 
 // }
 
-const SearchResult = ({ results, currentPage, setCurrentPage }) => {
+const SearchResult = ({ setInitQueryStr }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [results, setResults] = useState({});
+  const [error, setError] = useState(false);
+  const location = useLocation();
+  const history = useHistory();
+
+  // on init and when the url changes, iterate over the query params and add it to initQueryStr state
+  useEffect(() => {
+    // access the current query params in the url
+    const params = new URLSearchParams(window.location.search);
+
+    const searchParams = params.entries();
+
+    // add all the query param values from the url to the initQueryStr state object
+    [...searchParams].forEach((row) => {
+      setInitQueryStr((prevState) => ({ ...prevState, [row[0]]: row[1] }));
+    });
+
+    (async () => {
+      try {
+        const searchType = params.get("search-type") || "issues";
+        const pageNum = params.get("page") || 1;
+
+        // search api request and setResults
+        const {
+          data: { type, totalResultCount, currentResultCount, searchResults },
+        } = await querySearchType(searchType, window.location.search);
+
+        setCurrentPage(pageNum);
+        setResults({
+          type,
+          totalResultCount,
+          currentResultCount,
+          searchResults,
+        });
+      } catch (err) {
+        setError(true);
+      }
+    })();
+  }, [location]);
+
   console.log("currentPage", currentPage);
   const setPage = (page) => setCurrentPage(page);
 
@@ -143,46 +184,7 @@ const SearchForm = ({ values }) => {
 
 const Search = () => {
   const [initQueryStr, setInitQueryStr] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [results, setResults] = useState({});
-  const [error, setError] = useState(false);
-  const location = useLocation();
   const history = useHistory();
-
-  // on init and when the url changes, iterate over the query params and add it to initQueryStr state
-  useEffect(() => {
-    // access the current query params in the url
-    const params = new URLSearchParams(window.location.search);
-
-    const searchParams = params.entries();
-
-    // add all the query param values from the url to the initQueryStr state object
-    [...searchParams].forEach((row) => {
-      setInitQueryStr((prevState) => ({ ...prevState, [row[0]]: row[1] }));
-    });
-
-    (async () => {
-      try {
-        const searchType = params.get("search-type") || "issues";
-        const pageNum = params.get("page") || 1;
-
-        // search api request and setResults
-        const {
-          data: { type, totalResultCount, currentResultCount, searchResults },
-        } = await querySearchType(searchType, window.location.search);
-
-        setCurrentPage(pageNum);
-        setResults({
-          type,
-          totalResultCount,
-          currentResultCount,
-          searchResults,
-        });
-      } catch (err) {
-        setError(true);
-      }
-    })();
-  }, [location]);
 
   // useEffect(() => {
   //   console.log("initQueryStr", initQueryStr);
@@ -259,9 +261,15 @@ const Search = () => {
         }}
         onSubmit={onSubmit}
         enableReinitialize
-        component={SearchForm}
-      />
-      {error ? (
+      >
+        {(props) => (
+          <>
+            <SearchForm {...props} />
+            <SearchResult {...props} setInitQueryStr={setInitQueryStr} />
+          </>
+        )}
+      </Formik>
+      {/* {error ? (
         <div className="text-center mt-50">
           <ErrMsg
             errorStatus={error}
@@ -274,7 +282,7 @@ const Search = () => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
-      )}
+      )} */}
     </div>
   );
 };
