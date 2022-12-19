@@ -71,7 +71,14 @@ const SearchResult = ({ setInitQueryStr }) => {
   console.log("currentPage", currentPage);
   const setPage = (page) => setCurrentPage(page);
 
-  return (
+  return error ? (
+    <div className="text-center mt-50">
+      <ErrMsg
+        errorStatus={error}
+        messageText="An Error occurred. Please try again later."
+      />
+    </div>
+  ) : (
     <>
       <div>results</div>
 
@@ -269,20 +276,6 @@ const Search = () => {
           </>
         )}
       </Formik>
-      {/* {error ? (
-        <div className="text-center mt-50">
-          <ErrMsg
-            errorStatus={error}
-            messageText="An Error occurred. Please try again later."
-          />
-        </div>
-      ) : (
-        <SearchResult
-          results={results}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
-      )} */}
     </div>
   );
 };
