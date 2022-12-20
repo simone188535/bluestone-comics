@@ -61,7 +61,7 @@ const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
       />
     </div>
   ) : (
-    <>
+    <section className="filter-section">
       <ListedResults resultsList={results.searchResults} type={results.type} />
       <Pagination
         className="pagination-bar"
@@ -70,7 +70,7 @@ const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
         pageSize={12}
         onPageChange={setPage}
       />
-    </>
+    </section>
   );
 };
 
