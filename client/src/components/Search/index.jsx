@@ -26,6 +26,30 @@ import "./search.scss";
 
 // }
 
+const DetailedBooksIssues = ({ resultsList }) => {
+  const mappedItems = resultsList?.map(
+    ({
+      book_id: bookId,
+      issue_id: IssueId,
+      book_title: bookTitle,
+      issue_title: IssueTitle,
+    }) => (
+      <article key={`detailed-books-issues-${bookId || IssueId}`}>
+        Title: {bookTitle || IssueTitle}
+      </article>
+    )
+  );
+  return mappedItems || null;
+};
+
+const ListedResults = ({ type, resultsList }) => {
+  if (type === "users") {
+    return <article>User Component</article>;
+  }
+
+  return <DetailedBooksIssues resultsList={resultsList} />;
+};
+
 const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
   const setPage = (page) => setCurrentPage(page);
 
@@ -38,8 +62,7 @@ const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
     </div>
   ) : (
     <>
-      <div>results</div>
-
+      <ListedResults resultsList={results.searchResults} type={results.type} />
       <Pagination
         className="pagination-bar"
         currentPage={currentPage}
@@ -97,7 +120,7 @@ const SearchForm = ({ values }) => {
           />
 
           <p className="filter-section-header">
-            Select <strong>genre inclusion/exclusion</strong>:{" "}
+            Select <strong>genres</strong> to <strong>include/exclude</strong>:{" "}
           </p>
           <section className="genre-container filter-section-body">
             <GenreExInclusion disabled={userSearchTypeDisable} />
