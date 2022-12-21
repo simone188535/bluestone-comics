@@ -94,7 +94,10 @@ const ListedResults = ({ type, resultsList }) => {
 };
 
 const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
-  const setPage = (page) => setCurrentPage(page);
+  const setPage = (page) => {
+    // dont forget to update formik state
+    setCurrentPage(page);
+  };
 
   return error ? (
     <div className="text-center mt-50">
@@ -266,7 +269,7 @@ const Search = () => {
   //   console.log("initQueryStr", initQueryStr);
   // }, [initQueryStr]);
 
-  // if currentPage number changes and the url param for page does not equal currentPage AND the current page is not 1 and there is no url param for page then trigger onSubmit. This prevents multiple api calls from happening on init
+  // if currentPage number changes and the url param for page (params.get("page") || 1) does not equal currentPage then trigger onSubmit. This prevents multiple api calls from happening on init
 
   const onSubmit = (values, { setSubmitting }) => {
     let newQueryString = "";
