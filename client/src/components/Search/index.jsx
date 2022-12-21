@@ -26,16 +26,46 @@ import "./search.scss";
 
 // }
 
-const DetailedBooksIssues = ({ resultsList }) => {
+// const DetailedBooks = ({ resultsList }) => {
+//   const mappedItems = resultsList?.map(
+//     ({ book_id: bookId, book_title: bookTitle }) => (
+//       <article key={`detailed-books-issues-${bookId}`}>
+//         Title: {bookTitle}
+//       </article>
+//     )
+//   );
+//   return mappedItems || null;
+// };
+
+// const DetailedIssues = ({ resultsList }) => {
+//   const mappedItems = resultsList?.map(
+//     ({ issue_id: IssueId, issue_title: IssueTitle }) => (
+//       <article key={`detailed-books-issues-${IssueId}`}>
+//         Title: {IssueTitle}
+//       </article>
+//     )
+//   );
+//   return mappedItems || null;
+// };
+
+const DetailedUsers = ({ resultsList }) => {
+  return <article>User Component</article>;
+};
+
+const DetailedBooksIssues = ({ isIssue, resultsList }) => {
   const mappedItems = resultsList?.map(
     ({
       book_id: bookId,
       issue_id: IssueId,
+      cover_photo: coverPhoto,
       book_title: bookTitle,
       issue_title: IssueTitle,
+      description,
     }) => (
-      <article key={`detailed-books-issues-${bookId || IssueId}`}>
-        Title: {bookTitle || IssueTitle}
+      <article key={`detailed-books-issues-${IssueId || bookId}`}>
+        <h2>Title: {IssueTitle || bookTitle}</h2>
+        {isIssue ? <h3>{bookTitle}</h3> : null}
+        <p>{description}</p>
       </article>
     )
   );
@@ -43,11 +73,24 @@ const DetailedBooksIssues = ({ resultsList }) => {
 };
 
 const ListedResults = ({ type, resultsList }) => {
+  // const props = { resultsList };
+
   if (type === "users") {
-    return <article>User Component</article>;
+    return <DetailedUsers resultsList={resultsList} />;
   }
 
-  return <DetailedBooksIssues resultsList={resultsList} />;
+  // if (type === "books") {
+  //   return <DetailedBooks {...props} />;
+  // }
+
+  // return <DetailedIssues {...props} />;
+  // {...{ type, resultsList }}
+  return (
+    <DetailedBooksIssues
+      isIssue={type === "issues"}
+      resultsList={resultsList}
+    />
+  );
 };
 
 const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
@@ -172,7 +215,7 @@ const SearchForm = ({ values }) => {
 
 const Search = () => {
   const [initQueryStr, setInitQueryStr] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [results, setResults] = useState({});
   const [error, setError] = useState(false);
   const history = useHistory();
@@ -222,6 +265,8 @@ const Search = () => {
   // useEffect(() => {
   //   console.log("initQueryStr", initQueryStr);
   // }, [initQueryStr]);
+
+  // if currentPage number changes and the url param for page does not equal currentPage AND the current page is not 1 and there is no url param for page then trigger onSubmit. This prevents multiple api calls from happening on init
 
   const onSubmit = (values, { setSubmitting }) => {
     let newQueryString = "";
