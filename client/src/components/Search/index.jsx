@@ -334,7 +334,7 @@ const Search = () => {
           contentRating: initQueryStr?.["content-rating"] || "",
           sortBy: initQueryStr?.sort || "",
           limit: initQueryStr?.limit || null,
-          page: initQueryStr?.page || null,
+          page: initQueryStr?.page || 0,
           validationSchema: Yup.object({}),
         }}
         onSubmit={onSubmit}
