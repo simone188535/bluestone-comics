@@ -29,10 +29,10 @@ const FilterOptions = ({
 
   return (
     <>
-      <p className="filter-section-header">
+      <p className="search-section-header">
         Select a <strong>{headerText}</strong>:
       </p>
-      <div className="search-type-radio filter-section-body">{wrap}</div>
+      <div className="search-type-radio search-section-body">{wrap}</div>
     </>
   );
 };

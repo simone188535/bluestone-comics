@@ -1,148 +1,141 @@
 @import '../../styles/abstracts/variables.scss';
 
 .search-page {
-    form.search-filter-form {
+    .search-bar-container {
+        display: flex;
+        flex: 1 1 100%;
+        max-width: 700px;
+        width: 90%;
+        margin: 45px auto;
 
-        .search-bar-container {
-            display: flex;
-            flex: 1 1 100%;
-            max-width: 700px;
-            width: 90%;
-            margin: 45px auto;
+        .search-bar {
+            flex: 1 1 auto;
+            padding: 10px;
+        //   border: 1px solid $mid-dark-gray;
+            border: 1px solid $disabled-violet-blue;
+            font-family: $Roboto, $base-font;
 
-            .search-bar {
-                flex: 1 1 auto;
-                padding: 10px;
-            //   border: 1px solid $mid-dark-gray;
-                border: 1px solid $disabled-violet-blue;
-                font-family: $Roboto, $base-font;
-
-                &::placeholder {
-                font-weight: $light;
-                font-family: $Roboto, $base-font;
-                }
-            }
-
-            .search-button-btn {
-                flex: 0 0 50px;
-                border-left: none;
-                color: $pure-white;
-                background-color: $violet-blue;
-                border: none;
-
-                &:hover {
-                background-color: $dark-violet-blue;
-                }
-            }
-        }
-    
-        
-        // .filter-btn {
-        //     margin: 20px 0;
-        //     width: 50%;
-        //     font-size: 1rem;
-        // }
-        
-
-        .search-bar-container, .filter-btn {
-            height: 50px;
-        }
-
-        .filter-section {
-            width: 90%;
-            max-width: 1000px;
-            background-color: $pure-white;
-            margin: 0 auto;
-            padding: 1rem;
-            border: 1px solid $light-grey;
-            border-radius: 10px;
+            &::placeholder {
             font-weight: $light;
-
-            &-header, &-body {
-                margin-bottom: 10px;
+            font-family: $Roboto, $base-font;
             }
+        }
 
-            .radio-btn {
-                margin-right: 5px;
-                &-label {
-                    margin-left: 10px;
-                }
+        .search-button-btn {
+            flex: 0 0 50px;
+            border-left: none;
+            color: $pure-white;
+            background-color: $violet-blue;
+            border: none;
+
+            &:hover {
+            background-color: $dark-violet-blue;
             }
+        }
+    }
 
-            .genre-container {
+    
+    // .filter-btn {
+    //     margin: 20px 0;
+    //     width: 50%;
+    //     font-size: 1rem;
+    // }
+    
+
+    .search-bar-container, .filter-btn {
+        height: 50px;
+    }
+
+    .search-section {
+        width: 90%;
+        max-width: 1000px;
+        background-color: $pure-white;
+        margin: 0 auto;
+        padding: 1rem;
+        border: 1px solid $light-grey;
+        border-radius: 10px;
+        font-weight: $light;
+
+        &-header, &-body {
+            margin-bottom: 10px;
+        }
+
+        .radio-btn {
+            margin-right: 5px;
+            &-label {
+                margin-left: 10px;
+            }
+        }
+
+        .genre-container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 900px;
+            
+            .genre-holder {
+                flex: 1 1 50%;
                 display: flex;
-                flex-wrap: wrap;
-                max-width: 900px;
+                justify-content: center;
                 
-                .genre-holder {
-                    flex: 1 1 50%;
-                    display: flex;
-                    justify-content: center;
-                    
-                    .genre-button {
-                        font-weight: $light;
-                        font-family: $Roboto, $base-font;
-                        background-color: $white-light-grey;
-                        border-radius: 5px;
-                        width: 120px;
-                        height: 35px;
-                        margin: 10px 0px;
-                        border: 1px solid $mid-dark-gray;
-                        // position: relative;
+                .genre-button {
+                    font-weight: $light;
+                    font-family: $Roboto, $base-font;
+                    background-color: $white-light-grey;
+                    border-radius: 5px;
+                    width: 120px;
+                    height: 35px;
+                    margin: 10px 0px;
+                    border: 1px solid $mid-dark-gray;
+                    // position: relative;
 
-                        &.include {
-                            background-color: $tea-green;
-                        }
-
-                        &.exclude {
-                            background-color: $mauvelous;
-                        }
-
-                        // .inclu-exclu-icon {
-                        //     position: absolute;
-                        //     top: 5px;
-                        //     right: 10px;
-                        //     font-size: 10px;
-
-                        // }
+                    &.include {
+                        background-color: $tea-green;
                     }
+
+                    &.exclude {
+                        background-color: $mauvelous;
+                    }
+
+                    // .inclu-exclu-icon {
+                    //     position: absolute;
+                    //     top: 5px;
+                    //     right: 10px;
+                    //     font-size: 10px;
+
+                    // }
                 }
             }
         }
-     }
+
+        &.search-results {
+            margin-top: 1rem;
+        }
+    }
 }
 
 @media only screen and (min-width: $small) {
 
     .search-page {
-        form.search-filter-form {
-
-            .filter-section {
-                width: 80%;
-            }
-            // .filter-btn {
-            //     font-size: .7rem;
-            //     width: 90px;
-            //     margin: 0 0 0 20px;
-            // }
+        .search-section {
+            width: 80%;
         }
-        
-    }     
+        // .filter-btn {
+        //     font-size: .7rem;
+        //     width: 90px;
+        //     margin: 0 0 0 20px;
+        // }
+    }    
 }
 
 @media only screen and (min-width: $medium) {
 
     .search-page {
-        form.search-filter-form {
-
-            .filter-section {
-                .genre-container {
-                    .genre-holder {
-                        flex: 0 0 25%;
-                    }
+        .search-section {
+            .genre-container {
+                .genre-holder {
+                    flex: 0 0 25%;
                 }
             }
         }
-        
-    }     
+    }    
 }

@@ -61,7 +61,7 @@ const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
       />
     </div>
   ) : (
-    <section className="filter-section">
+    <section className="search-section search-results">
       <ListedResults resultsList={results.searchResults} type={results.type} />
       <Pagination
         className="pagination-bar"
@@ -106,7 +106,7 @@ const SearchForm = ({ values }) => {
       >
         Filter
       </button>
-      <section className="filter-section">
+      <section className="search-section">
         <div className="search-type-container">
           <FilterOptions
             fieldName="searchType"
@@ -119,10 +119,10 @@ const SearchForm = ({ values }) => {
             component={RadioBtn}
           />
 
-          <p className="filter-section-header">
+          <p className="search-section-header">
             Select <strong>genres</strong> to <strong>include/exclude</strong>:{" "}
           </p>
-          <section className="genre-container filter-section-body">
+          <section className="genre-container search-section-body">
             <GenreExInclusion disabled={userSearchTypeDisable} />
           </section>
 
@@ -197,7 +197,14 @@ const Search = () => {
 
         // search api request and setResults
         const {
-          data: { type, totalResultCount, currentResultCount, searchResults },
+          data: {
+            type,
+            totalResultCount,
+            currentResultCount,
+            books,
+            issues,
+            users,
+          },
         } = await querySearchType(searchType, window.location.search);
 
         setCurrentPage(pageNum);
@@ -205,7 +212,7 @@ const Search = () => {
           type,
           totalResultCount,
           currentResultCount,
-          searchResults,
+          searchResults: books || issues || users,
         });
       } catch (err) {
         setError(true);
