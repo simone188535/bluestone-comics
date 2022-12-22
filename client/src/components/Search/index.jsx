@@ -54,16 +54,21 @@ const DetailedUsers = ({ resultsList }) => {
 
 const DetailedBooksIssues = ({ isIssue, resultsList }) => {
   const mappedItems = resultsList?.map(
-    ({
-      book_id: bookId,
-      issue_id: IssueId,
-      cover_photo: coverPhoto,
-      book_title: bookTitle,
-      issue_title: IssueTitle,
-      description,
-    }) => (
+    (
+      {
+        book_id: bookId,
+        issue_id: IssueId,
+        cover_photo: coverPhoto,
+        book_title: bookTitle,
+        issue_title: IssueTitle,
+        description,
+      },
+      index
+    ) => (
       <article key={`detailed-books-issues-${IssueId || bookId}`}>
-        <h2>Title: {IssueTitle || bookTitle}</h2>
+        <h2>
+          #{index + 1} Title: {IssueTitle || bookTitle}
+        </h2>
         {isIssue ? <h3>{bookTitle}</h3> : null}
         <p>{description}</p>
       </article>
@@ -93,10 +98,17 @@ const ListedResults = ({ type, resultsList }) => {
   );
 };
 
-const SearchResult = ({ results, error, setFieldValue, values }) => {
-  const setPage = (page) => {
-    // this will also need to trigger a submit
+const SearchResult = ({
+  results,
+  error,
+  setFieldValue,
+  values,
+  submitForm,
+}) => {
+  const setPage = async (page) => {
     setFieldValue("page", page);
+    // this will also need to trigger a submit
+    await submitForm();
   };
 
   return error ? (
@@ -113,7 +125,8 @@ const SearchResult = ({ results, error, setFieldValue, values }) => {
         className="pagination-bar"
         currentPage={values.page}
         totalCount={results.totalResultCount || 0}
-        pageSize={12}
+        // totalCount={161}
+        pageSize={20}
         onPageChange={setPage}
       />
     </section>
