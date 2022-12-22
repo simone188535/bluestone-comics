@@ -93,10 +93,10 @@ const ListedResults = ({ type, resultsList }) => {
   );
 };
 
-const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
+const SearchResult = ({ results, error, setFieldValue, values }) => {
   const setPage = (page) => {
-    // dont forget to update formik state
-    setCurrentPage(page);
+    // this will also need to trigger a submit
+    setFieldValue("page", page);
   };
 
   return error ? (
@@ -111,7 +111,7 @@ const SearchResult = ({ results, error, currentPage, setCurrentPage }) => {
       <ListedResults resultsList={results.searchResults} type={results.type} />
       <Pagination
         className="pagination-bar"
-        currentPage={currentPage}
+        currentPage={values.page}
         totalCount={results.totalResultCount || 0}
         pageSize={12}
         onPageChange={setPage}
@@ -218,7 +218,6 @@ const SearchForm = ({ values }) => {
 
 const Search = () => {
   const [initQueryStr, setInitQueryStr] = useState({});
-  const [currentPage, setCurrentPage] = useState(0);
   const [results, setResults] = useState({});
   const [error, setError] = useState(false);
   const history = useHistory();
@@ -239,7 +238,7 @@ const Search = () => {
     (async () => {
       try {
         const searchType = params.get("search-type") || "issues";
-        const pageNum = params.get("page") || 1;
+        const existingPageNum = params.get("page");
 
         // search api request and setResults
         const {
@@ -253,7 +252,11 @@ const Search = () => {
           },
         } = await querySearchType(searchType, window.location.search);
 
-        setCurrentPage(pageNum);
+        // if there is no page url path, add a page value of 1 to the initial query str
+        if (!existingPageNum) {
+          setInitQueryStr((prevState) => ({ ...prevState, page: 1 }));
+        }
+
         setResults({
           type,
           totalResultCount,
@@ -268,8 +271,6 @@ const Search = () => {
   // useEffect(() => {
   //   console.log("initQueryStr", initQueryStr);
   // }, [initQueryStr]);
-
-  // if currentPage number changes and the url param for page (params.get("page") || 1) does not equal currentPage then trigger onSubmit. This prevents multiple api calls from happening on init
 
   const onSubmit = (values, { setSubmitting }) => {
     let newQueryString = "";
@@ -337,7 +338,7 @@ const Search = () => {
           contentRating: initQueryStr?.["content-rating"] || "",
           sortBy: initQueryStr?.sort || "",
           limit: initQueryStr?.limit || null,
-          page: initQueryStr?.page || 0,
+          page: Number(initQueryStr?.page) || 0,
           validationSchema: Yup.object({}),
         }}
         onSubmit={onSubmit}
@@ -346,13 +347,7 @@ const Search = () => {
         {(props) => (
           <>
             <SearchForm {...props} />
-            <SearchResult
-              {...props}
-              results={results}
-              error={error}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-            />
+            <SearchResult {...props} results={results} error={error} />
           </>
         )}
       </Formik>
