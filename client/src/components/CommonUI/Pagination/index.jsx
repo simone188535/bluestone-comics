@@ -46,12 +46,13 @@ const Pagination = ({
           <div className="arrow left" />
         </button>
       </li>
-      {paginationRange.map((pageNumber) => {
+      {paginationRange.map((pageNumber, index) => {
         // If the pageItem is a DOT, render the DOTS unicode character
         if (pageNumber === DOTS) {
           return (
             <li
-              key={`pagination-dots-${pageNumber}`}
+              // eslint-disable-next-line react/no-array-index-key
+              key={`pagination-dots-${pageNumber}-${index}`}
               className="pagination-item dots"
             >
               &#8230;
