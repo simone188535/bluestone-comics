@@ -51,7 +51,6 @@ const Pagination = ({
         if (pageNumber === DOTS) {
           return (
             <li
-              // eslint-disable-next-line react/no-array-index-key
               key={`pagination-dots-${pageNumber}-${index}`}
               className="pagination-item dots"
             >
