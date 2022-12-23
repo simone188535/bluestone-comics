@@ -125,7 +125,6 @@ const SearchResult = ({
         className="pagination-bar"
         currentPage={values.page}
         totalCount={results.totalResultCount || 0}
-        // totalCount={161}
         pageSize={20}
         onPageChange={setPage}
       />
@@ -286,6 +285,7 @@ const Search = () => {
   // }, [initQueryStr]);
 
   const onSubmit = (values, { setSubmitting }) => {
+    const params = new URLSearchParams(window.location.search);
     let newQueryString = "";
 
     // if the selected searchTypes is not users, add the rest of the optional queries
@@ -299,12 +299,23 @@ const Search = () => {
           ]
         : [{}];
 
+    /* 
+      do not add the page query param to the new URL if the selected search type is different than the current one
+      (This resets the query search to page 1) AND if the current page number DOES NOT 1 (this prevents the &page=1 
+      from appearing in the url).
+    */
+
+    const optionalPageQuery =
+      values.searchType === params.get("search-type") && values.page !== 1
+        ? { page: "page" }
+        : {};
+
     const queryOrderArr = [
       { queryStr: "q" },
       { searchType: "search-type" },
       ...optionalQueries,
       { limit: "limit" },
-      { page: "page" },
+      optionalPageQuery,
       { sortBy: "sort" },
     ];
 
