@@ -24,7 +24,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
   ).filter('books.title ILIKE $ OR books.description ILIKE $');
 
   const { count } = await new QueryPG(pool).find(
-    `COUNT(*)`,
+    `COUNT(DISTINCT books.id)`,
     searchBookFilter.query,
     searchBookFilter.parameterizedValues,
     false
@@ -71,7 +71,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
   ).filter('issues.title ILIKE $ OR issues.description ILIKE $');
 
   const { count } = await new QueryPG(pool).find(
-    `COUNT(*)`,
+    `COUNT(DISTINCT issues.id)`,
     searchIssueFilter.query,
     searchIssueFilter.parameterizedValues,
     false
@@ -121,7 +121,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
   ).filter('users.username ILIKE $');
 
   const { count } = await new QueryPG(pool).find(
-    `COUNT(*)`,
+    `COUNT(users.id)`,
     searchUsersFilter.query,
     searchUsersFilter.parameterizedValues,
     false
