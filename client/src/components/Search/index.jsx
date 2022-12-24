@@ -238,7 +238,7 @@ const Search = () => {
   // on init and when the url changes, iterate over the query params and add it to initQueryStr state
   useEffect(() => {
     // access the current query params in the url
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
 
     const searchParams = params.entries();
 
@@ -262,7 +262,7 @@ const Search = () => {
             issues,
             users,
           },
-        } = await querySearchType(searchType, window.location.search);
+        } = await querySearchType(searchType, location.search);
 
         // if there is no page url path, add a page value of 1 to the initial query str
         if (!existingPageNum) {
@@ -285,7 +285,7 @@ const Search = () => {
   // }, [initQueryStr]);
 
   const onSubmit = (values, { setSubmitting }) => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     let newQueryString = "";
 
     // if the selected searchTypes is not users, add the rest of the optional queries
