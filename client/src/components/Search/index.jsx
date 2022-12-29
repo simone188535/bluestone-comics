@@ -354,6 +354,10 @@ const Search = () => {
     history.push(`/search?${newQueryString}`);
     // start page at the beginning of the search results
     scrollToTop();
+    // close search adv filter if it is open
+    if (advFilterIsOpen) {
+      setAdvFilter();
+    }
     setSubmitting(false);
   };
 
