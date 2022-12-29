@@ -7,6 +7,7 @@ import _ from "lodash";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { querySearchType } from "../../services";
 // import CONSTANTS from "../../utils/Constants";
+import { scrollToTop } from "../../utils/scrollToTop";
 import GenreExInclusion from "./GenreExInclusion";
 import FilterOptions from "./FilterOptions";
 import RadioBtn from "./RadioBtn";
@@ -99,6 +100,7 @@ const ListedResults = ({ type, resultsList }) => {
 };
 
 const SearchResult = ({
+  setAdvFilter,
   results,
   error,
   setFieldValue,
@@ -120,6 +122,13 @@ const SearchResult = ({
     </div>
   ) : (
     <section className="search-section search-results">
+      <button
+        type="button"
+        className="filter-btn bsc-button transparent transparent-blue"
+        onClick={setAdvFilter}
+      >
+        Filter
+      </button>
       <ListedResults resultsList={results.searchResults} type={results.type} />
       <Pagination
         className="pagination-bar"
@@ -132,9 +141,7 @@ const SearchResult = ({
   );
 };
 
-const SearchForm = ({ values }) => {
-  const [advancedFilter, setAdvancedFilter] = useState(false);
-
+const SearchForm = ({ values, advFilterIsOpen }) => {
   const userSearchTypeDisable = values.searchType === "users";
   //   useEffect(() => {
   //     console.log(initQueryStr);
@@ -157,79 +164,76 @@ const SearchForm = ({ values }) => {
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
       </section>
-      <button
-        type="button"
-        className="filter-btn bsc-button transparent transparent-blue"
-        onClick={() => setAdvancedFilter(!advancedFilter)}
-      >
-        Filter
-      </button>
-      <section className="search-section">
-        <div className="search-type-container">
-          <FilterOptions
-            fieldName="searchType"
-            option={[
-              { opt: "Issues", value: "issues" },
-              { opt: "Books", value: "books" },
-              { opt: "Users", value: "users" },
-            ]}
-            headerText="search type"
-            component={RadioBtn}
-          />
+      {advFilterIsOpen && (
+        <section className="search-section">
+          <div className="search-type-container">
+            <FilterOptions
+              fieldName="searchType"
+              option={[
+                { opt: "Issues", value: "issues" },
+                { opt: "Books", value: "books" },
+                { opt: "Users", value: "users" },
+              ]}
+              headerText="search type"
+              component={RadioBtn}
+            />
 
-          <p className="search-section-header">
-            Select <strong>genres</strong> to <strong>include/exclude</strong>:{" "}
-          </p>
-          <section className="genre-container search-section-body">
-            <GenreExInclusion disabled={userSearchTypeDisable} />
-          </section>
+            <p className="search-section-header">
+              Select <strong>genres</strong> to <strong>include/exclude</strong>
+              :{" "}
+            </p>
+            <section className="genre-container search-section-body">
+              <GenreExInclusion disabled={userSearchTypeDisable} />
+            </section>
 
-          <FilterOptions
-            fieldName="status"
-            option={[
-              { opt: "All", value: "" },
-              { opt: "Ongoing", value: "ongoing" },
-              { opt: "Completed", value: "completed" },
-              { opt: "Hiatus", value: "hiatus" },
-            ]}
-            headerText="status"
-            component={RadioBtn}
-            disabled={userSearchTypeDisable}
-          />
+            <FilterOptions
+              fieldName="status"
+              option={[
+                { opt: "All", value: "" },
+                { opt: "Ongoing", value: "ongoing" },
+                { opt: "Completed", value: "completed" },
+                { opt: "Hiatus", value: "hiatus" },
+              ]}
+              headerText="status"
+              component={RadioBtn}
+              disabled={userSearchTypeDisable}
+            />
 
-          <FilterOptions
-            fieldName="contentRating"
-            option={[
-              { opt: "All", value: "" },
-              { opt: "General", value: "G" },
-              { opt: "Teen", value: "T" },
-              { opt: "Mature", value: "M" },
-              { opt: "Explicit", value: "E" },
-            ]}
-            headerText="content rating"
-            component={RadioBtn}
-            disabled={userSearchTypeDisable}
-          />
+            <FilterOptions
+              fieldName="contentRating"
+              option={[
+                { opt: "All", value: "" },
+                { opt: "General", value: "G" },
+                { opt: "Teen", value: "T" },
+                { opt: "Mature", value: "M" },
+                { opt: "Explicit", value: "E" },
+              ]}
+              headerText="content rating"
+              component={RadioBtn}
+              disabled={userSearchTypeDisable}
+            />
 
-          <FilterOptions
-            fieldName="sortBy"
-            option={[
-              { opt: "Select Sort", value: "" },
-              { opt: "Newest to Oldest", value: "ASC" },
-              { opt: "Oldest to Newest", value: "DESC" },
-            ]}
-            headerText="date range"
-            isDropdown
-            component={DropDown}
-          />
-        </div>
-      </section>
+            <FilterOptions
+              fieldName="sortBy"
+              option={[
+                { opt: "Select Sort", value: "" },
+                { opt: "Newest to Oldest", value: "ASC" },
+                { opt: "Oldest to Newest", value: "DESC" },
+              ]}
+              headerText="date range"
+              isDropdown
+              component={DropDown}
+            />
+          </div>
+        </section>
+      )}
     </Form>
   );
 };
 
 const Search = () => {
   const [initQueryStr, setInitQueryStr] = useState({});
+  const [advFilterIsOpen, setAdvFilterIsOpen] = useState(false);
   const [results, setResults] = useState({});
   const [error, setError] = useState(false);
   const history = useHistory();
@@ -283,6 +287,7 @@ const Search = () => {
   // useEffect(() => {
   //   console.log("initQueryStr", initQueryStr);
   // }, [initQueryStr]);
+  const setAdvFilter = () => setAdvFilterIsOpen(!advFilterIsOpen);
 
   const onSubmit = (values, { setSubmitting }) => {
     const params = new URLSearchParams(location.search);
@@ -347,6 +352,8 @@ const Search = () => {
 
     // update url
     history.push(`/search?${newQueryString}`);
+    // start page at the beginning of the search results
+    scrollToTop();
     setSubmitting(false);
   };
 
@@ -370,8 +377,13 @@ const Search = () => {
       >
         {(props) => (
           <>
-            <SearchForm {...props} />
-            <SearchResult {...props} results={results} error={error} />
+            <SearchForm {...props} advFilterIsOpen={advFilterIsOpen} />
+            <SearchResult
+              {...props}
+              results={results}
+              error={error}
+              setAdvFilter={setAdvFilter}
+            />
           </>
         )}
       </Formik>
