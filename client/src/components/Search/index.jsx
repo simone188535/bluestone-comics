@@ -101,6 +101,7 @@ const ListedResults = ({ type, resultsList }) => {
 };
 
 const SearchResult = ({
+  advFilterIsOpen,
   setAdvFilter,
   results,
   error,
@@ -124,6 +125,8 @@ const SearchResult = ({
     return `${start}-${end}`;
   };
 
+  const activeClass = advFilterIsOpen ? "active" : "";
+
   return error ? (
     <div className="text-center mt-50">
       <ErrMsg
@@ -135,15 +138,19 @@ const SearchResult = ({
     <section className="search-section search-results">
       <section className="search-details">
         <div className="result-count">
-          {calcNumItemsPerPage()} of {results.totalResultCount} Total Results
+          <div>
+            <span className="count-num">{calcNumItemsPerPage()}</span> of{" "}
+            <span className="count-num">{results.totalResultCount}</span> Total
+            Results
+          </div>
         </div>
         <div className="result-format">
           <button
             type="button"
-            className="filter-btn bsc-button transparent transparent-blue"
+            className={`filter-btn bsc-button transparent transparent-black not-round ${activeClass}`}
             onClick={setAdvFilter}
           >
-            Filter
+            Advanced Filter
           </button>
         </div>
       </section>
@@ -152,7 +159,7 @@ const SearchResult = ({
         className="pagination-bar"
         currentPage={values.page}
         totalCount={results.totalResultCount || 0}
-        pageSize={20}
+        pageSize={NUM_OF_ITEMS_PER_SEARCH_PAGE}
         onPageChange={setPage}
       />
     </section>
@@ -405,6 +412,7 @@ const Search = () => {
               results={results}
               error={error}
               setAdvFilter={setAdvFilter}
+              advFilterIsOpen={advFilterIsOpen}
             />
           </>
         )}
