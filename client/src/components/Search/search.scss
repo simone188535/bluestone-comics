@@ -109,6 +109,9 @@
 
         &.search-results {
             margin-top: 1rem;
+            .search-details {
+                display: flex;
+            }
         }
     }
 }

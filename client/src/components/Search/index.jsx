@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { querySearchType } from "../../services";
-// import CONSTANTS from "../../utils/Constants";
+import CONSTANTS from "../../utils/Constants";
 import { scrollToTop } from "../../utils/scrollToTop";
 import GenreExInclusion from "./GenreExInclusion";
 import FilterOptions from "./FilterOptions";
@@ -48,6 +48,7 @@ import "./search.scss";
 //   );
 //   return mappedItems || null;
 // };
+const { NUM_OF_ITEMS_PER_SEARCH_PAGE } = CONSTANTS;
 
 const DetailedUsers = ({ resultsList }) => {
   return <article>User Component</article>;
@@ -113,6 +114,16 @@ const SearchResult = ({
     await submitForm();
   };
 
+  // calculate the number of items per page and their index
+  const calcNumItemsPerPage = () => {
+    const start = (values.page - 1) * NUM_OF_ITEMS_PER_SEARCH_PAGE + 1;
+    const end = Math.min(
+      start + NUM_OF_ITEMS_PER_SEARCH_PAGE - 1,
+      results.totalResultCount
+    );
+    return `${start}-${end}`;
+  };
+
   return error ? (
     <div className="text-center mt-50">
       <ErrMsg
@@ -122,13 +133,20 @@ const SearchResult = ({
     </div>
   ) : (
     <section className="search-section search-results">
-      <button
-        type="button"
-        className="filter-btn bsc-button transparent transparent-blue"
-        onClick={setAdvFilter}
-      >
-        Filter
-      </button>
+      <section className="search-details">
+        <div className="result-count">
+          {calcNumItemsPerPage()} of {results.totalResultCount} Total Results
+        </div>
+        <div className="result-format">
+          <button
+            type="button"
+            className="filter-btn bsc-button transparent transparent-blue"
+            onClick={setAdvFilter}
+          >
+            Filter
+          </button>
+        </div>
+      </section>
       <ListedResults resultsList={results.searchResults} type={results.type} />
       <Pagination
         className="pagination-bar"
