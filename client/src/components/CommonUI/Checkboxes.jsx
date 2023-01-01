@@ -27,8 +27,9 @@ function DisplaySingleOrMultipleCheckboxes({
           value={currCheckboxValue.value}
           checked={checkVal?.includes(currCheckboxValue.value)}
           disabled={currCheckboxValue.disabled}
+          className="checkbox-input"
         />
-        <span>{currCheckboxValue.name}</span>
+        <span className="checkbox-name">{currCheckboxValue.name}</span>
       </label>
     </AddWrapperElement>
   );
