@@ -18,8 +18,8 @@ const Pagination = ({
     pageSize,
   });
 
-  // If there are less than 2 times in pagination range we shall not render the component
-  if (currentPage === 0 || paginationRange.length < 2) {
+  // If the currentPage is 0 we shall not render the component
+  if (currentPage === 0) {
     return null;
   }
 
