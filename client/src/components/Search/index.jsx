@@ -254,7 +254,6 @@ const SearchForm = ({ values, setAdvFilter, advFilterIsOpen }) => {
                 type="multiple"
                 className="form-btn-label"
                 checkboxValue={[
-                  { name: "All", value: "", disabled: userSearchTypeDisable },
                   {
                     name: "General",
                     value: "G",
@@ -438,7 +437,7 @@ const Search = () => {
           genreInclude: initQueryStr?.include?.split(",") || [],
           genreExclude: initQueryStr?.exclude?.split(",") || [],
           status: initQueryStr?.status || "",
-          contentRating: initQueryStr?.["content-rating"]?.split(",") || [""],
+          contentRating: initQueryStr?.["content-rating"]?.split(",") || [],
           sortBy: initQueryStr?.sort || "",
           limit: initQueryStr?.limit || null,
           page: Number(initQueryStr?.page) || 0,
