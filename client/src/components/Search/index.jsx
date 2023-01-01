@@ -4,7 +4,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { querySearchType } from "../../services";
 import CONSTANTS from "../../utils/Constants";
 import { scrollToTop } from "../../utils/scrollToTop";
@@ -166,7 +166,7 @@ const SearchResult = ({
   );
 };
 
-const SearchForm = ({ values, advFilterIsOpen }) => {
+const SearchForm = ({ values, setAdvFilter, advFilterIsOpen }) => {
   const userSearchTypeDisable = values.searchType === "users";
   //   useEffect(() => {
   //     console.log(initQueryStr);
@@ -191,6 +191,13 @@ const SearchForm = ({ values, advFilterIsOpen }) => {
       </section>
       {advFilterIsOpen && (
         <section className="search-section">
+          <button
+            type="button"
+            onClick={setAdvFilter}
+            className="bsc-button close-btn search-filter-close"
+          >
+            <FontAwesomeIcon icon={faTimes} size="lg" />
+          </button>
           <div className="search-type-container">
             <FilterOptions
               fieldName="searchType"
@@ -412,7 +419,11 @@ const Search = () => {
       >
         {(props) => (
           <>
-            <SearchForm {...props} advFilterIsOpen={advFilterIsOpen} />
+            <SearchForm
+              {...props}
+              setAdvFilter={setAdvFilter}
+              advFilterIsOpen={advFilterIsOpen}
+            />
             <SearchResult
               {...props}
               results={results}

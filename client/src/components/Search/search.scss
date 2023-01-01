@@ -56,9 +56,15 @@
         border: 1px solid $light-grey;
         border-radius: 10px;
         font-weight: $light;
+        position: relative;
 
         &-header, &-body {
             margin-bottom: 10px;
+        }
+
+        .search-filter-close {
+            position: absolute;
+            right: 20px;
         }
 
         .radio-btn {

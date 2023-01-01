@@ -90,6 +90,17 @@
         }
     }
 
+    &.close-btn {
+        color: $error-red;
+        padding: 0;
+        background-color: transparent;
+
+        &:hover,
+        &.active {
+            color: $dark-red;
+        }
+    }
+
     &.not-round {
         border-radius: 0;
     }
