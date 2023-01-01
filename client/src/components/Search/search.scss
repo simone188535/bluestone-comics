@@ -67,11 +67,12 @@
             right: 20px;
         }
 
-        .radio-btn {
+        .form-btn, .checkbox-input {
             margin-right: 5px;
-            &-label {
-                margin-left: 10px;
-            }
+        }
+
+        .form-btn-label, .checkbox-item {
+            margin-left: 10px;
         }
 
         .genre-container {

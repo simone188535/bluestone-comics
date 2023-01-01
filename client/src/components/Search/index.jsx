@@ -14,6 +14,7 @@ import RadioBtn from "./RadioBtn";
 import DropDown from "./DropDown";
 import Pagination from "../CommonUI/Pagination";
 import ErrMsg from "../CommonUI/ErrorMessage";
+import Checkboxes from "../CommonUI/Checkboxes";
 import "./search.scss";
 
 // const INCLUSION_TYPES = ["NEUTRAL", "INCLUSION", "EXCLUSION"];
@@ -231,7 +232,7 @@ const SearchForm = ({ values, setAdvFilter, advFilterIsOpen }) => {
               disabled={userSearchTypeDisable}
             />
 
-            <FilterOptions
+            {/* <FilterOptions
               fieldName="contentRating"
               option={[
                 { opt: "All", value: "" },
@@ -243,7 +244,36 @@ const SearchForm = ({ values, setAdvFilter, advFilterIsOpen }) => {
               headerText="content rating"
               component={RadioBtn}
               disabled={userSearchTypeDisable}
-            />
+            /> */}
+            <p className="search-section-header">
+              Select a <strong>content rating</strong>:{" "}
+            </p>
+            <div className="search-section-body">
+              <Checkboxes
+                identifier="contentRating"
+                type="multiple"
+                className="form-btn-label"
+                checkboxValue={[
+                  { name: "All", value: "", disabled: userSearchTypeDisable },
+                  {
+                    name: "General",
+                    value: "G",
+                    disabled: userSearchTypeDisable,
+                  },
+                  { name: "Teen", value: "T", disabled: userSearchTypeDisable },
+                  {
+                    name: "Mature",
+                    value: "M",
+                    disabled: userSearchTypeDisable,
+                  },
+                  {
+                    name: "Explicit",
+                    value: "E",
+                    disabled: userSearchTypeDisable,
+                  },
+                ]}
+              />
+            </div>
 
             <FilterOptions
               fieldName="sortBy"
@@ -408,7 +438,7 @@ const Search = () => {
           genreInclude: initQueryStr?.include?.split(",") || [],
           genreExclude: initQueryStr?.exclude?.split(",") || [],
           status: initQueryStr?.status || "",
-          contentRating: initQueryStr?.["content-rating"] || "",
+          contentRating: initQueryStr?.["content-rating"]?.split(",") || [""],
           sortBy: initQueryStr?.sort || "",
           limit: initQueryStr?.limit || null,
           page: Number(initQueryStr?.page) || 0,
