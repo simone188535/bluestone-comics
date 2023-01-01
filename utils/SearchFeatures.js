@@ -40,28 +40,32 @@ class SearchFeatures {
 
     if (status) {
       // if the where clause is not empty, add an AND clause to the beginning of the string
-      this.appendClauseAndDataInsert('AND', `status`, status);
+      this.appendClauseAndDataInsert(`status`, status);
     }
 
     if (contentRating) {
-      this.appendClauseAndDataInsert('AND', `content_rating`, contentRating);
+      this.multiValQStrAppend('books.content_rating', contentRating, 'IN');
     }
+    // // If no content Rating is provided, by default search all content ratings except E if books or issues
+    // else if (this.filterString.includes('books')) {
+    //   this.multiValQStrAppend('books.content_rating', 'T', 'IN');
+    // }
 
     if (username) {
-      this.appendClauseAndDataInsert('AND', `username`, username);
+      this.appendClauseAndDataInsert(`username`, username);
     }
 
     // By default, only the works of users who have active accounts are shown
     if (!allowDeactivatedUserResults) {
-      this.appendClauseAndDataInsert('AND', `users.active`, true);
+      this.appendClauseAndDataInsert(`users.active`, true);
     }
 
     if (include) {
-      this.multiValQStrAppend(include, 'IN');
+      this.multiValQStrAppend('genres.genre', include, 'IN');
     }
 
     if (exclude) {
-      this.multiValQStrAppend(exclude, 'NOT IN');
+      this.multiValQStrAppend('genres.genre', exclude, 'NOT IN');
     }
 
     // if this.filterString string is populated, add WHERE in the beginning of the string
@@ -139,7 +143,7 @@ class SearchFeatures {
     // return stringToCheck !== '' ? pgKeywordToAppend : '';
   }
 
-  appendClauseAndDataInsert(pgKeyword, column, paramVal) {
+  appendClauseAndDataInsert(column, paramVal, pgKeyword = 'AND') {
     // this method not only appends AND or OR to the filtered string, but it also adds and compares the column to paramVal and inserts the data into the parameterizedValues array
     this.appendAndOrClause(
       pgKeyword,
@@ -149,7 +153,7 @@ class SearchFeatures {
     this.appendToParameterizedValues(paramVal);
   }
 
-  multiValQStrAppend(strMultiVal, inClause) {
+  multiValQStrAppend(columnName, strMultiVal, inClause, pgKeyword = 'AND') {
     /*
       this method iterates over a query str with multiple values ie action,adventure appends to the query str
       by separating the string it an array and mapping over them
@@ -162,8 +166,8 @@ class SearchFeatures {
     });
 
     this.appendAndOrClause(
-      'AND',
-      `genres.genre ${inClause} (${params.join(',')})`
+      pgKeyword,
+      `${columnName} ${inClause} (${params.join(',')})`
     );
   }
 }

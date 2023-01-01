@@ -44,6 +44,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.status, 
     books.last_updated, 
     books.date_created,
+    books.content_rating,
     array(SELECT genre from genres WHERE genres.book_id = books.id) as genres
    `,
     searchBook.query,
@@ -93,6 +94,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     books.id AS book_id,
     books.title AS book_title,
     books.url_slug,
+    books.content_rating,
     array(SELECT genre from genres WHERE genres.book_id = books.id) as genres
     `,
     searchIssue.query,
