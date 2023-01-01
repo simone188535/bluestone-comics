@@ -156,13 +156,15 @@ const SearchResult = ({
         </div>
       </section>
       <ListedResults resultsList={results.searchResults} type={results.type} />
-      <Pagination
-        className="pagination-bar"
-        currentPage={values.page}
-        totalCount={results.totalResultCount}
-        pageSize={NUM_OF_ITEMS_PER_SEARCH_PAGE}
-        onPageChange={setPage}
-      />
+      {results.totalResultCount && (
+        <Pagination
+          className="pagination-bar"
+          currentPage={values.page}
+          totalCount={results.totalResultCount}
+          pageSize={NUM_OF_ITEMS_PER_SEARCH_PAGE}
+          onPageChange={setPage}
+        />
+      )}
     </section>
   );
 };

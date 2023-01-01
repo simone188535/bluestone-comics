@@ -14,7 +14,7 @@ class SearchFeatures {
     const {
       q,
       status,
-      contentRating,
+      'content-rating': contentRating,
       username,
       include,
       exclude,
