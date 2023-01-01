@@ -250,6 +250,12 @@ const SearchForm = ({ values, advFilterIsOpen }) => {
               component={DropDown}
             />
           </div>
+          <button
+            type="submit"
+            className="search-filter-btn bsc-button transparent transparent-blue not-round"
+          >
+            Search
+          </button>
         </section>
       )}
     </Form>
