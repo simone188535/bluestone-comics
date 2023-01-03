@@ -28,6 +28,37 @@ const {
   },
 } = CONSTANTS;
 
+const BookUploadForm = ({
+  modalIsOpen,
+  toggleModal,
+  errorMessage,
+  uploadPercentage,
+}) => {
+  return (
+    <Form
+      className="bsc-form upload-form"
+      encType="multipart/form-data"
+      method="post"
+    >
+      <h1 className="form-header-text">
+        Upload a <strong>New Book</strong> along with its{" "}
+        <strong>First Issue</strong>
+      </h1>
+      <BookUpload />
+      <IssueUpload />
+      <SubmissionProgressModal
+        modalIsOpen={modalIsOpen}
+        toggleModal={toggleModal}
+        errorMessage={errorMessage}
+        uploadPercentage={uploadPercentage}
+      />
+      <button type="submit" className="form-submit form-item">
+        Submit
+      </button>
+    </Form>
+  );
+};
+
 const Upload = () => {
   // redirect after completed
   const history = useHistory();
@@ -202,30 +233,17 @@ const Upload = () => {
           })}
           enableReinitialize
           onSubmit={onSubmit}
-          component={() => (
-            <Form
-              className="bsc-form upload-form"
-              encType="multipart/form-data"
-              method="post"
-            >
-              <h1 className="form-header-text">
-                Upload a <strong>New Book</strong> along with its{" "}
-                <strong>First Issue</strong>
-              </h1>
-              <BookUpload />
-              <IssueUpload />
-              <SubmissionProgressModal
-                modalIsOpen={modalIsOpen}
-                toggleModal={toggleModal}
-                errorMessage={errorMessage}
-                uploadPercentage={uploadPercentage}
-              />
-              <button type="submit" className="form-submit form-item">
-                Submit
-              </button>
-            </Form>
+        >
+          {(props) => (
+            <BookUploadForm
+              {...props}
+              modalIsOpen={modalIsOpen}
+              toggleModal={toggleModal}
+              errorMessage={errorMessage}
+              uploadPercentage={uploadPercentage}
+            />
           )}
-        />
+        </Formik>
       </div>
     </div>
   );
