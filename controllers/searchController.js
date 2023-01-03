@@ -119,7 +119,8 @@ exports.searchUsers = catchAsync(async (req, res) => {
   const searchUsersFilter = new SearchFeatures(
     parameterizedQuery,
     req.query,
-    []
+    [],
+    false
   ).filter('users.username ILIKE $');
 
   const { count } = await new QueryPG(pool).find(

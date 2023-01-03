@@ -1,10 +1,11 @@
 class SearchFeatures {
-  constructor(query, queryString, parameterizedValues = []) {
+  constructor(query, queryString, parameterizedValues = [], bookSearch = true) {
     // these are the query values passed in from node AKA req.query
     this.query = query;
     this.queryString = queryString;
     this.filterString = '';
     this.parameterizedValues = parameterizedValues;
+    this.bookSearch = bookSearch;
 
     this.parameterizedIndex = 0;
   }
@@ -46,10 +47,10 @@ class SearchFeatures {
     if (contentRating) {
       this.multiValQStrAppend('books.content_rating', contentRating, 'IN');
     }
-    // // If no content Rating is provided, by default search all content ratings except E if books or issues
-    // else if (this.filterString.includes('books')) {
-    //   this.multiValQStrAppend('books.content_rating', 'T', 'IN');
-    // }
+    // If no content Rating is provided, by default search all content ratings except E if books or issues
+    else if (this.bookSearch) {
+      this.multiValQStrAppend('books.content_rating', 'E', 'NOT IN');
+    }
 
     if (username) {
       this.appendClauseAndDataInsert(`username`, username);
@@ -87,12 +88,12 @@ class SearchFeatures {
     switch (this.queryString.sort) {
       case 'desc':
         sort = 'date_created';
-        ascOrDesc = 'DESC';
+        ascOrDesc = 'ASC';
         break;
       default:
         // by default, sort by newest/most recently added case
         sort = 'date_created';
-        ascOrDesc = 'ASC';
+        ascOrDesc = 'DESC';
     }
 
     this.query = `${this.query} ORDER BY ${tableColumnPrefix}.${sort} ${ascOrDesc}`;
