@@ -37,6 +37,7 @@
     "jsx-a11y/label-has-associated-control": "off",
     "no-unused-vars": "warn",
     "react/no-array-index-key": "warn",
+    "react/jsx-wrap-multilines": ["error", { "prop": false}],
 
     // reenable (to reenable them, remove them) the rules below this line during the version 2 typescript rewrite
     "react/function-component-definition": "off"
