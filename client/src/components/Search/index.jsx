@@ -148,7 +148,7 @@ const SearchResult = ({
         <div className="result-format">
           <button
             type="button"
-            className={`filter-btn bsc-button transparent transparent-black not-round ${activeClass}`}
+            className={`filter-btn bsc-button transparent transparent-blue not-round ${activeClass}`}
             onClick={setAdvFilter}
           >
             Advanced Filter
