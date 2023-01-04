@@ -373,25 +373,49 @@ const Search = () => {
           ]
         : [{}];
 
-    /* 
-      do not add the page query param to the new URL if the selected search type is different than the current one
-      (This resets the query search to page 1) AND if the current page number DOES NOT 1 (this prevents the &page=1 
-      from appearing in the url).
-    */
-
-    const optionalPageQuery =
-      values.searchType === params.get("search-type") && values.page !== 1
-        ? { page: "page" }
-        : {};
-
     const queryOrderArr = [
       { queryStr: "q" },
       { searchType: "search-type" },
       ...optionalQueries,
       { limit: "limit" },
-      optionalPageQuery,
       { sortBy: "sort" },
     ];
+
+    /*
+      if any of the values in formik state are different than the values in the url path,
+      the page object should not be added to the query string
+    */
+    const formikValsHaveChanged = queryOrderArr.some((obj) => {
+      const objKey = Object.keys(obj);
+      const indexedFormikVal = values[objKey];
+      const urlVal = params.get(Object.values(obj)) || null;
+      /*
+         on initial search, when the searchType url path is null, The searchType object will always be different from the index url path because
+         it will have a default value of "issues", this condition prevents formikValsHaveChanged from returning true
+         in that use case
+      */
+      if (objKey[0] === "searchType" && !urlVal) return false;
+
+      /* 
+        if value is an array, turn it in to a string separated by commas (because that is the format for arrays 
+        in the url) else simply return the formik val
+      */
+      const formikValFormatted = Array.isArray(indexedFormikVal)
+        ? indexedFormikVal.join(",")
+        : indexedFormikVal;
+
+      const formikVal = formikValFormatted || null;
+      return formikVal !== urlVal;
+    });
+
+    /* 
+      do not add the page query param to the new URL if the selected formik values have changed
+      (Not adding it will this resets the query search to page 1) AND if the current page number 
+      DOES NOT equal 1 (this prevents the &page=1 from appearing in the url).
+    */
+    if (!formikValsHaveChanged && values.page !== 1) {
+      queryOrderArr.push({ page: "page" });
+    }
 
     // reset initial state for incoming data
     setInitQueryStr({});
