@@ -12,9 +12,10 @@ class QueryPGFeature {
     selectScope,
     tableInfo,
     preparedStatment = null,
-    returnMultipleRows = false
+    returnMultipleRows = false,
+    cte = ''
   ) {
-    const selectQuery = `SELECT ${selectScope} FROM ${tableInfo} `;
+    const selectQuery = `${cte} SELECT ${selectScope} FROM ${tableInfo} `;
 
     try {
       const { rows } = await this.queryInstance.query(
