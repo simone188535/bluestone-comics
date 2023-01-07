@@ -7,7 +7,7 @@ const SearchFeatures = require('../utils/SearchFeatures');
 
 // TODO: may implement this in our pagination later: https://ivopereira.net/efficient-pagination-dont-use-offset-limit , https://medium.com/swlh/how-to-implement-cursor-pagination-like-a-pro-513140b65f32
 exports.searchBooks = catchAsync(async (req, res, next) => {
-  const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id) INNER JOIN genres ON (books.id = genres.book_id)`;
+  const parameterizedQuery = `books INNER JOIN users ON (users.id = books.publisher_id) INNER JOIN workGenres ON (workGenres.genre_book_id = books.id)`;
 
   // const searchBookFilter = new SearchFeatures(
   //   parameterizedQuery,
@@ -27,13 +27,14 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     `COUNT(DISTINCT books.id)`,
     searchBookFilter.query,
     searchBookFilter.parameterizedValues,
-    false
+    false,
+    `WITH workGenres AS (SELECT genres.book_id AS genre_book_id, array_agg(genres.genre)::text[] AS genre_array FROM genres GROUP BY genre_book_id ORDER BY genre_book_id)`
   );
 
   const searchBook = searchBookFilter.sort('books').paginate(20);
 
   const books = await new QueryPG(pool).find(
-    `DISTINCT users.id AS user_id,
+    `users.id AS user_id,
     users.username,
     users.user_photo,
     books.id AS book_id,
@@ -45,11 +46,12 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.last_updated, 
     books.date_created,
     books.content_rating,
-    array(SELECT genre from genres WHERE genres.book_id = books.id) as genres
+    workGenres.genre_array
    `,
     searchBook.query,
     searchBook.parameterizedValues,
-    true
+    true,
+    `WITH workGenres AS (SELECT genres.book_id AS genre_book_id, array_agg(genres.genre)::text[] AS genre_array FROM genres GROUP BY genre_book_id ORDER BY genre_book_id)`
   );
 
   // Send Response
