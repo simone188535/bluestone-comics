@@ -63,7 +63,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
 });
 
 exports.searchIssues = catchAsync(async (req, res) => {
-  const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id) INNER JOIN genres ON (books.id = genres.book_id)`;
+  const parameterizedQuery = `issues INNER JOIN users ON (users.id = issues.publisher_id) INNER JOIN books ON (books.id = issues.book_id) INNER JOIN workGenres ON (workGenres.genre_book_id = books.id)`;
 
   const searchIssueFilter = new SearchFeatures(
     parameterizedQuery,
@@ -75,13 +75,14 @@ exports.searchIssues = catchAsync(async (req, res) => {
     `COUNT(DISTINCT issues.id)`,
     searchIssueFilter.query,
     searchIssueFilter.parameterizedValues,
-    false
+    false,
+    `WITH workGenres AS (SELECT genres.book_id AS genre_book_id, array_agg(genres.genre)::text[] AS genre_array FROM genres GROUP BY genre_book_id ORDER BY genre_book_id)`
   );
 
   const searchIssue = searchIssueFilter.sort('issues').paginate(20);
 
   const issues = await new QueryPG(pool).find(
-    `DISTINCT users.id AS user_id,
+    `users.id AS user_id,
     users.username,
     users.email,
     users.user_photo,
@@ -95,11 +96,12 @@ exports.searchIssues = catchAsync(async (req, res) => {
     books.title AS book_title,
     books.url_slug,
     books.content_rating,
-    array(SELECT genre from genres WHERE genres.book_id = books.id) as genres
+    workGenres.genre_array
     `,
     searchIssue.query,
     searchIssue.parameterizedValues,
-    true
+    true,
+    `WITH workGenres AS (SELECT genres.book_id AS genre_book_id, array_agg(genres.genre)::text[] AS genre_array FROM genres GROUP BY genre_book_id ORDER BY genre_book_id)`
   );
 
   // Send Response
