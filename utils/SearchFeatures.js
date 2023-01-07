@@ -1,3 +1,5 @@
+const { joinHelper } = require('./SearchFeaturesHelpers');
+
 class SearchFeatures {
   constructor(query, queryString, parameterizedValues = [], bookSearch = true) {
     // these are the query values passed in from node AKA req.query
@@ -62,11 +64,21 @@ class SearchFeatures {
     }
 
     if (include) {
-      this.multiValQStrAppend('genres.genre', include, 'IN');
+      // if any of the array elements exists in workGenres.genre_array, include it
+      const arrVal = this.calcDynamicArrFromMultiVal(include);
+      this.appendAndOrClause(
+        'AND',
+        `ARRAY[${joinHelper(arrVal)}] && workGenres.genre_array = TRUE`
+      );
     }
 
     if (exclude) {
-      this.multiValQStrAppend('genres.genre', exclude, 'NOT IN');
+      // if any of the array elements exists in workGenres.genre_array, exclude it
+      const arrVal = this.calcDynamicArrFromMultiVal(exclude);
+      this.appendAndOrClause(
+        'AND',
+        `ARRAY[${joinHelper(arrVal)}] && workGenres.genre_array = FALSE`
+      );
     }
 
     // if this.filterString string is populated, add WHERE in the beginning of the string
@@ -154,11 +166,12 @@ class SearchFeatures {
     this.appendToParameterizedValues(paramVal);
   }
 
-  multiValQStrAppend(columnName, strMultiVal, inClause, pgKeyword = 'AND') {
+  calcDynamicArrFromMultiVal(strMultiVal) {
     /*
       this method iterates over a query str with multiple values ie action,adventure appends to the query str
       by separating the string it an array and mapping over them
      */
+
     const params = [];
 
     strMultiVal.split(',').forEach((val) => {
@@ -166,9 +179,19 @@ class SearchFeatures {
       this.appendToParameterizedValues(val);
     });
 
+    return params;
+  }
+
+  multiValQStrAppend(columnName, strMultiVal, inClause, pgKeyword = 'AND') {
+    /*
+      this method iterates over a query str with multiple values ie action,adventure appends to the query str
+      by separating the string it an array and mapping over them
+     */
+    const params = this.calcDynamicArrFromMultiVal(strMultiVal);
+
     this.appendAndOrClause(
       pgKeyword,
-      `${columnName} ${inClause} (${params.join(',')})`
+      `${columnName} ${inClause} (${joinHelper(params)})`
     );
   }
 }
