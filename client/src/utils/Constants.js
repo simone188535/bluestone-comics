@@ -2,8 +2,8 @@
 const CONSTANTS = {
   IMAGE_UPLOAD_DIMENSIONS: {
     THUMBNAIL: {
-      WIDTH: 690,
-      HEIGHT: 1061,
+      WIDTH: 320,
+      HEIGHT: 485,
       MAX_FILE_SIZE: 1048576, // 1MB
       MAX_FILE_SIZE_IN_BYTES: "1MB",
     },
