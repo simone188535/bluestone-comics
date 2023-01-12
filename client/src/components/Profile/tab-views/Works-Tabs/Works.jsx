@@ -202,6 +202,11 @@ const Works = ({ profilePageUser }) => {
   // TODO: This can be made a constant
   const buttonValues = ["Books", "Issues", "Accredited"];
   const { username, id } = profilePageUser;
+  const searchOptions = {
+    username,
+    limit: 0,
+    "content-rating": "all",
+  };
 
   const [activeButton, setActiveButton] = useState(0);
   const [filterType, setFilterType] = useState(buttonValues[0]);
@@ -218,8 +223,7 @@ const Works = ({ profilePageUser }) => {
           setLoadingStatus(true);
 
           const booksByProfileUser = await searchBooks({
-            username,
-            limit: 0,
+            ...searchOptions,
           });
 
           const { books } = booksByProfileUser.data;
@@ -232,8 +236,7 @@ const Works = ({ profilePageUser }) => {
           setLoadingStatus(true);
 
           const issuesByProfileUser = await searchIssues({
-            username,
-            limit: 0,
+            ...searchOptions,
           });
 
           const { issues } = issuesByProfileUser.data;
