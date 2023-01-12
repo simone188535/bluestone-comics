@@ -161,27 +161,23 @@ const BooksOrIssues = ({
   });
 
   return (
-    <>
-      {
-        // if the user has no results in the section, return this message, else return filtered results and pagination
-        filteredResults.length === 0 ? (
-          <p className="description">No works to display yet.</p>
-        ) : (
-          <>
-            <div className="filtered-results">
-              <ul className="display-work-grid col-4">{searchResults}</ul>
-            </div>
-            <Pagination
-              className="pagination-bar"
-              currentPage={currentPage}
-              totalCount={filteredResults.length}
-              pageSize={PAGINATION_LIMIT}
-              onPageChange={setPage}
-            />
-          </>
-        )
-      }
-    </>
+    // if the user has no results in the section, return this message, else return filtered results and pagination
+    filteredResults.length === 0 ? (
+      <p className="description">No works to display yet.</p>
+    ) : (
+      <>
+        <div className="filtered-results">
+          <ul className="display-work-grid col-4">{searchResults}</ul>
+        </div>
+        <Pagination
+          className="pagination-bar"
+          currentPage={currentPage}
+          totalCount={filteredResults.length}
+          pageSize={PAGINATION_LIMIT}
+          onPageChange={setPage}
+        />
+      </>
+    )
   );
 };
 
@@ -223,7 +219,7 @@ const Works = ({ profilePageUser }) => {
 
           const booksByProfileUser = await searchBooks({
             username,
-            sort: "desc",
+            limit: 0,
           });
 
           const { books } = booksByProfileUser.data;
@@ -237,7 +233,7 @@ const Works = ({ profilePageUser }) => {
 
           const issuesByProfileUser = await searchIssues({
             username,
-            sort: "desc",
+            limit: 0,
           });
 
           const { issues } = issuesByProfileUser.data;
@@ -358,12 +354,10 @@ const Works = ({ profilePageUser }) => {
   };
 
   return (
-    <>
-      <div className="works-tab">
-        <div className="works-tab-tri-buttons-container">{filterButtons}</div>
-        {statusOfDataRetrieval()}
-      </div>
-    </>
+    <div className="works-tab">
+      <div className="works-tab-tri-buttons-container">{filterButtons}</div>
+      {statusOfDataRetrieval()}
+    </div>
   );
 };
 
