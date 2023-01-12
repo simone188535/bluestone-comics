@@ -47,7 +47,10 @@ class SearchFeatures {
     }
 
     if (contentRating) {
-      this.multiValQStrAppend('books.content_rating', contentRating, 'IN');
+      const contentRatingVal =
+        contentRating === 'all' ? 'G,T,M,E' : contentRating;
+
+      this.multiValQStrAppend('books.content_rating', contentRatingVal, 'IN');
     }
     // If no content Rating is provided, by default search all content ratings except E if books or issues
     else if (this.bookSearch) {
