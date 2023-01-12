@@ -57,23 +57,30 @@ const DetailedUsers = ({ resultsList }) => {
 
 const DetailedBooksIssues = ({ isIssue, resultsList }) => {
   const mappedItems = resultsList?.map(
-    (
-      {
-        book_id: bookId,
-        issue_id: IssueId,
-        cover_photo: coverPhoto,
-        book_title: bookTitle,
-        issue_title: IssueTitle,
-        description,
-      },
-      index
-    ) => (
-      <article key={`detailed-books-issues-${IssueId || bookId}`}>
-        <h2>
-          #{index + 1} Title: {IssueTitle || bookTitle}
-        </h2>
-        {isIssue ? <h3>{bookTitle}</h3> : null}
-        <p>{description}</p>
+    ({
+      book_id: bookId,
+      issue_id: IssueId,
+      cover_photo: coverPhoto,
+      book_title: bookTitle,
+      issue_title: IssueTitle,
+      description,
+    }) => (
+      <article
+        className="search-result"
+        key={`detailed-books-issues-${IssueId || bookId}`}
+      >
+        <section className="work-thumbnail">
+          <img
+            className="work-thumbnail-img"
+            src={coverPhoto}
+            alt={`${IssueTitle || bookTitle}-thumbnail`}
+          />
+        </section>
+        <section className="work-details">
+          <h2 className="title">{IssueTitle || bookTitle}</h2>
+          {isIssue ? <h3 className="sub-title">{bookTitle}</h3> : null}
+          <p className="work-desc">{description}</p>
+        </section>
       </article>
     )
   );

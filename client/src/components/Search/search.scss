@@ -149,15 +149,51 @@
             display: block;
             margin: 2rem auto 0;
         }
+
+        .search-result {
+            display: flex;
+            
+            .work-thumbnail {
+                &-img {
+                display: block;
+                width: 200px;
+                height: 300px;
+                }
+            }
+
+            .work-details {
+                margin-left: 1.2rem;
+                line-height: 1.5;
+                letter-spacing: 1px;
+                word-break: break-word;
+
+                .title, .sub-title {
+                    font-size: 1rem;
+                    margin-bottom: .2rem;
+                }
+
+                .title {
+                    font-weight: $normal;
+                }
+
+                .sub-title {
+                    font-weight: $light;
+                }
+
+                .work-desc {
+                    margin-top: .6rem;
+                }
+            }
+        }
     }
 }
 
 @media only screen and (min-width: $small) {
 
     .search-page {
-        .search-section {
-            width: 80%;
-        }
+        // .search-section {
+        //     width: 80%;
+        // }
         // .filter-btn {
         //     font-size: .7rem;
         //     width: 90px;
@@ -170,6 +206,7 @@
 
     .search-page {
         .search-section {
+            width: 80%;
             padding: 1rem 2rem;
             .filter-btn {
                 width: auto;
