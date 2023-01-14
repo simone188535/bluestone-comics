@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Formik, Field, Form, useFormikContext } from "formik";
-import { useHistory, useLocation } from "react-router-dom";
+import moment from "moment";
+import { Formik, Field, Form } from "formik";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
@@ -15,6 +16,7 @@ import DropDown from "./DropDown";
 import Pagination from "../CommonUI/Pagination";
 import ErrMsg from "../CommonUI/ErrorMessage";
 import Checkboxes from "../CommonUI/Checkboxes";
+import ReadMore from "../CommonUI/ReadMore";
 import "./search.scss";
 
 // const INCLUSION_TYPES = ["NEUTRAL", "INCLUSION", "EXCLUSION"];
@@ -64,22 +66,54 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
       book_title: bookTitle,
       issue_title: IssueTitle,
       description,
+      url_slug: urlSlug,
+      issue_number: issueNumber,
+      username,
+      status,
+      date_created: dateCreated,
     }) => (
       <article
         className="search-result"
         key={`detailed-books-issues-${IssueId || bookId}`}
       >
         <section className="work-thumbnail">
-          <img
-            className="work-thumbnail-img"
-            src={coverPhoto}
-            alt={`${IssueTitle || bookTitle}-thumbnail`}
-          />
+          <Link to={`/details/${urlSlug}/book/${bookId}`}>
+            <img
+              className="work-thumbnail-img"
+              src={coverPhoto}
+              alt={`${IssueTitle || bookTitle}-thumbnail`}
+            />
+          </Link>
         </section>
         <section className="work-details">
-          <h2 className="title">{IssueTitle || bookTitle}</h2>
-          {isIssue ? <h3 className="sub-title">{bookTitle}</h3> : null}
-          <p className="work-desc">{description}</p>
+          <div className="title-row">
+            <h2 className="title">
+              <Link
+                className="title-link"
+                to={`/read/${urlSlug}/book/${bookId}/issue/${issueNumber || 1}`}
+              >
+                {IssueTitle || bookTitle}
+              </Link>
+            </h2>
+            <p className="date-created">
+              <span className="date">
+                {moment(dateCreated).format("MMM D, YYYY")}
+              </span>
+            </p>
+          </div>
+          {isIssue ? (
+            <h3 className="sub-title">
+              <Link
+                className="sub-title-link"
+                to={`/details/${urlSlug}/book/${bookId}`}
+              >
+                {bookTitle}
+              </Link>
+            </h3>
+          ) : null}
+          <p className="work-desc">
+            <ReadMore content={description} maxStringLengthShown={500} />
+          </p>
         </section>
       </article>
     )
