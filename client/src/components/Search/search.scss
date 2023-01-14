@@ -173,6 +173,7 @@
                 letter-spacing: 1px;
                 word-break: break-word;
                 flex: 1;
+                color: $kinda-gray-kinda-black;
 
                 .title-row {
                     display: flex;
@@ -182,6 +183,10 @@
                     .title {
                       font-weight: $normal;
                       order: 2;
+
+                      &-link {
+                        color: $violet-blue;
+                      }
                     }
 
                     .date-created {
@@ -199,7 +204,6 @@
                         margin-bottom: .2rem;
 
                         &-link {
-                            color: $kinda-gray-kinda-black;
                             text-decoration: none;
 
                             &:hover {
@@ -211,6 +215,10 @@
 
                     .sub-title {
                         font-weight: $light;
+                        
+                        &-link {
+                        color: $kinda-gray-kinda-black;
+                        }
                     }
 
                     .work-desc {
