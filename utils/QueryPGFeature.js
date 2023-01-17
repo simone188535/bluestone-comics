@@ -3,11 +3,9 @@ const AppError = require('./appError');
 redundency of db queries to PostgresSQL */
 
 class QueryPGFeature {
+  // either pool or client can be passed into the parameter here
   constructor(queryInstance) {
-    // either pool or client can be passed into the parameter here
     this.queryInstance = queryInstance;
-    this.currQueryStr = '';
-    this.currParamValues = null;
   }
 
   async find(
@@ -19,8 +17,9 @@ class QueryPGFeature {
   ) {
     const selectQuery = `${cte} SELECT ${selectScope} FROM ${tableInfo} `;
 
-    this.currQueryStr = selectQuery;
-    this.currParamValues = preparedStatement;
+    // these logs can be used to see the current query and the current prepared statement
+    // console.log('logMyQueryStr', selectQuery);
+    // console.log('logMyParamVal', preparedStatement);
 
     try {
       const { rows } = await this.queryInstance.query(
@@ -43,8 +42,10 @@ class QueryPGFeature {
     returnMultipleRows = false
   ) {
     const insertQuery = `INSERT INTO ${tableInfo} VALUES(${preparedStatement}) RETURNING *`;
-    this.currQueryStr = insertQuery;
-    this.currParamValues = preparedStatementValues;
+
+    // these logs can be used to see the current query and the current prepared statement
+    // console.log('logMyQueryStr', insertQuery);
+    // console.log('logMyParamVal', preparedStatementValues);
 
     try {
       const { rows } = await this.queryInstance.query(
@@ -68,8 +69,10 @@ class QueryPGFeature {
     returnMultipleRows = false
   ) {
     const updateQuery = `UPDATE ${tableInfo} SET ${setQuery} WHERE ${whereQuery} RETURNING *`;
-    this.currQueryStr = updateQuery;
-    this.currParamValues = preparedStatementValues;
+
+    // these logs can be used to see the current query and the current prepared statement
+    // console.log('logMyQueryStr', updateQuery);
+    // console.log('logMyParamVal', preparedStatementValues);
 
     try {
       const { rows } = await this.queryInstance.query(
@@ -92,8 +95,10 @@ class QueryPGFeature {
     returnMultipleRows = false
   ) {
     const deleteQuery = `DELETE FROM ${tableInfo} WHERE ${whereQuery} RETURNING *`;
-    this.currQueryStr = deleteQuery;
-    this.currParamValues = preparedStatementValues;
+
+    // these logs can be used to see the current query and the current prepared statement
+    // console.log('logMyQueryStr', deleteQuery);
+    // console.log('logMyParamVal', preparedStatementValues);
 
     try {
       const { rows } = await this.queryInstance.query(
