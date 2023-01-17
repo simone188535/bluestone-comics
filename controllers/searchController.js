@@ -47,7 +47,9 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     books.last_updated, 
     books.date_created,
     books.content_rating,
-    workGenres.genre_array
+    workGenres.genre_array,
+    (SELECT COUNT(*) FROM issues WHERE issues.book_id = books.id) AS total_issues,
+    (SELECT COUNT(*) FROM issue_assets WHERE issue_assets.book_id = books.id) AS total_book_pages
    `,
     searchBook.query,
     searchBook.parameterizedValues,
@@ -97,9 +99,12 @@ exports.searchIssues = catchAsync(async (req, res) => {
     issues.date_created,
     books.id AS book_id,
     books.title AS book_title,
+    books.status,
     books.url_slug,
     books.content_rating,
-    workGenres.genre_array
+    workGenres.genre_array,
+    (SELECT COUNT(*) FROM issues WHERE issues.book_id = books.id) AS total_issues,
+    (SELECT COUNT(*) FROM issue_assets WHERE issue_assets.issue_id = issues.id) AS total_issue_pages
     `,
     searchIssue.query,
     searchIssue.parameterizedValues,
