@@ -6,21 +6,26 @@ class QueryPGFeature {
   constructor(queryInstance) {
     // either pool or client can be passed into the parameter here
     this.queryInstance = queryInstance;
+    this.currQueryStr = '';
+    this.currParamValues = null;
   }
 
   async find(
     selectScope,
     tableInfo,
-    preparedStatment = null,
+    preparedStatement = null,
     returnMultipleRows = false,
     cte = ''
   ) {
     const selectQuery = `${cte} SELECT ${selectScope} FROM ${tableInfo} `;
 
+    this.currQueryStr = selectQuery;
+    this.currParamValues = preparedStatement;
+
     try {
       const { rows } = await this.queryInstance.query(
         selectQuery,
-        preparedStatment
+        preparedStatement
       );
 
       const rowsReturned = returnMultipleRows ? rows : rows[0];
@@ -33,14 +38,18 @@ class QueryPGFeature {
 
   async insert(
     tableInfo,
-    preparedStatment,
-    preparedStatmentValues,
+    preparedStatement,
+    preparedStatementValues,
     returnMultipleRows = false
   ) {
+    const insertQuery = `INSERT INTO ${tableInfo} VALUES(${preparedStatement}) RETURNING *`;
+    this.currQueryStr = insertQuery;
+    this.currParamValues = preparedStatementValues;
+
     try {
       const { rows } = await this.queryInstance.query(
-        `INSERT INTO ${tableInfo} VALUES(${preparedStatment}) RETURNING *`,
-        preparedStatmentValues
+        insertQuery,
+        preparedStatementValues
       );
 
       const rowsReturned = returnMultipleRows ? rows : rows[0];
@@ -55,13 +64,17 @@ class QueryPGFeature {
     tableInfo,
     setQuery,
     whereQuery,
-    preparedStatmentValues,
+    preparedStatementValues,
     returnMultipleRows = false
   ) {
+    const updateQuery = `UPDATE ${tableInfo} SET ${setQuery} WHERE ${whereQuery} RETURNING *`;
+    this.currQueryStr = updateQuery;
+    this.currParamValues = preparedStatementValues;
+
     try {
       const { rows } = await this.queryInstance.query(
-        `UPDATE ${tableInfo} SET ${setQuery} WHERE ${whereQuery} RETURNING *`,
-        preparedStatmentValues
+        updateQuery,
+        preparedStatementValues
       );
 
       const rowsReturned = returnMultipleRows ? rows : rows[0];
@@ -75,13 +88,17 @@ class QueryPGFeature {
   async delete(
     tableInfo,
     whereQuery,
-    preparedStatmentValues,
+    preparedStatementValues,
     returnMultipleRows = false
   ) {
+    const deleteQuery = `DELETE FROM ${tableInfo} WHERE ${whereQuery} RETURNING *`;
+    this.currQueryStr = deleteQuery;
+    this.currParamValues = preparedStatementValues;
+
     try {
       const { rows } = await this.queryInstance.query(
-        `DELETE FROM ${tableInfo} WHERE ${whereQuery} RETURNING *`,
-        preparedStatmentValues
+        deleteQuery,
+        preparedStatementValues
       );
 
       const rowsReturned = returnMultipleRows ? rows : rows[0];
