@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const pool = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 const SearchFeatures = require('../utils/SearchFeatures');
+const { withGenresStr } = require('../utils/SearchFeaturesHelpers');
 
 // TODO: may implement this in our pagination later: https://ivopereira.net/efficient-pagination-dont-use-offset-limit , https://medium.com/swlh/how-to-implement-cursor-pagination-like-a-pro-513140b65f32
 exports.searchBooks = catchAsync(async (req, res, next) => {
@@ -28,7 +29,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     searchBookFilter.query,
     searchBookFilter.parameterizedValues,
     false,
-    `WITH workGenres AS (SELECT genres.book_id AS genre_book_id, array_agg(genres.genre)::text[] AS genre_array FROM genres GROUP BY genre_book_id ORDER BY genre_book_id)`
+    `${withGenresStr}`
   );
 
   const searchBook = searchBookFilter.sort('books').paginate(20);
@@ -51,7 +52,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     searchBook.query,
     searchBook.parameterizedValues,
     true,
-    `WITH workGenres AS (SELECT genres.book_id AS genre_book_id, array_agg(genres.genre)::text[] AS genre_array FROM genres GROUP BY genre_book_id ORDER BY genre_book_id)`
+    `${withGenresStr}`
   );
 
   // Send Response
@@ -78,7 +79,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     searchIssueFilter.query,
     searchIssueFilter.parameterizedValues,
     false,
-    `WITH workGenres AS (SELECT genres.book_id AS genre_book_id, array_agg(genres.genre)::text[] AS genre_array FROM genres GROUP BY genre_book_id ORDER BY genre_book_id)`
+    `${withGenresStr}`
   );
 
   const searchIssue = searchIssueFilter.sort('issues').paginate(20);
@@ -103,7 +104,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     searchIssue.query,
     searchIssue.parameterizedValues,
     true,
-    `WITH workGenres AS (SELECT genres.book_id AS genre_book_id, array_agg(genres.genre)::text[] AS genre_array FROM genres GROUP BY genre_book_id ORDER BY genre_book_id)`
+    `${withGenresStr}`
   );
 
   // Send Response
