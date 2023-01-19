@@ -68,55 +68,91 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
       description,
       url_slug: urlSlug,
       issue_number: issueNumber,
+      total_issues: totalIssues,
+      total_issue_pages: totalIssuePages,
+      total_book_pages: totalBookPages,
+      content_rating: contentRating,
       username,
       status,
       date_created: dateCreated,
-    }) => (
-      <article
-        className="search-result"
-        key={`detailed-books-issues-${IssueId || bookId}`}
-      >
-        <section className="work-thumbnail">
-          <Link to={`/details/${urlSlug}/book/${bookId}`}>
-            <img
-              className="work-thumbnail-img"
-              src={coverPhoto}
-              alt={`${IssueTitle || bookTitle}-thumbnail`}
-            />
-          </Link>
-        </section>
-        <section className="work-details">
-          <div className="title-row">
-            <h2 className="title">
-              <Link
-                className="title-link"
-                to={`/read/${urlSlug}/book/${bookId}/issue/${issueNumber || 1}`}
-              >
-                {IssueTitle || bookTitle}
-              </Link>
-            </h2>
-            <p className="date-created">
-              <span className="date">
-                {moment(dateCreated).format("MMM D, YYYY")}
-              </span>
+    }) => {
+      const conditionalExtraDetails = isIssue
+        ? [
+            { key: "Issue #", val: issueNumber },
+            { key: "Total Issue Pages", val: totalIssuePages },
+          ]
+        : [{ key: "Total Book Pages", val: totalBookPages }];
+
+      const extraDetails = [
+        {
+          key: "Status",
+          val: status,
+        },
+        ...conditionalExtraDetails,
+        {
+          key: "Total Issues",
+          val: totalIssues,
+        },
+        {
+          key: "Content Rating",
+          val: contentRating,
+        },
+      ].map(({ key, val }) => (
+        <span className="extra-details" key={`extra-details-${key}`}>
+          {`${key}: ${val} `}
+        </span>
+      ));
+
+      return (
+        <article
+          className="search-result"
+          key={`detailed-books-issues-${IssueId || bookId}`}
+        >
+          <section className="work-thumbnail">
+            <Link to={`/details/${urlSlug}/book/${bookId}`}>
+              <img
+                className="work-thumbnail-img"
+                src={coverPhoto}
+                alt={`${IssueTitle || bookTitle}-thumbnail`}
+              />
+            </Link>
+          </section>
+          <section className="work-details">
+            <div className="title-row">
+              <h2 className="title">
+                <Link
+                  className="title-link"
+                  to={`/read/${urlSlug}/book/${bookId}/issue/${
+                    issueNumber || totalIssues
+                  }`}
+                >
+                  {IssueTitle || bookTitle}
+                </Link>
+              </h2>
+              <p className="date-created">
+                <span className="date">
+                  {moment(dateCreated).format("MMM D, YYYY")}
+                </span>
+              </p>
+            </div>
+            {isIssue ? (
+              <h3 className="sub-title">
+                <Link
+                  className="sub-title-link"
+                  to={`/details/${urlSlug}/book/${bookId}`}
+                >
+                  {bookTitle}
+                </Link>
+              </h3>
+            ) : null}
+            <p className="work-desc">
+              <ReadMore content={description} maxStringLengthShown={500} />
             </p>
-          </div>
-          {isIssue ? (
-            <h3 className="sub-title">
-              <Link
-                className="sub-title-link"
-                to={`/details/${urlSlug}/book/${bookId}`}
-              >
-                {bookTitle}
-              </Link>
-            </h3>
-          ) : null}
-          <p className="work-desc">
-            <ReadMore content={description} maxStringLengthShown={500} />
-          </p>
-        </section>
-      </article>
-    )
+            <p className="extra-details-container">{extraDetails}</p>
+          </section>
+        </article>
+      );
+    }
   );
   return mappedItems || null;
 };
