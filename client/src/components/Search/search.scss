@@ -36,10 +36,8 @@
 
     
     .filter-btn {
-        // margin: 20px 0;
-        // width: 50%;
-        // font-size: 1rem;
         width: 100%;
+        max-width: 300px;
     }
     
 
@@ -155,10 +153,13 @@
             flex-direction: column;
             // border: 1px solid black;
             // background-color: $light-grey;
-            margin: 2rem 0;
+            margin: 2rem auto;
+            max-width: 600px;
             padding: 1rem .5rem;
             
             .work-thumbnail {
+                display: inline-flex;
+                align-self: center;
                 flex: 1;
                 &-img {
                 display: block;
@@ -168,7 +169,6 @@
             }
 
             .work-details {
-                margin-left: 1.2rem;
                 line-height: 1.5;
                 letter-spacing: 1px;
                 word-break: break-word;
@@ -222,7 +222,7 @@
                     }
 
                     .work-desc {
-                        margin-top: .6rem;
+                        margin: 0.6rem auto 0.8rem;
                         // min-height: 210px;
                     }
 
@@ -255,7 +255,7 @@
     }    
 }
 
-@media only screen and (min-width: $medium) {
+@media only screen and (min-width: $large) {
 
     .search-page {
         .search-section {
@@ -292,8 +292,10 @@
             .search-result {
                 // display: flex;
                 flex-direction: row;
+                max-width: unset;
                 
                 .work-thumbnail {
+                    align-self: unset;
                     flex: 0;
                     &-img {
                     display: block;
@@ -321,22 +323,10 @@
                             text-align: center;
                         }
                     }
-                    // .title, .sub-title {
-                    //     font-size: 1rem;
-                    //     margin-bottom: .2rem;
-                    // }
     
-                    // .title {
-                    //     font-weight: $normal;
-                    // }
-    
-                    // .sub-title {
-                    //     font-weight: $light;
-                    // }
-    
-                    // .work-desc {
-                    //     margin-top: .6rem;
-                    // }
+                    .work-desc {
+                        min-height: 170px;
+                    }
                 }
             }
         }
