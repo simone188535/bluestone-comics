@@ -128,6 +128,12 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
                 >
                   {IssueTitle || bookTitle}
                 </Link>
+                {` `}
+                by
+                {` `}
+                <Link className="title-link" to={`/profile/${username}`}>
+                  {username}
+                </Link>
               </h2>
               <p className="date-created">
                 <span className="date">
