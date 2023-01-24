@@ -161,6 +161,7 @@
                 display: inline-flex;
                 align-self: center;
                 flex: 1;
+                margin-bottom: 0.8rem;
                 &-img {
                 display: block;
                 width: 200px;
@@ -196,6 +197,7 @@
                         // flex: 0 0 100px;
                         text-align: right;
                         order: 1;
+                        margin-bottom: 0.5rem;
                     }
                 }
 
@@ -297,6 +299,7 @@
                 .work-thumbnail {
                     align-self: unset;
                     flex: 0;
+                    margin-bottom: 0;
                     &-img {
                     display: block;
                     width: 200px;
@@ -321,6 +324,7 @@
                             flex: 0 0 100px;
                             order: 2;
                             text-align: center;
+                            margin-bottom: 0rem;
                         }
                     }
     
