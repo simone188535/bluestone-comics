@@ -257,6 +257,32 @@
     }    
 }
 
+@media only screen and (min-width: $medium) {
+
+    .search-page {
+        .search-section {
+
+            .search-result {
+                .work-details {
+                    .title-row {
+                        flex-direction: row;
+
+                        .title {
+                            order: 1;
+                        }
+                        .date-created {
+                            order: 2;
+                            flex: 0 0 100px;
+                            text-align: center;
+                            margin-bottom: 0rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media only screen and (min-width: $large) {
 
     .search-page {
@@ -312,21 +338,6 @@
                     line-height: 1.5;
                     letter-spacing: 1px;
                     word-break: break-word;
-    
-
-                    .title-row {
-                        flex-direction: row;
-
-                        .title {
-                            order: 1;
-                        }
-                        .date-created {
-                            flex: 0 0 100px;
-                            order: 2;
-                            text-align: center;
-                            margin-bottom: 0rem;
-                        }
-                    }
     
                     .work-desc {
                         min-height: 170px;
