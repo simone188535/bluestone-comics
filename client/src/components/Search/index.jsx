@@ -76,6 +76,10 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
       status,
       date_created: dateCreated,
     }) => {
+      const conditionalUrl = isIssue
+        ? `/details/${urlSlug}/book/${bookId}/issues/${issueNumber}`
+        : `/details/${urlSlug}/book/${bookId}`;
+
       const conditionalExtraDetails = isIssue
         ? [
             { key: "Issue #", val: issueNumber },
@@ -109,7 +113,7 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
           key={`detailed-books-issues-${IssueId || bookId}`}
         >
           <section className="work-thumbnail">
-            <Link to={`/details/${urlSlug}/book/${bookId}`}>
+            <Link to={conditionalUrl}>
               <img
                 className="work-thumbnail-img"
                 src={coverPhoto}
