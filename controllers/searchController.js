@@ -143,7 +143,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
   const searchUsers = searchUsersFilter.sort('users').paginate(20);
 
   const users = await new QueryPG(pool).find(
-    'id, username, user_photo, date_created',
+    'id, username, user_photo, date_created, (SELECT COUNT(*) FROM subscribers WHERE subscribers.publisher_id = users.id)::integer AS total_subscribers',
     searchUsers.query,
     searchUsers.parameterizedValues,
     true
