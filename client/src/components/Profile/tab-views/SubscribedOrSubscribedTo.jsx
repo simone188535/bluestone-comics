@@ -7,7 +7,6 @@ import abbreviateNumber from "../../../utils/abbreviateNumber";
 import "../subscription.scss";
 
 const SubscribedOrSubscribedTo = ({ profilePageUserId, type }) => {
-  // const { id } = profilePageUserId;
   const [id, setId] = useState(profilePageUserId);
   const [errorMessage, setErrorMessage] = useState(false);
   const [pageType, setPageType] = useState(type);
@@ -148,13 +147,11 @@ const SubscribedOrSubscribedTo = ({ profilePageUserId, type }) => {
     );
 
   return (
-    <>
-      <section className="subscription container-fluid">
-        {renderAllSubscribedList}
-        {renderSpinner}
-        {renderError}
-      </section>
-    </>
+    <section className="subscription container-fluid">
+      {renderAllSubscribedList}
+      {renderSpinner}
+      {renderError}
+    </section>
   );
 };
 
