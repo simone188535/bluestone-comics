@@ -7,7 +7,7 @@
   justify-content: center;
 
   .pagination-item {
-    padding: 0 12px;
+    padding: 0 4px;
     text-align: center;
     margin: auto 4px;
     color: rgba(0, 0, 0, 0.87);
@@ -78,10 +78,15 @@
 
 
     }
+  }
+}
 
-    //   button {
-    //     border: none;
-    //     background: transparent;
-    //   }
+@media only screen and (min-width: $small) {
+
+  .pagination-container {
+  
+    .pagination-item {
+      padding: 0 12px;
+    }
   }
 }
