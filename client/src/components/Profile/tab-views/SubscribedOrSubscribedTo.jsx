@@ -4,7 +4,7 @@ import { getAllSubscribedTo, getAllSubscribers } from "../../../services";
 import ErrorMessage from "../../CommonUI/ErrorMessage";
 import LoadingSpinner from "../../CommonUI/LoadingSpinner";
 import abbreviateNumber from "../../../utils/abbreviateNumber";
-import "../subscription.scss";
+import "./subscribed-subscribed-to.scss";
 
 const SubscribedOrSubscribedTo = ({ profilePageUserId, type }) => {
   const [id, setId] = useState(profilePageUserId);
@@ -123,7 +123,7 @@ const SubscribedOrSubscribedTo = ({ profilePageUserId, type }) => {
               <Link to={`/profile/${username}`} className="subscription-link">
                 <div className="grid-image-container">
                   <img
-                    className="subscription-profile-img grid-image"
+                    className="subscription-profile-img large-img grid-image"
                     src={userPhoto}
                     alt={username}
                   />
@@ -147,7 +147,7 @@ const SubscribedOrSubscribedTo = ({ profilePageUserId, type }) => {
     );
 
   return (
-    <section className="subscription container-fluid">
+    <section className="subscribed-subscribed-to subscription container-fluid">
       {renderAllSubscribedList}
       {renderSpinner}
       {renderError}

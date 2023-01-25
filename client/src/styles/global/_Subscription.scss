@@ -1,0 +1,25 @@
+@import '../../styles/abstracts/variables.scss';
+
+.subscription {
+
+    .subscription-list {
+        grid-gap: 5%;
+
+        .subscription-list-item {
+            .subscription-link {
+                text-decoration: none;
+                color: $off-black;
+
+                img.subscription-profile-img {
+                    border-radius: 50%;
+                    margin: 0 auto;
+                }
+
+                .subscription-general-info {
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+}
