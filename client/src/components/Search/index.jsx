@@ -405,12 +405,13 @@ const SearchForm = ({ values, setAdvFilter, advFilterIsOpen }) => {
               fieldName="sortBy"
               option={[
                 { opt: "Select Sort", value: "" },
-                { opt: "Newest to Oldest", value: "ASC" },
-                { opt: "Oldest to Newest", value: "DESC" },
+                { opt: "Newest to Oldest", value: "asc" },
+                { opt: "Oldest to Newest", value: "desc" },
               ]}
               headerText="date range"
               isDropdown
               component={DropDown}
+              disabled={userSearchTypeDisable}
             />
           </div>
           <button
@@ -541,6 +542,15 @@ const Search = () => {
     if (!formikValsHaveChanged && values.page !== 1) {
       queryOrderArr.push({ page: "page" });
     }
+
+    // if the formikValues have not changed, add limit/sort if they are already present
+    // if (!formikValsHaveChanged && values.limit) {
+    //   queryOrderArr.push({ limit: "limit" });
+    // }
+
+    // if (!formikValsHaveChanged && values.sort) {
+    //   queryOrderArr.push({ sortBy: "sort" });
+    // }
 
     // reset initial state for incoming data
     setInitQueryStr({});
