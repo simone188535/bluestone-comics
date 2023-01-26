@@ -142,6 +142,15 @@
                     order: 1;
                 }
             }
+
+            .search-user {
+                margin: 3rem 0;
+                
+                .profile-img {
+                    width: 100px;
+                    height: 100px;
+                }
+            }
         }
         .search-filter-btn {
             display: block;

@@ -17,6 +17,7 @@ import Pagination from "../CommonUI/Pagination";
 import ErrMsg from "../CommonUI/ErrorMessage";
 import Checkboxes from "../CommonUI/Checkboxes";
 import ReadMore from "../CommonUI/ReadMore";
+import abbreviateNumber from "../../utils/abbreviateNumber";
 import "./search.scss";
 
 // const INCLUSION_TYPES = ["NEUTRAL", "INCLUSION", "EXCLUSION"];
@@ -54,7 +55,44 @@ import "./search.scss";
 const { NUM_OF_ITEMS_PER_SEARCH_PAGE } = CONSTANTS;
 
 const DetailedUsers = ({ resultsList }) => {
-  return <article>User Component</article>;
+  const resList = resultsList.map(
+    ({
+      id,
+      username,
+      user_photo: userPhoto,
+      total_subscribers: totalSubscribers,
+    }) => (
+      <li
+        key={`subscriber-id-${id}`}
+        className="subscription-list-item grid-list-item"
+      >
+        {" "}
+        <Link to={`/profile/${username}`} className="subscription-link">
+          <div className="grid-image-container">
+            <img
+              className="subscription-profile-img grid-image profile-img"
+              src={userPhoto}
+              alt={username}
+            />
+          </div>
+          <div className="grid-info-box subscription-general-info">
+            <div className="grid-info-box-header">
+              {`${abbreviateNumber(totalSubscribers)} subscribers`}
+            </div>
+            <div className="grid-info-box-header">{username}</div>
+          </div>
+        </Link>
+      </li>
+    )
+  );
+
+  return (
+    <article className="search-user subscription container-fluid">
+      <ul className="display-work-grid subscription-list col-sm-2 col-5">
+        {resList}
+      </ul>
+    </article>
+  );
 };
 
 const DetailedBooksIssues = ({ isIssue, resultsList }) => {
