@@ -145,7 +145,10 @@
 
             .search-user {
                 margin: 3rem 0;
-                
+                .subscription-list {
+                    grid-gap: 35px;
+                }
+
                 .profile-img {
                     width: 100px;
                     height: 100px;

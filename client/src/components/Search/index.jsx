@@ -496,6 +496,8 @@ const Search = () => {
             { genreExclude: "exclude" },
             { status: "status" },
             { contentRating: "content-rating" },
+            { limit: "limit" },
+            { sortBy: "sort" },
           ]
         : [{}];
 
@@ -503,8 +505,6 @@ const Search = () => {
       { queryStr: "q" },
       { searchType: "search-type" },
       ...optionalQueries,
-      { limit: "limit" },
-      { sortBy: "sort" },
     ];
 
     /*
@@ -542,15 +542,6 @@ const Search = () => {
     if (!formikValsHaveChanged && values.page !== 1) {
       queryOrderArr.push({ page: "page" });
     }
-
-    // if the formikValues have not changed, add limit/sort if they are already present
-    // if (!formikValsHaveChanged && values.limit) {
-    //   queryOrderArr.push({ limit: "limit" });
-    // }
-
-    // if (!formikValsHaveChanged && values.sort) {
-    //   queryOrderArr.push({ sortBy: "sort" });
-    // }
 
     // reset initial state for incoming data
     setInitQueryStr({});
