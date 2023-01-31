@@ -20,38 +20,6 @@ import ReadMore from "../CommonUI/ReadMore";
 import abbreviateNumber from "../../utils/abbreviateNumber";
 import "./search.scss";
 
-// const INCLUSION_TYPES = ["NEUTRAL", "INCLUSION", "EXCLUSION"];
-
-// const SearchBar = () => {
-// return (<>
-// </>);
-// };
-
-// const AdvancedFilter = () => {
-
-// }
-
-// const DetailedBooks = ({ resultsList }) => {
-//   const mappedItems = resultsList?.map(
-//     ({ book_id: bookId, book_title: bookTitle }) => (
-//       <article key={`detailed-books-issues-${bookId}`}>
-//         Title: {bookTitle}
-//       </article>
-//     )
-//   );
-//   return mappedItems || null;
-// };
-
-// const DetailedIssues = ({ resultsList }) => {
-//   const mappedItems = resultsList?.map(
-//     ({ issue_id: IssueId, issue_title: IssueTitle }) => (
-//       <article key={`detailed-books-issues-${IssueId}`}>
-//         Title: {IssueTitle}
-//       </article>
-//     )
-//   );
-//   return mappedItems || null;
-// };
 const { NUM_OF_ITEMS_PER_SEARCH_PAGE } = CONSTANTS;
 
 const DetailedUsers = ({ resultsList }) => {
@@ -224,12 +192,6 @@ const ListedResults = ({ type, resultsList }) => {
     return <DetailedUsers resultsList={resultsList} />;
   }
 
-  // if (type === "books") {
-  //   return <DetailedBooks {...props} />;
-  // }
-
-  // return <DetailedIssues {...props} />;
-  // {...{ type, resultsList }}
   return (
     <DetailedBooksIssues
       isIssue={type === "issues"}
@@ -308,13 +270,6 @@ const SearchResult = ({
 
 const SearchForm = ({ values, setAdvFilter, advFilterIsOpen }) => {
   const userSearchTypeDisable = values.searchType === "users";
-  //   useEffect(() => {
-  //     console.log(initQueryStr);
-  //   }, [initQueryStr]);
-
-  //   useEffect(() => {
-  //     console.log("values", values);
-  //   }, [values]);
 
   return (
     <Form className="search-filter-form">
@@ -370,20 +325,6 @@ const SearchForm = ({ values, setAdvFilter, advFilterIsOpen }) => {
               component={RadioBtn}
               disabled={userSearchTypeDisable}
             />
-
-            {/* <FilterOptions
-              fieldName="contentRating"
-              option={[
-                { opt: "All", value: "" },
-                { opt: "General", value: "G" },
-                { opt: "Teen", value: "T" },
-                { opt: "Mature", value: "M" },
-                { opt: "Explicit", value: "E" },
-              ]}
-              headerText="content rating"
-              component={RadioBtn}
-              disabled={userSearchTypeDisable}
-            /> */}
             <p className="search-section-header">
               Select a <strong>content rating</strong>:{" "}
             </p>
@@ -491,9 +432,7 @@ const Search = () => {
       }
     })();
   }, [location]);
-  // useEffect(() => {
-  //   console.log("initQueryStr", initQueryStr);
-  // }, [initQueryStr]);
+
   const setAdvFilter = () => setAdvFilterIsOpen(!advFilterIsOpen);
 
   const onSubmit = (values, { setSubmitting }) => {
