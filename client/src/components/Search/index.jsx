@@ -55,7 +55,7 @@ import "./search.scss";
 const { NUM_OF_ITEMS_PER_SEARCH_PAGE } = CONSTANTS;
 
 const DetailedUsers = ({ resultsList }) => {
-  const resList = resultsList.map(
+  const resList = resultsList?.map(
     ({
       id,
       username,
@@ -88,9 +88,13 @@ const DetailedUsers = ({ resultsList }) => {
 
   return (
     <article className="search-user subscription container-fluid">
-      <ul className="display-work-grid subscription-list col-sm-2 col-5">
-        {resList}
-      </ul>
+      {resultsList?.length > 0 ? (
+        <ul className="display-work-grid subscription-list col-sm-2 col-5">
+          {resList}
+        </ul>
+      ) : (
+        <section className="text-center">No users found.</section>
+      )}
     </article>
   );
 };
@@ -202,7 +206,15 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
       );
     }
   );
-  return mappedItems || null;
+  return (
+    <article className="search-works container-fluid">
+      {resultsList?.length > 0 ? (
+        mappedItems
+      ) : (
+        <section className="text-center">No results found.</section>
+      )}
+    </article>
+  );
 };
 
 const ListedResults = ({ type, resultsList }) => {
@@ -281,7 +293,7 @@ const SearchResult = ({
         </div>
       </section>
       <ListedResults resultsList={results.searchResults} type={results.type} />
-      {results.totalResultCount && (
+      {results.totalResultCount > 0 && (
         <Pagination
           className="pagination-bar"
           currentPage={values.page}
