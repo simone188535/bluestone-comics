@@ -172,7 +172,7 @@ const Header = () => {
         <li className="nav-menu-item">
           <Link to="/about">About</Link>
         </li>
-        <li className="nav-menu-item">
+        {/* <li className="nav-menu-item">
           <Link to="/comic-list">Comic List</Link>
         </li>
         <li className="nav-menu-item">
@@ -183,7 +183,7 @@ const Header = () => {
         </li>
         <li className="nav-menu-item">
           <Link to="/news">News</Link>
-        </li>
+        </li> */}
         <AuthNavItems />
       </ul>
       <button
