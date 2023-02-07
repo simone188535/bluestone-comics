@@ -7,7 +7,7 @@ import "./home.scss";
 
 const Home = () => {
   return (
-    <main className="container-fluid home-page min-vh100">
+    <main className="container-fluid home-page">
       <section className="hero-container sect-one">
         <div className="hero-image-container">
           <img className="hero-image" src={wolverine} alt="wolverine" />

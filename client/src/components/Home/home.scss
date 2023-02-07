@@ -6,16 +6,19 @@
         position: relative;
         width: 100%;
 
-        .hero-image-container .hero-image {
-            display: block;
-            width: 100%;
+        .hero-image-container {
+
+            .hero-image {
+                display: block;
+                width: 100%;
+            }
         }
 
         .desc {
             display: flex;
             flex-direction: column;
             padding: 20px 0;
-            max-width: 55%;
+            width: 55%;
             margin: 0 auto;
 
             .primary-header {
@@ -38,15 +41,20 @@
             }
         }
     }
-    // .panel {
-    //     background-repeat: no-repeat;
-    //     background-size: cover;
-    // }
+
     .sect-one {
 
-        // .panel:nth-child(2) {
-        //     background-image: url('../../assets/wolverine.jpeg');
-        // }
     }
 
 }
+
+// @media only screen and (min-width: $medium) {
+//     .home-page {
+//         .hero-container {
+//             .desc {
+//                 position: absolute;
+//                 top: 0;
+//             }
+//         }
+//     }
+// }
