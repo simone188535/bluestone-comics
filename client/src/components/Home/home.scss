@@ -1,3 +1,14 @@
 .home-page {
 
+    .panel {
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .sect-one {
+
+        .panel:nth-child(2) {
+            background-image: url('../../assets/wolverine.jpeg');
+        }
+    }
+
 }

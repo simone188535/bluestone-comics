@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import ScrollToTop from "./components/CommonUI/ScrollToTop";
 import * as serviceWorker from "./serviceWorker";
 // import 'bootstrap/dist/css/bootstrap.min.css';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./index.scss";
 
 import App from "./components/App";
