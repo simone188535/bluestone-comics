@@ -1,14 +1,52 @@
-.home-page {
+@import '../../styles/abstracts/variables.scss';
 
-    .panel {
-        background-repeat: no-repeat;
-        background-size: cover;
+.home-page {
+    .hero-container {
+        // display: flex;
+        position: relative;
+        width: 100%;
+
+        .hero-image-container .hero-image {
+            display: block;
+            width: 100%;
+        }
+
+        .desc {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            max-width: 55%;
+            margin: 0 auto;
+
+            .primary-header {
+                flex: 1;
+                text-align: center;
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .details {
+                flex: 1;
+                font-size: 1.1rem;
+                font-weight: $light;
+                line-height: 1.5;
+                text-align: center;
+            }
+
+            .link-button {
+                margin: 12px auto 0 auto;
+            }
+        }
     }
+    // .panel {
+    //     background-repeat: no-repeat;
+    //     background-size: cover;
+    // }
     .sect-one {
 
-        .panel:nth-child(2) {
-            background-image: url('../../assets/wolverine.jpeg');
-        }
+        // .panel:nth-child(2) {
+        //     background-image: url('../../assets/wolverine.jpeg');
+        // }
     }
 
 }
