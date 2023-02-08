@@ -7,7 +7,7 @@
         width: 100%;
 
         .hero-image-container {
-
+            overflow: hidden;
             .hero-image {
                 display: block;
                 width: 100%;
@@ -16,20 +16,27 @@
 
         .desc {
             display: flex;
-            flex-direction: column;
-            padding: 20px 0;
-            width: 55%;
-            margin: 0 auto;
+            justify-content: center;
+            // width: 55%;
+            width: 100%;
+            // margin: 0 auto;
+
+            .desc-content {
+                padding: 20px 0;
+                display: flex;
+                flex-direction: column;
+                flex-basis: 55%;
+            
 
             .primary-header {
-                flex: 1;
+                // flex: 1;
                 text-align: center;
                 font-size: 2rem;
                 margin-bottom: 0.8rem;
             }
 
             .details {
-                flex: 1;
+                // flex: 1;
                 font-size: 1.1rem;
                 font-weight: $light;
                 line-height: 1.5;
@@ -40,6 +47,7 @@
                 margin: 12px auto 0 auto;
             }
         }
+        }
     }
 
     .sect-one {
@@ -48,13 +56,36 @@
 
 }
 
-// @media only screen and (min-width: $medium) {
-//     .home-page {
-//         .hero-container {
-//             .desc {
-//                 position: absolute;
-//                 top: 0;
-//             }
-//         }
-//     }
-// }
+@media only screen and (min-width: $medium) {
+    .home-page {
+        .hero-container {
+            .desc {
+                position: absolute;
+                top: 0;
+                height: 100%;
+                left: 0;
+                justify-content: flex-start;
+
+                .desc-content {
+                    flex-basis: 41%;
+                    background-color: $disabled-violet-blue;
+                    justify-content: center;
+                    z-index: 2;
+                    padding-left: 5%;
+                }
+                &:after {
+                    display: block;
+                    content: "";
+                    width: 10%;
+                    height: 100%;
+                    transform: skewX(-10deg);
+                    // transform-origin: bottom right;
+                    background-color: $disabled-violet-blue;
+                    z-index: 1;
+                    position: relative;
+                    right: 5%;
+                }
+            }
+        }
+    }
+}

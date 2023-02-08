@@ -13,19 +13,21 @@ const Home = () => {
           <img className="hero-image" src={wolverine} alt="wolverine" />
         </div>
         <article className="desc">
-          <h1 className="primary-header">Welcome to Bluestone Comics</h1>
-          <p className="details">
-            Bluestone comics is a celebration of american comics books. Our goal
-            is to promote their creation and culture.
-          </p>
-          <Link to="/upload" className="link-button">
-            <button
-              type="button"
-              className="bsc-button transparent transparent-black "
-            >
-              Upload Your Work
-            </button>
-          </Link>
+          <section className="desc-content">
+            <h1 className="primary-header">Welcome to Bluestone Comics</h1>
+            <p className="details">
+              Bluestone comics is a celebration of american comics books. Our
+              goal is to promote their creation and culture.
+            </p>
+            <Link to="/upload" className="link-button">
+              <button
+                type="button"
+                className="bsc-button transparent transparent-black "
+              >
+                Upload Your Work
+              </button>
+            </Link>
+          </section>
         </article>
       </section>
       {/* <section className="one-third-display sect-two">
