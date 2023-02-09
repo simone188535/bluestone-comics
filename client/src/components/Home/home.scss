@@ -7,11 +7,18 @@
         width: 100%;
 
         .hero-image-container {
-            overflow: hidden;
-            .hero-image {
-                display: block;
-                width: 100%;
-            }
+            // overflow: hidden;
+            width: 100%;
+            height: 50vh;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            min-height: 350px;
+
+            // .hero-image {
+            //     display: block;
+            //     width: 100%;
+            // }
         }
 
         .desc {
@@ -48,10 +55,18 @@
             }
         }
         }
-    }
 
-    .sect-one {
-
+        &.sect-one .hero-image-container {
+            background-image: url('../../assets/wolverine.jpeg');
+        }
+        
+        &.sect-two .hero-image-container {
+            background-image: url('../../assets/supergirl.jpeg');
+        }
+       
+        &.sect-three .hero-image-container {
+            background-image: url('../../assets/starlight.jpeg');
+        }
     }
 
 }
@@ -68,7 +83,7 @@
 
                 .desc-content {
                     // flex-basis: 41%;
-                    background-color: $disabled-violet-blue;
+                    // background-color: $disabled-violet-blue;
                     justify-content: center;
                     // z-index: 2;
                 }
@@ -94,7 +109,7 @@
                     &:after {
                         display: block;
                         transform: skewX(-7deg);
-                        background-color: $disabled-violet-blue;
+                        // background-color: $disabled-violet-blue;
                         right: 5%;
                     }
 
@@ -109,7 +124,7 @@
                     &:before {
                         display: block;
                         transform: skewX(7deg);
-                        background-color: $disabled-violet-blue;
+                        // background-color: $disabled-violet-blue;
                         left: 5%;
                     }
                     .desc-content {
@@ -118,6 +133,55 @@
 
                 }
             }
+
+            .hero-image-container { 
+                background-position-y: top;
+            }
+
+            &.sect-one {
+                .hero-image-container {
+                    background-position-x: 20rem;
+                }
+                .desc {
+                    .desc-content {
+                        background-color: $disabled-violet-blue;
+                    }
+
+                    &:after, &:before {
+                        background-color: $disabled-violet-blue;
+                    }
+                }
+            }
+            &.sect-two {
+                .hero-image-container {
+                    background-position-x: -12rem;
+                }
+                .desc {
+                    .desc-content {
+                        background-color: $white-light-grey;
+                    }
+
+                    &:after, &:before {
+                        background-color: $white-light-grey;
+                    }
+                }
+                
+            }
+            &.sect-three {
+                .hero-image-container {
+                    background-position-x: 19rem;
+                }
+                .desc {
+                    .desc-content {
+                        background-color: $violet-blue;
+                    }
+
+                    &:after, &:before {
+                        background-color: $violet-blue;
+                    }
+                }
+            }
+
         }
     }
 }
