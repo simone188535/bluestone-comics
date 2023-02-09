@@ -63,27 +63,59 @@
                 position: absolute;
                 top: 0;
                 height: 100%;
-                left: 0;
+                // left: 0;
                 justify-content: flex-start;
 
                 .desc-content {
-                    flex-basis: 41%;
+                    // flex-basis: 41%;
                     background-color: $disabled-violet-blue;
                     justify-content: center;
-                    z-index: 2;
-                    padding-left: 5%;
+                    // z-index: 2;
                 }
-                &:after {
-                    display: block;
-                    content: "";
-                    width: 10%;
-                    height: 100%;
-                    transform: skewX(-10deg);
-                    // transform-origin: bottom right;
-                    background-color: $disabled-violet-blue;
-                    z-index: 1;
-                    position: relative;
-                    right: 5%;
+
+                &[class*="slant"] {
+
+                    .desc-content {
+                        flex-basis: 45%;
+                        z-index: 2;
+                    }
+
+                     &:after, &:before {
+                        display: none;
+                        content: "";
+                        width: 10%;
+                        height: 100%;
+                        z-index: 1;
+                        position: relative;
+                    }
+                }
+
+                &.left-slant {
+                    &:after {
+                        display: block;
+                        transform: skewX(-7deg);
+                        background-color: $disabled-violet-blue;
+                        right: 5%;
+                    }
+
+                    .desc-content {
+                        padding-left: 5%;
+                    }
+
+                }
+
+                &.right-slant {
+                    justify-content: flex-end;
+                    &:before {
+                        display: block;
+                        transform: skewX(7deg);
+                        background-color: $disabled-violet-blue;
+                        left: 5%;
+                    }
+                    .desc-content {
+                        padding-right: 5%;
+                    }
+
                 }
             }
         }
