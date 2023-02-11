@@ -46,26 +46,26 @@ const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
     )
   );
 
-  if (!files.length) return <></>;
-
   return (
-    <>
-      <h4>Preview Issue Assets: </h4>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="thumb-nails">
-          {(provided) => (
-            <ul
-              className="thumb-nails"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {draggableImageThumbnails}
-              {provided.placeholder}
-            </ul>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </>
+    files.length > 0 && (
+      <>
+        <h4>Preview Issue Assets: </h4>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="thumb-nails">
+            {(provided) => (
+              <ul
+                className="thumb-nails"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {draggableImageThumbnails}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </>
+    )
   );
 };
 
@@ -166,7 +166,7 @@ const FileInputMultipleUpload = ({
 
   useEffect(() => {
     /*
-      only on initial render, if files have previously existing files have been uploaded (when values[identifier] is populated), 
+      only on initial render, if previously existing files have been uploaded (when values[identifier] is populated), 
       add those files to the file state 
     */
     if (

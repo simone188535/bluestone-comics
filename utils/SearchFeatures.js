@@ -1,72 +1,95 @@
+const { joinHelper } = require('./SearchFeaturesHelpers');
+
 class SearchFeatures {
-  constructor(query, queryString, parameterizedValues = []) {
+  constructor(query, queryString, parameterizedValues = [], bookSearch = true) {
     // these are the query values passed in from node AKA req.query
     this.query = query;
     this.queryString = queryString;
+    this.filterString = '';
     this.parameterizedValues = parameterizedValues;
+    this.bookSearch = bookSearch;
 
     this.parameterizedIndex = 0;
   }
 
-  filter(tableToSearch) {
+  filter(qTextFilterQuery = '') {
     // add comic type: oneshot, graphic novel, comic still needs to be added here
+    const {
+      q,
+      status,
+      'content-rating': contentRating,
+      username,
+      include,
+      exclude,
+      allowDeactivatedUserResults
+    } = this.queryString;
 
-    let whereClause = '';
     // if a text search/q is present
-    if (this.queryString.q) {
-      if (tableToSearch === 'books' || tableToSearch === 'issues') {
-        // whereClause += `to_tsvector('english', coalesce(${tableToSearch}.title, '') || ' ' || coalesce(${tableToSearch}.description, '')) @@ plainto_tsquery('english', $${this.parameterizedIndexInc()}) `;
-        whereClause += `${tableToSearch}.title ILIKE ($${this.parameterizedIndexInc()}) OR ${tableToSearch}.description ILIKE ($${this.parameterizedIndexInc()}) `;
-        // append where clause values for title and description
-        this.parameterizedValues.push(
-          `${this.queryString.q}%`,
-          `${this.queryString.q}%`
-        );
-        // append where clause text search value
-      } else if (tableToSearch === 'users') {
-        whereClause += `${tableToSearch}.username ILIKE ($${this.parameterizedIndexInc()}) `;
-        // append where clause values for title and description
-        this.parameterizedValues.push(`${this.queryString.q}%`);
-      }
+    if (q) {
+      // for every dollar sign found in qTextFilterQuery, push the q value to parameterizedValues, increment parameterizedIndex
+      const newQString = [...qTextFilterQuery]
+        .map((element) => {
+          if (element === '$') {
+            this.parameterizedValues.push(`${q}%`);
+            element = this.parameterizedIndexIncStr();
+          }
+
+          return element;
+        })
+        .join('');
+
+      this.filterString += `${newQString} `;
     }
 
-    if (this.queryString.status) {
+    if (status) {
       // if the where clause is not empty, add an AND clause to the beginning of the string
-      whereClause += `${this.appendAndOrClause(
-        whereClause,
-        'AND'
-      )} status = ($${this.parameterizedIndexInc()})`;
-      // append where clause values for status
-      this.parameterizedValues.push(`${this.queryString.status}`);
+      this.appendClauseAndDataInsert(`status`, status);
     }
 
-    if (this.queryString.username) {
-      whereClause += `${this.appendAndOrClause(
-        whereClause,
-        'AND'
-      )} username = ($${this.parameterizedIndexInc()})`;
+    if (contentRating) {
+      const contentRatingVal =
+        contentRating === 'all' ? 'G,T,M,E' : contentRating;
 
-      // append where clause values for username
-      this.parameterizedValues.push(`${this.queryString.username}`);
+      this.multiValQStrAppend('books.content_rating', contentRatingVal, 'IN');
+    }
+    // If no content Rating is provided, by default search all content ratings except E if books or issues
+    else if (this.bookSearch) {
+      this.multiValQStrAppend('books.content_rating', 'E', 'NOT IN');
+    }
+
+    if (username) {
+      this.appendClauseAndDataInsert(`username`, username);
     }
 
     // By default, only the works of users who have active accounts are shown
-    if (!this.queryString.allowDeactivatedUserResults) {
-      whereClause += `${this.appendAndOrClause(
-        whereClause,
-        'AND'
-      )} users.active = ($${this.parameterizedIndexInc()})`;
-
-      // append where clause values for users with active accounts
-      this.parameterizedValues.push(true);
+    if (!allowDeactivatedUserResults) {
+      this.appendClauseAndDataInsert(`users.active`, true);
     }
 
-    // if whereClause string is populated, add WHERE in the beginning of the string
-    if (whereClause !== '') {
-      whereClause = `WHERE ${whereClause}`;
+    if (include) {
+      // if any of the array elements exists in workGenres.genre_array, include it
+      const arrVal = this.calcDynamicArrFromMultiVal(include);
+      this.appendAndOrClause(
+        'AND',
+        `ARRAY[${joinHelper(arrVal)}] && workGenres.genre_array = TRUE`
+      );
     }
 
-    this.query = `${this.query} ${whereClause}`;
+    if (exclude) {
+      // if any of the array elements exists in workGenres.genre_array, exclude it
+      const arrVal = this.calcDynamicArrFromMultiVal(exclude);
+      this.appendAndOrClause(
+        'AND',
+        `ARRAY[${joinHelper(arrVal)}] && workGenres.genre_array = FALSE`
+      );
+    }
+
+    // if this.filterString string is populated, add WHERE in the beginning of the string
+    if (this.filterString !== '') {
+      this.filterString = `WHERE ${this.filterString}`;
+    }
+
+    this.query = `${this.query} ${this.filterString}`;
 
     return this;
   }
@@ -80,15 +103,15 @@ class SearchFeatures {
     switch (this.queryString.sort) {
       case 'desc':
         sort = 'date_created';
-        ascOrDesc = 'DESC';
+        ascOrDesc = 'ASC';
         break;
       default:
         // by default, sort by newest/most recently added case
         sort = 'date_created';
-        ascOrDesc = 'ASC';
+        ascOrDesc = 'DESC';
     }
 
-    this.query = `${this.query} ORDER BY ${tableColumnPrefix}${sort} ${ascOrDesc}`;
+    this.query = `${this.query} ORDER BY ${tableColumnPrefix}.${sort} ${ascOrDesc}`;
 
     return this;
   }
@@ -103,18 +126,76 @@ class SearchFeatures {
     return this;
   }
 
-  appendAndOrClause(stringToCheck, pgKeywordToAppend) {
-    // If the provided string empty, add the pgKeywordToAppend ie AND or OR, else return an empty string
-    return stringToCheck !== '' ? pgKeywordToAppend : '';
+  parameterizedIndexVal() {
+    return this.parameterizedIndex;
   }
 
-  parameterizedIndexInc() {
-    // This increments parameterizedIndex so that Parameterized query statements can be added dynamically ie ($3) or ($1)
-    // later a function may need to be added that counts how many $ are in the given query expression so that the correct Parameterized query value can be added
-    // let parameterizedIndex = this.query.match(/\$/g).length;
-
+  incrementParameterizedIndex() {
     this.parameterizedIndex += 1;
-    return this.parameterizedIndex;
+  }
+
+  parameterizedIndexIncStr() {
+    /* 
+      This increments parameterizedIndex so that Parameterized query statements can be added dynamically ie ($3) or ($1)
+      later a function may need to be added that counts how many $ are in the given query expression so that the correct Parameterized query value can be added
+      let parameterizedIndex = this.query.match(/\$/g).length;
+    */
+
+    this.incrementParameterizedIndex();
+    // increment the Parameterized Index and return that value in a string for parameterizedValues to use later
+    return `($${this.parameterizedIndexVal()})`;
+  }
+
+  appendToParameterizedValues(paramVal) {
+    // add a value to the param values array
+    this.parameterizedValues.push(paramVal);
+  }
+
+  appendAndOrClause(pgKeywordToAppend, columnCondition) {
+    // If the provided string empty, add the pgKeywordToAppend ie AND or OR, else return an empty string
+
+    const addAndOrClause = this.filterString !== '' ? pgKeywordToAppend : '';
+    this.filterString += ` ${addAndOrClause} ${columnCondition}`;
+    // return stringToCheck !== '' ? pgKeywordToAppend : '';
+  }
+
+  appendClauseAndDataInsert(column, paramVal, pgKeyword = 'AND') {
+    // this method not only appends AND or OR to the filtered string, but it also adds and compares the column to paramVal and inserts the data into the parameterizedValues array
+    this.appendAndOrClause(
+      pgKeyword,
+      `${column} = ${this.parameterizedIndexIncStr()}`
+    );
+
+    this.appendToParameterizedValues(paramVal);
+  }
+
+  calcDynamicArrFromMultiVal(strMultiVal) {
+    /*
+      this method iterates over a query str with multiple values ie action,adventure appends to the query str
+      by separating the string it an array and mapping over them
+     */
+
+    const params = [];
+
+    strMultiVal.split(',').forEach((val) => {
+      params.push(this.parameterizedIndexIncStr());
+      this.appendToParameterizedValues(val);
+    });
+
+    return params;
+  }
+
+  multiValQStrAppend(columnName, strMultiVal, inClause, pgKeyword = 'AND') {
+    /*
+      this method iterates over a query str with multiple values ie action,adventure appends to the query str
+      by separating the string it an array and mapping over them
+     */
+    const params = this.calcDynamicArrFromMultiVal(strMultiVal);
+
+    this.appendAndOrClause(
+      pgKeyword,
+      `${columnName} ${inClause} (${joinHelper(params)})`
+    );
   }
 }
 

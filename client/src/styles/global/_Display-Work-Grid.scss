@@ -6,13 +6,10 @@
     max-width: 90%;
     margin: 0 auto;
     grid-gap: 50px;
-    place-items: center;
+    place-items: start center;
 
 
     // mimics bootstrap column sizes
-    &.col-sm-2 {
-        grid-template-columns: 1fr 1fr;
-    }
 
     &.col-sm-3 {
         grid-template-columns: 1fr 1fr 1fr;
@@ -80,6 +77,16 @@
                 color: $dark-violet-blue;
                 font-size: .9em;
             }
+        }
+    }
+}
+
+@media only screen and (min-width: $small) {
+
+    .display-work-grid {
+
+        &.col-sm-2 {
+            grid-template-columns: 1fr 1fr;
         }
     }
 }

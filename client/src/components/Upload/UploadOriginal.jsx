@@ -209,7 +209,7 @@ const UploadBookFields = ({ values, errors, defaultSelectedUsernames }) => {
               { name: "Drama" },
               { name: "Family" },
               { name: "Fantasy" },
-              { name: "Graphic Novels" },
+              { name: "Graphic Novel" },
               { name: "Historical" },
               { name: "Horror" },
               { name: "LGBTQ" },

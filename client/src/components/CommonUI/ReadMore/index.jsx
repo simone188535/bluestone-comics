@@ -5,7 +5,7 @@ const ReadMore = ({ content, maxStringLengthShown }) => {
   const [hidden, setHidden] = useState(true);
 
   // My be able to remove this: related to this bug: May need to clear filtered result when changing filterType
-  if (!content) return <></>;
+  if (!content) return null;
 
   const previewText = content.slice(0, maxStringLengthShown);
   const overflowText = content.slice(maxStringLengthShown);
@@ -47,6 +47,7 @@ const ReadMore = ({ content, maxStringLengthShown }) => {
       <span className={`text-overflow ${hidden ? `hide` : `reveal`}`}>
         {overflowText}
       </span>
+      {` `}
       {showReadLess}
     </span>
   );

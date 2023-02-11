@@ -1,3 +1,198 @@
-.home-page {
+@import '../../styles/abstracts/variables.scss';
 
+.home-page {
+    max-width: 1500px;
+    margin: 0 auto;
+    .hero-container {
+        // display: flex;
+        position: relative;
+        width: 100%;
+
+        .hero-image-container {
+            // overflow: hidden;
+            width: 100%;
+            height: 50vh;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            min-height: 350px;
+
+            // .hero-image {
+            //     display: block;
+            //     width: 100%;
+            // }
+        }
+
+        .desc {
+            display: flex;
+            justify-content: center;
+            // width: 55%;
+            width: 100%;
+            // margin: 0 auto;
+            min-height: 300px;
+            align-items: center;
+
+            .desc-content {
+                padding: 20px 0;
+                display: flex;
+                flex-direction: column;
+                flex-basis: 55%;
+            
+
+            .primary-header {
+                // flex: 1;
+                text-align: center;
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+                color: $violet-blue;
+            }
+
+            .details {
+                // flex: 1;
+                font-size: 1.1rem;
+                font-weight: $light;
+                line-height: 1.5;
+                text-align: center;
+            }
+
+            .link-button {
+                display: block;
+                margin: 12px auto 0 auto;
+            }
+        }
+        }
+
+        &.sect-one .hero-image-container {
+            background-image: url('../../assets/wolverine.jpeg');
+        }
+        
+        &.sect-two .hero-image-container {
+            background-image: url('../../assets/supergirl.jpeg');
+        }
+       
+        &.sect-three .hero-image-container {
+            background-image: url('../../assets/starlight.jpeg');
+        }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .home-page {
+        .hero-container {
+            .desc {
+                position: absolute;
+                top: 0;
+                height: 100%;
+                // left: 0;
+                justify-content: flex-start;
+                min-height: unset;
+                align-items: unset;
+
+                .desc-content {
+                    // flex-basis: 41%;
+                    // background-color: $disabled-violet-blue;
+                    justify-content: center;
+                    // z-index: 2;
+                }
+
+                &[class*="slant"] {
+
+                    .desc-content {
+                        flex-basis: 45%;
+                        z-index: 2;
+                    }
+
+                     &:after, &:before {
+                        display: none;
+                        content: "";
+                        width: 10%;
+                        height: 100%;
+                        z-index: 1;
+                        position: relative;
+                    }
+                }
+
+                &.left-slant {
+                    &:after {
+                        display: block;
+                        transform: skewX(-7deg);
+                        // background-color: $disabled-violet-blue;
+                        right: 5%;
+                    }
+
+                    .desc-content {
+                        padding-left: 5%;
+                    }
+
+                }
+
+                &.right-slant {
+                    justify-content: flex-end;
+                    &:before {
+                        display: block;
+                        transform: skewX(7deg);
+                        // background-color: $disabled-violet-blue;
+                        left: 5%;
+                    }
+                    .desc-content {
+                        padding-right: 5%;
+                    }
+
+                }
+            }
+
+            .hero-image-container { 
+                background-position-y: top;
+            }
+
+            &.sect-one {
+                .hero-image-container {
+                    background-position-x: 20rem;
+                }
+                .desc {
+                    .desc-content {
+                        background-color: $white-light-grey;
+                    }
+
+                    &:after, &:before {
+                        background-color: $white-light-grey;
+                    }
+                }
+            }
+            &.sect-two {
+                .hero-image-container {
+                    background-position-x: -12rem;
+                }
+                .desc {
+                    .desc-content {
+                        .primary-header {
+                            color: $white-light-grey;
+                        }
+                        color: $white-light-grey;
+                        background-color: $violet-blue;
+                    }
+
+                    &:after, &:before {
+                        background-color: $violet-blue;
+                    }
+                }
+                
+            }
+            &.sect-three {
+                .hero-image-container {
+                    background-position-x: 19rem;
+                }
+                .desc {
+                    .desc-content {
+                        background-color: $white-light-grey;
+                    }
+
+                    &:after, &:before {
+                        background-color: $white-light-grey;
+                    }
+                }
+            }
+
+        }
+    }
 }

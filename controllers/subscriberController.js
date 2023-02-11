@@ -77,7 +77,7 @@ exports.unsubscribe = catchAsync(async (req, res, next) => {
   });
 });
 
-// all subscribers to a the current user
+// all subscribers to a the current user(publisherId)
 exports.getAllSubscribers = catchAsync(async (req, res, next) => {
   const { page } = req.query;
   const { publisherId } = req.params;
@@ -121,7 +121,7 @@ exports.getAllSubscribers = catchAsync(async (req, res, next) => {
   });
 });
 
-// Get All publishers this user is subscribed to
+// Get All publishers this user(subscriberId) is subscribed to
 exports.getAllSubscribedTo = catchAsync(async (req, res, next) => {
   const { page } = req.query;
   const { subscriberId } = req.params;
