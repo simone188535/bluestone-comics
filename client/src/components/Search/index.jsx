@@ -61,7 +61,7 @@ const DetailedUsers = ({ resultsList }) => {
           {resList}
         </ul>
       ) : (
-        <section className="text-center">No users found.</section>
+        <section className="text-center">No users found. Be the first!</section>
       )}
     </article>
   );
@@ -179,7 +179,9 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
       {resultsList?.length > 0 ? (
         mappedItems
       ) : (
-        <section className="text-center">No results found.</section>
+        <section className="text-center">
+          No results found. Be the first!
+        </section>
       )}
     </article>
   );
