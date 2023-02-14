@@ -40,30 +40,28 @@ const MappedIssue = ({
         {moment(dateCreated).format("MMMM D, YYYY")}
       </div>
       {belongsToUser && (
-        <>
-          <div className={`col desc-detail user-owned-col ${btnClass}`}>
-            <Link
-              to={`/edit-upload/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
-              className="desc-detail link-as-normal"
+        <div className={`col desc-detail user-owned-col ${btnClass}`}>
+          <Link
+            to={`/edit-upload/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
+            className="desc-detail link-as-normal"
+          >
+            <button
+              type="button"
+              className="bsc-button user-owned-btn transparent transparent-blue"
             >
-              <button
-                type="button"
-                className="bsc-button user-owned-btn transparent transparent-blue"
-              >
-                Edit
-              </button>
-            </Link>
-            {isLatestIssue && (
-              <button
-                type="button"
-                className="bsc-button user-owned-btn transparent transparent-red"
-                onClick={() => setDeleteModalIsOpen(true)}
-              >
-                Delete
-              </button>
-            )}
-          </div>
-        </>
+              Edit
+            </button>
+          </Link>
+          {isLatestIssue && (
+            <button
+              type="button"
+              className="bsc-button user-owned-btn transparent transparent-red"
+              onClick={() => setDeleteModalIsOpen(true)}
+            >
+              Delete
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
