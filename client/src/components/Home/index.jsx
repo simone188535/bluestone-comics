@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Modal from './../../components/CommonUI/Modal';
 import "./home.scss";
 
 const LinkButton = ({ buttonText, link, btnClass }) => (
@@ -51,7 +50,10 @@ const Home = () => {
     <main className="container-fluid home-page">
       {homePageSections.map(
         ({ sectionNum, slantDirection, headerText, detailsText }) => (
-          <section className={`hero-container sect-${sectionNum}`}>
+          <section
+            className={`hero-container sect-${sectionNum}`}
+            key={sectionNum}
+          >
             <div className="hero-image-container" />
             <article className={`desc ${slantDirection}-slant`}>
               <section className="desc-content">
