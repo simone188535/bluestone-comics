@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Modal from './../../components/CommonUI/Modal';
 import "./home.scss";
 
 const LinkButton = ({ buttonText, link, btnClass }) => (
