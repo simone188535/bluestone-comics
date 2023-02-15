@@ -27,6 +27,35 @@ const {
   },
 } = CONSTANTS;
 
+const UploadNewIssueForm = ({
+  modalIsOpen,
+  toggleModal,
+  errorMessage,
+  uploadPercentage,
+}) => {
+  return (
+    <Form
+      className="bsc-form upload-form"
+      encType="multipart/form-data"
+      method="post"
+    >
+      <h1 className="form-header-text">
+        Add a <strong>New Issue</strong>
+      </h1>
+      <IssueUpload />
+      <SubmissionProgressModal
+        modalIsOpen={modalIsOpen}
+        toggleModal={toggleModal}
+        errorMessage={errorMessage}
+        uploadPercentage={uploadPercentage}
+      />
+      <button type="submit" className="form-submit form-item">
+        Submit
+      </button>
+    </Form>
+  );
+};
+
 const UploadNewIssue = () => {
   const history = useHistory();
   const { urlSlug, bookId } = useParams();
@@ -145,28 +174,17 @@ const UploadNewIssue = () => {
           })}
           enableReinitialize
           onSubmit={onSubmit}
-          component={() => (
-            <Form
-              className="bsc-form upload-form"
-              encType="multipart/form-data"
-              method="post"
-            >
-              <h1 className="form-header-text">
-                Add a <strong>New Issue</strong>
-              </h1>
-              <IssueUpload />
-              <SubmissionProgressModal
-                modalIsOpen={modalIsOpen}
-                toggleModal={toggleModal}
-                errorMessage={errorMessage}
-                uploadPercentage={uploadPercentage}
-              />
-              <button type="submit" className="form-submit form-item">
-                Submit
-              </button>
-            </Form>
+        >
+          {(props) => (
+            <UploadNewIssueForm
+              modalIsOpen={modalIsOpen}
+              toggleModal={toggleModal}
+              errorMessage={errorMessage}
+              uploadPercentage={uploadPercentage}
+              {...props}
+            />
           )}
-        />
+        </Formik>
       </div>
     </div>
   );
