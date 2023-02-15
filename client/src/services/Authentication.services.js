@@ -1,14 +1,5 @@
 import axios from "axios";
 
-export const AuthenticationServices = {
-  ReAuthUser,
-  login,
-  logout,
-  signUp,
-  forgotPassword,
-  resetPassword,
-};
-
 // This function helps ReAuth a user if the jwtToken is in the browser
 // https://stackoverflow.com/questions/47541032/handling-async-request-with-react-redux-and-axios
 async function ReAuthUser() {
@@ -69,3 +60,12 @@ function resetPassword(resetToken, password, passwordConfirm) {
     passwordConfirm,
   });
 }
+
+export default {
+  ReAuthUser,
+  login,
+  logout,
+  signUp,
+  forgotPassword,
+  resetPassword,
+};
