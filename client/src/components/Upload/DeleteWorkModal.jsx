@@ -31,56 +31,54 @@ const DeleteWorkModal = ({
   };
 
   return (
-    <>
-      {deleteModalIsOpen && (
-        <Modal
-          isOpen={deleteModalIsOpen}
-          onClose={() => resetModal()}
-          isCloseButtonPresent={!deleting}
-          className="delete-work-modal"
-        >
-          {!deleteErr ? (
-            <div>
-              <h2 className="delete-work-modal-header">
-                <strong>
-                  {deleting
-                    ? "Deleting...."
-                    : "Are you sure that you want to permanently delete this work?"}
-                </strong>
-              </h2>
-              {deleting && <p>This may take a while, please be patient.</p>}
-            </div>
-          ) : (
-            <ErrMsg
-              errorStatus={deleteErr}
-              messageText="An Error occurred. Please try again later."
-            />
+    deleteModalIsOpen && (
+      <Modal
+        isOpen={deleteModalIsOpen}
+        onClose={() => resetModal()}
+        isCloseButtonPresent={!deleting}
+        className="delete-work-modal"
+      >
+        {!deleteErr ? (
+          <div>
+            <h2 className="delete-work-modal-header">
+              <strong>
+                {deleting
+                  ? "Deleting...."
+                  : "Are you sure that you want to permanently delete this work?"}
+              </strong>
+            </h2>
+            {deleting && <p>This may take a while, please be patient.</p>}
+          </div>
+        ) : (
+          <ErrMsg
+            errorStatus={deleteErr}
+            messageText="An Error occurred. Please try again later."
+          />
+        )}
+        <section className="action-btn-container">
+          {!deleteErr && !deleting && (
+            <>
+              <button
+                type="button"
+                className="bsc-button action-btn transparent transparent-blue"
+                disabled={deleting}
+                onClick={() => resetModal()}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="bsc-button action-btn transparent transparent-red prompt-btn"
+                disabled={deleting}
+                onClick={(e) => deleteHelper(e)}
+              >
+                Delete
+              </button>
+            </>
           )}
-          <section className="action-btn-container">
-            {!deleteErr && !deleting && (
-              <>
-                <button
-                  type="button"
-                  className="bsc-button action-btn transparent transparent-blue"
-                  disabled={deleting}
-                  onClick={() => resetModal()}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="bsc-button action-btn transparent transparent-red prompt-btn"
-                  disabled={deleting}
-                  onClick={(e) => deleteHelper(e)}
-                >
-                  Delete
-                </button>
-              </>
-            )}
-          </section>
-        </Modal>
-      )}
-    </>
+        </section>
+      </Modal>
+    )
   );
 };
 
