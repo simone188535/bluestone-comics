@@ -14,6 +14,7 @@ const initialState = {
   user: null,
   isReactivated: false,
 };
+// eslint-disable-next-line default-param-last
 export default function (state = initialState, action) {
   switch (action.type) {
     case LOGIN_REQUEST:
