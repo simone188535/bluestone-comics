@@ -32,6 +32,72 @@ const {
   },
 } = CONSTANTS;
 
+const EditIssueForm = ({
+  submissionModalIsOpen,
+  toggleModal,
+  errorMessage,
+  uploadPercentage,
+  isLatestIssue,
+  deleteModalIsOpen,
+  setDeleteModalIsOpen,
+  deleteModal,
+}) => {
+  return (
+    <>
+      <Form
+        className="bsc-form upload-form"
+        encType="multipart/form-data"
+        method="post"
+      >
+        <h1 className="form-header-text">
+          Edit An <strong>Existing Issue</strong>
+        </h1>
+        <IssueUpload
+          issueCoverPhotoData={{
+            identifier: "issueCoverPhoto",
+            toBeRemovedField: "issueCoverPhotoToBeRemoved",
+            hasPrevUploadedData: true,
+          }}
+          multiFileUploadPrevData={{
+            identifier: "issueAssets",
+            toBeRemovedField: "issueAssetsToBeRemoved",
+            hasPrevUploadedData: true,
+          }}
+        />
+        <SubmissionProgressModal
+          modalIsOpen={submissionModalIsOpen}
+          toggleModal={toggleModal}
+          errorMessage={errorMessage}
+          uploadPercentage={uploadPercentage}
+        />
+        <button type="submit" className="form-submit form-item">
+          Submit
+        </button>
+      </Form>
+      {isLatestIssue && (
+        <>
+          <DeleteWorkModal
+            deleteModalIsOpen={deleteModalIsOpen}
+            setDeleteModalIsOpen={setDeleteModalIsOpen}
+            deleteMethod={deleteModal}
+          />
+          <section className="delete-book-btn-section">
+            <h1 className="delete-book-btn-header">
+              <strong>Permanently Delete This Issue!</strong>
+            </h1>
+            <button
+              type="button"
+              className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
+              onClick={() => setDeleteModalIsOpen(true)}
+            >
+              Delete Issue
+            </button>
+          </section>
+        </>
+      )}
+    </>
+  );
+};
 const EditIssueUpload = () => {
   // redirect after completed
   const history = useHistory();
@@ -282,62 +348,21 @@ const EditIssueUpload = () => {
             })}
             onSubmit={onSubmit}
             enableReinitialize
-            component={() => (
-              <>
-                <Form
-                  className="bsc-form upload-form"
-                  encType="multipart/form-data"
-                  method="post"
-                >
-                  <h1 className="form-header-text">
-                    Edit An <strong>Existing Issue</strong>
-                  </h1>
-                  <IssueUpload
-                    issueCoverPhotoData={{
-                      identifier: "issueCoverPhoto",
-                      toBeRemovedField: "issueCoverPhotoToBeRemoved",
-                      hasPrevUploadedData: true,
-                    }}
-                    multiFileUploadPrevData={{
-                      identifier: "issueAssets",
-                      toBeRemovedField: "issueAssetsToBeRemoved",
-                      hasPrevUploadedData: true,
-                    }}
-                  />
-                  <SubmissionProgressModal
-                    modalIsOpen={submissionModalIsOpen}
-                    toggleModal={toggleModal}
-                    errorMessage={errorMessage}
-                    uploadPercentage={uploadPercentage}
-                  />
-                  <button type="submit" className="form-submit form-item">
-                    Submit
-                  </button>
-                </Form>
-                {isLatestIssue && (
-                  <>
-                    <DeleteWorkModal
-                      deleteModalIsOpen={deleteModalIsOpen}
-                      setDeleteModalIsOpen={setDeleteModalIsOpen}
-                      deleteMethod={deleteModal}
-                    />
-                    <section className="delete-book-btn-section">
-                      <h1 className="delete-book-btn-header">
-                        <strong>Permanently Delete This Issue!</strong>
-                      </h1>
-                      <button
-                        type="button"
-                        className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
-                        onClick={() => setDeleteModalIsOpen(true)}
-                      >
-                        Delete Issue
-                      </button>
-                    </section>
-                  </>
-                )}
-              </>
+          >
+            {(props) => (
+              <EditIssueForm
+                submissionModalIsOpen={submissionModalIsOpen}
+                toggleModal={toggleModal}
+                errorMessage={errorMessage}
+                uploadPercentage={uploadPercentage}
+                isLatestIssue={isLatestIssue}
+                deleteModalIsOpen={deleteModalIsOpen}
+                setDeleteModalIsOpen={setDeleteModalIsOpen}
+                deleteModal={deleteModal}
+                {...props}
+              />
             )}
-          />
+          </Formik>
         )}
       </div>
     </div>
