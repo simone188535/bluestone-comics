@@ -8,7 +8,7 @@ const removeError = () => {
   return { type: REMOVE_ERROR };
 };
 
-export const errorActions = {
+export default {
   setError,
   removeError,
 };

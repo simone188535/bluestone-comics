@@ -8,7 +8,7 @@ import {
   GET_ME,
 } from "./types";
 import { AuthenticationServices } from "../services";
-import { errorActions } from "./errorActions";
+import errorActions from "./errorActions";
 
 const loginRequest = () => {
   return { type: LOGIN_REQUEST };
@@ -86,7 +86,7 @@ const refetchUser = () => async (dispatch) => {
   }
 };
 
-export const authActions = {
+export default {
   loginRequest,
   loginSuccess,
   loginFailure,
