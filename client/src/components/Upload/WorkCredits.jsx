@@ -72,79 +72,74 @@ const WorkCreditsFields = ({ identifier, apiResults, clearTextInput }) => {
   };
 
   return (
-    <>
-      <FieldArray name={identifier}>
-        {({ push, remove }) => (
-          <div>
-            <>
-              <RenderSearchList
-                apiResults={apiResults}
-                push={push}
-                clearTextInput={clearTextInput}
-              />
-            </>
-            {values.workCredits.map((credit, index) => {
-              // console.log('credit', credit);
-              return (
-                <div
-                  key={credit.user}
-                  className="work-credit-selected-search-list-item"
-                >
-                  <div className="username">{credit.username}</div>
+    <FieldArray name={identifier}>
+      {({ push, remove }) => (
+        <div>
+          <RenderSearchList
+            apiResults={apiResults}
+            push={push}
+            clearTextInput={clearTextInput}
+          />
+          {values.workCredits.map((credit, index) => {
+            // console.log('credit', credit);
+            return (
+              <div
+                key={credit.user}
+                className="work-credit-selected-search-list-item"
+              >
+                <div className="username">{credit.username}</div>
 
-                  {/* This input contains the users ID */}
-                  <Field
-                    className="user-input"
-                    name={`workCredits[${index}].user`}
-                    value={credit.user}
-                  />
-                  <ErrorMessage
-                    className="error-message error-text-color wc-error"
-                    component="div"
-                    name={`workCredits[${index}].user`}
-                  />
-                  <div className="info-head">
-                    While creating this work, this user fulfilled the role(s)
-                    of:
-                    {` `}
-                  </div>
-                  <ul className="work-credits-checkbox-section">
-                    <Checkboxes
-                      identifier={`workCredits[${index}].credits`}
-                      type="multiple"
-                      wrapperElement="li"
-                      checkboxValue={[
-                        { name: "Writer", value: "writer" },
-                        { name: "Artist", value: "artist" },
-                        { name: "Editor", value: "editor" },
-                        { name: "Inker", value: "inker" },
-                        { name: "Letterer", value: "letterer" },
-                        { name: "Penciller", value: "penciller" },
-                        { name: "Colorist", value: "colorist" },
-                        { name: "Cover Artist", value: "cover artist" },
-                      ]}
-                    />
-                  </ul>
-                  <ErrorMessage
-                    className="error-message error-text-color wc-error"
-                    component="div"
-                    name={`workCredits[${index}].credits`}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => removeSelectedUser(remove, index)}
-                    className="delete-work-credits-button"
-                  >
-                    <FontAwesomeIcon icon={faTimes} size="2x" />
-                  </button>
+                {/* This input contains the users ID */}
+                <Field
+                  className="user-input"
+                  name={`workCredits[${index}].user`}
+                  value={credit.user}
+                />
+                <ErrorMessage
+                  className="error-message error-text-color wc-error"
+                  component="div"
+                  name={`workCredits[${index}].user`}
+                />
+                <div className="info-head">
+                  While creating this work, this user fulfilled the role(s) of:
+                  {` `}
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </FieldArray>
-    </>
+                <ul className="work-credits-checkbox-section">
+                  <Checkboxes
+                    identifier={`workCredits[${index}].credits`}
+                    type="multiple"
+                    wrapperElement="li"
+                    checkboxValue={[
+                      { name: "Writer", value: "writer" },
+                      { name: "Artist", value: "artist" },
+                      { name: "Editor", value: "editor" },
+                      { name: "Inker", value: "inker" },
+                      { name: "Letterer", value: "letterer" },
+                      { name: "Penciller", value: "penciller" },
+                      { name: "Colorist", value: "colorist" },
+                      { name: "Cover Artist", value: "cover artist" },
+                    ]}
+                  />
+                </ul>
+                <ErrorMessage
+                  className="error-message error-text-color wc-error"
+                  component="div"
+                  name={`workCredits[${index}].credits`}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => removeSelectedUser(remove, index)}
+                  className="delete-work-credits-button"
+                >
+                  <FontAwesomeIcon icon={faTimes} size="2x" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </FieldArray>
   );
 };
 
