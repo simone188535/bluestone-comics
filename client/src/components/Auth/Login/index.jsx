@@ -6,7 +6,7 @@ import "./login.scss";
 
 const Login = () => {
   return (
-    <div className="container auth-pages login-page">
+    <div className="container auth-pages login-page min-vh100">
       <LoginForm />
       <Link className="text-blue forgot-password" to="/forgot-password">
         Forgot your password?
