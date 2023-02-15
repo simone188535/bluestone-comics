@@ -19,7 +19,7 @@ const IssuePaginationBtn = ({ children, btnProps, linkProps, disabled }) => {
     !disabled && linkProps?.to ? (
       <Link {...linkProps}>{children}</Link>
     ) : (
-      <>{children}</>
+      { children }
     );
 
   // add disabled className to btnProps when the button is disabled
