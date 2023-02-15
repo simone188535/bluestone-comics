@@ -34,6 +34,90 @@ const {
   },
 } = CONSTANTS;
 
+const statusOption = ["Ongoing", "Completed", "Hiatus"];
+
+const EditBookForm = ({
+  submissionModalIsOpen,
+  toggleModal,
+  errorMessage,
+  uploadPercentage,
+  deleteModalIsOpen,
+  setDeleteModalIsOpen,
+  deleteModal,
+}) => {
+  return (
+    <>
+      <Form
+        className="bsc-form upload-form"
+        encType="multipart/form-data"
+        method="post"
+      >
+        <h1 className="form-header-text">
+          Edit An <strong>Existing Book</strong>
+        </h1>
+
+        <BookUpload
+          bookCoverPhotoData={{
+            identifier: "bookCoverPhoto",
+            toBeRemovedField: "bookCoverPhotoToBeRemoved",
+            hasPrevUploadedData: true,
+          }}
+        />
+        <div className="form-header-text">
+          Select the <strong>status</strong> of this book:
+        </div>
+        <ul className="checkbox-group upload-checkboxes radio-btn-group">
+          {statusOption.map((status) => (
+            <li key={`${status}-radio-item`}>
+              <label htmlFor="status" className="radio-label">
+                <Field
+                  className="radio-btn"
+                  type="radio"
+                  name="status"
+                  value={status.toLowerCase()}
+                  id={status}
+                />
+                {status}
+              </label>
+            </li>
+          ))}
+        </ul>
+        <ErrorMessage
+          className="error-message error-text-color"
+          component="div"
+          name="status"
+        />
+        <SubmissionProgressModal
+          modalIsOpen={submissionModalIsOpen}
+          toggleModal={toggleModal}
+          errorMessage={errorMessage}
+          uploadPercentage={uploadPercentage}
+        />
+        <button type="submit" className="form-submit form-item">
+          Submit
+        </button>
+      </Form>
+      <DeleteWorkModal
+        deleteModalIsOpen={deleteModalIsOpen}
+        setDeleteModalIsOpen={setDeleteModalIsOpen}
+        deleteMethod={deleteModal}
+      />
+      <section className="delete-book-btn-section">
+        <h1 className="delete-book-btn-header">
+          <strong>Permanently Delete This Book!</strong>
+        </h1>
+        <button
+          type="button"
+          className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
+          onClick={() => setDeleteModalIsOpen(true)}
+        >
+          Delete Book
+        </button>
+      </section>
+    </>
+  );
+};
+
 const EditBookUpload = () => {
   // redirect after completed
   const history = useHistory();
@@ -49,7 +133,6 @@ const EditBookUpload = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const toggleModal = () => setSubmissionModalIsOpen(!submissionModalIsOpen);
 
-  const statusOption = ["Ongoing", "Completed", "Hiatus"];
   const currentUserName = currentUser?.username;
 
   useEffect(() => {
@@ -228,78 +311,20 @@ const EditBookUpload = () => {
             })}
             onSubmit={onSubmit}
             enableReinitialize
-            component={() => (
-              <>
-                <Form
-                  className="bsc-form upload-form"
-                  encType="multipart/form-data"
-                  method="post"
-                >
-                  <h1 className="form-header-text">
-                    Edit An <strong>Existing Book</strong>
-                  </h1>
-
-                  <BookUpload
-                    bookCoverPhotoData={{
-                      identifier: "bookCoverPhoto",
-                      toBeRemovedField: "bookCoverPhotoToBeRemoved",
-                      hasPrevUploadedData: true,
-                    }}
-                  />
-                  <div className="form-header-text">
-                    Select the <strong>status</strong> of this book:
-                  </div>
-                  <ul className="checkbox-group upload-checkboxes radio-btn-group">
-                    {statusOption.map((status) => (
-                      <li key={`${status}-radio-item`}>
-                        <label htmlFor="status" className="radio-label">
-                          <Field
-                            className="radio-btn"
-                            type="radio"
-                            name="status"
-                            value={status.toLowerCase()}
-                            id={status}
-                          />
-                          {status}
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                  <ErrorMessage
-                    className="error-message error-text-color"
-                    component="div"
-                    name="status"
-                  />
-                  <SubmissionProgressModal
-                    modalIsOpen={submissionModalIsOpen}
-                    toggleModal={toggleModal}
-                    errorMessage={errorMessage}
-                    uploadPercentage={uploadPercentage}
-                  />
-                  <button type="submit" className="form-submit form-item">
-                    Submit
-                  </button>
-                </Form>
-                <DeleteWorkModal
-                  deleteModalIsOpen={deleteModalIsOpen}
-                  setDeleteModalIsOpen={setDeleteModalIsOpen}
-                  deleteMethod={deleteModal}
-                />
-                <section className="delete-book-btn-section">
-                  <h1 className="delete-book-btn-header">
-                    <strong>Permanently Delete This Book!</strong>
-                  </h1>
-                  <button
-                    type="button"
-                    className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
-                    onClick={() => setDeleteModalIsOpen(true)}
-                  >
-                    Delete Book
-                  </button>
-                </section>
-              </>
+          >
+            {(props) => (
+              <EditBookForm
+                submissionModalIsOpen={submissionModalIsOpen}
+                toggleModal={toggleModal}
+                errorMessage={errorMessage}
+                uploadPercentage={uploadPercentage}
+                deleteModalIsOpen={deleteModalIsOpen}
+                setDeleteModalIsOpen={setDeleteModalIsOpen}
+                deleteModal={deleteModal}
+                {...props}
+              />
             )}
-          />
+          </Formik>
         )}
       </div>
     </div>
