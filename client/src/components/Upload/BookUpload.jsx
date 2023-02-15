@@ -40,11 +40,7 @@ const UrlSlugifedField = ({ name, ...props }) => {
     setFieldValue(name, prevExistingUrlSlug || slugify(bookTitle || ""));
   }, [bookTitle, name, urlSlug, setFieldValue, hasBookTitleBeenEmpty]);
 
-  return (
-    <>
-      <input {...props} {...field} />
-    </>
-  );
+  return <input {...props} {...field} />;
 };
 
 const ratingsRadioBtn = [
