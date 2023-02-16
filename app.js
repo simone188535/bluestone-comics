@@ -64,9 +64,11 @@ app.use('/api/v1/subscribe', subscribeRoutes);
 
 // If route is not defined or not found.
 // in charge of sending the main index.html file back to the client if it didn't receive a request it recognized otherwise
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-// });
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
