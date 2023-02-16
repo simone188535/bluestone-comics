@@ -90,6 +90,12 @@
         align-items: center;
         justify-content: center;
         flex-basis: 60px;
+        border: none;
+        background-color: transparent;
+
+        &:hover {
+         background-color: $mid-gray;
+        }
     }
 
     .search {
