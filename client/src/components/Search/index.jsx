@@ -219,18 +219,20 @@ const SearchResult = ({
 
   // calculate the number of items per page and their index
   const calcNumItemsPerPage = () => {
-    let start = (values.page - 1) * NUM_OF_ITEMS_PER_SEARCH_PAGE + 1;
+    let start;
+    let end;
 
-    // while loading, start has a value less than 0, this conditions gives it a default
-    if (start < 0) start = 0;
+    if (!results.totalResultCount) {
+      start = 0;
+      end = 0;
+    } else {
+      start = (values.page - 1) * NUM_OF_ITEMS_PER_SEARCH_PAGE + 1;
 
-    let end = Math.min(
-      start + NUM_OF_ITEMS_PER_SEARCH_PAGE - 1,
-      results.totalResultCount
-    );
-
-    // while loading, end is a value of NAN, this condition gives it a default value
-    if (Number.isNaN(end)) end = 0;
+      end = Math.min(
+        start + NUM_OF_ITEMS_PER_SEARCH_PAGE - 1,
+        results.totalResultCount
+      );
+    }
 
     return `${start}-${end}`;
   };
@@ -250,9 +252,7 @@ const SearchResult = ({
         <div className="result-count">
           <div>
             <span className="count-num">{calcNumItemsPerPage()}</span> of{" "}
-            <span className="count-num">
-              {!results?.totalResultCount ? 0 : results?.totalResultCount}
-            </span>{" "}
+            <span className="count-num">{results?.totalResultCount || 0}</span>{" "}
             Results
           </div>
         </div>
