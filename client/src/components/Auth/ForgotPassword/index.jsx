@@ -5,7 +5,7 @@ import "./forgot-password.scss";
 
 const ForgotPassword = () => {
   return (
-    <div className="container auth-pages forgot-password-page">
+    <div className="container auth-pages forgot-password-page min-vh100">
       <ForgotPasswordForm />
     </div>
   );

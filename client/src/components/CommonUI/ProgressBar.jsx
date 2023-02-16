@@ -9,12 +9,10 @@ const ProgressBar = ({ uploadPercentage, className }) => {
   }, [uploadPercentage]);
 
   return (
-    <>
-      <div className={`progress-bar ${providedClassNames}`}>
-        <div className="progress" />
-        <div className="progress-label">{`${uploadPercentage}%`}</div>
-      </div>
-    </>
+    <div className={`progress-bar ${providedClassNames}`}>
+      <div className="progress" />
+      <div className="progress-label">{`${uploadPercentage}%`}</div>
+    </div>
   );
 };
 

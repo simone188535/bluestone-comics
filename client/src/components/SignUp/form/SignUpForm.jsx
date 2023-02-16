@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { authActions } from "../../../../actions";
+import { authActions } from "../../../actions";
 
 function SignUpForm() {
-  const history = useHistory();
   const dispatch = useDispatch();
   const [enableMessage, setEnableMessage] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -33,23 +31,17 @@ function SignUpForm() {
       return <span className="error-text-color">{errorMessage} </span>;
     }
     if (isAuthenticated) {
-      return <span className="success-text-color"> Sign Up successful!</span>;
+      return <span className="success-text-color"> Login successful!</span>;
     }
     return "";
   };
 
   useEffect(() => {
     // if isAuthenticated redirect
-    if (isAuthenticated) {
-      setTimeout(() => {
-        // redirect to home page
-        history.push("/");
-      }, 3000);
-    }
-  }, [history, isAuthenticated]);
+  }, [isAuthenticated]);
 
   return (
-    <div className="sign-up-form-container auth-container">
+    <div className="sign-up-form-container">
       <Formik
         initialValues={{
           firstName: "",
@@ -73,13 +65,13 @@ function SignUpForm() {
         })}
         onSubmit={onSubmit}
       >
-        <Form className="bsc-form sign-up-form auth-form">
+        <Form className="bsc-form sign-up-form">
           <div className="form-header-text">
             Please, <strong>Sign Up</strong> to continue
           </div>
           <div>
             <Field
-              className="form-input form-item auth-input"
+              className="form-input form-item"
               name="firstName"
               type="text"
               placeholder="First Name"
@@ -92,7 +84,7 @@ function SignUpForm() {
             />
 
             <Field
-              className="form-input form-item auth-input"
+              className="form-input form-item"
               name="lastName"
               type="text"
               placeholder="Last Name"
@@ -105,7 +97,7 @@ function SignUpForm() {
             />
 
             <Field
-              className="form-input form-item auth-input"
+              className="form-input form-item"
               name="username"
               type="text"
               placeholder="Username"
@@ -118,7 +110,7 @@ function SignUpForm() {
             />
 
             <Field
-              className="form-input form-item auth-input"
+              className="form-input form-item"
               name="email"
               type="email"
               placeholder="Email"
@@ -131,7 +123,7 @@ function SignUpForm() {
             />
 
             <Field
-              className="form-input form-item auth-input"
+              className="form-input form-item"
               name="password"
               type="password"
               placeholder="Password"
@@ -144,7 +136,7 @@ function SignUpForm() {
             />
 
             <Field
-              className="form-input form-item auth-input"
+              className="form-input form-item"
               name="passwordConfirm"
               type="password"
               placeholder="Password Confirm"
@@ -156,12 +148,12 @@ function SignUpForm() {
               name="passwordConfirm"
             />
           </div>
-          <button type="submit" className="form-submit form-item auth-submit">
+          <button type="submit" className="form-submit form-item">
             Submit
           </button>
         </Form>
       </Formik>
-      <div className="status-message">{enableMessage && isAuthMessage()}</div>
+      <div className="final-message">{enableMessage && isAuthMessage()}</div>
     </div>
   );
 }

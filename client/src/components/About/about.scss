@@ -1,3 +1,20 @@
+@import '../../styles/abstracts/variables';
+
 .about-page {
-    
+    // .header, .desc {
+    //     font-weight: $semibold;
+    // }
+    .header {
+        font-weight: $bold;
+        margin: 2rem 0;
+        font-size: 3rem;
+    }
+
+    .desc {
+        font-weight: $semibold;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        line-height: 2rem;
+        letter-spacing: 1px;
+    }
 }

@@ -1,9 +1,9 @@
-import React from 'react';
-import './comic-list.scss';
+import React from "react";
+import "./comic-list.scss";
 
 const ComicList = () => {
   return (
-    <div className="container-fluid comic-list-page">
+    <div className="container-fluid comic-list-page min-vh100">
       <div className="row">
         <h2>Comic List</h2>
       </div>

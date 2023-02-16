@@ -170,9 +170,7 @@ const ExtraInfo = ({
               <div className="desc-detail normal">{issueNum}</div>
             </div>
           </>
-        ) : (
-          <></>
-        )}
+        ) : null}
         <div className={`view-${className}-field`}>
           <h3 className="tertiary-header">Date Published:</h3>
           <div className="desc-detail normal">
@@ -186,9 +184,7 @@ const ExtraInfo = ({
               {moment(lastUpdated).format("MMMM D, YYYY")}
             </div>
           </div>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </article>
     );
   };

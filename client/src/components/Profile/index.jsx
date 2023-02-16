@@ -111,9 +111,7 @@ const SubUnsubBtnOrEdit = ({
     >
       {displayLoadingOrContent()}
     </button>
-  ) : (
-    <></>
-  );
+  ) : null;
 };
 
 const Profile = () => {

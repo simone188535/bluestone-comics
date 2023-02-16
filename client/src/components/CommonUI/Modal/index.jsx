@@ -19,9 +19,7 @@ const Modal = ({
     <button type="button" className="modal-close-btn" onClick={onClose}>
       <FontAwesomeIcon icon={faTimes} size="lg" />
     </button>
-  ) : (
-    <></>
-  );
+  ) : null;
 
   const modalMarkup = (
     <div className={`modal-wrapper ${providedClassNames}`}>

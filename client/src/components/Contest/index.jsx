@@ -1,5 +1,5 @@
-import React from 'react';
-import './contest.scss';
+import React from "react";
+import "./contest.scss";
 
 const Contest = () => {
   return (
