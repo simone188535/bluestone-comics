@@ -253,7 +253,7 @@ const AboutYou = () => {
     username,
     email,
     bio,
-  } = useSelector((state) => state.auth?.user);
+  } = useSelector((state) => state.auth?.user || {});
 
   const onSubmit = async (
     {
