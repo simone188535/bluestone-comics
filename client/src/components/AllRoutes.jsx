@@ -20,6 +20,7 @@ import Profile from "./Profile";
 import EditProfile from "./Profile/Edit";
 import Details from "./Details";
 import Read from "./Read";
+import PageNotFound from "./PageNotFound";
 import ProtectedRoute from "./Auth/ProtectedRoute";
 
 import store from "../store";
@@ -69,7 +70,8 @@ const AllRoutes = () => {
         path="/read/:urlSlug/book/:bookId/issue/:issueNumber"
         component={Read}
       />
-      <Route path="/" component={Home} />
+      <Route path="/" exact component={Home} />
+      <Route path="*" component={PageNotFound} />
     </Switch>
   );
 };
