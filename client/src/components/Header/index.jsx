@@ -59,7 +59,11 @@ const AuthNavItems = () => {
           onMouseLeave={(e) => toggleMenu(e, "navSubItem")}
         >
           <button className="link-button" type="button" tabIndex="0">
-            Profile
+            <img
+              className="link-profile-img"
+              src={currentUser.user_photo}
+              alt="thumbnail-profile-pic"
+            />
           </button>
           <ul className="submenu">
             <li className="subitem">
