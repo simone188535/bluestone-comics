@@ -39,12 +39,14 @@ body {
 
     .container {
         width: 80%;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .container-fluid {
         width: 100%;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
