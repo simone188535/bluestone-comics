@@ -182,10 +182,10 @@ const Profile = () => {
           <h2 className="username-header">{profilePageUser.username}</h2>
           <p className="role">{profilePageUser.role}</p>
           <div className="general-info">
-            <div className="general-info-content">
+            {/* <div className="general-info-content">
               <h2>WWW.W</h2>
               <p>Views</p>
-            </div>
+            </div> */}
             <div className="general-info-content">
               <h2>{generalInfo.subscribers}</h2>
               <p>Subscribers</p>
