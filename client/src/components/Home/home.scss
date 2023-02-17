@@ -145,10 +145,7 @@
                 background-position-y: top;
             }
 
-            &.sect-one {
-                .hero-image-container {
-                    background-position-x: 20rem;
-                }
+            &[class*="sect"] {
                 .desc {
                     .desc-content {
                         background-color: $white-light-grey;
@@ -157,39 +154,21 @@
                     &:after, &:before {
                         background-color: $white-light-grey;
                     }
+                }
+            }
+            &.sect-one {
+                .hero-image-container {
+                    background-position-x: 20rem;
                 }
             }
             &.sect-two {
                 .hero-image-container {
                     background-position-x: -12rem;
                 }
-                .desc {
-                    .desc-content {
-                        .primary-header {
-                            color: $white-light-grey;
-                        }
-                        color: $white-light-grey;
-                        background-color: $violet-blue;
-                    }
-
-                    &:after, &:before {
-                        background-color: $violet-blue;
-                    }
-                }
-                
             }
             &.sect-three {
                 .hero-image-container {
                     background-position-x: 19rem;
-                }
-                .desc {
-                    .desc-content {
-                        background-color: $white-light-grey;
-                    }
-
-                    &:after, &:before {
-                        background-color: $white-light-grey;
-                    }
                 }
             }
 

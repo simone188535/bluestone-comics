@@ -1,9 +1,15 @@
+@import '../../styles/abstracts/variables.scss';
+
 .bsc-footer {
-    // position: fixed;
-    // bottom: 0;
-    // width: 100%;
-    // position: fixed;
-    // bottom: 0;
-    // left: 0;
-    // width: 100%;
+    min-height: 100px;
+    background-color: $dark-charcoal;
+    display: flex;
+    color: $white-light-grey;
+    align-items: center;
+    justify-content: center;
+
+    .footer-text {
+        flex: 0 0 150px;
+        font-weight: $light;
+    }
 }

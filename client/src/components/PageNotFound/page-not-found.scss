@@ -1,6 +1,6 @@
 @import '../../styles/abstracts/variables';
 
-.about-page {
+.not-found-page {
     .header {
         font-weight: $bold;
         margin: 2rem 0;
@@ -13,5 +13,9 @@
         margin-bottom: 1rem;
         line-height: 2rem;
         letter-spacing: 1px;
+
+        .back-to-home-link {
+            color: $violet-blue;
+        }
     }
 }

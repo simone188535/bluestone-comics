@@ -133,10 +133,6 @@
                     h2 {
                         font-size: 1.4em;
                     }
-
-                    &:last-child {
-                        width: 100%;
-                    }
                 }
             }
         }
@@ -164,13 +160,9 @@
         .profile-page-header .background-overlay .general-info {
             &-content {
                 float: left;
-                width: 33.333%;
+                width: 50%;
                 text-align: center;
                 margin-top: 30px;
-
-                &:last-child {
-                    width: 33.333%;
-                }
             }
         }
 

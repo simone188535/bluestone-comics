@@ -28,7 +28,7 @@
         height: 100%;
 
         &:hover {
-            color: $dark-violet-blue;
+            color: $violet-blue;
         }
     }
 
@@ -70,6 +70,14 @@
             display: none;
             height: 100%;
             padding: 20px;
+
+            .link-button {
+                .link-profile-img {
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                }
+            }
             
         }
 
