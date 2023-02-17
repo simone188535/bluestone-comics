@@ -4,7 +4,7 @@ import "./footer.scss";
 const Footer = () => {
   return (
     <footer className="bsc-footer">
-      <h2>Footer</h2>
+      <div className="footer-text">&copy; Bluestone Comics</div>
     </footer>
   );
 };
