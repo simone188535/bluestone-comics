@@ -253,7 +253,18 @@ const AboutYou = () => {
     username,
     email,
     bio,
-  } = useSelector((state) => state.auth?.user || {});
+  } = useSelector(
+    (state) =>
+      state.auth?.user || {
+        // eslint-disable-next-line camelcase
+        first_name: "",
+        // eslint-disable-next-line camelcase
+        last_name: "",
+        username: "",
+        email: "",
+        bio: "",
+      }
+  );
 
   const onSubmit = async (
     {
@@ -317,6 +328,7 @@ const AboutYou = () => {
               .required("Email required!"),
             bio: Yup.string(),
           })}
+          enableReinitialize
           onSubmit={onSubmit}
         >
           {({ isValid }) => (
@@ -377,7 +389,7 @@ const AboutYou = () => {
                 className="form-input form-textarea"
                 name="bio"
                 as="textarea"
-                placeholder="Book Description"
+                placeholder="User Description"
                 autoComplete="on"
               />
               <FormikErrorMessage
