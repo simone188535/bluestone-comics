@@ -33,15 +33,19 @@ const homePageSections = [
     sectionNum: "two",
     slantDirection: "right",
     headerText: "Awards",
-    detailsText:
-      "If your work stands out from the rest, your work may be featured on the homepage.",
+    detailsText: (
+      <>
+        If your work stands out from the rest, It may be featured on the
+        homepage. It may also be <strong>eligible for funding</strong>.
+      </>
+    ),
   },
   {
     sectionNum: "three",
     slantDirection: "left",
     headerText: "Sponsorship",
     detailsText:
-      "Popular works may have the chance to receive sponsorship in the future.",
+      "Popular comics may have the chance to receive sponsorship in the future.",
   },
 ];
 
