@@ -32,6 +32,7 @@ const loginFailure = () => {
 // This "nesting" is called currying (it also counts as a higher order function). Go here for more: https://stackoverflow.com/questions/32782922/what-do-multiple-arrow-functions-mean-in-javascript
 const login = (email, password) => async (dispatch) => {
   try {
+    dispatch(errorActions.removeError());
     dispatch(loginRequest());
 
     const res = await AuthenticationServices.login(email, password);
@@ -48,6 +49,7 @@ const signUp =
   (firstName, lastName, username, email, password, passwordConfirm) =>
   async (dispatch) => {
     try {
+      dispatch(errorActions.removeError());
       dispatch(loginRequest());
 
       const res = await AuthenticationServices.signUp(
