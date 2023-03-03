@@ -179,7 +179,9 @@ const Upload = () => {
             ],
           }}
           validationSchema={Yup.object().shape({
-            bookTitle: Yup.string().required("Book Title required!"),
+            bookTitle: Yup.string()
+              .max(50, "Book Title must be at most 50 characters!")
+              .required("Book Title required!"),
             bookCoverPhoto: Yup.mixed()
               .required("You need to provide a file")
               .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
