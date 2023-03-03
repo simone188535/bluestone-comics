@@ -326,7 +326,7 @@ const AboutYou = () => {
             email: Yup.string()
               .email("Invalid email address!")
               .required("Email required!"),
-            bio: Yup.string(),
+            bio: Yup.string().max(150),
           })}
           enableReinitialize
           onSubmit={onSubmit}
