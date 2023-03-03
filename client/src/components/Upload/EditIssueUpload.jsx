@@ -332,9 +332,9 @@ const EditIssueUpload = () => {
                     THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
                   ),
               }),
-              issueDescription: Yup.string().required(
-                "Issue Description required!"
-              ),
+              issueDescription: Yup.string()
+                .max(550, "Description must be at most 550 characters!")
+                .required("Issue Description required!"),
               issueAssets: Yup.array().required("A Issue Assets are required!"),
               workCredits: Yup.array()
                 .of(
