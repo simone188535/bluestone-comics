@@ -85,8 +85,8 @@ exports.signup = catchAsync(async (req, res, next) => {
   // Check if user/email already exists in the DB
   const existingUser = await new QueryPG(pool).find(
     '*',
-    'users WHERE email = $1',
-    [email]
+    'users WHERE email = ($1) OR username = ($2)',
+    [email, username]
   );
 
   if (existingUser) {
