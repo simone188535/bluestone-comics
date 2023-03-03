@@ -322,11 +322,11 @@ const AboutYou = () => {
           validationSchema={Yup.object({
             firstName: Yup.string().required("First name required!"),
             lastName: Yup.string().required("Last name required!"),
-            username: Yup.string().required("Username required!"),
+            username: Yup.string().min(6).required("Username required!"),
             email: Yup.string()
               .email("Invalid email address!")
               .required("Email required!"),
-            bio: Yup.string(),
+            bio: Yup.string().max(150),
           })}
           enableReinitialize
           onSubmit={onSubmit}

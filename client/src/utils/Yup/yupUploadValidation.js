@@ -19,29 +19,38 @@ const {
 } = CONSTANTS;
 
 const BookUploadValidation = {
-  bookTitle: Yup.string().required("Book Title required!"),
+  bookTitle: Yup.string()
+    .max(50, "Book Title must be at most 50 characters!")
+    .required("Book Title required!"),
   bookCoverPhoto: Yup.mixed()
     .required("You need to provide a file")
     .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
     .imageSizeCheck(THUMBNAIL_MAX_FILE_SIZE, THUMBNAIL_MAX_FILE_SIZE_IN_BYTES),
-  bookDescription: Yup.string().required("Book Description required!"),
+  bookDescription: Yup.string()
+    .max(550, "Description must be at most 550 characters!")
+    .required("Book Description required!"),
   urlSlug: Yup.string()
-    .required("URL Slug required!")
+    .max(50, "URL slug must be at most 50 characters!")
     .test("urlSlug", "This URL Slug Invalid!", (value) => {
       const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
 
       return regexForValidURLSlug.test(value);
-    }),
+    })
+    .required("URL Slug required!"),
   genres: Yup.array().required("You must select a genre!"),
 };
 
 const IssueUploadValidation = {
-  issueTitle: Yup.string().required("Issue Title required!"),
+  issueTitle: Yup.string()
+    .max(50, "Issue Title must be at most 50 characters!")
+    .required("Issue Title required!"),
   issueCoverPhoto: Yup.mixed()
     .required("A Issue Cover Photo is required!")
     .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
     .imageSizeCheck(THUMBNAIL_MAX_FILE_SIZE, THUMBNAIL_MAX_FILE_SIZE_IN_BYTES),
-  issueDescription: Yup.string().required("Issue Description required!"),
+  issueDescription: Yup.string()
+    .max(550, "Description must be at most 550 characters!")
+    .required("Issue Description required!"),
   // issueAssets: Yup.array().of(
   //     Yup.mixed().imageDimensionCheck()
   // )
