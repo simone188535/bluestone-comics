@@ -189,17 +189,17 @@ const Upload = () => {
                 THUMBNAIL_MAX_FILE_SIZE,
                 THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
               ),
-            bookDescription: Yup.string().required(
-              "Book Description required!"
-            ),
+            bookDescription: Yup.string()
+              .max(550, "Description must be at most 550 characters!")
+              .required("Book Description required!"),
             urlSlug: Yup.string()
-              .required("URL Slug required!")
               .max(50, "URL slug must be at most 50 characters!")
               .test("urlSlug", "This URL Slug Invalid!", (value) => {
                 const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
 
                 return regexForValidURLSlug.test(value);
-              }),
+              })
+              .required("URL Slug required!"),
             contentRating: Yup.string().required("Content Rating required!"),
             issueTitle: Yup.string()
               .max(50, "Issue Title must be at most 50 characters!")
