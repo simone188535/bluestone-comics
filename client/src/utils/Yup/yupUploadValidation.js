@@ -29,6 +29,7 @@ const BookUploadValidation = {
   bookDescription: Yup.string().required("Book Description required!"),
   urlSlug: Yup.string()
     .required("URL Slug required!")
+    .max(50, "URL slug must be at most 50 characters!")
     .test("urlSlug", "This URL Slug Invalid!", (value) => {
       const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
 
