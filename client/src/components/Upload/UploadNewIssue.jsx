@@ -144,7 +144,9 @@ const UploadNewIssue = () => {
             ],
           }}
           validationSchema={Yup.object().shape({
-            issueTitle: Yup.string().required("Issue Title required!"),
+            issueTitle: Yup.string()
+              .max(50, "Issue Title must be at most 50 characters!")
+              .required("Issue Title required!"),
             issueCoverPhoto: Yup.mixed()
               .required("A Issue Cover Photo is required!")
               .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
