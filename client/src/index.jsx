@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
+import { HelmetProvider } from "react-helmet-async";
 import ScrollToTop from "./components/CommonUI/ScrollToTop";
 import * as serviceWorker from "./serviceWorker";
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,10 +16,12 @@ import store from "./store";
 ReactDOM.render(
   // <React.StrictMode>
   <Provider store={store}>
-    <Router>
-      <ScrollToTop />
-      <App />
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <ScrollToTop />
+        <App />
+      </Router>
+    </HelmetProvider>
   </Provider>,
   // </React.StrictMode>
   document.getElementById("root")
