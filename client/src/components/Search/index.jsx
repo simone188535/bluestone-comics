@@ -17,6 +17,7 @@ import Pagination from "../CommonUI/Pagination";
 import ErrMsg from "../CommonUI/ErrorMessage";
 import Checkboxes from "../CommonUI/Checkboxes";
 import ReadMore from "../CommonUI/ReadMore";
+import MetaTags from "../MetaTags";
 import abbreviateNumber from "../../utils/abbreviateNumber";
 import "./search.scss";
 
@@ -544,41 +545,48 @@ const Search = () => {
   };
 
   return (
-    <div className="container-fluid search-page min-vh100">
-      <Formik
-        initialValues={{
-          queryStr: initQueryStr?.q || "",
-          searchType: initQueryStr?.["search-type"] || "issues",
-          genreInclude: initQueryStr?.include?.split(",") || [],
-          genreExclude: initQueryStr?.exclude?.split(",") || [],
-          status: initQueryStr?.status || "",
-          contentRating: initQueryStr?.["content-rating"]?.split(",") || [],
-          sortBy: initQueryStr?.sort || "",
-          limit: initQueryStr?.limit || null,
-          page: Number(initQueryStr?.page) || 0,
-          validationSchema: Yup.object({}),
-        }}
-        onSubmit={onSubmit}
-        enableReinitialize
-      >
-        {(props) => (
-          <>
-            <SearchForm
-              {...props}
-              setAdvFilter={setAdvFilter}
-              advFilterIsOpen={advFilterIsOpen}
-            />
-            <SearchResult
-              {...props}
-              results={results}
-              error={error}
-              setAdvFilter={setAdvFilter}
-              advFilterIsOpen={advFilterIsOpen}
-            />
-          </>
-        )}
-      </Formik>
-    </div>
+    <>
+      <MetaTags
+        title="Bluestone Comics | Search"
+        canonical="https://www.bluestonecomics.com/search"
+        description="Search for popular American WebComics! Explore American Comics by new and existing creators."
+      />
+      <div className="container-fluid search-page min-vh100">
+        <Formik
+          initialValues={{
+            queryStr: initQueryStr?.q || "",
+            searchType: initQueryStr?.["search-type"] || "issues",
+            genreInclude: initQueryStr?.include?.split(",") || [],
+            genreExclude: initQueryStr?.exclude?.split(",") || [],
+            status: initQueryStr?.status || "",
+            contentRating: initQueryStr?.["content-rating"]?.split(",") || [],
+            sortBy: initQueryStr?.sort || "",
+            limit: initQueryStr?.limit || null,
+            page: Number(initQueryStr?.page) || 0,
+            validationSchema: Yup.object({}),
+          }}
+          onSubmit={onSubmit}
+          enableReinitialize
+        >
+          {(props) => (
+            <>
+              <SearchForm
+                {...props}
+                setAdvFilter={setAdvFilter}
+                advFilterIsOpen={advFilterIsOpen}
+              />
+              <SearchResult
+                {...props}
+                results={results}
+                error={error}
+                setAdvFilter={setAdvFilter}
+                advFilterIsOpen={advFilterIsOpen}
+              />
+            </>
+          )}
+        </Formik>
+      </div>
+    </>
   );
 };
 
