@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import "./home.scss";
 
 const LinkButton = ({ buttonText, link, btnClass }) => (
@@ -14,7 +15,7 @@ const homePageSections = [
   {
     sectionNum: "one",
     slantDirection: "left",
-    headerText: "Welcome to Bluestone Comics",
+    headerText: <h1 className="primary-header">Welcome to Bluestone Comics</h1>,
     detailsText: (
       <>
         <span>
@@ -32,7 +33,7 @@ const homePageSections = [
   {
     sectionNum: "two",
     slantDirection: "right",
-    headerText: "Awards",
+    headerText: <h2 className="primary-header">Awards</h2>,
     detailsText: (
       <>
         If your work stands out from the rest, It may be featured on the
@@ -43,7 +44,7 @@ const homePageSections = [
   {
     sectionNum: "three",
     slantDirection: "left",
-    headerText: "Sponsorship",
+    headerText: <h2 className="primary-header">Sponsorship</h2>,
     detailsText:
       "Popular comics may have the chance to receive sponsorship in the future.",
   },
@@ -51,24 +52,34 @@ const homePageSections = [
 
 const Home = () => {
   return (
-    <main className="container-fluid home-page">
-      {homePageSections.map(
-        ({ sectionNum, slantDirection, headerText, detailsText }) => (
-          <section
-            className={`hero-container sect-${sectionNum}`}
-            key={sectionNum}
-          >
-            <div className="hero-image-container" />
-            <article className={`desc ${slantDirection}-slant`}>
-              <section className="desc-content">
-                <h1 className="primary-header">{headerText}</h1>
-                <p className="details">{detailsText}</p>
-              </section>
-            </article>
-          </section>
-        )
-      )}
-    </main>
+    <>
+      <Helmet>
+        <title>Bluestone Comics: Make and Read American WebComics</title>
+        <link rel="canonical" href="https://www.bluestonecomics.com" />
+        <meta
+          name="description"
+          content="Bluestone Comics is a celebration of American comic books. Upload your own American style comic books. Read all comic books for free. Bring your comics to life."
+        />
+      </Helmet>
+      <main className="container-fluid home-page">
+        {homePageSections.map(
+          ({ sectionNum, slantDirection, headerText, detailsText }) => (
+            <section
+              className={`hero-container sect-${sectionNum}`}
+              key={sectionNum}
+            >
+              <div className="hero-image-container" />
+              <article className={`desc ${slantDirection}-slant`}>
+                <section className="desc-content">
+                  {headerText}
+                  <p className="details">{detailsText}</p>
+                </section>
+              </article>
+            </section>
+          )
+        )}
+      </main>
+    </>
   );
 };
 export default Home;
