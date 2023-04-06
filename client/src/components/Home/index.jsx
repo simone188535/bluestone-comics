@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import MetaTags from "../MetaTags";
 import "./home.scss";
 
 const LinkButton = ({ buttonText, link, btnClass }) => (
@@ -53,14 +53,11 @@ const homePageSections = [
 const Home = () => {
   return (
     <>
-      <Helmet>
-        <title>Bluestone Comics: Make and Read American WebComics</title>
-        <link rel="canonical" href="https://www.bluestonecomics.com" />
-        <meta
-          name="description"
-          content="Bluestone Comics is a celebration of American comic books. Upload your own American style comic books. Read all comic books for free. Bring your comics to life."
-        />
-      </Helmet>
+      <MetaTags
+        title="Bluestone Comics: Make and Read American WebComics"
+        canonical="https://www.bluestonecomics.com"
+        description="Bluestone Comics is a celebration of American comic books. Upload your own American style comic books. Read all comic books for free. Bring your comics to life."
+      />
       <main className="container-fluid home-page">
         {homePageSections.map(
           ({ sectionNum, slantDirection, headerText, detailsText }) => (
