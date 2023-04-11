@@ -2,6 +2,9 @@
 
 .search-page {
     margin-bottom: 3rem;
+    .search-header {
+        font-size: 0px;
+    }
     .search-bar-container {
         display: flex;
         flex: 1 1 100%;

@@ -129,6 +129,8 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
                 className="work-thumbnail-img"
                 src={coverPhoto}
                 alt={`${IssueTitle || bookTitle}-thumbnail`}
+                width="200"
+                height="300"
               />
             </Link>
           </section>
@@ -570,6 +572,7 @@ const Search = () => {
         >
           {(props) => (
             <>
+              <h1 className="search-header">Bluestone Comics Search Page</h1>
               <SearchForm
                 {...props}
                 setAdvFilter={setAdvFilter}
