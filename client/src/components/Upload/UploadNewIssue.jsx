@@ -13,6 +13,7 @@ import {
   // eslint-disable-next-line no-unused-vars
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
+import MetaTags from "../MetaTags";
 import "./upload.scss";
 import CONSTANTS from "../../utils/Constants";
 
@@ -34,25 +35,33 @@ const UploadNewIssueForm = ({
   uploadPercentage,
 }) => {
   return (
-    <Form
-      className="bsc-form upload-form"
-      encType="multipart/form-data"
-      method="post"
-    >
-      <h1 className="form-header-text">
-        Add a <strong>New Issue</strong>
-      </h1>
-      <IssueUpload />
-      <SubmissionProgressModal
-        modalIsOpen={modalIsOpen}
-        toggleModal={toggleModal}
-        errorMessage={errorMessage}
-        uploadPercentage={uploadPercentage}
-      />
-      <button type="submit" className="form-submit form-item">
-        Submit
-      </button>
-    </Form>
+    <>
+      <MetaTags
+        title="Bluestone Comics | Upload New Issue"
+        description="Bluestone Comics' mission statement and goals for the future."
+      >
+        <meta name="robots" content="noindex, nofollow" />
+      </MetaTags>
+      <Form
+        className="bsc-form upload-form"
+        encType="multipart/form-data"
+        method="post"
+      >
+        <h1 className="form-header-text">
+          Add a <strong>New Issue</strong>
+        </h1>
+        <IssueUpload />
+        <SubmissionProgressModal
+          modalIsOpen={modalIsOpen}
+          toggleModal={toggleModal}
+          errorMessage={errorMessage}
+          uploadPercentage={uploadPercentage}
+        />
+        <button type="submit" className="form-submit form-item">
+          Submit
+        </button>
+      </Form>
+    </>
   );
 };
 
