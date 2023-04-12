@@ -571,7 +571,7 @@ const Search = () => {
         >
           {(props) => (
             <>
-              <h1 className="search-header">
+              <h1 className="hidden-header">
                 Search Page - Search and Read popular American WebComics
               </h1>
               <SearchForm
