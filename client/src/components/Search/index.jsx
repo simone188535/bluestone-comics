@@ -4,7 +4,6 @@ import { Formik, Field, Form } from "formik";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import _ from "lodash";
 import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { querySearchType } from "../../services";
 import CONSTANTS from "../../utils/Constants";
@@ -572,7 +571,9 @@ const Search = () => {
         >
           {(props) => (
             <>
-              <h1 className="search-header">Bluestone Comics Search Page</h1>
+              <h1 className="search-header">
+                Search Page - Search and Read popular American WebComics
+              </h1>
               <SearchForm
                 {...props}
                 setAdvFilter={setAdvFilter}
