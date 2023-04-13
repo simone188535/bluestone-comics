@@ -63,6 +63,8 @@ const AuthNavItems = () => {
               className="link-profile-img"
               src={currentUser.user_photo}
               alt="thumbnail-profile-pic"
+              width="40"
+              height="40"
             />
           </button>
           <ul className="submenu">

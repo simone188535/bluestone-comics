@@ -48,7 +48,7 @@ const UploadNewIssueForm = ({
         method="post"
       >
         <h1 className="form-header-text">
-          Add a <strong>New Issue</strong>
+          Add a <strong>New Issue</strong> To An Existing Book
         </h1>
         <IssueUpload />
         <SubmissionProgressModal
