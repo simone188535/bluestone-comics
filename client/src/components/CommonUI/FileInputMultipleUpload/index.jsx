@@ -37,8 +37,10 @@ const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
             <p className="thumb-nail-caption">Page {index + 1}</p>
             <img
               className="thumb-nail-img"
-              alt={name}
+              alt={name || `thumb-nail-img-page-${index + 1}`}
               src={preview || photoURL}
+              width="250"
+              height="auto"
             />
           </li>
         )}
@@ -49,7 +51,7 @@ const DragnDrop = ({ files, onDragEnd, removalOnClick }) => {
   return (
     files.length > 0 && (
       <>
-        <h4>Preview Issue Assets: </h4>
+        <h2 className="preview-issue-assets-header">Preview Issue Assets: </h2>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="thumb-nails">
             {(provided) => (

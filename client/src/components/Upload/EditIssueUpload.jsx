@@ -19,6 +19,7 @@ import SubmissionProgressModal from "./SubmissionProgressModal";
 import DeleteWorkModal from "./DeleteWorkModal";
 import IssueUpload from "./IssueUpload";
 import CONSTANTS from "../../utils/Constants";
+import MetaTags from "../MetaTags";
 import "./upload.scss";
 
 const {
@@ -82,9 +83,9 @@ const EditIssueForm = ({
             deleteMethod={deleteModal}
           />
           <section className="delete-book-btn-section">
-            <h1 className="delete-book-btn-header">
+            <h2 className="delete-book-btn-header">
               <strong>Permanently Delete This Issue!</strong>
-            </h1>
+            </h2>
             <button
               type="button"
               className="bsc-button transparent transparent-red delete-book-btn prompt-btn"
@@ -299,75 +300,88 @@ const EditIssueUpload = () => {
   };
 
   return (
-    <div className="upload-page container min-vh100">
-      <div className="upload-form-container">
-        {loadingInitialData ? (
-          <LoadingSpinner
-            loadingStatus={loadingInitialData}
-            spinnerType="large"
-            className="edit-upload-loading-spinner"
-          />
-        ) : (
-          <Formik
-            initialValues={{
-              issueTitle: currentIssueInfo.issueTitle,
-              issueCoverPhoto: currentIssueInfo.issueCoverPhoto,
-              issueCoverPhotoToBeRemoved: "",
-              issueDescription: currentIssueInfo.issueDesc,
-              issueAssets: currentIssueInfo.issueAssets,
-              issueAssetsToBeRemoved: [],
-              workCredits: prevExistingWorkCredits,
-            }}
-            validationSchema={Yup.object().shape({
-              issueTitle: Yup.string()
-                .max(50, "Issue Title must be at most 50 characters!")
-                .required("Issue Title required!"),
-              issueCoverPhoto: Yup.mixed().when("issueCoverPhotoToBeRemoved", {
-                is: (password) => Boolean(password),
-                then: Yup.mixed()
-                  .required("You need to provide a file")
-                  .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
-                  .imageSizeCheck(
-                    THUMBNAIL_MAX_FILE_SIZE,
-                    THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
-                  ),
-              }),
-              issueDescription: Yup.string()
-                .max(550, "Description must be at most 550 characters!")
-                .required("Issue Description required!"),
-              issueAssets: Yup.array().required("A Issue Assets are required!"),
-              workCredits: Yup.array()
-                .of(
-                  Yup.object().shape({
-                    user: Yup.string().required("A user must be selected"),
-                    username: Yup.string().required(
-                      "A user must have a username"
-                    ),
-                    credits: Yup.array().required("Please select credits"),
-                  })
-                )
-                .required("Must have at least one work credit"),
-            })}
-            onSubmit={onSubmit}
-            enableReinitialize
-          >
-            {(props) => (
-              <EditIssueForm
-                submissionModalIsOpen={submissionModalIsOpen}
-                toggleModal={toggleModal}
-                errorMessage={errorMessage}
-                uploadPercentage={uploadPercentage}
-                isLatestIssue={isLatestIssue}
-                deleteModalIsOpen={deleteModalIsOpen}
-                setDeleteModalIsOpen={setDeleteModalIsOpen}
-                deleteModal={deleteModal}
-                {...props}
-              />
-            )}
-          </Formik>
-        )}
+    <>
+      <MetaTags
+        title="Bluestone Comics | Upload New Issue"
+        description="Edit an existing issue"
+      >
+        <meta name="robots" content="noindex, nofollow" />
+      </MetaTags>
+      <div className="upload-page container min-vh100">
+        <div className="upload-form-container">
+          {loadingInitialData ? (
+            <LoadingSpinner
+              loadingStatus={loadingInitialData}
+              spinnerType="large"
+              className="edit-upload-loading-spinner"
+            />
+          ) : (
+            <Formik
+              initialValues={{
+                issueTitle: currentIssueInfo.issueTitle,
+                issueCoverPhoto: currentIssueInfo.issueCoverPhoto,
+                issueCoverPhotoToBeRemoved: "",
+                issueDescription: currentIssueInfo.issueDesc,
+                issueAssets: currentIssueInfo.issueAssets,
+                issueAssetsToBeRemoved: [],
+                workCredits: prevExistingWorkCredits,
+              }}
+              validationSchema={Yup.object().shape({
+                issueTitle: Yup.string()
+                  .max(50, "Issue Title must be at most 50 characters!")
+                  .required("Issue Title required!"),
+                issueCoverPhoto: Yup.mixed().when(
+                  "issueCoverPhotoToBeRemoved",
+                  {
+                    is: (password) => Boolean(password),
+                    then: Yup.mixed()
+                      .required("You need to provide a file")
+                      .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+                      .imageSizeCheck(
+                        THUMBNAIL_MAX_FILE_SIZE,
+                        THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+                      ),
+                  }
+                ),
+                issueDescription: Yup.string()
+                  .max(550, "Description must be at most 550 characters!")
+                  .required("Issue Description required!"),
+                issueAssets: Yup.array().required(
+                  "A Issue Assets are required!"
+                ),
+                workCredits: Yup.array()
+                  .of(
+                    Yup.object().shape({
+                      user: Yup.string().required("A user must be selected"),
+                      username: Yup.string().required(
+                        "A user must have a username"
+                      ),
+                      credits: Yup.array().required("Please select credits"),
+                    })
+                  )
+                  .required("Must have at least one work credit"),
+              })}
+              onSubmit={onSubmit}
+              enableReinitialize
+            >
+              {(props) => (
+                <EditIssueForm
+                  submissionModalIsOpen={submissionModalIsOpen}
+                  toggleModal={toggleModal}
+                  errorMessage={errorMessage}
+                  uploadPercentage={uploadPercentage}
+                  isLatestIssue={isLatestIssue}
+                  deleteModalIsOpen={deleteModalIsOpen}
+                  setDeleteModalIsOpen={setDeleteModalIsOpen}
+                  deleteModal={deleteModal}
+                  {...props}
+                />
+              )}
+            </Formik>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 export default EditIssueUpload;
