@@ -74,9 +74,9 @@ function SignUpForm() {
         onSubmit={onSubmit}
       >
         <Form className="bsc-form sign-up-form auth-form">
-          <div className="form-header-text">
+          <h1 className="form-header-text">
             Please, <strong>Sign Up</strong> to continue
-          </div>
+          </h1>
           <div>
             <Field
               className="form-input form-item auth-input"
