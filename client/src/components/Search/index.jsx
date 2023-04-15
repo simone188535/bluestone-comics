@@ -87,7 +87,7 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
       date_created: dateCreated,
     }) => {
       const conditionalUrl = isIssue
-        ? `/details/${urlSlug}/book/${bookId}/issues/${issueNumber}`
+        ? `/details/${urlSlug}/book/${bookId}/issue/${issueNumber}`
         : `/details/${urlSlug}/book/${bookId}`;
 
       const conditionalExtraDetails = isIssue
