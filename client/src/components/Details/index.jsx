@@ -284,7 +284,11 @@ const Details = () => {
                 <img
                   className="detail-img"
                   src={coverPhoto}
-                  alt={properTitle}
+                  alt={
+                    isIssue
+                      ? `${detailInfo.bookTitle}: ${detailInfo.issueTitle}`
+                      : detailInfo.bookTitle
+                  }
                   width="250"
                   height="auto"
                 />
