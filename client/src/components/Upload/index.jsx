@@ -14,8 +14,9 @@ import {
   // eslint-disable-next-line no-unused-vars
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
-import "./upload.scss";
+import MetaTags from "../MetaTags";
 import CONSTANTS from "../../utils/Constants";
+import "./upload.scss";
 
 const {
   IMAGE_UPLOAD_DIMENSIONS: {
@@ -160,97 +161,105 @@ const Upload = () => {
   };
 
   return (
-    <div className="upload-page container">
-      <div className="upload-form-container">
-        <Formik
-          initialValues={{
-            bookTitle: "",
-            bookCoverPhoto: null,
-            bookDescription: "",
-            urlSlug: "",
-            contentRating: "",
-            issueTitle: "",
-            issueCoverPhoto: null,
-            issueDescription: "",
-            genres: [],
-            issueAssets: [],
-            workCredits: [
-              { user: currentUserId, username: currentUsername, credits: [] },
-            ],
-          }}
-          validationSchema={Yup.object().shape({
-            bookTitle: Yup.string()
-              .max(50, "Book Title must be at most 50 characters!")
-              .required("Book Title required!"),
-            bookCoverPhoto: Yup.mixed()
-              .required("You need to provide a file")
-              .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
-              .imageSizeCheck(
-                THUMBNAIL_MAX_FILE_SIZE,
-                THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
-              ),
-            bookDescription: Yup.string()
-              .max(550, "Description must be at most 550 characters!")
-              .required("Book Description required!"),
-            urlSlug: Yup.string()
-              .max(50, "URL slug must be at most 50 characters!")
-              .test("urlSlug", "This URL Slug Invalid!", (value) => {
-                const regexForValidURLSlug = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
+    <>
+      <MetaTags
+        title="Bluestone Comics | Upload"
+        canonical="https://www.bluestonecomics.com/upload"
+        description="Upload your new American WebComic for others to read."
+      />
+      <div className="upload-page container">
+        <div className="upload-form-container">
+          <Formik
+            initialValues={{
+              bookTitle: "",
+              bookCoverPhoto: null,
+              bookDescription: "",
+              urlSlug: "",
+              contentRating: "",
+              issueTitle: "",
+              issueCoverPhoto: null,
+              issueDescription: "",
+              genres: [],
+              issueAssets: [],
+              workCredits: [
+                { user: currentUserId, username: currentUsername, credits: [] },
+              ],
+            }}
+            validationSchema={Yup.object().shape({
+              bookTitle: Yup.string()
+                .max(50, "Book Title must be at most 50 characters!")
+                .required("Book Title required!"),
+              bookCoverPhoto: Yup.mixed()
+                .required("You need to provide a file")
+                .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+                .imageSizeCheck(
+                  THUMBNAIL_MAX_FILE_SIZE,
+                  THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+                ),
+              bookDescription: Yup.string()
+                .max(550, "Description must be at most 550 characters!")
+                .required("Book Description required!"),
+              urlSlug: Yup.string()
+                .max(50, "URL slug must be at most 50 characters!")
+                .test("urlSlug", "This URL Slug Invalid!", (value) => {
+                  const regexForValidURLSlug =
+                    /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
 
-                return regexForValidURLSlug.test(value);
-              })
-              .required("URL Slug required!"),
-            contentRating: Yup.string().required("Content Rating required!"),
-            issueTitle: Yup.string()
-              .max(50, "Issue Title must be at most 50 characters!")
-              .required("Issue Title required!"),
-            issueCoverPhoto: Yup.mixed()
-              .required("A Issue Cover Photo is required!")
-              .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
-              .imageSizeCheck(
-                THUMBNAIL_MAX_FILE_SIZE,
-                THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
-              ),
-            issueDescription: Yup.string()
-              .max(550, "Description must be at most 550 characters!")
-              .required("Issue Description required!"),
-            // issueAssets: Yup.array().of(
-            //     Yup.mixed().imageDimensionCheck()
-            // )
-            //     .required('A Issue Assets are required!'),
-            issueAssets: Yup.array().required("A Issue Assets are required!"),
-            genres: Yup.array().required("You must select a genre!"),
-            workCredits: Yup.array()
-              .of(
-                Yup.object().shape({
-                  user: Yup.string().required("A user must be selected"),
-                  username: Yup.string().required(
-                    "A user must have a username"
-                  ),
-                  credits: Yup.array().required("Please select credits"),
+                  return regexForValidURLSlug.test(value);
                 })
-              )
-              .required("Must have at least one work credit"),
-            // This workCredits validation represents an array of objects: [
-            //     {"user": "5ef2ac98a9983fc4b33c63ac", "username": 'username1', "credits": ["Writer","Artist"]},
-            //     {"user": "5f3b4020e1cdaeb34ec330f5", "username": 'username2', "credits": ["Editor"]}
-            // ]
-          })}
-          enableReinitialize
-          onSubmit={onSubmit}
-        >
-          {(props) => (
-            <BookUploadForm
-              {...props}
-              modalIsOpen={modalIsOpen}
-              toggleModal={toggleModal}
-              errorMessage={errorMessage}
-              uploadPercentage={uploadPercentage}
-            />
-          )}
-        </Formik>
+                .required("URL Slug required!"),
+              contentRating: Yup.string().required("Content Rating required!"),
+              issueTitle: Yup.string()
+                .max(50, "Issue Title must be at most 50 characters!")
+                .required("Issue Title required!"),
+              issueCoverPhoto: Yup.mixed()
+                .required("A Issue Cover Photo is required!")
+                .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+                .imageSizeCheck(
+                  THUMBNAIL_MAX_FILE_SIZE,
+                  THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+                ),
+              issueDescription: Yup.string()
+                .max(550, "Description must be at most 550 characters!")
+                .required("Issue Description required!"),
+              // issueAssets: Yup.array().of(
+              //     Yup.mixed().imageDimensionCheck()
+              // )
+              //     .required('A Issue Assets are required!'),
+              issueAssets: Yup.array().required("A Issue Assets are required!"),
+              genres: Yup.array().required("You must select a genre!"),
+              workCredits: Yup.array()
+                .of(
+                  Yup.object().shape({
+                    user: Yup.string().required("A user must be selected"),
+                    username: Yup.string().required(
+                      "A user must have a username"
+                    ),
+                    credits: Yup.array().required("Please select credits"),
+                  })
+                )
+                .required("Must have at least one work credit"),
+              // This workCredits validation represents an array of objects: [
+              //     {"user": "5ef2ac98a9983fc4b33c63ac", "username": 'username1', "credits": ["Writer","Artist"]},
+              //     {"user": "5f3b4020e1cdaeb34ec330f5", "username": 'username2', "credits": ["Editor"]}
+              // ]
+            })}
+            enableReinitialize
+            onSubmit={onSubmit}
+          >
+            {(props) => (
+              <BookUploadForm
+                {...props}
+                modalIsOpen={modalIsOpen}
+                toggleModal={toggleModal}
+                errorMessage={errorMessage}
+                uploadPercentage={uploadPercentage}
+              />
+            )}
+          </Formik>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 export default memo(Upload);

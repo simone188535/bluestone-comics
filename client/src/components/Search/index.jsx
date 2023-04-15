@@ -4,7 +4,6 @@ import { Formik, Field, Form } from "formik";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import _ from "lodash";
 import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { querySearchType } from "../../services";
 import CONSTANTS from "../../utils/Constants";
@@ -17,6 +16,7 @@ import Pagination from "../CommonUI/Pagination";
 import ErrMsg from "../CommonUI/ErrorMessage";
 import Checkboxes from "../CommonUI/Checkboxes";
 import ReadMore from "../CommonUI/ReadMore";
+import MetaTags from "../MetaTags";
 import abbreviateNumber from "../../utils/abbreviateNumber";
 import "./search.scss";
 
@@ -87,7 +87,7 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
       date_created: dateCreated,
     }) => {
       const conditionalUrl = isIssue
-        ? `/details/${urlSlug}/book/${bookId}/issues/${issueNumber}`
+        ? `/details/${urlSlug}/book/${bookId}/issue/${issueNumber}`
         : `/details/${urlSlug}/book/${bookId}`;
 
       const conditionalExtraDetails = isIssue
@@ -128,6 +128,8 @@ const DetailedBooksIssues = ({ isIssue, resultsList }) => {
                 className="work-thumbnail-img"
                 src={coverPhoto}
                 alt={`${IssueTitle || bookTitle}-thumbnail`}
+                width="200"
+                height="300"
               />
             </Link>
           </section>
@@ -544,41 +546,51 @@ const Search = () => {
   };
 
   return (
-    <div className="container-fluid search-page min-vh100">
-      <Formik
-        initialValues={{
-          queryStr: initQueryStr?.q || "",
-          searchType: initQueryStr?.["search-type"] || "issues",
-          genreInclude: initQueryStr?.include?.split(",") || [],
-          genreExclude: initQueryStr?.exclude?.split(",") || [],
-          status: initQueryStr?.status || "",
-          contentRating: initQueryStr?.["content-rating"]?.split(",") || [],
-          sortBy: initQueryStr?.sort || "",
-          limit: initQueryStr?.limit || null,
-          page: Number(initQueryStr?.page) || 0,
-          validationSchema: Yup.object({}),
-        }}
-        onSubmit={onSubmit}
-        enableReinitialize
-      >
-        {(props) => (
-          <>
-            <SearchForm
-              {...props}
-              setAdvFilter={setAdvFilter}
-              advFilterIsOpen={advFilterIsOpen}
-            />
-            <SearchResult
-              {...props}
-              results={results}
-              error={error}
-              setAdvFilter={setAdvFilter}
-              advFilterIsOpen={advFilterIsOpen}
-            />
-          </>
-        )}
-      </Formik>
-    </div>
+    <>
+      <MetaTags
+        title="Bluestone Comics | Search"
+        canonical="https://www.bluestonecomics.com/search"
+        description="Search for popular American WebComics! Explore American Comics by new and existing creators."
+      />
+      <div className="container-fluid search-page min-vh100">
+        <Formik
+          initialValues={{
+            queryStr: initQueryStr?.q || "",
+            searchType: initQueryStr?.["search-type"] || "issues",
+            genreInclude: initQueryStr?.include?.split(",") || [],
+            genreExclude: initQueryStr?.exclude?.split(",") || [],
+            status: initQueryStr?.status || "",
+            contentRating: initQueryStr?.["content-rating"]?.split(",") || [],
+            sortBy: initQueryStr?.sort || "",
+            limit: initQueryStr?.limit || null,
+            page: Number(initQueryStr?.page) || 0,
+            validationSchema: Yup.object({}),
+          }}
+          onSubmit={onSubmit}
+          enableReinitialize
+        >
+          {(props) => (
+            <>
+              <h1 className="hidden-header">
+                Search Page - Search and Read popular American WebComics
+              </h1>
+              <SearchForm
+                {...props}
+                setAdvFilter={setAdvFilter}
+                advFilterIsOpen={advFilterIsOpen}
+              />
+              <SearchResult
+                {...props}
+                results={results}
+                error={error}
+                setAdvFilter={setAdvFilter}
+                advFilterIsOpen={advFilterIsOpen}
+              />
+            </>
+          )}
+        </Formik>
+      </div>
+    </>
   );
 };
 

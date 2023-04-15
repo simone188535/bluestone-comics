@@ -13,6 +13,7 @@ import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import useIsBookmarked from "../../hooks/useIsBookmarked";
 import LoadingSpinner from "../CommonUI/LoadingSpinner";
 import ErrMsg from "../CommonUI/ErrorMessage";
+import MetaTags from "../MetaTags";
 import "./details.scss";
 
 const Details = () => {
@@ -30,7 +31,6 @@ const Details = () => {
     status,
     description,
     coverPhoto,
-    title,
     dateCreated,
     lastUpdated,
     issueNum,
@@ -41,6 +41,7 @@ const Details = () => {
 
   // If issueId does not exist then the provided URL and the data on this page is for a book.
   const isIssue = !!issueNumber;
+  const properTitle = isIssue ? issueTitle : bookTitle;
 
   useEffect(() => {
     // create the initial values for whether the work is bookmarked and the loading state
@@ -110,9 +111,7 @@ const Details = () => {
         {/* Use flex basis of 70%, flex-grow 1 and flex-shrink 1 */}
         <section className="extra-info-content-block">
           <div className="extra-info">
-            <h1 className="primary-header">
-              {isIssue ? issueTitle : bookTitle}
-            </h1>
+            <h2 className="primary-header">{properTitle}</h2>
             <div className="desc-detail bold">
               Author:{" "}
               <Link to={`/profile/${author}`} className="desc-detail link">
@@ -264,51 +263,73 @@ const Details = () => {
   };
 
   return (
-    <div className="container-fluid details-page">
-      <div
-        className="bg-overlay"
-        style={{ backgroundImage: `url(${coverPhoto})` }}
-      >
-        <div className="blur">
-          <article className="primary-info">
-            <section className="detail-img-container">
-              {/* Use flex basis of 30%, flex-grow 1 and flex-shrink 1 */}
-              {/* https://developer.mozilla.org/en-US/docs/Web/CSS/flex */}
-              <img className="detail-img" src={coverPhoto} alt={title} />
-              {/* maybe put rating stars here later */}
-            </section>
-            {displayPrimaryInfo("hide-until-lg")}
-          </article>
+    <>
+      <MetaTags
+        title={properTitle}
+        canonical={`https://www.bluestonecomics.com/details/book/${bookId}${
+          isIssue ? `/issue/${issueNumber}` : ""
+        }`}
+        description={description}
+      />
+      <div className="container-fluid details-page">
+        <div
+          className="bg-overlay"
+          style={{ backgroundImage: `url(${coverPhoto})` }}
+        >
+          <div className="blur">
+            <article className="primary-info">
+              <section className="detail-img-container">
+                {/* Use flex basis of 30%, flex-grow 1 and flex-shrink 1 */}
+                {/* https://developer.mozilla.org/en-US/docs/Web/CSS/flex */}
+                <img
+                  className="detail-img"
+                  src={coverPhoto}
+                  alt={
+                    isIssue
+                      ? `${detailInfo.bookTitle}: ${detailInfo.issueTitle}`
+                      : detailInfo.bookTitle
+                  }
+                  width="250"
+                  height="auto"
+                />
+                {/* maybe put rating stars here later */}
+              </section>
+              <h1 className="hidden-header">
+                {isIssue ? "Issue" : "Book"} Details - {properTitle}
+              </h1>
+              {displayPrimaryInfo("hide-until-lg")}
+            </article>
+          </div>
         </div>
+        {errMsg ? (
+          <div className="text-center mt-50">
+            <ErrMsg
+              errorStatus={errMsg}
+              messageText="An Error occurred. Please try again later."
+            />
+          </div>
+        ) : (
+          <>
+            {displayPrimaryInfo("show-at-lg")}
+            {actionBtns()}
+            <ExtraInfo
+              isIssue={isIssue}
+              dateCreated={dateCreated}
+              lastUpdated={lastUpdated}
+              issueNum={issueNum}
+              totalIssuePages={totalIssuePages}
+            />
+            <DisplayIssues
+              isIssue={isIssue}
+              bookId={bookId}
+              urlSlug={urlSlug}
+              belongsToUser={belongsToUser}
+            />
+            {/* Add comment section in the future */}
+          </>
+        )}
       </div>
-      {errMsg ? (
-        <div className="text-center mt-50">
-          <ErrMsg
-            errorStatus={errMsg}
-            messageText="An Error occurred. Please try again later."
-          />
-        </div>
-      ) : (
-        <>
-          {displayPrimaryInfo("show-at-lg")}
-          {actionBtns()}
-          <ExtraInfo
-            isIssue={isIssue}
-            dateCreated={dateCreated}
-            lastUpdated={lastUpdated}
-            issueNum={issueNum}
-            totalIssuePages={totalIssuePages}
-          />
-          <DisplayIssues
-            isIssue={isIssue}
-            bookId={bookId}
-            urlSlug={urlSlug}
-            belongsToUser={belongsToUser}
-          />
-          {/* Add comment section in the future */}
-        </>
-      )}
-    </div>
+    </>
   );
 };
 export default Details;

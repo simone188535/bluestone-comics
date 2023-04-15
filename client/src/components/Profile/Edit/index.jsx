@@ -19,6 +19,7 @@ import { authActions } from "../../../actions";
 import FileInputSingleUpload from "../../CommonUI/FileInputSingleUpload";
 import FormikSubmissionStatus from "../../CommonUI/FormikSubmissionStatus";
 import Modal from "../../CommonUI/Modal";
+import MetaTags from "../../MetaTags";
 import "./edit-profile.scss";
 import "../../CommonUI/Modal/styles/user-accept-reject-prompt.scss";
 
@@ -202,9 +203,9 @@ const DeactivateAccount = () => {
 
   return (
     <div className="edit-profile-page container">
-      <h1 className="header-text">
+      <h2 className="header-text">
         <strong>Deactivate Account</strong>
-      </h1>
+      </h2>
       <p className="error-text-color warning">
         <strong>
           * Deactivating your account will remove your work from all search
@@ -333,9 +334,9 @@ const AboutYou = () => {
         >
           {({ isValid }) => (
             <Form className="bsc-form upload-form">
-              <h1 className="form-header-text">
+              <h2 className="form-header-text">
                 <strong>About Me</strong>
-              </h1>
+              </h2>
 
               <Field
                 name="firstName"
@@ -420,6 +421,12 @@ const AboutYou = () => {
 const EditProfile = () => {
   return (
     <>
+      <MetaTags
+        title="Bluestone Comics | Edit Profile"
+        description="Edit your personal profile page. Customize its look and feel."
+      >
+        <meta name="robots" content="noindex, nofollow" />
+      </MetaTags>
       <ChangeProfilePics />
       <AboutYou />
       <DeactivateAccount />

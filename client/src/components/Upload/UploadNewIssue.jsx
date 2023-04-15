@@ -13,6 +13,7 @@ import {
   // eslint-disable-next-line no-unused-vars
   imageSizeCheck,
 } from "../../utils/Yup/yupCustomMethods";
+import MetaTags from "../MetaTags";
 import "./upload.scss";
 import CONSTANTS from "../../utils/Constants";
 
@@ -40,7 +41,7 @@ const UploadNewIssueForm = ({
       method="post"
     >
       <h1 className="form-header-text">
-        Add a <strong>New Issue</strong>
+        Add a <strong>New Issue</strong> To An Existing Book
       </h1>
       <IssueUpload />
       <SubmissionProgressModal
@@ -131,64 +132,72 @@ const UploadNewIssue = () => {
   };
 
   return (
-    <div className="upload-page container">
-      <div className="upload-form-container">
-        <Formik
-          initialValues={{
-            issueTitle: "",
-            issueCoverPhoto: null,
-            issueDescription: "",
-            issueAssets: [],
-            workCredits: [
-              { user: currentUserId, username: currentUsername, credits: [] },
-            ],
-          }}
-          validationSchema={Yup.object().shape({
-            issueTitle: Yup.string()
-              .max(50, "Issue Title must be at most 50 characters!")
-              .required("Issue Title required!"),
-            issueCoverPhoto: Yup.mixed()
-              .required("A Issue Cover Photo is required!")
-              .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
-              .imageSizeCheck(
-                THUMBNAIL_MAX_FILE_SIZE,
-                THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
-              ),
-            issueDescription: Yup.string()
-              .max(550, "Description must be at most 550 characters!")
-              .required("Issue Description required!"),
-            // issueAssets: Yup.array().of(
-            //     Yup.mixed().imageDimensionCheck()
-            // )
-            //     .required('A Issue Assets are required!'),
-            issueAssets: Yup.array().required("A Issue Assets are required!"),
-            workCredits: Yup.array()
-              .of(
-                Yup.object().shape({
-                  user: Yup.string().required("A user must be selected"),
-                  username: Yup.string().required(
-                    "A user must have a username"
-                  ),
-                  credits: Yup.array().required("Please select credits"),
-                })
-              )
-              .required("Must have at least one work credit"),
-          })}
-          enableReinitialize
-          onSubmit={onSubmit}
-        >
-          {(props) => (
-            <UploadNewIssueForm
-              modalIsOpen={modalIsOpen}
-              toggleModal={toggleModal}
-              errorMessage={errorMessage}
-              uploadPercentage={uploadPercentage}
-              {...props}
-            />
-          )}
-        </Formik>
+    <>
+      <MetaTags
+        title="Bluestone Comics | Upload New Issue"
+        description="Bluestone Comics' mission statement and goals for the future."
+      >
+        <meta name="robots" content="noindex, nofollow" />
+      </MetaTags>
+      <div className="upload-page container">
+        <div className="upload-form-container">
+          <Formik
+            initialValues={{
+              issueTitle: "",
+              issueCoverPhoto: null,
+              issueDescription: "",
+              issueAssets: [],
+              workCredits: [
+                { user: currentUserId, username: currentUsername, credits: [] },
+              ],
+            }}
+            validationSchema={Yup.object().shape({
+              issueTitle: Yup.string()
+                .max(50, "Issue Title must be at most 50 characters!")
+                .required("Issue Title required!"),
+              issueCoverPhoto: Yup.mixed()
+                .required("A Issue Cover Photo is required!")
+                .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+                .imageSizeCheck(
+                  THUMBNAIL_MAX_FILE_SIZE,
+                  THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
+                ),
+              issueDescription: Yup.string()
+                .max(550, "Description must be at most 550 characters!")
+                .required("Issue Description required!"),
+              // issueAssets: Yup.array().of(
+              //     Yup.mixed().imageDimensionCheck()
+              // )
+              //     .required('A Issue Assets are required!'),
+              issueAssets: Yup.array().required("A Issue Assets are required!"),
+              workCredits: Yup.array()
+                .of(
+                  Yup.object().shape({
+                    user: Yup.string().required("A user must be selected"),
+                    username: Yup.string().required(
+                      "A user must have a username"
+                    ),
+                    credits: Yup.array().required("Please select credits"),
+                  })
+                )
+                .required("Must have at least one work credit"),
+            })}
+            enableReinitialize
+            onSubmit={onSubmit}
+          >
+            {(props) => (
+              <UploadNewIssueForm
+                modalIsOpen={modalIsOpen}
+                toggleModal={toggleModal}
+                errorMessage={errorMessage}
+                uploadPercentage={uploadPercentage}
+                {...props}
+              />
+            )}
+          </Formik>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 export default memo(UploadNewIssue);

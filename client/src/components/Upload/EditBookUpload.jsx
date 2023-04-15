@@ -103,9 +103,9 @@ const EditBookForm = ({
         deleteMethod={deleteModal}
       />
       <section className="delete-book-btn-section">
-        <h1 className="delete-book-btn-header">
+        <h2 className="delete-book-btn-header">
           <strong>Permanently Delete This Book!</strong>
-        </h1>
+        </h2>
         <button
           type="button"
           className="bsc-button transparent transparent-red delete-book-btn prompt-btn"

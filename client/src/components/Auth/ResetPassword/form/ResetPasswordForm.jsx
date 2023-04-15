@@ -73,9 +73,9 @@ function ResetPassword() {
         onSubmit={onSubmit}
       >
         <Form className="bsc-form reset-password-form auth-form">
-          <div className="form-header-text">
+          <h1 className="form-header-text">
             Please, <strong>reset</strong> your password.
-          </div>
+          </h1>
           <div>
             <Field
               className="form-input form-item auth-input"

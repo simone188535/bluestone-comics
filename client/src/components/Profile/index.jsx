@@ -15,6 +15,7 @@ import Bookmarks from "./tab-views/Bookmarks";
 import SubscribedOrSubscribedTo from "./tab-views/SubscribedOrSubscribedTo";
 import ErrorMessage from "../CommonUI/ErrorMessage";
 import abbreviateNumber from "../../utils/abbreviateNumber";
+import MetaTags from "../MetaTags";
 import "./profile.scss";
 
 // https://www.google.com/search?q=profile+page+examples&tbm=isch&ved=2ahUKEwiHqYjq8pfuAhUWGs0KHX0JDK8Q2-cCegQIABAA&oq=profile+page+ex&gs_lcp=CgNpbWcQARgAMgIIADIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAUQHjIGCAAQBRAeMgYIABAFEB4yBggAEAgQHjoECAAQQ1CjxxZYquUWYLTuFmgAcAB4AIABeIgBrQKSAQMyLjGYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=iV_-X8fAB5a0tAb9krD4Cg&bih=610&biw=1191&rlz=1C5CHFA_enUS873US873#imgrc=H1KWibQNaM5UGM
@@ -166,89 +167,107 @@ const Profile = () => {
   }, [profilePageUser]);
 
   return (
-    <div className="container-fluid profile-page">
-      <div
-        className="profile-page-header"
-        style={{
-          backgroundImage: `url(${profilePageUser.background_user_photo})`,
-        }}
-      >
-        <div className="background-overlay">
-          <img
-            className="profile-pic"
-            alt="profile"
-            src={profilePageUser.user_photo}
-          />
-          <h2 className="username-header">{profilePageUser.username}</h2>
-          <p className="role">{profilePageUser.role}</p>
-          <div className="general-info">
-            {/* <div className="general-info-content">
+    <>
+      {profilePageUser?.username && (
+        <MetaTags
+          title={profilePageUser?.username}
+          canonical={
+            profilePageUser?.username
+              ? `https://www.bluestonecomics.com/profile/${profilePageUser?.username}`
+              : null
+          }
+          description={profilePageUser?.bio}
+        />
+      )}
+      <div className="container-fluid profile-page">
+        <div
+          className="profile-page-header"
+          style={{
+            backgroundImage: `url(${profilePageUser.background_user_photo})`,
+          }}
+        >
+          <div className="background-overlay">
+            <h1 className="hidden-header">
+              User Profile Page - {profilePageUser.username}
+            </h1>
+            <img
+              className="profile-pic"
+              alt="profile"
+              src={profilePageUser.user_photo}
+              width="150px"
+              height="150px"
+            />
+            <h2 className="username-header">{profilePageUser.username}</h2>
+            <p className="role">{profilePageUser.role}</p>
+            <div className="general-info">
+              {/* <div className="general-info-content">
               <h2>WWW.W</h2>
               <p>Views</p>
             </div> */}
-            <div className="general-info-content">
-              <h2>{generalInfo.subscribers}</h2>
-              <p>Subscribers</p>
-            </div>
-            <div className="general-info-content">
-              <h2>{generalInfo.subscribedTo}</h2>
-              <p>Subscribed</p>
+              <div className="general-info-content">
+                <h2>{generalInfo.subscribers}</h2>
+                <p>Subscribers</p>
+              </div>
+              <div className="general-info-content">
+                <h2>{generalInfo.subscribedTo}</h2>
+                <p>Subscribed</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <main className="profile-page-body">
-        <ErrorMessage
-          errorStatus={errorMessage}
-          messageText="An error occurred. Please try again later."
-          className="description-err-msg centered-err-msg"
-        />
-        <section className="container subscribe-edit">
-          <SubUnsubBtnOrEdit
-            setErrorMessage={setErrorMessage}
-            profilePageUserId={profilePageUser.id}
-            username={username}
+        <main className="profile-page-body">
+          <ErrorMessage
+            errorStatus={errorMessage}
+            messageText="An error occurred. Please try again later."
+            className="description-err-msg centered-err-msg"
           />
-        </section>
-        <section className="container user-bio">
-          <h2 className="title">Bio</h2>
-          <p className="description">{profilePageUser.bio}</p>
-        </section>
-        <section className="user-info">
-          <Tabs className="tab-navigation">
-            <section className="container">
-              <TabList>
-                <Tab>Works</Tab>
-                <Tab>Bookmarks</Tab>
-                <Tab>Subscribers</Tab>
-                <Tab>Subscribed</Tab>
-                {/* <Tab>Achievements</Tab> */}
-              </TabList>
-            </section>
-            <section className="container-fluid">
-              <TabPanel>
-                <Works profilePageUser={profilePageUser} />
-              </TabPanel>
-              <TabPanel>
-                <Bookmarks profilePageUserId={profilePageUser.id} />
-              </TabPanel>
-              <TabPanel>
-                <SubscribedOrSubscribedTo
-                  profilePageUserId={profilePageUser.id}
-                  type="getAllSubscribers"
-                />
-              </TabPanel>
-              <TabPanel>
-                <SubscribedOrSubscribedTo
-                  profilePageUserId={profilePageUser.id}
-                  type="getAllSubscribedTo"
-                />
-              </TabPanel>
-            </section>
-          </Tabs>
-        </section>
-      </main>
-    </div>
+          <section className="container subscribe-edit">
+            <SubUnsubBtnOrEdit
+              setErrorMessage={setErrorMessage}
+              profilePageUserId={profilePageUser.id}
+              username={username}
+            />
+          </section>
+          <section className="container user-bio">
+            <h2 className="title">Bio</h2>
+            <p className="description">{profilePageUser.bio}</p>
+          </section>
+          <section className="user-info">
+            <Tabs className="tab-navigation">
+              <section className="container">
+                <TabList>
+                  <Tab>Works</Tab>
+                  <Tab>Bookmarks</Tab>
+                  <Tab>Subscribers</Tab>
+                  <Tab>Subscribed</Tab>
+                  {/* <Tab>Achievements</Tab> */}
+                </TabList>
+              </section>
+              <section className="container-fluid">
+                <TabPanel>
+                  <Works profilePageUser={profilePageUser} />
+                </TabPanel>
+                <TabPanel>
+                  <Bookmarks profilePageUserId={profilePageUser.id} />
+                </TabPanel>
+                <TabPanel>
+                  <SubscribedOrSubscribedTo
+                    profilePageUserId={profilePageUser.id}
+                    type="getAllSubscribers"
+                  />
+                </TabPanel>
+                <TabPanel>
+                  <SubscribedOrSubscribedTo
+                    profilePageUserId={profilePageUser.id}
+                    type="getAllSubscribedTo"
+                  />
+                </TabPanel>
+              </section>
+            </Tabs>
+          </section>
+        </main>
+      </div>
+    </>
   );
 };
 export default Profile;

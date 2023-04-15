@@ -144,6 +144,8 @@ const BooksOrIssues = ({
               className="grid-image"
               src={currentResult.cover_photo}
               alt={`${currentResult.book_title}`}
+              width="100%"
+              height="auto"
             />
           </Link>
         </div>

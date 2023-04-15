@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getIssue, getIssues } from "../../services";
 import ErrMsg from "../CommonUI/ErrorMessage";
+import MetaTags from "../MetaTags";
 import "./read.scss";
 
 const IssuePaginationBtn = ({ children, btnProps, linkProps, disabled }) => {
@@ -162,6 +163,7 @@ const IssuePagination = ({ setDeleteErr }) => {
 };
 
 const Read = () => {
+  const [issueDetails, setIssueDetails] = useState({});
   const [pages, setPages] = useState([]);
   const [deleteErr, setDeleteErr] = useState(false);
   const { urlSlug, bookId, issueNumber } = useParams();
@@ -169,8 +171,16 @@ const Read = () => {
     try {
       (async () => {
         const {
-          data: { issueAssets },
+          data: {
+            issue: {
+              book_title: bookTitle,
+              issue_title: issueTitle,
+              description,
+            },
+            issueAssets,
+          },
         } = await getIssue(urlSlug, bookId, issueNumber);
+        setIssueDetails({ bookTitle, issueTitle, description });
         setPages(issueAssets);
       })();
     } catch (err) {
@@ -178,32 +188,45 @@ const Read = () => {
     }
   }, [bookId, issueNumber, urlSlug]);
   return (
-    <main className="container-fluid read-page min-vh100">
-      <div className="row">
-        {/* <h2>Read</h2> */}
-        {!deleteErr ? (
-          <ul className="issue-page-list-container">
-            {pages.map(({ id, page_number: pageNum, photo_url: photoUrl }) => (
-              <li className="issue-page" key={`issue-page-${id}`}>
-                <img
-                  src={photoUrl}
-                  className="issue-page-img"
-                  alt={`issue-page-${pageNum}`}
-                />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="read-err-msg text-center">
-            <ErrMsg
-              errorStatus={deleteErr}
-              messageText="An Error occurred. Please try again later."
-            />
-          </p>
-        )}
-      </div>
-      <IssuePagination setDeleteErr={setDeleteErr} />
-    </main>
+    <>
+      <MetaTags
+        title={`${issueDetails.bookTitle}: ${issueDetails.issueTitle}`}
+        canonical={`https://www.bluestonecomics.com/read/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
+        description={issueDetails.description}
+      />
+      <main className="container-fluid read-page min-vh100">
+        <div className="row">
+          <h1 className="hidden-header">
+            Read - {issueDetails.bookTitle}: {issueDetails.issueTitle}
+          </h1>
+          {!deleteErr ? (
+            <ul className="issue-page-list-container">
+              {pages.map(
+                ({ id, page_number: pageNum, photo_url: photoUrl }) => (
+                  <li className="issue-page" key={`issue-page-${id}`}>
+                    <img
+                      src={photoUrl}
+                      className="issue-page-img"
+                      alt={`${issueDetails.bookTitle}: ${issueDetails.issueTitle} page ${pageNum}`}
+                      width="100%"
+                      height="auto"
+                    />
+                  </li>
+                )
+              )}
+            </ul>
+          ) : (
+            <p className="read-err-msg text-center">
+              <ErrMsg
+                errorStatus={deleteErr}
+                messageText="An Error occurred. Please try again later."
+              />
+            </p>
+          )}
+        </div>
+        <IssuePagination setDeleteErr={setDeleteErr} />
+      </main>
+    </>
   );
 };
 export default Read;
