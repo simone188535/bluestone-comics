@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../actions";
+import logo from "../../assets/logo.png";
 import "./header.scss";
 
 /* 
@@ -172,7 +173,15 @@ const Header = () => {
   return (
     <nav className="global-nav">
       <div className="global-nav-item logo">
-        <Link to="/">Bluestone Comics</Link>
+        <Link to="/">
+          <img
+            src={logo}
+            className="logo-img"
+            alt="Bluestone Comics logo"
+            width="225px"
+            height="auto"
+          />
+        </Link>
       </div>
       <ul className="global-nav-item nav-menu">
         <li className="nav-menu-item">
