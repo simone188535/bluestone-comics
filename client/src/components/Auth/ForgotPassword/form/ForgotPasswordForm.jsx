@@ -45,10 +45,10 @@ function ForgotPasswordForm() {
         onSubmit={onSubmit}
       >
         <Form className="bsc-form forgot-password-form auth-form">
-          <div className="form-header-text">
+          <h1 className="form-header-text">
             Please, Provide your <strong>email</strong> so that your password
             can be reset.
-          </div>
+          </h1>
           <div>
             <Field
               className="form-input form-item auth-input"
