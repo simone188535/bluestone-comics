@@ -2,6 +2,7 @@ import React from "react";
 import store from "../store";
 import { authActions } from "../actions";
 import { AuthenticationServices } from "../services";
+import MetaTags from "./MetaTags";
 
 import Header from "./Header";
 import Footer from "./Footer";
@@ -25,11 +26,18 @@ if (jwtToken) {
 }
 
 const App = () => (
-  <div className="bsc">
-    <Header />
-    <AllRoutes />
-    <Footer />
-  </div>
+  <>
+    <MetaTags
+      title="Bluestone Comics: Make and Read American WebComics"
+      canonical="https://www.bluestonecomics.com"
+      description="Bluestone Comics is a celebration of American comic books. Upload your own American style comic books. Read all comic books for free. Bring your comics to life."
+    />
+    <div className="bsc">
+      <Header />
+      <AllRoutes />
+      <Footer />
+    </div>
+  </>
 );
 
 export default App;
