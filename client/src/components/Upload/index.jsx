@@ -164,9 +164,10 @@ const Upload = () => {
     <>
       <MetaTags
         title="Bluestone Comics | Upload"
-        canonical="https://www.bluestonecomics.com/upload"
         description="Upload your new American WebComic for others to read."
-      />
+      >
+        <meta name="robots" content="noindex, nofollow" />
+      </MetaTags>
       <div className="upload-page container">
         <div className="upload-form-container">
           <Formik
