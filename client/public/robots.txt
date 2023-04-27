@@ -1,3 +1,13 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+
+Disallow: /upload
+Disallow: /upload-issue/*
+Disallow: /edit-upload/*
+Disallow: /reset-password/*
+Disallow: /profile/*/edit
+Disallow: *?q=*
+
+
+
+Sitemap: https://www.bluestonecomics.com/sitemaps/index.xml
