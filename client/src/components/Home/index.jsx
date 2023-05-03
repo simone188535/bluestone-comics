@@ -65,7 +65,7 @@ const Home = () => {
               className={`hero-container sect-${sectionNum}`}
               key={sectionNum}
             >
-              <div className="hero-image-container" />
+              <div className="hero-image-container"></div>
               <article className={`desc ${slantDirection}-slant`}>
                 <section className="desc-content">
                   {headerText}
