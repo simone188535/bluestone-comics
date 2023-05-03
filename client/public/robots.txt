@@ -7,7 +7,6 @@ Disallow: /edit-upload/*
 Disallow: /reset-password/*
 Disallow: /profile/*/edit
 Disallow: *?q=*
-Disallow: /comic-list
 
 
 Sitemap: https://www.bluestonecomics.com/sitemaps/index.xml

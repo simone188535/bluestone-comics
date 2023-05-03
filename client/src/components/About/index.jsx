@@ -8,7 +8,7 @@ const About = () => {
       <MetaTags
         title="Bluestone Comics | About"
         canonical="https://www.bluestonecomics.com/about"
-        description="Bluestone Comics' mission statement and goals for the future."
+        description="Bluestone Comics' mission statement and goals for the future. Our Passion is supporting the creation of indie comics."
       />
       <div className="container about-page min-vh100">
         <h1 className="hidden-header">
