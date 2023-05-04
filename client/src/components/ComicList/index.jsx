@@ -1,4 +1,4 @@
-import React from "react-router-dom";
+import React, { Redirect } from "react-router-dom";
 import MetaTags from "../MetaTags";
 import "./comic-list.scss";
 
@@ -10,6 +10,7 @@ const ComicList = () => {
         canonical="https://www.bluestonecomics.com/comic-list"
         description="Find and Read Your Favorite American Comics. There is tons of new work to explore!"
       />
+      <Redirect to="/search" />
       <div className="container-fluid comic-list-page min-vh100">
         <div className="row">
           <h2>Comic List</h2>
