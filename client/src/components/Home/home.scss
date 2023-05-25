@@ -1,8 +1,8 @@
 @import '../../styles/abstracts/variables.scss';
 
 .home-page {
-    max-width: 1800px;
-    margin: 0 auto;
+    // max-width: 1800px;
+    // margin: 0 auto;
     .hero-container {
         display: flex;
         // position: relative;
@@ -45,6 +45,7 @@
             // margin: 0 auto;
             min-height: 300px;
             align-items: center;
+            order: 2;
 
             .desc-content {
                 padding: 20px 0;
@@ -133,7 +134,7 @@
                         display: block;
                         transform: skewX(-7deg);
                         // background-color: $disabled-violet-blue;
-                        left: 7%;
+                        left: 4%;
                     }
 
                     .desc-content {
@@ -148,7 +149,7 @@
                         display: block;
                         transform: skewX(7deg);
                         // background-color: $disabled-violet-blue;
-                        right: 15%;
+                        right: 5%;
                     }
                     .desc-content {
                         // padding-right: 5%;
@@ -186,6 +187,9 @@
             }
 
             &.odd {
+                .hero-image-container {
+                    order: 2;
+                }
                 .desc-content {
                     left: 10%;
                 }
