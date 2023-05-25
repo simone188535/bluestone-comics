@@ -45,7 +45,7 @@
             // margin: 0 auto;
             min-height: 300px;
             align-items: center;
-            order: 2;
+            // order: 2;
 
             .desc-content {
                 padding: 20px 0;
@@ -144,7 +144,7 @@
                 }
 
                 &.right-slant {
-                    order: 2;
+                    // order: 2;
                     &:before {
                         display: block;
                         transform: skewX(7deg);
@@ -196,8 +196,12 @@
             }
 
             &.even {
-                .desc-content {
-                    right: 15%;
+                .desc.right-slant {
+                    order: 2;
+
+                    .desc-content {
+                        right: 15%;
+                    }
                 }
             }
             

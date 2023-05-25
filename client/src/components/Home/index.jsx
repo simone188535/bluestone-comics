@@ -105,12 +105,6 @@ const Home = () => {
               className={`hero-container sect-${sectionNum} ${sectionOrder}`}
               key={sectionNum}
             >
-              <article className={`desc ${slantDirection}-slant`}>
-                <section className="desc-content">
-                  {headerText}
-                  <p className="details">{detailsText}</p>
-                </section>
-              </article>
               <div className="hero-image-container">
                 <picture className="hero-picture">
                   <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
@@ -119,6 +113,12 @@ const Home = () => {
                   <img className="hero-image" src={imgSrc.small} alt={imgAlt} />
                 </picture>
               </div>
+              <article className={`desc ${slantDirection}-slant`}>
+                <section className="desc-content">
+                  {headerText}
+                  <p className="details">{detailsText}</p>
+                </section>
+              </article>
             </section>
           )
         )}
