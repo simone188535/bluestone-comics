@@ -4,7 +4,7 @@
     max-width: 1800px;
     margin: 0 auto;
     .hero-container {
-        // display: flex;
+        display: flex;
         position: relative;
         width: 100%;
 
@@ -12,15 +12,23 @@
             // overflow: hidden;
             width: 100%;
             height: 50vh;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            min-height: 350px;
+            // background-repeat: no-repeat;
+            // background-size: cover;
+            // background-position: center;
+            height: 350px;
+            display: block;
 
-            // .hero-image {
-            //     display: block;
-            //     width: 100%;
-            // }
+            .hero-picture {         
+                width: 100%;
+                display: block;
+                max-height: 350px;
+            }
+
+            .hero-image {         
+                width: 100%;
+                display: block;
+                max-height: 350px;
+            }
         }
 
         .desc {
@@ -63,15 +71,15 @@
         }
 
         &.sect-one .hero-image-container {
-            background-image: url('../../assets/wolverine.jpeg');
+            // background-image: url('../../assets/wolverine.jpeg');
         }
         
         &.sect-two .hero-image-container {
-            background-image: url('../../assets/supergirl.jpeg');
+            // background-image: url('../../assets/supergirl.jpeg');
         }
        
         &.sect-three .hero-image-container {
-            background-image: url('../../assets/starlight.jpeg');
+            // background-image: url('../../assets/starlight.jpeg');
         }
     }
 }
@@ -142,7 +150,7 @@
             }
 
             .hero-image-container { 
-                background-position-y: top;
+                // background-position-y: top;
             }
 
             &[class*="sect"] {
@@ -158,17 +166,17 @@
             }
             &.sect-one {
                 .hero-image-container {
-                    background-position-x: 20rem;
+                    // background-position-x: 20rem;
                 }
             }
             &.sect-two {
                 .hero-image-container {
-                    background-position-x: -12rem;
+                    // background-position-x: -12rem;
                 }
             }
             &.sect-three {
                 .hero-image-container {
-                    background-position-x: 19rem;
+                    // background-position-x: 19rem;
                 }
             }
 

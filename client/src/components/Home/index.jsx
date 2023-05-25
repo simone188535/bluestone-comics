@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import MetaTags from "../MetaTags";
+import batmanXLarge from "../../assets/homepage/bluestone-comics-welcome-XL.jpg";
+import batmanLarge from "../../assets/homepage/bluestone-comics-welcome-Large.jpg";
+import batmanMedium from "../../assets/homepage/bluestone-comics-welcome-Medium.jpg";
+import batmanSmall from "../../assets/homepage/bluestone-comics-welcome-Small.jpg";
+import blackPantherXLarge from "../../assets/homepage/bluestone-comics-awards-XL.jpg";
+import blackPantherLarge from "../../assets/homepage/bluestone-comics-awards-Large.jpg";
+import blackPantherMedium from "../../assets/homepage/bluestone-comics-awards-Medium.jpg";
+import blackPantherSmall from "../../assets/homepage/bluestone-comics-awards-Small.jpg";
 import "./home.scss";
 
 const LinkButton = ({ buttonText, link, btnClass }) => (
@@ -15,6 +23,13 @@ const homePageSections = [
   {
     sectionNum: "one",
     slantDirection: "left",
+    imgSrc: {
+      xl: batmanXLarge,
+      large: batmanLarge,
+      medium: batmanMedium,
+      small: batmanSmall,
+    },
+    imgAlt: "Welcome to Bluestone Comics",
     headerText: <h1 className="primary-header">Welcome to Bluestone Comics</h1>,
     detailsText: (
       <>
@@ -33,6 +48,13 @@ const homePageSections = [
   {
     sectionNum: "two",
     slantDirection: "right",
+    imgSrc: {
+      xl: blackPantherXLarge,
+      large: blackPantherLarge,
+      medium: blackPantherMedium,
+      small: blackPantherSmall,
+    },
+    imgAlt: "Bluestone Comics Awards",
     headerText: <h2 className="primary-header">Awards</h2>,
     detailsText: (
       <>
@@ -44,6 +66,13 @@ const homePageSections = [
   {
     sectionNum: "three",
     slantDirection: "left",
+    imgSrc: {
+      xl: batmanXLarge,
+      large: batmanXLarge,
+      medium: batmanXLarge,
+      small: batmanXLarge,
+    },
+    imgAlt: "Bluestone Comics Sponsorship",
     headerText: <h2 className="primary-header">Sponsorship</h2>,
     detailsText:
       "Popular comics may have the chance to receive sponsorship in the future.",
@@ -60,12 +89,26 @@ const Home = () => {
       />
       <main className="container-fluid home-page">
         {homePageSections.map(
-          ({ sectionNum, slantDirection, headerText, detailsText }) => (
+          ({
+            sectionNum,
+            slantDirection,
+            imgSrc,
+            imgAlt,
+            headerText,
+            detailsText,
+          }) => (
             <section
               className={`hero-container sect-${sectionNum}`}
               key={sectionNum}
             >
-              <div className="hero-image-container"></div>
+              <div className="hero-image-container">
+                <picture className="hero-picture">
+                  <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
+                  <source media="(min-width: 992px)" srcSet={imgSrc.large} />
+                  <source media="(min-width: 768px)" srcSet={imgSrc.medium} />
+                  <img className="hero-image" src={imgSrc.small} alt={imgAlt} />
+                </picture>
+              </div>
               <article className={`desc ${slantDirection}-slant`}>
                 <section className="desc-content">
                   {headerText}
