@@ -21,6 +21,7 @@ const LinkButton = ({ buttonText, link, btnClass }) => (
 
 const homePageSections = [
   {
+    sectionOrder: "odd",
     sectionNum: "one",
     slantDirection: "left",
     imgSrc: {
@@ -46,6 +47,7 @@ const homePageSections = [
     ),
   },
   {
+    sectionOrder: "even",
     sectionNum: "two",
     slantDirection: "right",
     imgSrc: {
@@ -64,6 +66,7 @@ const homePageSections = [
     ),
   },
   {
+    sectionOrder: "odd",
     sectionNum: "three",
     slantDirection: "left",
     imgSrc: {
@@ -90,6 +93,7 @@ const Home = () => {
       <main className="container-fluid home-page">
         {homePageSections.map(
           ({
+            sectionOrder,
             sectionNum,
             slantDirection,
             imgSrc,
@@ -98,9 +102,15 @@ const Home = () => {
             detailsText,
           }) => (
             <section
-              className={`hero-container sect-${sectionNum}`}
+              className={`hero-container sect-${sectionNum} ${sectionOrder}`}
               key={sectionNum}
             >
+              <article className={`desc ${slantDirection}-slant`}>
+                <section className="desc-content">
+                  {headerText}
+                  <p className="details">{detailsText}</p>
+                </section>
+              </article>
               <div className="hero-image-container">
                 <picture className="hero-picture">
                   <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
@@ -109,12 +119,6 @@ const Home = () => {
                   <img className="hero-image" src={imgSrc.small} alt={imgAlt} />
                 </picture>
               </div>
-              <article className={`desc ${slantDirection}-slant`}>
-                <section className="desc-content">
-                  {headerText}
-                  <p className="details">{detailsText}</p>
-                </section>
-              </article>
             </section>
           )
         )}
