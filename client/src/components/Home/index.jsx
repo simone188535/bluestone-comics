@@ -1,14 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import MetaTags from "../MetaTags";
-import batmanXLarge from "../../assets/homepage/bluestone-comics-welcome-XL.jpg";
-import batmanLarge from "../../assets/homepage/bluestone-comics-welcome-Large.jpg";
-import batmanMedium from "../../assets/homepage/bluestone-comics-welcome-Medium.jpg";
-import batmanSmall from "../../assets/homepage/bluestone-comics-welcome-Small.jpg";
-import blackPantherXLarge from "../../assets/homepage/bluestone-comics-awards-XL.jpg";
-import blackPantherLarge from "../../assets/homepage/bluestone-comics-awards-Large.jpg";
-import blackPantherMedium from "../../assets/homepage/bluestone-comics-awards-Medium.jpg";
-import blackPantherSmall from "../../assets/homepage/bluestone-comics-awards-Small.jpg";
+import batmanXLarge from "../../assets/homepage/batman-welcome-XL.jpg";
+import batmanLarge from "../../assets/homepage/batman-welcome-Large.jpg";
+import batmanMedium from "../../assets/homepage/batman-welcome-Medium.jpg";
+import batmanSmall from "../../assets/homepage/batman-welcome-Small.jpg";
+import blackPantherXLarge from "../../assets/homepage/black-panther-awards-XL.jpg";
+import blackPantherLarge from "../../assets/homepage/black-panther-awards-Large.jpg";
+import blackPantherMedium from "../../assets/homepage/black-panther-awards-Medium.jpg";
+import blackPantherSmall from "../../assets/homepage/black-panther-awards-Small.jpg";
+import spidermanXLarge from "../../assets/homepage/spiderman-sponsorship-XL.jpg";
+import spidermanLarge from "../../assets/homepage/spiderman-sponsorship-Large.jpg";
+import spidermanMedium from "../../assets/homepage/spiderman-sponsorship-Medium.jpg";
+import spidermanSmall from "../../assets/homepage/spiderman-sponsorship-Small.jpg";
 import "./home.scss";
 
 const LinkButton = ({ buttonText, link, btnClass }) => (
@@ -70,10 +74,10 @@ const homePageSections = [
     sectionNum: "three",
     slantDirection: "left",
     imgSrc: {
-      xl: batmanXLarge,
-      large: batmanXLarge,
-      medium: batmanXLarge,
-      small: batmanXLarge,
+      xl: spidermanXLarge,
+      large: spidermanLarge,
+      medium: spidermanMedium,
+      small: spidermanSmall,
     },
     imgAlt: "Bluestone Comics Sponsorship",
     headerText: <h2 className="primary-header">Sponsorship</h2>,
