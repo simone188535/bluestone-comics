@@ -114,7 +114,13 @@ const Home = () => {
                   <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
                   <source media="(min-width: 992px)" srcSet={imgSrc.large} />
                   <source media="(min-width: 768px)" srcSet={imgSrc.medium} />
-                  <img className="hero-image" src={imgSrc.small} alt={imgAlt} />
+                  <img
+                    className="hero-image"
+                    src={imgSrc.small}
+                    width="auto"
+                    height="auto"
+                    alt={imgAlt}
+                  />
                 </picture>
               </div>
               <article className={`desc ${slantDirection}-slant`}>
