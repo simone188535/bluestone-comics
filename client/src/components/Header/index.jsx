@@ -178,7 +178,7 @@ const Header = () => {
             src={logo}
             className="logo-img"
             alt="Bluestone Comics logo"
-            width="225px"
+            width="auto"
             height="auto"
           />
         </Link>

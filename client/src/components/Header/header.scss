@@ -16,10 +16,11 @@
         font-size: 20px;
         font-weight: $semibold;
         padding: 0 10px;
+        // flex-basis: 200px;
 
         .logo-img {
             display: block;
-            width: 225px;
+            width: 100%;
         }
     }
 
@@ -94,6 +95,7 @@
 
     .logo {
         order: 2;
+        flex-basis: 200px;
     }
 
     .mobile-toggle {
@@ -219,6 +221,7 @@
         .logo {
             order: 1;
             padding: 0 20px;
+            flex-basis: 225px;
         }
 
         .mobile-toggle {
