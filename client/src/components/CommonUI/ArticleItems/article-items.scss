@@ -1,3 +1,10 @@
 @import '../../../styles/abstracts/variables';
 
 .article-items {}
+
+
+@media only screen and (min-width: $medium) {
+    .article-items {
+    
+    }
+}
