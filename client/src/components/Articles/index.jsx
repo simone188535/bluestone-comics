@@ -1,12 +1,12 @@
 import React from "react";
-import ArticleItem from "../CommonUI/ArticleItem";
+import ArticleItems from "../CommonUI/ArticleItems";
 import "./articles.scss";
 
 const Articles = () => {
   return (
     <div className="container-fluid articles-page min-vh100">
       <main className="articles-container">
-        <ArticleItem articleList={[]} />
+        <ArticleItems articleList={[]} />
       </main>
     </div>
   );

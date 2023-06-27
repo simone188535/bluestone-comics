@@ -188,16 +188,14 @@ const Header = () => {
           <Link to="/search">Comic List</Link>
         </li>
         <li className="nav-menu-item">
+          <Link to="/articles">Articles</Link>
+        </li>
+        <li className="nav-menu-item">
           <Link to="/about">About</Link>
         </li>
-        {/* <li className="nav-menu-item">
-          <Link to="/comic-list">Comic List</Link>
-        </li>
+        {/*
         <li className="nav-menu-item">
           <Link to="/contest">Contests</Link>
-        </li>
-        <li className="nav-menu-item">
-          <Link to="/articles">Articles</Link>
         </li>
         <li className="nav-menu-item">
           <Link to="/news">News</Link>
