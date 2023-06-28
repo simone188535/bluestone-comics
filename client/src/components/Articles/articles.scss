@@ -1,18 +1,18 @@
 @import '../../styles/abstracts/variables';
 
 .articles-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 
     .articles-container {
-        flex-basis: 80%;
-        display: flex;
+        width: 90%;
+        margin: 0 auto;
     }
 }
 
 @media only screen and (min-width: $medium) {
     .articles-page {
     
+        .articles-container {
+            max-width: 900px;
+        }
     }
 }

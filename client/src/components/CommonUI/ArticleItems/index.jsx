@@ -9,16 +9,16 @@ const ArticleItems = ({ articleList }) => {
 
           return (
             <article className="article-items" key={`article-items-${key}`}>
+              {imgSrc && alt && (
+                <figure className="article-img-wrapper">
+                  <img src={imgSrc} alt={alt} className="article-img" />
+                </figure>
+              )}
               <section className="article-body">
                 <h2 className="header">{header}</h2>
                 {desc && <section className="desc">{desc}</section>}
                 {date && <div className="date">{date}</div>}
               </section>
-              {imgSrc && alt && (
-                <figure>
-                  <img src={imgSrc} alt={alt} />
-                </figure>
-              )}
             </article>
           );
         })

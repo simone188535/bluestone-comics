@@ -1,10 +1,32 @@
 @import '../../../styles/abstracts/variables';
 
-.article-items {}
+.article-items {
+    display: flex;
+    flex-direction: column;
+
+    .article-img-wrapper {
+        // display: flex;
+        flex: 0 0 100%;
+
+        .article-img {
+            display: block;
+            max-width: 100%;
+        }
+    }
+    .article-body {
+        flex: 1;
+    }
+
+}
 
 
 @media only screen and (min-width: $medium) {
     .article-items {
+        flex-direction: row;
+        // flex-wrap: nowrap;
+        .article-img-wrapper {
+            flex: 0 0 400px;
+        }
     
     }
 }
