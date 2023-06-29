@@ -28,14 +28,19 @@
                 margin-bottom: 0.3rem;
             }
 
-            .header, .date {
+            .extra-details, .header {
                 letter-spacing: 0.04rem;
             }
 
-            .date, .desc {
+            .extra-details, .desc {
                 font-weight: $light;
                 // color: $gray-black;
                 color: $kinda-gray-kinda-black;
+            }
+
+            .extra-details {
+                margin-top: 0.5rem;
+                font-size: .8rem;
             }
 
             .desc {
@@ -43,10 +48,6 @@
                 margin-bottom: 0.2rem;
             }
 
-            .date {
-                margin-top: 0.5rem;
-                font-size: .8rem;
-            }
         }
     }
 

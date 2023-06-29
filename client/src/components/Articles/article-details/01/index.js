@@ -4,9 +4,15 @@ const pageOne = {
   key: 1,
   header: "Testing123",
   desc: "Testing Desc",
-  date: "2023-06-27T20:00:54.813Z",
-  imgSrc: batmanLarge,
-  alt: "placeholder",
+  img: {
+    src: batmanLarge,
+    alt: "placeholder",
+  },
+  extraDetails: {
+    date: "2023-06-27T20:00:54.813Z",
+    articleType: "Creator",
+    minRead: 5,
+  },
 };
 
 export default pageOne;

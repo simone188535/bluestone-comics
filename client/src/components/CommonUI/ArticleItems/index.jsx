@@ -5,20 +5,38 @@ const ArticleItems = ({ articleList }) => {
   const articles =
     articleList?.length > 0
       ? articleList.map((item) => {
-          const { key, header, desc, date, imgSrc, alt } = item;
+          const {
+            key,
+            header,
+            desc,
+            img: { src, alt },
+            extraDetails: { date, articleType, minRead },
+          } = item;
 
           return (
             <article className="article-items" key={`article-items-${key}`}>
-              {imgSrc && alt && (
+              {src && alt && (
                 <figure className="article-img-wrapper">
-                  <img src={imgSrc} alt={alt} className="article-img" />
+                  <img src={src} alt={alt} className="article-img" />
                 </figure>
               )}
               <section className="article-body">
                 <section className="content-wrapper">
                   <h2 className="header">{header}</h2>
                   {desc && <section className="desc">{desc}</section>}
-                  {date && <div className="date">{date}</div>}
+                  <div className="extra-details">
+                    <span className="left-details">
+                      {date && <span className="date">{date}</span>}
+                      {minRead && (
+                        <span className="min-read">{minRead} min read</span>
+                      )}
+                    </span>
+                    <span className="right-details">
+                      {articleType && (
+                        <span className="article-type">{articleType}</span>
+                      )}
+                    </span>
+                  </div>
                 </section>
               </section>
             </article>
