@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import "./article-items.scss";
 
 const ArticleItems = ({ articleList }) => {
@@ -26,7 +27,11 @@ const ArticleItems = ({ articleList }) => {
                   {desc && <section className="desc">{desc}</section>}
                   <div className="extra-details">
                     <span className="left-details">
-                      {date && <span className="date">{date}</span>}
+                      {date && (
+                        <span className="date">
+                          {moment(date).format("MMM D")}
+                        </span>
+                      )}
                       {minRead && (
                         <span className="min-read">{minRead} min read</span>
                       )}
