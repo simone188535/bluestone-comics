@@ -5,7 +5,6 @@
     flex-direction: column;
 
     .article-img-wrapper {
-        // display: flex;
         flex: 0 0 100%;
 
         .article-img {
@@ -15,6 +14,40 @@
     }
     .article-body {
         flex: 1;
+        display: flex;
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .header {
+                font-size: 1.3rem;
+                font-weight: $normal;
+                // font-weight: $semibold;
+                margin-bottom: 0.3rem;
+            }
+
+            .header, .date {
+                letter-spacing: 0.04rem;
+            }
+
+            .date, .desc {
+                font-weight: $light;
+                // color: $gray-black;
+                color: $kinda-gray-kinda-black;
+            }
+
+            .desc {
+                font-size: 1rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .date {
+                margin-top: 0.5rem;
+                font-size: .8rem;
+            }
+        }
     }
 
 }
@@ -23,10 +56,13 @@
 @media only screen and (min-width: $medium) {
     .article-items {
         flex-direction: row;
-        // flex-wrap: nowrap;
         .article-img-wrapper {
-            flex: 0 0 400px;
+            flex: 0 0 250px;
+            order: 2;
         }
-    
+
+        .article-body {
+            order: 1;
+        }
     }
 }

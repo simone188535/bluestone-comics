@@ -15,9 +15,11 @@ const ArticleItems = ({ articleList }) => {
                 </figure>
               )}
               <section className="article-body">
-                <h2 className="header">{header}</h2>
-                {desc && <section className="desc">{desc}</section>}
-                {date && <div className="date">{date}</div>}
+                <section className="content-wrapper">
+                  <h2 className="header">{header}</h2>
+                  {desc && <section className="desc">{desc}</section>}
+                  {date && <div className="date">{date}</div>}
+                </section>
               </section>
             </article>
           );
