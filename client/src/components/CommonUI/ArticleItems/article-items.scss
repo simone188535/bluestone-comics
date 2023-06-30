@@ -138,6 +138,12 @@
 @media only screen and (min-width: $medium) {
     .article-items {
 
+        .article-img-wrapper .article-img {
+            min-height: unset;
+            object-fit: unset;
+        }
+
+
         .article-body .content-wrapper .link {
             .header {
                 font-size: 1.3rem;
