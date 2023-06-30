@@ -2,6 +2,7 @@ import batmanLarge from "../../../../assets/homepage/batman-welcome-Large.jpg";
 
 const pageOne = {
   key: 1,
+  link: "#",
   header: "Testing123",
   desc: "Testing Desc",
   img: {

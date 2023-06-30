@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import "./article-items.scss";
 
@@ -8,6 +9,7 @@ const ArticleItems = ({ articleList }) => {
       ? articleList.map((item) => {
           const {
             key,
+            link,
             header,
             desc,
             img: { src, alt },
@@ -23,8 +25,10 @@ const ArticleItems = ({ articleList }) => {
               )}
               <section className="article-body">
                 <section className="content-wrapper">
-                  <h2 className="header">{header}</h2>
-                  {desc && <section className="desc">{desc}</section>}
+                  <Link to={link} className="link">
+                    <h2 className="header">{header}</h2>
+                    {desc && <section className="desc">{desc}</section>}
+                  </Link>
                   <div className="extra-details">
                     <span className="left-details">
                       {date && (
