@@ -76,11 +76,12 @@
 }
 
 
-@media only screen and (min-width: $medium) {
+@media only screen and (min-width: $small) {
     .article-items {
         flex-direction: row;
         .article-img-wrapper {
-            flex: 0 0 250px;
+            // flex: 0 0 250px;
+            flex: 0 0 30%;
             order: 2;
         }
 
