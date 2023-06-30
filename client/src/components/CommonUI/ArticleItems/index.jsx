@@ -28,12 +28,14 @@ const ArticleItems = ({ articleList }) => {
                   <div className="extra-details">
                     <span className="left-details">
                       {date && (
-                        <span className="date">
+                        <span className="left-details-item date">
                           {moment(date).format("MMM D")}
                         </span>
                       )}
                       {minRead && (
-                        <span className="min-read">{minRead} min read</span>
+                        <span className="left-details-item min-read">
+                          {minRead} min read
+                        </span>
                       )}
                     </span>
                     <span className="right-details">

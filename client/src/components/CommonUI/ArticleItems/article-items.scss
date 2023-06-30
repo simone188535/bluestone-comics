@@ -18,6 +18,7 @@
 
         .content-wrapper {
             display: flex;
+            flex: 1;
             flex-direction: column;
             justify-content: center;
 
@@ -28,6 +29,12 @@
                 margin-bottom: 0.3rem;
             }
 
+            .desc {
+                font-size: 1rem;
+                margin-bottom: 0.2rem;
+                color: $kinda-gray-kinda-black;
+            }
+
             .extra-details, .header {
                 letter-spacing: 0.04rem;
             }
@@ -35,17 +42,32 @@
             .extra-details, .desc {
                 font-weight: $light;
                 // color: $gray-black;
-                color: $kinda-gray-kinda-black;
+                
             }
 
             .extra-details {
                 margin-top: 0.5rem;
                 font-size: .8rem;
-            }
+                display: flex;
+                justify-content: space-between;
+                color: $gray-black;
 
-            .desc {
-                font-size: 1rem;
-                margin-bottom: 0.2rem;
+                .left-details {
+                    .left-details-item {
+                        &:not(:last-child):after {
+                            content: "\2022";
+                            margin: 0.2rem;
+                            color: $gray-black;
+                        }
+                    }
+                }
+
+                .right-details .article-type {
+                    background-color: $mid-gray;
+                    border-radius: 15px;
+                    padding: 5px;
+                    color: $gray-black;
+                }
             }
 
         }
@@ -64,6 +86,10 @@
 
         .article-body {
             order: 1;
+
+            .content-wrapper {
+                padding-right: 1.5rem;
+            }
         }
     }
 }
