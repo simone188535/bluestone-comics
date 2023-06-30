@@ -48,14 +48,14 @@
                 }
 
                 .header {
-                    font-size: 1.3rem;
+                    font-size: 1.1rem;
                     font-weight: $normal;
                     // font-weight: $semibold;
                     margin: 1rem 0 0.5rem;
                 }
 
                 .desc {
-                    font-size: 1rem;
+                    font-size: .9rem;
                     line-height: 1.3;
                     color: $kinda-gray-kinda-black;
                     margin-bottom: 0.8rem;
@@ -125,11 +125,28 @@
                     .header {
                         margin-top: 0;
                     }
+
                     .desc {
                         margin-bottom: 0.5rem;
                     }
                 }
             }
         }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .article-items {
+
+        .article-body .content-wrapper .link {
+            .header {
+                font-size: 1.3rem;
+            }
+
+            .desc {
+                font-size: 1rem;
+            }
+        }
+
     }
 }
