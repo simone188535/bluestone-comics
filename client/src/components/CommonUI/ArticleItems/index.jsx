@@ -20,7 +20,9 @@ const ArticleItems = ({ articleList }) => {
             <article className="article-items" key={`article-items-${key}`}>
               {src && alt && (
                 <figure className="article-img-wrapper">
-                  <img src={src} alt={alt} className="article-img" />
+                  <Link to={link}>
+                    <img src={src} alt={alt} className="article-img" />
+                  </Link>
                 </figure>
               )}
               <section className="article-body">
