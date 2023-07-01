@@ -7,9 +7,10 @@ import allPageData from "./article-details";
 import CONSTANTS from "../../utils/Constants";
 import "./articles.scss";
 
+const { ARTICLE_PAGINATION_LIMIT } = CONSTANTS;
+
 const Articles = () => {
   const history = useHistory();
-  const { ARTICLE_PAGINATION_LIMIT } = CONSTANTS;
   const [currentPage, setCurrentPage] = useState(null);
 
   const setPage = (page) => {
@@ -37,15 +38,17 @@ const Articles = () => {
         <section className="all-articles">
           <ArticleItems articleList={currentResultsDisplayed} />
         </section>
-        <section className="article-pagination">
-          <Pagination
-            className="pagination-bar"
-            currentPage={currentPage}
-            totalCount={allPageData.length}
-            pageSize={ARTICLE_PAGINATION_LIMIT}
-            onPageChange={setPage}
-          />
-        </section>
+        {allPageData.length > ARTICLE_PAGINATION_LIMIT && (
+          <section className="article-pagination">
+            <Pagination
+              className="pagination-bar"
+              currentPage={currentPage}
+              totalCount={allPageData.length}
+              pageSize={ARTICLE_PAGINATION_LIMIT}
+              onPageChange={setPage}
+            />
+          </section>
+        )}
       </main>
     </div>
   );
