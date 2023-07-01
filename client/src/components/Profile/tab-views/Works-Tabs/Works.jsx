@@ -177,6 +177,7 @@ const BooksOrIssues = ({
           totalCount={filteredResults.length}
           pageSize={PAGINATION_LIMIT}
           onPageChange={setPage}
+          alwaysShow={false}
         />
       </>
     )

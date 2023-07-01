@@ -99,6 +99,7 @@ const Bookmarks = ({ profilePageUserId }) => {
             totalCount={bookmarks.length}
             pageSize={PAGINATION_LIMIT}
             onPageChange={setPage}
+            alwaysShow={false}
           />
         </>
       );

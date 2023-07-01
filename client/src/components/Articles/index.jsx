@@ -38,17 +38,16 @@ const Articles = () => {
         <section className="all-articles">
           <ArticleItems articleList={currentResultsDisplayed} />
         </section>
-        {allPageData.length > ARTICLE_PAGINATION_LIMIT && (
-          <section className="article-pagination">
-            <Pagination
-              className="pagination-bar"
-              currentPage={currentPage}
-              totalCount={allPageData.length}
-              pageSize={ARTICLE_PAGINATION_LIMIT}
-              onPageChange={setPage}
-            />
-          </section>
-        )}
+        <section className="article-pagination">
+          <Pagination
+            className="pagination-bar"
+            currentPage={currentPage}
+            totalCount={allPageData.length}
+            pageSize={ARTICLE_PAGINATION_LIMIT}
+            onPageChange={setPage}
+            alwaysShow={false}
+          />
+        </section>
       </main>
     </div>
   );
