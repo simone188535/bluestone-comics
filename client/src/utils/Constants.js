@@ -15,6 +15,7 @@ const CONSTANTS = {
     },
   },
   PAGINATION_LIMIT: 12,
+  ARTICLE_PAGINATION_LIMIT: 15,
   GENRES: [
     "Action",
     "Adventure",
