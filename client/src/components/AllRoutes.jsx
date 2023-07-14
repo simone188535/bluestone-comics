@@ -8,7 +8,8 @@ import Login from "./Auth/Login";
 import ForgotPassword from "./Auth/ForgotPassword";
 import ResetPassword from "./Auth/ResetPassword";
 import About from "./About";
-import Articles from "./Articles";
+// import Articles from "./Articles";
+import ArticleRoutes from "./Articles/pages";
 import ComicList from "./ComicList";
 import Contest from "./Contest";
 import News from "./News";
@@ -38,7 +39,9 @@ const AllRoutes = () => {
     <Switch>
       <Route path="/about" component={About} />
       <Route path="/search" component={Search} />
-      <Route path="/articles" component={Articles} />
+      <Route path="/articles">
+        <ArticleRoutes />
+      </Route>
       <Route path="/contest" component={Contest} />
       <Route path="/comic-list" component={ComicList} />
       <Route path="/news" component={News} />
