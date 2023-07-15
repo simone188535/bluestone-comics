@@ -3,18 +3,22 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import RouteWithSubRoutes from "../../Routes/RouteWithSubRoutes";
 import Articles from "..";
+import ArticlePage from "../ArticlePage";
 
 import allPageData from "../article-details";
 
 function AllArticleRoutes() {
-  return allPageData.map(({ key, link, pageComp }) => (
-    <RouteWithSubRoutes
-      key={key}
-      path={link}
-      component={pageComp}
-      routes={{ path: link, component: pageComp }}
-    />
-  ));
+  return allPageData.map(({ key, link, pageComp }) => {
+    const articlePageWChild = () => <ArticlePage>{pageComp()}</ArticlePage>;
+    return (
+      <RouteWithSubRoutes
+        key={key}
+        path={link}
+        component={articlePageWChild}
+        routes={{ path: link, component: articlePageWChild }}
+      />
+    );
+  });
 }
 
 function ArticleRoutes() {
