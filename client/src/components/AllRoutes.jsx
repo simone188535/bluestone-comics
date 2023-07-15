@@ -22,7 +22,7 @@ import EditProfile from "./Profile/Edit";
 import Details from "./Details";
 import Read from "./Read";
 import PageNotFound from "./PageNotFound";
-import ProtectedRoute from "./Auth/ProtectedRoute";
+import ProtectedRoute from "./Routes/ProtectedRoute";
 
 import store from "../store";
 
