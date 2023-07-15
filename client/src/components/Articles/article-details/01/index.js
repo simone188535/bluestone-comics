@@ -6,7 +6,7 @@ import MakeAComicOnline from "../../pages/MakeAComicOnline";
 const pageOne = [
   {
     key: 1,
-    link: "articles/test",
+    link: "/articles/test",
     header:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
     desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
@@ -23,7 +23,7 @@ const pageOne = [
   },
   {
     key: 2,
-    link: "articles/hmm",
+    link: "/articles/hmm",
     header: "Testing123",
     desc: "Testing Desc",
     img: {
