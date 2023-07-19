@@ -1,0 +1,37 @@
+@import '../../../styles/abstracts/variables';
+
+.article-page {
+    display: flex;
+    flex-wrap: wrap;
+
+    .article {
+        &-main,
+        &-aside {
+            flex: 0 0 100%;
+        }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .article-page {
+        flex-wrap: nowrap;
+        justify-content: center;
+
+        .article {
+            &-main {
+                flex: 1 0 60%;
+                max-width: 1000px;
+                
+                &.only {
+                  max-width: 700px;
+                  flex-grow: 0;
+                }
+            }
+
+            &-aside {
+                flex: 0 0 25%;
+                max-width: 400px;
+            }
+        }
+    }
+}

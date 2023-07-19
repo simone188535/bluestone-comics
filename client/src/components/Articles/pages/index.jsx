@@ -15,7 +15,7 @@ function AllArticleRoutes() {
       mainComponent: MainComponent,
       asideComponent: AsideComponent,
     }) => {
-      const articlePageWChild = () => (
+      const articlePageWContent = () => (
         <ArticlePage
           main={<MainComponent />}
           aside={AsideComponent ? <AsideComponent /> : null}
@@ -26,8 +26,8 @@ function AllArticleRoutes() {
         <RouteWithSubRoutes
           key={key}
           path={link}
-          component={articlePageWChild}
-          routes={{ path: link, component: articlePageWChild }}
+          component={articlePageWContent}
+          routes={{ path: link, component: articlePageWContent }}
         />
       );
     }
