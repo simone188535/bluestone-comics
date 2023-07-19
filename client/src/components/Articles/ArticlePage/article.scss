@@ -9,7 +9,62 @@
         &-aside {
             flex: 0 0 100%;
         }
+
+        &-header {
+            margin: 3rem 0 2rem;
+            
+            &-title {
+                font-size: 2.3rem;
+            }
+
+        }
+
+        &-sub-header {
+            margin-bottom: 0.8rem;
+            
+            .article-header-sub-title {
+                font-weight: $light;
+                color: $gray-black;
+                font-size: 1.3rem;
+                line-height: 1.5;
+            }
+        }
+
+        &-creation-details {
+            font-size: .9rem;
+                display: flex;
+                justify-content: space-between;
+                color: $gray-black;
+                font-weight: $light;
+
+                .extra-details {
+                    .extra-details-item {
+                        &:not(:last-child):after {
+                            content: "\2022";
+                            margin: 0.2rem;
+                            color: $gray-black;
+                        }
+                    }
+                }
+        }
+
+        &-hr {
+            height: 1px;
+            background-color: $light-grey;
+            border: none;
+            &-spacing {
+                margin: 2rem 0;
+            }
+        }
+
+        &-para {
+            font-weight: $light;
+            line-height: 1.6;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
     }
+
 }
 
 @media only screen and (min-width: $medium) {

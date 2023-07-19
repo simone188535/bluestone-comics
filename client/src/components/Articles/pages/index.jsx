@@ -12,12 +12,14 @@ function AllArticleRoutes() {
     ({
       key,
       link,
+      extraDetails,
+      img,
       mainComponent: MainComponent,
       asideComponent: AsideComponent,
     }) => {
       const articlePageWContent = () => (
         <ArticlePage
-          main={<MainComponent />}
+          main={<MainComponent extraDetails={extraDetails} img={img} />}
           aside={AsideComponent ? <AsideComponent /> : null}
         />
       );

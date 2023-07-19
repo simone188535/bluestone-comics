@@ -20,7 +20,6 @@ const pageOne = [
       minRead: 5,
     },
     mainComponent: UploadWorkTutorial,
-    asideComponent: UploadWorkTutorial,
   },
   {
     key: 2,
@@ -37,6 +36,7 @@ const pageOne = [
       minRead: 5,
     },
     mainComponent: MakeAComicOnline,
+    asideComponent: UploadWorkTutorial,
   },
 ];
 
