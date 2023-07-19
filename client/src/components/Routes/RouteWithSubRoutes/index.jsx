@@ -6,7 +6,7 @@ import { Route } from "react-router-dom";
     handle "sub"-routes by passing them in a `routes`
     prop to the component it renders.
 
-    This is perfect for mapping over nested routes: 
+    This is perfect for implementing over nested routes: 
     ie route: /taco, sub-route: /taco/cart
 
     example: https://v5.reactrouter.com/web/example/route-config line:63

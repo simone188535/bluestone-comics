@@ -19,7 +19,7 @@ const pageOne = [
       articleType: "Creator",
       minRead: 5,
     },
-    pageComp: UploadWorkTutorial,
+    mainComponent: UploadWorkTutorial,
   },
   {
     key: 2,
@@ -35,7 +35,7 @@ const pageOne = [
       articleType: "Creator",
       minRead: 5,
     },
-    pageComp: MakeAComicOnline,
+    mainComponent: MakeAComicOnline,
   },
 ];
 
