@@ -3,7 +3,7 @@ import moment from "moment";
 
 function UploadWorkTutorial({
   // img,
-  extraDetails: { date, minRead },
+  extraDetails: { date, minRead } = { extraDetails: {} },
 }) {
   return (
     <>
@@ -35,9 +35,15 @@ function UploadWorkTutorial({
         <hr className="article-hr" />
       </section>
       <article className="article-para">
-        <figure>
-          <img src="pic_trulli.jpg" alt="Trulli" />
-          <figcaption>Fig.1 - Trulli, Puglia, Italy.</figcaption>
+        <figure className="article-figure">
+          <img
+            src="https://placebear.com/640/360"
+            alt="Trulli"
+            className="article-figure-img"
+          />
+          <figcaption className="article-figure-cap">
+            Fig.1 - Trulli, Puglia, Italy.
+          </figcaption>
         </figure>
         <p className="article-para">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

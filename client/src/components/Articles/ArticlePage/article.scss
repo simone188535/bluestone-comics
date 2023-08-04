@@ -63,6 +63,20 @@
             font-size: 1.2rem;
             margin-bottom: 2rem;
         }
+
+        &-figure {
+            width: 100%;
+            margin-bottom: 2rem;
+
+            &-img {
+                width: 100%;
+            }
+
+            &-cap {
+                font-size: .9rem;
+                text-align: center;
+            }
+        }
     }
 
 }
