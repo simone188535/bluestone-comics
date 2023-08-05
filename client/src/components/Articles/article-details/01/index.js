@@ -1,7 +1,10 @@
 import batmanLarge from "../../../../assets/homepage/batman-welcome-Large.jpg";
 
 import UploadWorkTutorial from "../../pages/UploadWorkTutorial";
-import MakeAComicOnline from "../../pages/MakeAComicOnline";
+// import MakeAComicOnline from "../../pages/MakeAComicOnline";
+
+// Keep commented out
+// import DemoArticle from "../../pages/DemoArticle";
 
 const pageOne = [
   {
@@ -21,23 +24,23 @@ const pageOne = [
     },
     mainComponent: UploadWorkTutorial,
   },
-  {
-    key: 2,
-    link: "/articles/hmm",
-    header: "Testing123",
-    desc: "Testing Desc",
-    img: {
-      src: batmanLarge,
-      alt: "placeholder",
-    },
-    extraDetails: {
-      date: "2023-06-27T20:00:54.813Z",
-      articleType: "Creator",
-      minRead: 5,
-    },
-    mainComponent: MakeAComicOnline,
-    asideComponent: UploadWorkTutorial,
-  },
+  // {
+  //   key: 2,
+  //   link: "/articles/hmm",
+  //   header: "Testing123",
+  //   desc: "Testing Desc",
+  //   img: {
+  //     src: batmanLarge,
+  //     alt: "placeholder",
+  //   },
+  //   extraDetails: {
+  //     date: "2023-06-27T20:00:54.813Z",
+  //     articleType: "Creator",
+  //     minRead: 5,
+  //   },
+  //   mainComponent: DemoArticle,
+  //   asideComponent: DemoArticle,
+  // },
 ];
 
 export default pageOne;
