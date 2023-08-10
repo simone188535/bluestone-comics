@@ -1,4 +1,6 @@
-import batmanLarge from "../../../../assets/homepage/batman-welcome-Large.jpg";
+// import batmanLarge from "../../../../assets/homepage/batman-welcome-Large.jpg";
+
+import publishCBOnline from "./assets/how-to-publish-a-comic-book-online.jpeg";
 
 import UploadWorkTutorial from "../../pages/UploadWorkTutorial";
 // import MakeAComicOnline from "../../pages/MakeAComicOnline";
@@ -9,13 +11,12 @@ import UploadWorkTutorial from "../../pages/UploadWorkTutorial";
 const pageOne = [
   {
     key: 1,
-    link: "/articles/test",
-    header:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+    link: "/articles/how-to-publish-your-comic-book-online",
+    header: "How to Publish A Comic Book Online: Step-by-Step Guide Article",
+    desc: 'The "How-To" guide for self-publishing American Comic Books',
     img: {
-      src: batmanLarge,
-      alt: "placeholder",
+      src: publishCBOnline,
+      alt: "How to publish a comic book online",
     },
     extraDetails: {
       date: "2023-06-27T20:00:54.813Z",

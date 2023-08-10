@@ -1,5 +1,6 @@
 import React from "react";
 import moment from "moment";
+import MetaTags from "../../../MetaTags";
 
 function UploadWorkTutorial({
   // img,
@@ -7,9 +8,14 @@ function UploadWorkTutorial({
 }) {
   return (
     <>
+      <MetaTags
+        title="How to Publish A Comic Book Online: Step-by-Step Guide"
+        canonical="https://www.bluestonecomics.com/articles/how-to-publish-your-comic-book-online"
+        description=""
+      />
       <header className="article-header">
         <h1 className="article-header-title">
-          How to Publish a Comic Book Online
+          How to Publish A Comic Book Online: Step-by-Step Guide
         </h1>
       </header>
       <section className="article-sub-header">
