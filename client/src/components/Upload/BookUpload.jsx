@@ -116,9 +116,9 @@ const BookUpload = ({
       />
       <div className="form-header-subtext">
         <strong>Your Comic URL will be similar to this: </strong>{" "}
-        https://bluestonecomics.com/api/v1/read/
+        https://bluestonecomics.com/read/
         <strong>{values.urlSlug ? values.urlSlug : "<URL Slug>"}</strong>
-        /book/1234
+        /book/example/issue/1
       </div>
       <ErrorMessage
         className="error-message error-text-color"
@@ -134,7 +134,6 @@ const BookUpload = ({
         component="div"
         name="contentRating"
       />
-
       <div className="form-header-text">
         Select the applicable <strong>genres</strong>:
       </div>
