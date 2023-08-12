@@ -55,7 +55,7 @@ const IssueUpload = ({
       />
       <div className="form-header-subtext">
         Thumbnail size must be:{" "}
-        <strong>{`${THUMBNAIL_WIDTH} x ${THUMBNAIL_HEIGHT}`}</strong>
+        <strong>{`${THUMBNAIL_WIDTH}px x ${THUMBNAIL_HEIGHT}px`}</strong>
       </div>
       <Field
         className="form-input form-textarea"

@@ -93,7 +93,7 @@ const BookUpload = ({
         name="bookCoverPhoto"
       />
       <div className="form-header-subtext">
-        Thumbnail size must be: <strong>{`${WIDTH} x ${HEIGHT}`}</strong>
+        Thumbnail size must be: <strong>{`${WIDTH}px x ${HEIGHT}px`}</strong>
       </div>
       <Field
         className="form-input form-textarea"
