@@ -84,8 +84,9 @@ const IssueUpload = ({
       <div className="form-header-subtext">
         <strong>
           *Tip: There is no need to select every available field if you are the
-          only creator. Selecting writer and artist will suffice. It may
-          overcomplicate the search for any of your other works.
+          only creator. Selecting &ldquo;writer&ldquo; and &ldquo;artist&ldquo;
+          will suffice. It may overcomplicate the search for users trying to
+          view which primary roles were fulfilled later.
         </strong>
       </div>
     </>
