@@ -128,14 +128,16 @@ function UploadWorkTutorial({
               <strong className="mid-bold">Select the genres</strong> applicable
               for the book.
             </li>
+          </ol>
 
-            <p className="article-para">
-              <strong className="mid-bold">
-                Steps 9 - 13 are for filling out the details of the first issue.
-                Think of an issue as a &#34;chapter&#34; of a book.
-              </strong>
-            </p>
+          <p className="article-para">
+            <strong className="mid-bold">
+              Steps 9 - 13 are for filling out the details of the first issue.
+              Think of an issue as a &#34;chapter&#34; of a book.
+            </strong>
+          </p>
 
+          <ol className="article-list" start="9">
             <li className="bold-marker">
               <strong className="mid-bold">Add an issue title</strong> (This
               will have no effect on the &#34;URL Slug&#34;).
