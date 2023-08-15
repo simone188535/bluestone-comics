@@ -98,13 +98,15 @@
         }
 
         &-list {
+            padding-left: 2.5rem;
+
             &.position-inside {
                 list-style-position: inside;
             }
 
             li {
                 margin-bottom: 20px;
-                margin-left: 20px;
+                padding-left: 10px;
 
                 &.bold-marker {
                     &::marker {

@@ -70,7 +70,7 @@ function UploadWorkTutorial({
         </h2>
 
         <article className="article-para">
-          <ol className="article-list position-inside">
+          <ol className="article-list">
             <li className="bold-marker">
               You must be <Link to="/login">logged in</Link> or{" "}
               <Link to="sign-up">create an account</Link>.
