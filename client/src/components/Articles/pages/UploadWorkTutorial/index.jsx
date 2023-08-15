@@ -63,11 +63,11 @@ function UploadWorkTutorial({
           of a traditional publisher&#39;s preferences.
         </p>
 
-        <p className="article-para">
+        <h2 className="article-para">
           <strong className="mid-bold">
             In order to self-publish your comic book on our site…
           </strong>
-        </p>
+        </h2>
 
         <article className="article-para">
           <ol className="article-list position-inside">
@@ -80,16 +80,19 @@ function UploadWorkTutorial({
               book and its first issue.
             </li>
             <li className="bold-marker">
-              <div className="article-para">
+              <div className="inline-li">
                 <strong className="mid-bold">Add a book title.</strong> The name
                 chosen for the book will also serve as the name of the work in
                 the URL.{" "}
               </div>
-              <div className="article-para">
+              <div className="mt-sm">
                 <strong className="mid-bold">For example, </strong> If the
-                chosen book title is <strong>&#34;my first comic&#34;</strong>.
+                chosen book title is{" "}
+                <strong className="mid-bold">&#34;my first comic&#34;</strong>.
                 The URL for the comic book would be similar to:{" "}
-                <strong>
+              </div>
+              <div className="mt-sm">
+                <strong className="mid-bold">
                   https://bluestonecomics.com/read/my-first-comic/book/example/issue/1
                 </strong>
               </div>
@@ -129,13 +132,13 @@ function UploadWorkTutorial({
             <p className="article-para">
               <strong className="mid-bold">
                 Steps 9 - 13 are for filling out the details of the first issue.
-                Think of an issue as a “chapter” of a book.
+                Think of an issue as a &#34;chapter&#34; of a book.
               </strong>
             </p>
 
             <li className="bold-marker">
               <strong className="mid-bold">Add an issue title</strong> (This
-              will have no effect on the “URL Slug”) .
+              will have no effect on the &#34;URL Slug&#34;).
             </li>
 
             <li className="bold-marker">
@@ -155,7 +158,7 @@ function UploadWorkTutorial({
 
             <li className="bold-marker">
               <strong className="mid-bold">
-                Drag ‘n’ Drop all the Issue pages
+                Drag &#39;n&#39; Drop all the Issue pages
               </strong>{" "}
               or select the box and select all the necessary files.{" "}
               <strong className="mid-bold">
@@ -170,24 +173,63 @@ function UploadWorkTutorial({
               file size of any given page can be{" "}
               <strong className="mid-bold">
                 no larger than 2 megabytes. If the pages appear in the incorrect
-                order, Drag ‘n’ Drop them to their correct position.
+                order, Drag &#39;n&#39; Drop them to their correct position.
               </strong>
             </li>
 
-            {/* <li className="bold-marker">
-              <strong className="mid-bold">Give work credit(s) to all the users that assisted in creating the first issue (including yourself)</strong>{" "}
-              Notice your username is already present in this section.  
-            </li> */}
+            <li className="bold-marker">
+              <div className="inline-li">
+                <strong className="mid-bold">
+                  Give work credit(s) to all the users that assisted in creating
+                  the first issue (including yourself)
+                </strong>{" "}
+                Notice your username is already present in this section.
+              </div>
+              <div className="mt-sm">
+                <strong className="mid-bold">
+                  If you are the only person who assisted in creating this work,
+                </strong>{" "}
+                Simply selecting the{" "}
+                <strong className="mid-bold">&#34;writer&#34;</strong> and{" "}
+                <strong className="mid-bold">&#34;artist&#34;</strong>
+                checkboxes will suffice. There is no reason to select all the
+                available checkboxes, as it will overcomplicate the search for
+                users trying to view{" "}
+                <strong className="mid-bold">
+                  which primary roles were fulfilled.
+                </strong>
+              </div>
+              <div className="mt-sm">
+                <strong className="mid-bold">
+                  If other users assisted in creating this work
+                </strong>
+                , search and select their username. When the dropdown closes,
+                their name will appear at the bottom of the credits list.{" "}
+                <strong className="mid-bold">
+                  Again, there is no need to select all the available checkboxes
+                  as it may overcomplicate the search later. Just select the
+                  primary roles each user has fulfilled in the issues&#39;
+                  creation.
+                </strong>
+              </div>
+              <div className="mt-sm">
+                <strong className="mid-bold">Important!</strong> Only the user
+                who uploaded the comic book can change the work credits in the
+                future.
+              </div>
+            </li>
+            <li className="bold-marker">
+              <strong className="mid-bold">Press the submit button.</strong>{" "}
+              This process might take a while, especially if the files you
+              provided were large. Try to be patient and avoid the temptation to
+              refresh. When the upload is complete, the page will redirect to
+              the details page of the newly published comic book.
+            </li>
           </ol>
         </article>
         <p className="article-para">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          Congratulations! You&#39;ve self-published your first comic book on
+          our site!
         </p>
       </article>
     </>

@@ -5,6 +5,7 @@
     flex-wrap: wrap;
 
     .article {
+
         &-main,
         &-aside {
             flex: 0 0 100%;
@@ -12,6 +13,7 @@
 
         &-main {
             padding: 0 1rem;
+
             &.only {
                 padding: 0 1.5rem;
             }
@@ -23,7 +25,7 @@
 
         &-header {
             margin: 3rem 0 2rem;
-            
+
             &-title {
                 font-size: 2.3rem;
             }
@@ -32,7 +34,7 @@
 
         &-sub-header {
             margin-bottom: 0.8rem;
-            
+
             .article-header-sub-title {
                 font-weight: $light;
                 color: $gray-black;
@@ -47,26 +49,27 @@
 
         &-creation-details {
             font-size: .9rem;
-                display: flex;
-                justify-content: space-between;
-                color: $gray-black;
-                font-weight: $light;
+            display: flex;
+            justify-content: space-between;
+            color: $gray-black;
+            font-weight: $light;
 
-                .extra-details {
-                    .extra-details-item {
-                        &:not(:last-child):after {
-                            content: "\2022";
-                            margin: 0.2rem;
-                            color: $gray-black;
-                        }
+            .extra-details {
+                .extra-details-item {
+                    &:not(:last-child):after {
+                        content: "\2022";
+                        margin: 0.2rem;
+                        color: $gray-black;
                     }
                 }
+            }
         }
 
         &-hr {
             height: 1px;
             background-color: $light-grey;
             border: none;
+
             &-spacing {
                 margin: 2rem 0;
             }
@@ -99,22 +102,42 @@
                 list-style-position: inside;
             }
 
-            .bold-marker {
-              &::marker {
-                font-weight: $semibold;
-              }
+            li {
+                margin-bottom: 20px;
+                margin-left: 20px;
+
+                &.bold-marker {
+                    &::marker {
+                        font-weight: $semibold;
+                    }
+                }
+
+                .inline-li {
+                    display: inline;
+                }
             }
         }
 
     }
 
+    // bold
     .mid-bold {
-        font-weight: $semibold;
+        font-weight: $normal;
     }
 
     .bold {
         font-weight: $bold;
     }
+
+    // spacing
+    .mt-sm {
+        margin-top: 10px;
+    }
+
+    .mt-lg {
+        margin-top: 20px;
+    }
+
 
 }
 
@@ -127,11 +150,11 @@
             &-main {
                 flex: 1 0 60%;
                 max-width: 1000px;
-                
+
                 &.only {
-                  max-width: 700px;
-                  flex-grow: 0;
-                  padding: unset;
+                    max-width: 700px;
+                    flex-grow: 0;
+                    padding: unset;
                 }
             }
 
