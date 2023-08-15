@@ -38,6 +38,10 @@
                 color: $gray-black;
                 font-size: 1.3rem;
                 line-height: 1.5;
+
+                &.black {
+                    color: $pure-black;
+                }
             }
         }
 
@@ -89,6 +93,27 @@
                 color: $dark-charcoal;
             }
         }
+
+        &-list {
+            &.position-inside {
+                list-style-position: inside;
+            }
+
+            .bold-marker {
+              &::marker {
+                font-weight: $semibold;
+              }
+            }
+        }
+
+    }
+
+    .mid-bold {
+        font-weight: $semibold;
+    }
+
+    .bold {
+        font-weight: $bold;
     }
 
 }
