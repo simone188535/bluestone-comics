@@ -181,7 +181,7 @@ function UploadWorkTutorial({
               <div className="inline-li">
                 <strong className="mid-bold">
                   Give work credit(s) to all the users that assisted in creating
-                  the first issue (including yourself)
+                  the first issue (including yourself).
                 </strong>{" "}
                 Notice your username is already present in this section.
               </div>
