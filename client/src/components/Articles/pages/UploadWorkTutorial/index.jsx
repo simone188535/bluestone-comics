@@ -193,7 +193,7 @@ function UploadWorkTutorial({
                 </strong>{" "}
                 Simply selecting the{" "}
                 <strong className="mid-bold">&#34;writer&#34;</strong> and{" "}
-                <strong className="mid-bold">&#34;artist&#34;</strong>
+                <strong className="mid-bold">&#34;artist&#34;</strong>{" "}
                 checkboxes will suffice. There is no reason to select all the
                 available checkboxes, as it will overcomplicate the search for
                 users trying to view{" "}
