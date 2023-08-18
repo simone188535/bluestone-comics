@@ -1,5 +1,6 @@
 @import '../../../styles/abstracts/variables';
 
+
 .article-page {
     display: flex;
     flex-wrap: wrap;
@@ -9,6 +10,7 @@
         &-main,
         &-aside {
             flex: 0 0 100%;
+            max-width: 100%;
         }
 
         &-main {
@@ -78,7 +80,7 @@
         &-para {
             font-weight: $light;
             line-height: 1.6;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-bottom: 2rem;
         }
 
@@ -98,7 +100,7 @@
         }
 
         &-list {
-            padding-left: 2.5rem;
+            padding-left: 2rem;
 
             &.position-inside {
                 list-style-position: inside;
