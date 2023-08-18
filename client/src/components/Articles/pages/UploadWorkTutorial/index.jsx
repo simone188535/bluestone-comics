@@ -93,7 +93,7 @@ function UploadWorkTutorial({
                 The URL for the comic book would be similar to:{" "}
               </div>
               <div className="mt-sm">
-                <strong className="mid-bold">
+                <strong className="mid-bold example-link">
                   https://bluestonecomics.com/read/my-first-comic/book/example/issue/1
                 </strong>
               </div>
