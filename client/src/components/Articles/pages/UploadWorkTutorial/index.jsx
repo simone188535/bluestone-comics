@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import MetaTags from "../../../MetaTags";
+import "./upload-work-tutorial.scss";
 
 function UploadWorkTutorial({
   // img,
