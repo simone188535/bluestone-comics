@@ -324,6 +324,19 @@
             padding: 10px 0;
         }
     }
+
+    .desc-detail {
+        letter-spacing: 1px;
+        line-height: 1.5;
+    }
+
+    .normal {
+        font-weight: $light;
+    }
+   
+    .bold {
+        font-weight: $normal;
+    }
 }
 
 @media only screen and (min-width: $medium) {

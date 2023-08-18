@@ -73,12 +73,22 @@ function UploadWorkTutorial({
         <article className="article-para">
           <ol className="article-list">
             <li className="bold-marker">
-              You must be <Link to="/login">logged in</Link> or{" "}
-              <Link to="sign-up">create an account</Link>.
+              You must be{" "}
+              <Link to="/login" className="standard-link">
+                logged in
+              </Link>{" "}
+              or{" "}
+              <Link to="sign-up" className="standard-link">
+                create an account
+              </Link>
+              .
             </li>
             <li className="bold-marker">
-              Go to the <Link to="/upload">upload page</Link> to create a comic
-              book and its first issue.
+              Go to the{" "}
+              <Link to="/upload" className="standard-link">
+                upload page
+              </Link>{" "}
+              to create a comic book and its first issue.
             </li>
             <li className="bold-marker">
               <div className="inline-li">

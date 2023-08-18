@@ -112,33 +112,31 @@ const Details = () => {
         <section className="extra-info-content-block">
           <div className="extra-info">
             <h2 className="primary-header">{properTitle}</h2>
-            <div className="desc-detail bold">
+            <div className="bold">
               Author:{" "}
-              <Link to={`/profile/${author}`} className="desc-detail link">
-                <span className="desc-detail normal">{author}</span>
+              <Link to={`/profile/${author}`} className="standard-link">
+                <span className="normal">{author}</span>
               </Link>
             </div>
             {isIssue && (
-              <div className="desc-detail bold">
+              <div className="bold">
                 Book:{" "}
                 <Link
                   to={`/details/${urlSlug}/book/${bookId}`}
-                  className="desc-detail link"
+                  className="standard-link"
                 >
-                  <span className="desc-detail normal">{bookTitle}</span>
+                  <span className="normal">{bookTitle}</span>
                 </Link>
               </div>
             )}
-            <div className="desc-detail bold">
-              Rating:{" "}
-              <span className="desc-detail normal">{contentRating}</span>
+            <div className="bold">
+              Rating: <span className="normal">{contentRating}</span>
             </div>
-            <div className="desc-detail bold">
-              Status: <span className="desc-detail normal">{status}</span>
+            <div className="bold">
+              Status: <span className="normal">{status}</span>
             </div>
             <p>
-              <span className="desc-detail bold">Description:</span>{" "}
-              {description}
+              <span className="bold">Description:</span> {description}
             </p>
           </div>
         </section>

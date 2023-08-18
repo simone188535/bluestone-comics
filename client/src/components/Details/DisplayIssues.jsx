@@ -20,30 +20,30 @@ const MappedIssue = ({
 
   return (
     <div className="row issues-list-table-item desc-detail">
-      <div className="col left-col desc-detail bold">
+      <div className="col left-col bold">
         <Link
           to={`/read/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
-          className="desc-detail link-as-normal"
+          className="standard-link-as-normal"
         >
           {title}
         </Link>
       </div>
-      <div className="col mid-col desc-detail bold">
+      <div className="col mid-col bold">
         <Link
           to={`/details/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
-          className="desc-detail link-as-normal"
+          className="standard-link-as-normal"
         >
           Issue#:&nbsp;{issueNumber}
         </Link>
       </div>
-      <div className="col right-col desc-detail bold">
+      <div className="col right-col bold">
         {moment(dateCreated).format("MMMM D, YYYY")}
       </div>
       {belongsToUser && (
-        <div className={`col desc-detail user-owned-col ${btnClass}`}>
+        <div className={`col user-owned-col ${btnClass}`}>
           <Link
             to={`/edit-upload/${urlSlug}/book/${bookId}/issue/${issueNumber}`}
-            className="desc-detail link-as-normal"
+            className="standard-link-as-normal"
           >
             <button
               type="button"

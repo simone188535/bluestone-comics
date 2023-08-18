@@ -1,0 +1,25 @@
+.standard-link {
+    color: $violet-blue;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &-as-normal {
+        color: $off-black;
+        text-decoration: underline;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    &.normal {
+        font-weight: $light;
+    }
+
+    &.bold {
+        font-weight: $normal;
+    }
+}

@@ -145,6 +145,9 @@
 
 }
 
+@media only screen and (min-width: $small) {
+    
+}
 @media only screen and (min-width: $medium) {
     .article-page {
         flex-wrap: nowrap;

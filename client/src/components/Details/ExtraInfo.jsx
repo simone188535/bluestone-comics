@@ -94,7 +94,7 @@ const ExtraInfo = ({
         return {
           id: `${workCreditAsString}-${nanoid()}`,
           listItem: `
-                  <a class="desc-detail link" href="/profile/${worksUserParticipatedIn}">
+                  <a class="standard-link" href="/profile/${worksUserParticipatedIn}">
                     ${worksUserParticipatedIn}
                   </a>`,
         };
@@ -115,7 +115,7 @@ const ExtraInfo = ({
           workCreditVal.map((username) => (
             <li key={nanoid()} className="creator-list-item">
               <Link
-                className="desc-detail link normal"
+                className="standard-link normal"
                 to={`/profile/${username}`}
               >
                 {username}
@@ -132,7 +132,7 @@ const ExtraInfo = ({
       });
     };
     return (
-      <article className={`${className}-panel`}>
+      <article className={`${className}-panel desc-detail`}>
         <div className="view-whole-field">
           <h3 className="tertiary-header accredited-issue-row">Accredited:</h3>
           {isIssue ? (
@@ -157,30 +157,30 @@ const ExtraInfo = ({
 
   const details = () => {
     return (
-      <article className={`${className}-panel`}>
+      <article className={`${className}-panel desc-detail`}>
         {/* Only show these fields if this is an issue */}
         {isIssue ? (
           <>
             <div className="view-half-field">
               <h3 className="tertiary-header">Total Page Count:</h3>
-              <div className="desc-detail normal">{totalIssuePages}</div>
+              <div className="normal">{totalIssuePages}</div>
             </div>
             <div className="view-half-field">
               <h3 className="tertiary-header">Volume/Issue #:</h3>
-              <div className="desc-detail normal">{issueNum}</div>
+              <div className="normal">{issueNum}</div>
             </div>
           </>
         ) : null}
         <div className={`view-${className}-field`}>
           <h3 className="tertiary-header">Date Published:</h3>
-          <div className="desc-detail normal">
+          <div className="normal">
             {moment(dateCreated).format("MMMM D, YYYY")}
           </div>
         </div>
         {lastUpdated ? (
           <div className={`view-${className}-field`}>
             <h3 className="tertiary-header">Last Updated:</h3>
-            <div className="desc-detail normal">
+            <div className="normal">
               {moment(lastUpdated).format("MMMM D, YYYY")}
             </div>
           </div>
