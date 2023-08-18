@@ -23,6 +23,7 @@ const pageOne = [
       articleType: "Creator",
       minRead: 5,
     },
+    className: "upload-work-tutorial",
     mainComponent: UploadWorkTutorial,
   },
   // {
@@ -39,6 +40,7 @@ const pageOne = [
   //     articleType: "Creator",
   //     minRead: 5,
   //   },
+  //   className: "demo-article",
   //   mainComponent: DemoArticle,
   //   asideComponent: DemoArticle,
   // },

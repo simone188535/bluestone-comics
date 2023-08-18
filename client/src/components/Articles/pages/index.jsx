@@ -14,6 +14,7 @@ function AllArticleRoutes() {
       link,
       extraDetails,
       img,
+      className,
       mainComponent: MainComponent,
       asideComponent: AsideComponent,
     }) => {
@@ -21,6 +22,7 @@ function AllArticleRoutes() {
         <ArticlePage
           main={<MainComponent extraDetails={extraDetails} img={img} />}
           aside={AsideComponent ? <AsideComponent /> : null}
+          className={className}
         />
       );
 
