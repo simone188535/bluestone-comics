@@ -110,11 +110,11 @@
                 margin-bottom: 20px;
                 padding-left: 10px;
 
-                &.bold-marker {
-                    &::marker {
-                        font-weight: $semibold;
-                    }
-                }
+                // &.bold-marker {
+                //     &::marker {
+                //         font-weight: $semibold;
+                //     }
+                // }
 
                 .inline-li {
                     display: inline;
@@ -133,14 +133,34 @@
         font-weight: $bold;
     }
 
-    // spacing
-    .mt-sm {
-        margin-top: 10px;
+    /* spacing start */
+    
+    // margin top 
+    .mt {
+        // small 
+        &-sm {
+            margin-top: 10px;
+        }
+        // large
+        &-lg {
+            margin-top: 20px;
+        }
     }
 
-    .mt-lg {
-        margin-top: 20px;
+
+    .mb {
+        // small 
+        &-sm {
+            margin-bottom: 10px;
+        }
+        // large
+        &-lg {
+            margin-bottom: 20px;
+        }
     }
+
+    /* spacing end */
+    
 
 
 }

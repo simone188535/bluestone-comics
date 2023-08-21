@@ -1,5 +1,14 @@
+@import '../../../../styles/abstracts/variables';
+
 .upload-work-tutorial {
     .example-link {
         word-break: break-word;
+        font-style: italic;
+        font-weight: $normal;
+    }
+
+    .note {
+        font-style: italic;
+        font-weight: $normal;
     }
 }
