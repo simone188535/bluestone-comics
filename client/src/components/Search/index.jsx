@@ -359,11 +359,11 @@ const SearchForm = ({ values, setAdvFilter, advFilterIsOpen }) => {
                     value: "M",
                     disabled: userSearchTypeDisable,
                   },
-                  {
-                    name: "Explicit",
-                    value: "E",
-                    disabled: userSearchTypeDisable,
-                  },
+                  // {
+                  //   name: "Explicit",
+                  //   value: "E",
+                  //   disabled: userSearchTypeDisable,
+                  // },
                 ]}
               />
             </div>

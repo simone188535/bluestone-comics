@@ -47,7 +47,7 @@ const ratingsRadioBtn = [
   { option: "General", value: "G" },
   { option: "Teen", value: "T" },
   { option: "Mature", value: "M" },
-  { option: "Explicit", value: "E" },
+  // { option: "Explicit", value: "E" },
 ].map((rating) => (
   <label className="radio-label" key={`rating-radio-btn-${rating.value}`}>
     <Field
