@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import MetaTags from "../../../MetaTags";
+import video from "../../article-details/01/assets/video/Upload-a-new-comic-book-tutorial.mp4";
 import "./upload-work-tutorial.scss";
 
 function UploadWorkTutorial({
@@ -44,13 +45,12 @@ function UploadWorkTutorial({
       </section>
       <article className="article-para">
         <figure className="article-figure">
-          <img
-            src="https://placebear.com/640/360"
-            alt="Trulli"
-            className="article-figure-img"
-          />
+          <video muted controls className="article-video">
+            <source src={video} type="video/mp4" />
+          </video>
+
           <figcaption className="article-figure-cap">
-            Fig.1 - Trulli, Puglia, Italy.
+            How to Publish A Comic Book Tutorial
           </figcaption>
         </figure>
         <p className="article-para">
