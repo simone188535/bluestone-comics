@@ -3,8 +3,12 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import MetaTags from "../../../MetaTags";
 import video from "../../article-details/01/assets/video/Upload-a-new-comic-book-tutorial.mp4";
+// import importAll from "../../../../utils/importAllAssets";
 import "./upload-work-tutorial.scss";
 
+// const images = importAll("../../article-details/01/assets", false, /^\.\/.*$/);
+
+// console.log("images", images);
 function UploadWorkTutorial({
   // img,
   extraDetails: { date, minRead } = { extraDetails: {} },
@@ -86,11 +90,24 @@ function UploadWorkTutorial({
               .
             </li>
             <li className="bold-marker">
-              Go to the{" "}
-              <Link to="/upload" className="standard-link">
-                upload page
-              </Link>{" "}
-              to create a comic book and its first issue.
+              <p className="mb-sm">
+                Go to the{" "}
+                <Link to="/upload" className="standard-link">
+                  upload page
+                </Link>{" "}
+                to create a comic book and its first issue.
+              </p>
+
+              <figure className="article-figure">
+                <img
+                  src="https://placebear.com/640/360"
+                  alt="Trulli"
+                  className="article-figure-img"
+                />
+                <figcaption className="article-figure-cap">
+                  Fig.1 - Trulli, Puglia, Italy.
+                </figcaption>
+              </figure>
             </li>
             <li className="bold-marker">
               <p className="mb-sm">
