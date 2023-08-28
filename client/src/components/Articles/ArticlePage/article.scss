@@ -145,9 +145,31 @@
         &-sm {
             margin-top: 10px;
         }
+        // medium
+        &-md {
+            margin-top: 30px;
+        }
         // large
         &-lg {
+            margin-top: 50px;
+        }
+    }
+
+    .my {
+        // small 
+        &-sm {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        // medium
+        &-md {
             margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        // large
+        &-lg {
+            margin-top: 50px;
+            margin-bottom: 50px;
         }
     }
 
@@ -157,9 +179,13 @@
         &-sm {
             margin-bottom: 10px;
         }
+        // medium
+        &-md {
+            margin-bottom: 30px;
+        }
         // large
         &-lg {
-            margin-bottom: 30px;
+            margin-bottom: 50px;
         }
     }
 

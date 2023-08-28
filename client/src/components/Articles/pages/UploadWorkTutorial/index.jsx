@@ -2,13 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import MetaTags from "../../../MetaTags";
-import video from "../../article-details/01/assets/video/Upload-a-new-comic-book-tutorial.mp4";
-// import importAll from "../../../../utils/importAllAssets";
+import {
+  uploadComicBookVideo,
+  uploadPage,
+  bookTitleSlug,
+  bookThumbnailUploaded,
+  contentRatingsGenres,
+  issueAssetsAdded,
+  workCreditsNoUsers,
+  workCreditsCurrentUser,
+  workCreditsDifferentUser,
+  submitUploadBtn,
+} from "../../article-details/01/assets";
 import "./upload-work-tutorial.scss";
 
-// const images = importAll("../../article-details/01/assets", false, /^\.\/.*$/);
-
-// console.log("images", images);
 function UploadWorkTutorial({
   // img,
   extraDetails: { date, minRead } = { extraDetails: {} },
@@ -50,7 +57,7 @@ function UploadWorkTutorial({
       <article className="article-para">
         <figure className="article-figure">
           <video muted controls className="article-video">
-            <source src={video} type="video/mp4" />
+            <source src={uploadComicBookVideo} type="video/mp4" />
           </video>
 
           <figcaption className="article-figure-cap">
@@ -90,30 +97,33 @@ function UploadWorkTutorial({
               .
             </li>
             <li className="bold-marker">
-              <p className="mb-sm">
+              <p className="mb-md">
                 Go to the{" "}
                 <Link to="/upload" className="standard-link">
                   upload page
                 </Link>{" "}
                 to create a comic book and its first issue.
               </p>
-
               <figure className="article-figure">
                 <img
-                  src="https://placebear.com/640/360"
-                  alt="Trulli"
+                  src={uploadPage}
+                  alt="upload page"
                   className="article-figure-img"
                 />
-                <figcaption className="article-figure-cap">
-                  Fig.1 - Trulli, Puglia, Italy.
-                </figcaption>
               </figure>
             </li>
             <li className="bold-marker">
-              <p className="mb-sm">
+              <p className="mb-md">
                 Add a book title. The name chosen for the book will also serve
                 as the name of the work in the URL.{" "}
               </p>
+              <figure className="article-figure mb-md">
+                <img
+                  src={bookTitleSlug}
+                  alt="upload page with book title and URL slug"
+                  className="article-figure-img"
+                />
+              </figure>
               <p className="mb-sm">
                 For example, If the chosen book title is &#34;my first
                 comic&#34;. The URL for the comic book would be similar to:{" "}
@@ -125,7 +135,14 @@ function UploadWorkTutorial({
               </p>
             </li>
             <li className="bold-marker">
-              <p className="mb-sm">Select a book thumbnail photo.</p>{" "}
+              <p className="mb-md">Select a book thumbnail photo.</p>{" "}
+              <figure className="article-figure mb-md">
+                <img
+                  src={bookThumbnailUploaded}
+                  alt="upload page with book thumbnail"
+                  className="article-figure-img"
+                />
+              </figure>
               <p className="mb-sm">
                 The book thumbnail photo is essentially the book&#39;s cover
                 photo. It is the cover image for the &#34;front of the
@@ -153,7 +170,16 @@ function UploadWorkTutorial({
               </p>
             </li>
             <li className="bold-marker">
-              Select the genres applicable for the book.
+              <p className="mb-md">
+                Select the genres applicable for the book.
+              </p>
+              <figure className="article-figure">
+                <img
+                  src={contentRatingsGenres}
+                  alt="upload page with genres and content rating"
+                  className="article-figure-img"
+                />
+              </figure>
             </li>
           </ol>
 
@@ -174,10 +200,15 @@ function UploadWorkTutorial({
 
             <li className="bold-marker">
               <p className="mb-sm">Select an issue thumbnail photo.</p>
+              <p className="mb-sm">
+                The issue thumbnail is the cover photo for the issue. If
+                you&#39;d like, you may reuse the same thumbnail as the one used
+                in the book thumbnail section.
+              </p>
               <p>
-                <span className="note">Note: </span>The issue thumbnail is the
-                cover photo for the issue. If you&#39;d like, you may reuse the
-                same thumbnail as the one used in the book thumbnail section.
+                <span className="note">Note: </span>
+                The thumbnail must have a width of 320 pixels and a height of
+                485 pixels. The maximum file size allowed is 1 Megabyte (MB).
               </p>
             </li>
 
@@ -190,10 +221,17 @@ function UploadWorkTutorial({
             </li>
 
             <li className="bold-marker">
-              <p className="mb-sm">
+              <p className="mb-md">
                 Drag &#39;n&#39; Drop all the Issue pages or select the box and
                 select all the necessary files.
               </p>
+              <figure className="article-figure mb-md">
+                <img
+                  src={issueAssetsAdded}
+                  alt="upload page with issue pages added"
+                  className="article-figure-img"
+                />
+              </figure>
               <p className="mb-sm">
                 <span className="note">Note: </span>
                 The recommended file width is 1988 pixels and the recommended
@@ -218,11 +256,18 @@ function UploadWorkTutorial({
                 the first issue (including yourself).
               </p>
 
-              <p className="mb-sm">
+              <p className="mb-md">
                 Notice your username is already present in this section.
               </p>
+              <figure className="article-figure mb-md">
+                <img
+                  src={workCreditsNoUsers}
+                  alt="upload page work credits"
+                  className="article-figure-img mb-lg"
+                />
+              </figure>
 
-              <p className="mb-sm">
+              <p className="mb-md">
                 <span className="note">Note: </span>
                 <strong className="mid-bold">
                   If you are the only person who assisted in creating this work,
@@ -230,14 +275,20 @@ function UploadWorkTutorial({
                 Simply selecting the &#34;writer&#34; and &#34;artist&#34;
                 checkboxes will suffice.{" "}
               </p>
-              <p className="mb-sm">
+              <figure className="article-figure mb-md">
+                <img
+                  src={workCreditsCurrentUser}
+                  alt="upload page work credits with current user"
+                  className="article-figure-img"
+                />
+              </figure>
+              <p className="mb-lg">
                 <strong className="mid-bold">Important!</strong> There is no
                 reason to select all the available checkboxes, as it will
                 overcomplicate the search for users trying to view which primary
                 roles were fulfilled.
               </p>
-
-              <p className="mb-sm">
+              <p className="mb-md">
                 <span className="note">Note 2: </span>
                 <strong className="mid-bold">
                   If other users assisted in creating this work
@@ -245,6 +296,13 @@ function UploadWorkTutorial({
                 , search and select their username. When the dropdown closes,
                 their name will appear at the bottom of the credits list.
               </p>
+              <figure className="article-figure mb-md">
+                <img
+                  src={workCreditsDifferentUser}
+                  alt="upload page work credits with other users"
+                  className="article-figure-img"
+                />
+              </figure>
               <p className="mb-lg">
                 <strong className="mid-bold">Important!</strong> Again, there is
                 no need to select all the available checkboxes as it may
@@ -261,11 +319,18 @@ function UploadWorkTutorial({
             </li>
             <li className="bold-marker">
               <p className="mb-sm">Press the submit button.</p>
-              <p className="mb-sm">
+              <p className="mb-md">
                 This process might take a while, especially if the files you
                 provided were large. Try to be patient and avoid the temptation
                 to refresh.
               </p>
+              <figure className="article-figure mb-md">
+                <img
+                  src={submitUploadBtn}
+                  alt="upload page submit"
+                  className="article-figure-img"
+                />
+              </figure>
               <p>
                 When the upload is complete, the page will redirect to the
                 details page of the newly published comic book.
