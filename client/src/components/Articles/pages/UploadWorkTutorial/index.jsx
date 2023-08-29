@@ -24,7 +24,7 @@ function UploadWorkTutorial({
       <MetaTags
         title="How to Publish A Comic Book Online: Step-by-Step Guide"
         canonical="https://www.bluestonecomics.com/articles/how-to-publish-your-comic-book-online"
-        description="Bluestone Comics allows you to publish your comic books online without having to compromise your vision to fit within the constraints of a traditional publisher's preferences."
+        description="Bluestone Comics allows you to publish your comic books online without having to compromise your artistic vision."
       />
       <header className="article-header">
         <h1 className="article-header-title">
@@ -108,6 +108,8 @@ function UploadWorkTutorial({
                   src={uploadPage}
                   alt="upload page"
                   className="article-figure-img"
+                  width="100%"
+                  height="auto"
                 />
               </figure>
             </li>
@@ -121,6 +123,8 @@ function UploadWorkTutorial({
                   src={bookTitleSlug}
                   alt="upload page with book title and URL slug"
                   className="article-figure-img"
+                  width="100%"
+                  height="auto"
                 />
               </figure>
               <p className="mb-sm">
@@ -140,6 +144,8 @@ function UploadWorkTutorial({
                   src={bookThumbnailUploaded}
                   alt="upload page with book thumbnail"
                   className="article-figure-img"
+                  width="100%"
+                  height="auto"
                 />
               </figure>
               <p className="mb-sm">
@@ -177,6 +183,8 @@ function UploadWorkTutorial({
                   src={contentRatingsGenres}
                   alt="upload page with genres and content rating"
                   className="article-figure-img"
+                  width="100%"
+                  height="auto"
                 />
               </figure>
             </li>
@@ -229,6 +237,8 @@ function UploadWorkTutorial({
                   src={issueAssetsAdded}
                   alt="upload page with issue pages added"
                   className="article-figure-img"
+                  width="100%"
+                  height="auto"
                 />
               </figure>
               <p className="mb-sm">
@@ -263,6 +273,8 @@ function UploadWorkTutorial({
                   src={workCreditsNoUsers}
                   alt="upload page work credits"
                   className="article-figure-img mb-lg"
+                  width="100%"
+                  height="auto"
                 />
               </figure>
 
@@ -279,6 +291,8 @@ function UploadWorkTutorial({
                   src={workCreditsCurrentUser}
                   alt="upload page work credits with current user"
                   className="article-figure-img"
+                  width="100%"
+                  height="auto"
                 />
               </figure>
               <p className="mb-lg">
@@ -300,6 +314,8 @@ function UploadWorkTutorial({
                   src={workCreditsDifferentUser}
                   alt="upload page work credits with other users"
                   className="article-figure-img"
+                  width="100%"
+                  height="auto"
                 />
               </figure>
               <p className="mb-lg">
