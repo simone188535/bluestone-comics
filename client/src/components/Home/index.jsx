@@ -44,7 +44,7 @@ const homePageSections = [
         </span>
         <LinkButton
           buttonText="Upload Your Work"
-          link="/upload"
+          link="/articles/how-to-publish-your-comic-book-online"
           btnClass="upload-btn transparent-black"
         />
       </>
