@@ -18,6 +18,7 @@
 
             &.only {
                 padding: 0 1.5rem;
+                margin-bottom: 3rem;
             }
         }
 
@@ -26,10 +27,10 @@
         }
 
         &-header {
-            margin: 3rem 0 2rem;
+            margin: 2rem 0 1rem;
 
             &-title {
-                font-size: 2.3rem;
+                font-size: 1.5rem;
             }
 
         }
@@ -40,7 +41,7 @@
             .article-header-sub-title {
                 font-weight: $light;
                 color: $gray-black;
-                font-size: 1.3rem;
+                font-size: 1.1rem;
                 line-height: 1.5;
 
                 &.black {
@@ -104,7 +105,7 @@
         }
 
         &-list {
-            padding-left: 2rem;
+            padding-left: 1rem;
 
             &.position-inside {
                 list-style-position: inside;
@@ -212,6 +213,7 @@
                     max-width: 700px;
                     flex-grow: 0;
                     padding: unset;
+                    margin-bottom: 5rem;
                 }
             }
 
@@ -219,6 +221,26 @@
                 flex: 0 0 25%;
                 max-width: 400px;
                 padding: 0 1rem 0 0;
+            }
+
+            &-header {
+                margin: 3rem 0 2rem;
+
+                &-title {
+                    font-size: 2.3rem;
+                }
+            }
+
+            &-sub-header {
+                margin-bottom: 0.8rem;
+    
+                .article-header-sub-title {
+                    font-size: 1.3rem;
+                }
+            }
+
+            &-list {
+                padding-left: 2rem;
             }
         }
     }

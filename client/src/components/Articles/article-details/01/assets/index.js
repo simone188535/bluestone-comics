@@ -7,7 +7,6 @@ import issueAssetsAdded from "./screenshots/issue-assets-added.png";
 import workCreditsNoUsers from "./screenshots/work-credits-no-user.png";
 import workCreditsCurrentUser from "./screenshots/work-credits-current-user.png";
 import workCreditsDifferentUser from "./screenshots/work-credits-different-user-added.png";
-import submitUploadBtn from "./screenshots/submit-button-upload-page.png";
 
 export {
   uploadComicBookVideo,
@@ -19,5 +18,4 @@ export {
   workCreditsNoUsers,
   workCreditsCurrentUser,
   workCreditsDifferentUser,
-  submitUploadBtn,
 };

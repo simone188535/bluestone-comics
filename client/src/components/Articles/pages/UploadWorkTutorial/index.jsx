@@ -12,7 +12,6 @@ import {
   workCreditsNoUsers,
   workCreditsCurrentUser,
   workCreditsDifferentUser,
-  submitUploadBtn,
 } from "../../article-details/01/assets";
 import "./upload-work-tutorial.scss";
 
@@ -319,18 +318,11 @@ function UploadWorkTutorial({
             </li>
             <li className="bold-marker">
               <p className="mb-sm">Press the submit button.</p>
-              <p className="mb-md">
+              <p className="mb-sm">
                 This process might take a while, especially if the files you
                 provided were large. Try to be patient and avoid the temptation
                 to refresh.
               </p>
-              <figure className="article-figure mb-md">
-                <img
-                  src={submitUploadBtn}
-                  alt="upload page submit"
-                  className="article-figure-img"
-                />
-              </figure>
               <p>
                 When the upload is complete, the page will redirect to the
                 details page of the newly published comic book.
