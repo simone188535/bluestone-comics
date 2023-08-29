@@ -19,9 +19,9 @@ const pageOne = [
       alt: "How to publish a comic book online",
     },
     extraDetails: {
-      date: "2023-06-27T20:00:54.813Z",
+      date: "2023-08-29T01:01:32.413Z",
       articleType: "Creator",
-      minRead: 5,
+      minRead: 10,
     },
     className: "upload-work-tutorial",
     mainComponent: UploadWorkTutorial,
