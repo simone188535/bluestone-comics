@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { createBook, getBookAndIssueImagePrefix } from "../../services";
 import onUploadProgressHelper from "./onUploadProgressHelper";
@@ -45,6 +45,17 @@ const BookUploadForm = ({
         Upload a <strong>New Book</strong> along with its{" "}
         <strong>First Issue</strong>
       </h1>
+      <p className="form-header-text">
+        {" "}
+        For a tutorial on how to upload a comic book to our site, Go{" "}
+        <Link
+          className="standard-link"
+          to="/articles/how-to-publish-your-comic-book-online"
+        >
+          here
+        </Link>
+        .
+      </p>
       <BookUpload />
       <IssueUpload />
       <SubmissionProgressModal

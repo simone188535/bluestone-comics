@@ -241,7 +241,7 @@ function UploadWorkTutorial({
               <p className="mb-sm">
                 <span className="note">Note 2: </span>
                 The file size of any given page can be no larger than 2
-                megabytes.
+                megabytes (MB).
               </p>
               <p>
                 <span className="note">Note 3: </span>
