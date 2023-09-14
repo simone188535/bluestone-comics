@@ -3,10 +3,10 @@
 import publishCBOnline from "./assets/how-to-publish-a-comic-book-online.jpeg";
 
 import UploadWorkTutorial from "../../pages/UploadWorkTutorial";
-// import MakeAComicOnline from "../../pages/MakeAComicOnline";
 
 // Keep commented out
 // import DemoArticle from "../../pages/DemoArticle";
+// import MakeAComicOnline from "../../pages/MakeAComicOnline";
 
 const pageOne = [
   {
@@ -26,8 +26,9 @@ const pageOne = [
     className: "upload-work-tutorial",
     mainComponent: UploadWorkTutorial,
   },
+  // keep
   // {
-  //   key: 2,
+  //   key: 3,
   //   link: "/articles/hmm",
   //   header: "Testing123",
   //   desc: "Testing Desc",
