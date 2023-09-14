@@ -1,21 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import moment from "moment";
 import MetaTags from "../../../MetaTags";
-import {
-  uploadComicBookVideo,
-  uploadPage,
-  bookTitleSlug,
-  bookThumbnailUploaded,
-  contentRatingsGenres,
-  issueAssetsAdded,
-  workCreditsNoUsers,
-  workCreditsCurrentUser,
-  workCreditsDifferentUser,
-} from "../../article-details/01/assets/UploadWorkTutorial";
-import "./upload-work-tutorial.scss";
+import { ComicCreationRolesLg } from "../../article-details/01/assets/EightRolesOfComicCreation";
+// import {
 
-function UploadWorkTutorial({
+// } from "../../article-details/01/assets/EightRolesOfComicCreation";
+import "./eight-roles-of-comic-creation.scss";
+
+function EightRolesOfComicCreation({
   // img,
   extraDetails: { date, minRead } = { extraDetails: {} },
 }) {
@@ -26,14 +19,14 @@ function UploadWorkTutorial({
         canonical="https://www.bluestonecomics.com/articles/how-to-publish-your-comic-book-online"
         description="Bluestone Comics allows you to publish your comic books online without having to compromise your artistic vision."
       />
+      {/* TODO: MAKE A COMPONENT FOR THIS HEADER */}
       <header className="article-header">
-        <h1 className="article-header-title">
-          How to Publish A Comic Book Online: Step-by-Step Guide
-        </h1>
+        <h1 className="article-header-title">8 Roles of Comic Creation</h1>
       </header>
       <section className="article-sub-header">
         <h2 className="article-header-sub-title">
-          The &#34;How-To&#34; guide for self-publishing American Comic Books
+          Creating a comic book is not a one-person job. It requires a team of
+          talented individuals to bring the story to life.
         </h2>
       </section>
       <section className="article-creation-details">
@@ -54,6 +47,17 @@ function UploadWorkTutorial({
         <hr className="article-hr" />
       </section>
       <article className="article-para">
+        <figure className="article-figure mb-md">
+          <img
+            src={ComicCreationRolesLg}
+            alt=""
+            className="article-figure-img"
+            width="100%"
+            height="auto"
+          />
+        </figure>
+      </article>
+      {/* <article className="article-para">
         <figure className="article-figure">
           <video muted controls className="article-video">
             <source src={uploadComicBookVideo} type="video/mp4" />
@@ -350,10 +354,9 @@ function UploadWorkTutorial({
           Congratulations! You&#39;ve self-published your first comic book on
           our site!
         </p>
-      </article>
+      </article> */}
     </>
   );
 }
 
-// add meta data, mobile styling, figure tag
-export default UploadWorkTutorial;
+export default EightRolesOfComicCreation;

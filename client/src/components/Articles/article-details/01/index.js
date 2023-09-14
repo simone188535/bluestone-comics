@@ -1,14 +1,35 @@
 // import batmanLarge from "../../../../assets/homepage/batman-welcome-Large.jpg";
 
-import publishCBOnline from "./assets/how-to-publish-a-comic-book-online.jpeg";
+// thumbnails
+import { publishCBOnline } from "./assets/UploadWorkTutorial";
+import { ComicCreationRolesSm } from "./assets/EightRolesOfComicCreation";
 
+// pages
 import UploadWorkTutorial from "../../pages/UploadWorkTutorial";
+import EightRolesOfComicCreation from "../../pages/EightRolesOfComicCreation";
 
 // Keep commented out
 // import DemoArticle from "../../pages/DemoArticle";
 // import MakeAComicOnline from "../../pages/MakeAComicOnline";
 
 const pageOne = [
+  {
+    key: 2,
+    link: "/articles/8-roles-of-comic-creation",
+    header: "8 Roles of Comic Creation",
+    desc: "Creating a comic book is not a one-person job. It requires a team of talented individuals to bring the story to life.",
+    img: {
+      src: ComicCreationRolesSm,
+      alt: "How to publish a comic book online",
+    },
+    extraDetails: {
+      date: "2023-09-14T02:18:27.133Z",
+      articleType: "Creator",
+      minRead: 5,
+    },
+    className: "comic-creation-roles",
+    mainComponent: EightRolesOfComicCreation,
+  },
   {
     key: 1,
     link: "/articles/how-to-publish-your-comic-book-online",

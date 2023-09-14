@@ -7,6 +7,7 @@ import issueAssetsAdded from "./screenshots/issue-assets-added.png";
 import workCreditsNoUsers from "./screenshots/work-credits-no-user.png";
 import workCreditsCurrentUser from "./screenshots/work-credits-current-user.png";
 import workCreditsDifferentUser from "./screenshots/work-credits-different-user-added.png";
+import publishCBOnline from "./how-to-publish-a-comic-book-online.jpeg";
 
 export {
   uploadComicBookVideo,
@@ -18,4 +19,5 @@ export {
   workCreditsNoUsers,
   workCreditsCurrentUser,
   workCreditsDifferentUser,
+  publishCBOnline,
 };
