@@ -240,7 +240,7 @@ function EightRolesOfComicCreation({
         </p>
 
         <p className="article-para">
-          Each of these roles is essential to the process and must work closely
+          Each of these roles are essential to the process and must work closely
           together to create a cohesive and engaging story.
         </p>
       </article>
