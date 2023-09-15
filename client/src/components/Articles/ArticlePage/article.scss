@@ -115,11 +115,23 @@
                 margin-bottom: 20px;
                 padding-left: 10px;
 
-                // &.bold-marker {
-                //     &::marker {
-                //         font-weight: $semibold;
-                //     }
-                // }
+                &.normal-bold-marker {
+                    &::marker {
+                        font-weight: $normal;
+                    }
+                }
+
+                &.semi-bold-marker {
+                    &::marker {
+                        font-weight: $semibold;
+                    }
+                }
+
+                &.bold-marker {
+                    &::marker {
+                        font-weight: $bold;
+                    }
+                }
 
                 .inline-li {
                     display: inline;
@@ -130,8 +142,12 @@
     }
 
     // bold
-    .mid-bold {
+    .normal-bold {
         font-weight: $normal;
+    }
+
+    .semi-bold {
+        font-weight: $semibold;
     }
 
     .bold {

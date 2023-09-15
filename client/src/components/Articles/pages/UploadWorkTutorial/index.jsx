@@ -64,12 +64,12 @@ function UploadWorkTutorial({
           </figcaption>
         </figure>
         <p className="article-para">
-          <strong className="mid-bold">Self-publishing</strong> gives you full
-          creative control over your comic book. You have the freedom to create
-          the story, artwork, and design exactly as you envision it.{" "}
+          <strong className="normal-bold">Self-publishing</strong> gives you
+          full creative control over your comic book. You have the freedom to
+          create the story, artwork, and design exactly as you envision it.{" "}
         </p>
         <p className="article-para">
-          <strong className="mid-bold">
+          <strong className="normal-bold">
             Bluestone Comics allows you to publish your comic books online
           </strong>{" "}
           without having to compromise your vision to fit within the constraints
@@ -77,14 +77,14 @@ function UploadWorkTutorial({
         </p>
 
         <h2 className="article-para">
-          <strong className="mid-bold">
+          <strong className="normal-bold">
             In order to self-publish your comic book on our site…
           </strong>
         </h2>
 
         <article className="article-para">
           <ol className="article-list">
-            <li className="bold-marker">
+            <li>
               You must be{" "}
               <Link to="/login" className="standard-link">
                 logged in
@@ -95,7 +95,7 @@ function UploadWorkTutorial({
               </Link>
               .
             </li>
-            <li className="bold-marker">
+            <li>
               <p className="mb-md">
                 Go to the{" "}
                 <Link to="/upload" className="standard-link">
@@ -113,7 +113,7 @@ function UploadWorkTutorial({
                 />
               </figure>
             </li>
-            <li className="bold-marker">
+            <li>
               <p className="mb-md">
                 Add a book title. The name chosen for the book will also serve
                 as the name of the work in the URL.{" "}
@@ -137,7 +137,7 @@ function UploadWorkTutorial({
                 </strong>
               </p>
             </li>
-            <li className="bold-marker">
+            <li>
               <p className="mb-md">Select a book thumbnail photo.</p>{" "}
               <figure className="article-figure mb-md">
                 <img
@@ -159,22 +159,22 @@ function UploadWorkTutorial({
                 485 pixels. The maximum file size allowed is 1 Megabyte (MB).
               </p>
             </li>
-            <li className="bold-marker">Add a book description.</li>
-            <li className="bold-marker">
+            <li>Add a book description.</li>
+            <li>
               <p className="mb-sm">Update the URL Slug.</p>
               <p className="mb-sm">
                 <span className="note">Note: </span>If you&#39;d like the URL
                 Slug to be different from the book title. See step 3.
               </p>
             </li>
-            <li className="bold-marker">
+            <li>
               <p className="mb-sm">Select the content rating for this book.</p>{" "}
               <p>
                 Make sure to check the creator guidelines to see if your work
                 meets the safety criteria for all users.
               </p>
             </li>
-            <li className="bold-marker">
+            <li>
               <p className="mb-md">
                 Select the genres applicable for the book.
               </p>
@@ -191,21 +191,21 @@ function UploadWorkTutorial({
           </ol>
 
           <p className="article-para">
-            <strong className="mid-bold">
+            <strong className="normal-bold">
               Steps 9 - 13 are for filling out the details of the first issue.
               Think of an issue as a &#34;chapter&#34; of a book.
             </strong>
           </p>
 
           <ol className="article-list" start="9">
-            <li className="bold-marker">
+            <li>
               <p className="mb-sm">
                 Add an issue title. (This will have no effect on the &#34;URL
                 Slug&#34;.)
               </p>
             </li>
 
-            <li className="bold-marker">
+            <li>
               <p className="mb-sm">Select an issue thumbnail photo.</p>
               <p className="mb-sm">
                 The issue thumbnail is the cover photo for the issue. If
@@ -219,7 +219,7 @@ function UploadWorkTutorial({
               </p>
             </li>
 
-            <li className="bold-marker">
+            <li>
               <p className="mb-sm">Add an Issue description.</p>
               <p>
                 Add a description of the current issue rather than the
@@ -227,7 +227,7 @@ function UploadWorkTutorial({
               </p>
             </li>
 
-            <li className="bold-marker">
+            <li>
               <p className="mb-md">
                 Drag &#39;n&#39; Drop all the Issue pages or select the box and
                 select all the necessary files.
@@ -259,7 +259,7 @@ function UploadWorkTutorial({
                 Drop them to their correct position.
               </p>
             </li>
-            <li className="bold-marker">
+            <li>
               <p className="mb-sm">
                 Give work credit(s) to all the users that assisted in creating
                 the first issue (including yourself).
@@ -280,7 +280,7 @@ function UploadWorkTutorial({
 
               <p className="mb-md">
                 <span className="note">Note: </span>
-                <strong className="mid-bold">
+                <strong className="normal-bold">
                   If you are the only person who assisted in creating this work,
                 </strong>{" "}
                 Simply selecting the &#34;writer&#34; and &#34;artist&#34;
@@ -296,14 +296,14 @@ function UploadWorkTutorial({
                 />
               </figure>
               <p className="mb-lg">
-                <strong className="mid-bold">Important!</strong> There is no
+                <strong className="normal-bold">Important!</strong> There is no
                 reason to select all the available checkboxes, as it will
                 overcomplicate the search for users trying to view which primary
                 roles were fulfilled.
               </p>
               <p className="mb-md">
                 <span className="note">Note 2: </span>
-                <strong className="mid-bold">
+                <strong className="normal-bold">
                   If other users assisted in creating this work
                 </strong>
                 , search and select their username. When the dropdown closes,
@@ -319,20 +319,20 @@ function UploadWorkTutorial({
                 />
               </figure>
               <p className="mb-lg">
-                <strong className="mid-bold">Important!</strong> Again, there is
-                no need to select all the available checkboxes as it may
+                <strong className="normal-bold">Important!</strong> Again, there
+                is no need to select all the available checkboxes as it may
                 overcomplicate the search later. Just select the primary roles
                 each user has fulfilled in the issues&#39; creation.
               </p>
 
               <p>
-                <strong className="mid-bold">
+                <strong className="normal-bold">
                   Only the user who uploaded the comic book can change the work
                   credits in the future.
                 </strong>
               </p>
             </li>
-            <li className="bold-marker">
+            <li>
               <p className="mb-sm">Press the submit button.</p>
               <p className="mb-sm">
                 This process might take a while, especially if the files you
