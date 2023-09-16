@@ -6,9 +6,6 @@ import {
   ComicCreationRolesLg,
   howComicBooksAreMade,
 } from "../../article-details/01/assets/EightRolesOfComicCreation";
-// import {
-
-// } from "../../article-details/01/assets/EightRolesOfComicCreation";
 import "./eight-roles-of-comic-creation.scss";
 
 function EightRolesOfComicCreation({
@@ -65,15 +62,6 @@ function EightRolesOfComicCreation({
         </figure>
       </article>
       <article className="article-para">
-        {/* <figure className="article-figure">
-          <video muted controls className="article-video">
-            <source src={uploadComicBookVideo} type="video/mp4" />
-          </video>
-
-          <figcaption className="article-figure-cap">
-            How to Publish A Comic Book Tutorial
-          </figcaption>
-        </figure> */}
         <p className="article-para">
           Comic books have become a staple of popular culture, with an
           increasing number of people interested in creating their own stories

@@ -23,7 +23,7 @@ const pageOne = [
       alt: "8 Roles Needed To Create A Comic Book",
     },
     extraDetails: {
-      date: "2023-09-14T02:18:27.133Z",
+      date: "2023-09-16T00:56:39.200Z",
       articleType: "Creator",
       minRead: 5,
     },
