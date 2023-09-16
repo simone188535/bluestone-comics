@@ -121,7 +121,7 @@ function EightRolesOfComicCreation({ extraDetails }) {
               <p className="mb-sm">
                 <strong className="normal-bold">
                   Artists can contain many sub-categories including: Penciller,
-                  Inker, Colorist, Editor and Cover Artist.
+                  Inker, Colorist and Cover Artist.
                 </strong>
               </p>
               <p className="mb-sm">
@@ -129,7 +129,7 @@ function EightRolesOfComicCreation({ extraDetails }) {
                 <strong className="normal-bold">
                   someone who fulfills multiple (or all) artistic roles
                 </strong>{" "}
-                in the creation of a comic book.
+                in the creation process.
               </p>
             </li>
             <li className="normal-bold-marker">
@@ -146,7 +146,7 @@ function EightRolesOfComicCreation({ extraDetails }) {
               <p className="mb-sm">
                 <strong className="normal-bold">
                   Their main tasks include: Storyboarding, Character Design and
-                  Panel Composition,
+                  Panel Composition.
                 </strong>
               </p>
             </li>
