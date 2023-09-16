@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import moment from "moment";
 import MetaTags from "../../../MetaTags";
 import {
   uploadComicBookVideo,
@@ -13,46 +12,27 @@ import {
   workCreditsCurrentUser,
   workCreditsDifferentUser,
 } from "../../article-details/01/assets/UploadWorkTutorial";
+import ArticleHeader from "../../ArticlePage/ArticleHeader";
 import "./upload-work-tutorial.scss";
 
 function UploadWorkTutorial({
   // img,
-  extraDetails: { date, minRead } = { extraDetails: {} },
+  extraDetails,
 }) {
   return (
     <>
-      <MetaTags
-        title="How to Publish A Comic Book Online: Step-by-Step Guide"
-        canonical="https://www.bluestonecomics.com/articles/how-to-publish-your-comic-book-online"
-        description="Bluestone Comics allows you to publish your comic books online without having to compromise your artistic vision."
+      <ArticleHeader
+        metaData={
+          <MetaTags
+            title="How to Publish A Comic Book Online: Step-by-Step Guide"
+            canonical="https://www.bluestonecomics.com/articles/how-to-publish-your-comic-book-online"
+            description="Bluestone Comics allows you to publish your comic books online without having to compromise your artistic vision."
+          />
+        }
+        headerText="How to Publish A Comic Book Online: Step-by-Step Guide"
+        subheaderText="The &#34;How-To&#34; guide for self-publishing American Comic Books"
+        extraDetails={extraDetails}
       />
-      <header className="article-header">
-        <h1 className="article-header-title">
-          How to Publish A Comic Book Online: Step-by-Step Guide
-        </h1>
-      </header>
-      <section className="article-sub-header">
-        <h2 className="article-header-sub-title">
-          The &#34;How-To&#34; guide for self-publishing American Comic Books
-        </h2>
-      </section>
-      <section className="article-creation-details">
-        <span className="extra-details">
-          {date && (
-            <span className="extra-details-item date">
-              {moment(date).format("MMM D YYYY")}
-            </span>
-          )}
-          {minRead && (
-            <span className="extra-details-item min-read">
-              {minRead} min read
-            </span>
-          )}
-        </span>
-      </section>
-      <section className="article-hr-spacing">
-        <hr className="article-hr" />
-      </section>
       <article className="article-para">
         <figure className="article-figure">
           <video muted controls className="article-video">

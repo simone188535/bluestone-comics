@@ -1,66 +1,35 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import moment from "moment";
 import MetaTags from "../../../MetaTags";
 import {
   ComicCreationRolesLg,
   howComicBooksAreMade,
 } from "../../article-details/01/assets/EightRolesOfComicCreation";
+import ArticleHeader from "../../ArticlePage/ArticleHeader";
 import "./eight-roles-of-comic-creation.scss";
 
-function EightRolesOfComicCreation({
-  // img,
-  extraDetails: { date, minRead } = { extraDetails: {} },
-}) {
+function EightRolesOfComicCreation({ extraDetails }) {
   return (
     <>
-      <MetaTags
-        title="The 8 Roles Needed To Create A Comic Book"
-        canonical="https://www.bluestonecomics.com/articles/the-8-roles-needed-to-create-comic-book"
-        description="Creating a comic book is not a one-person job. It requires a team of
+      <ArticleHeader
+        metaData={
+          <MetaTags
+            title="The 8 Roles Needed To Create A Comic Book"
+            canonical="https://www.bluestonecomics.com/articles/the-8-roles-needed-to-create-comic-book"
+            description="Creating a comic book is not a one-person job. It requires a team of
         talented individuals to bring the story to life. Here are the 8 roles
         needed to make your comic!"
-      />
-      {/* TODO: MAKE A COMPONENT FOR THIS HEADER */}
-      <header className="article-header">
-        <h1 className="article-header-title">
-          The 8 Roles Needed To Create A Comic Book{" "}
-        </h1>
-      </header>
-      <section className="article-sub-header">
-        <h2 className="article-header-sub-title">
-          Creating a comic book is not a one-person job. It requires a team of
-          talented individuals to bring the story to life.
-        </h2>
-      </section>
-      <section className="article-creation-details">
-        <span className="extra-details">
-          {date && (
-            <span className="extra-details-item date">
-              {moment(date).format("MMM D YYYY")}
-            </span>
-          )}
-          {minRead && (
-            <span className="extra-details-item min-read">
-              {minRead} min read
-            </span>
-          )}
-        </span>
-      </section>
-      <section className="article-hr-spacing">
-        <hr className="article-hr" />
-      </section>
-      <article className="article-para">
-        <figure className="article-figure mb-md">
-          <img
-            src={ComicCreationRolesLg}
-            alt="8 Roles Needed To Create A Comic Book"
-            className="article-figure-img"
-            width="100%"
-            height="auto"
           />
-        </figure>
-      </article>
+        }
+        headerText="The 8 Roles Needed To Create A Comic Book"
+        subheaderText="Creating a comic book is not a one-person job. It requires a team of
+        talented individuals to bring the story to life."
+        extraDetails={extraDetails}
+        pageImg={{
+          src: ComicCreationRolesLg,
+          alt: "8 Roles Needed To Create A Comic Book",
+        }}
+      />
       <article className="article-para">
         <p className="article-para">
           Comic books have become a staple of popular culture, with an
