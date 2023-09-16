@@ -1,8 +1,11 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import MetaTags from "../../../MetaTags";
-import { ComicCreationRolesLg } from "../../article-details/01/assets/EightRolesOfComicCreation";
+import {
+  ComicCreationRolesLg,
+  howComicBooksAreMade,
+} from "../../article-details/01/assets/EightRolesOfComicCreation";
 // import {
 
 // } from "../../article-details/01/assets/EightRolesOfComicCreation";
@@ -15,13 +18,17 @@ function EightRolesOfComicCreation({
   return (
     <>
       <MetaTags
-        title="How to Publish A Comic Book Online: Step-by-Step Guide"
-        canonical="https://www.bluestonecomics.com/articles/how-to-publish-your-comic-book-online"
-        description="Bluestone Comics allows you to publish your comic books online without having to compromise your artistic vision."
+        title="The 8 Roles Needed To Create A Comic Book"
+        canonical="https://www.bluestonecomics.com/articles/the-8-roles-needed-to-create-comic-book"
+        description="Creating a comic book is not a one-person job. It requires a team of
+        talented individuals to bring the story to life. Here are the 8 roles
+        needed to make your comic!"
       />
       {/* TODO: MAKE A COMPONENT FOR THIS HEADER */}
       <header className="article-header">
-        <h1 className="article-header-title">8 Roles of Comic Creation</h1>
+        <h1 className="article-header-title">
+          The 8 Roles Needed To Create A Comic Book{" "}
+        </h1>
       </header>
       <section className="article-sub-header">
         <h2 className="article-header-sub-title">
@@ -50,7 +57,7 @@ function EightRolesOfComicCreation({
         <figure className="article-figure mb-md">
           <img
             src={ComicCreationRolesLg}
-            alt=""
+            alt="8 Roles Needed To Create A Comic Book"
             className="article-figure-img"
             width="100%"
             height="auto"
@@ -80,11 +87,20 @@ function EightRolesOfComicCreation({
           . It requires a a team of talented individuals who work together to
           bring the story to life. In this article,{" "}
           <strong className="normal-bold">
-            we&#39;ll explore the 8 main roles required in the creation of a
-            comic book
+            we&#39;ll explore the 8 main roles required to create a comic book
           </strong>
           .
         </p>
+
+        <figure className="article-figure mb-md">
+          <img
+            src={howComicBooksAreMade}
+            alt="The Roles needed to Make a Comic Book"
+            className="article-figure-img md-img"
+            width="100%"
+            height="auto"
+          />
+        </figure>
 
         <h2 className="article-para">
           <strong className="normal-bold">Writer Roles:</strong>
@@ -228,6 +244,19 @@ function EightRolesOfComicCreation({
             </li>
           </ol>
         </article>
+
+        <p className="article-para">
+          Interested in making a comic book of your own?{" "}
+          <Link
+            to="/articles/how-to-publish-your-comic-book-online"
+            className="standard-link"
+          >
+            Here
+          </Link>{" "}
+          is how to <strong className="normal-bold">self-publish</strong> an
+          indie comic on our site{" "}
+          <strong className="normal-bold">for others to read</strong>.
+        </p>
 
         <p className="article-para">
           In conclusion, the creation of a comic book is a collaborative effort

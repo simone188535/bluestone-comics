@@ -255,6 +255,16 @@
                 }
             }
 
+            &-figure {
+                &-img {
+                    &.md-img {
+                        width: 80%;
+                        margin: 0 auto;
+                        display: block;
+                    }
+                }
+            }
+
             &-list {
                 padding-left: 2rem;
             }

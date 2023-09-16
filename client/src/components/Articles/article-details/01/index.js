@@ -15,12 +15,12 @@ import EightRolesOfComicCreation from "../../pages/EightRolesOfComicCreation";
 const pageOne = [
   {
     key: 2,
-    link: "/articles/8-roles-of-comic-creation",
-    header: "8 Roles of Comic Creation",
+    link: "/articles/the-8-roles-needed-to-create-comic-book",
+    header: "The 8 Roles Needed To Create A Comic Book",
     desc: "Creating a comic book is not a one-person job. It requires a team of talented individuals to bring the story to life.",
     img: {
       src: ComicCreationRolesSm,
-      alt: "How to publish a comic book online",
+      alt: "8 Roles Needed To Create A Comic Book",
     },
     extraDetails: {
       date: "2023-09-14T02:18:27.133Z",
