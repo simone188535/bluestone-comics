@@ -209,8 +209,7 @@ function UploadWorkTutorial({
 
             <li>
               <p className="mb-md">
-                Drag &#39;n&#39; Drop all the Issue pages or select the box and
-                select all the necessary files.
+                Drag &#39;n&#39; Drop all the necessary Issue pages.
               </p>
               <figure className="article-figure mb-md">
                 <img
