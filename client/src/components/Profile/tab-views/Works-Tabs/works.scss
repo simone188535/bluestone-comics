@@ -1,7 +1,7 @@
 @import '../../../../styles/abstracts/variables.scss';
 
 .works-tab {
-    min-height: 280px;
+    min-height: 380px;
     &-tri-buttons-container {
         overflow: hidden;
         margin: 0px 10% 7%;
@@ -21,7 +21,7 @@
 
 @media only screen and (min-width: $medium) {
     .works-tab {
-
+        min-height: 280px;
         .works-tab-tri-button {
             float: left;
             width: 30%;
