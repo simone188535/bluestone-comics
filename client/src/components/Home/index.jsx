@@ -39,7 +39,7 @@ const homePageSections = [
     detailsText: (
       <>
         <span>
-          Bluestone comics is a celebration of american comics books. Our goal
+          Bluestone Comics is a celebration of american comics books. Our goal
           is to promote their creation and culture.
         </span>
         <LinkButton
