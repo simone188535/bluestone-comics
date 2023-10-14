@@ -10,7 +10,7 @@ import EightRolesOfComicCreation from "../../pages/EightRolesOfComicCreation";
 
 // Keep commented out
 // import DemoArticle from "../../pages/DemoArticle";
-// import MakeAComicOnline from "../../pages/MakeAComicOnline";
+// import DemoMakeAComicOnline from "../../pages/DemoMakeAComicOnline";
 
 const pageOne = [
   {
@@ -63,7 +63,7 @@ const pageOne = [
   //     minRead: 5,
   //   },
   //   className: "demo-article",
-  //   mainComponent: DemoArticle,
+  //   mainComponent: DemoMakeAComicOnline,
   //   asideComponent: DemoArticle,
   // },
 ];
