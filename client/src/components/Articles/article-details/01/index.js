@@ -16,17 +16,17 @@ import EightRolesOfComicCreation from "../../pages/EightRolesOfComicCreation";
 const pageOne = [
   {
     key: 3,
-    link: "/articles/how-to-add-a-new-issue",
-    header: "How to Publish A New Comic Issue Online: Step-by-Step Guide",
-    desc: "Creating a comic book is not a one-person job. It requires a team of talented individuals to bring the story to life.",
+    link: "/articles/how-to-add-a-new-issue-to-my-comic-book",
+    header: "How to Add A New Issue To My Comic Book: Step-by-Step Guide",
+    desc: "Now that you've successfully created your comic book, It’s time to learn how to add a new issue.",
     img: {
       src: ComicCreationRolesSm,
       alt: "8 Roles Needed To Create A Comic Book",
     },
     extraDetails: {
-      date: "2023-09-16T00:56:39.200Z",
+      date: "2023-10-14T02:01:08.728Z'",
       articleType: "Creator",
-      minRead: 5,
+      minRead: 7,
     },
     className: "upload-new-issue-tutorial",
     mainComponent: UploadNewIssueTutorial,
