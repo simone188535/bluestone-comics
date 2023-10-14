@@ -5,6 +5,7 @@ import { publishCBOnline } from "./assets/UploadWorkTutorial";
 import { ComicCreationRolesSm } from "./assets/EightRolesOfComicCreation";
 
 // pages
+import UploadNewIssueTutorial from "../../pages/UploadNewIssueTutorial";
 import UploadWorkTutorial from "../../pages/UploadWorkTutorial";
 import EightRolesOfComicCreation from "../../pages/EightRolesOfComicCreation";
 
@@ -13,6 +14,23 @@ import EightRolesOfComicCreation from "../../pages/EightRolesOfComicCreation";
 // import DemoMakeAComicOnline from "../../pages/DemoMakeAComicOnline";
 
 const pageOne = [
+  {
+    key: 3,
+    link: "/articles/how-to-add-a-new-issue",
+    header: "How to Publish A New Comic Issue Online: Step-by-Step Guide",
+    desc: "Creating a comic book is not a one-person job. It requires a team of talented individuals to bring the story to life.",
+    img: {
+      src: ComicCreationRolesSm,
+      alt: "8 Roles Needed To Create A Comic Book",
+    },
+    extraDetails: {
+      date: "2023-09-16T00:56:39.200Z",
+      articleType: "Creator",
+      minRead: 5,
+    },
+    className: "upload-new-issue-tutorial",
+    mainComponent: UploadNewIssueTutorial,
+  },
   {
     key: 2,
     link: "/articles/the-8-roles-needed-to-create-comic-book",
@@ -33,7 +51,7 @@ const pageOne = [
   {
     key: 1,
     link: "/articles/how-to-publish-your-comic-book-online",
-    header: "How to Publish A Comic Book Online: Step-by-Step Guide Article",
+    header: "How to Publish A Comic Book Online: Step-by-Step Guide",
     desc: 'The "How-To" guide for self-publishing American Comic Books',
     img: {
       src: publishCBOnline,
