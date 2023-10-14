@@ -3,6 +3,7 @@
 // thumbnails
 import { publishCBOnline } from "./assets/UploadWorkTutorial";
 import { ComicCreationRolesSm } from "./assets/EightRolesOfComicCreation";
+import { addNewIssue } from "./assets/UploadNewIssueTutorial";
 
 // pages
 import UploadNewIssueTutorial from "../../pages/UploadNewIssueTutorial";
@@ -18,10 +19,10 @@ const pageOne = [
     key: 3,
     link: "/articles/how-to-add-a-new-issue-to-my-comic-book",
     header: "How to Add A New Issue To My Comic Book: Step-by-Step Guide",
-    desc: "Now that you've successfully created your comic book, It’s time to learn how to add a new issue.",
+    desc: "Now that you've successfully created your comic book, It’s time to learn how to add a new issue!",
     img: {
-      src: ComicCreationRolesSm,
-      alt: "8 Roles Needed To Create A Comic Book",
+      src: addNewIssue,
+      alt: "How to Add A New Comic Book Issue",
     },
     extraDetails: {
       date: "2023-10-14T02:01:08.728Z'",
