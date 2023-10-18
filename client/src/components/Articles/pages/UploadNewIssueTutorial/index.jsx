@@ -128,6 +128,21 @@ function UploadNewIssueTutorial({
                 />
               </figure>
             </li>
+
+            <li>
+              <p className="mb-sm">Select an issue thumbnail photo.</p>
+              <p className="mb-sm">
+                The issue thumbnail is the cover photo for the issue. If
+                you&#39;d like, you may reuse the same thumbnail as the one used
+                in the book thumbnail section.
+              </p>
+              <p>
+                <span className="note">Note: </span>
+                The thumbnail must have a width of 320 pixels and a height of
+                485 pixels. The maximum file size allowed is 1 Megabyte (MB).
+              </p>
+            </li>
+
             <li>
               <p className="mb-sm">Update the URL Slug.</p>
               <p className="mb-sm">
@@ -170,20 +185,6 @@ function UploadNewIssueTutorial({
               <p className="mb-sm">
                 Add an issue title. (This will have no effect on the &#34;URL
                 Slug&#34;.)
-              </p>
-            </li>
-
-            <li>
-              <p className="mb-sm">Select an issue thumbnail photo.</p>
-              <p className="mb-sm">
-                The issue thumbnail is the cover photo for the issue. If
-                you&#39;d like, you may reuse the same thumbnail as the one used
-                in the book thumbnail section.
-              </p>
-              <p>
-                <span className="note">Note: </span>
-                The thumbnail must have a width of 320 pixels and a height of
-                485 pixels. The maximum file size allowed is 1 Megabyte (MB).
               </p>
             </li>
 
