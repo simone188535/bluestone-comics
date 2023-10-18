@@ -1,24 +1,21 @@
-// import uploadComicBookVideo from "./video/Upload-a-new-comic-book-tutorial.mp4";
-// import uploadPage from "./screenshots/upload-page.png";
-// import bookTitleSlug from "./screenshots/title-url-slug-added-to-upload-page.png";
-// import bookThumbnailUploaded from "./screenshots/book-thumbnail-uploaded.png";
-// import contentRatingsGenres from "./screenshots/content-ratings-and-genres.png";
-// import issueAssetsAdded from "./screenshots/issue-assets-added.png";
-// import workCreditsNoUsers from "./screenshots/work-credits-no-user.png";
-// import workCreditsCurrentUser from "./screenshots/work-credits-current-user.png";
-// import workCreditsDifferentUser from "./screenshots/work-credits-different-user-added.png";
+import addNewIssueVideo from "./video/how-to-add-a-new-issue.mp4";
+import oneProfilePageDD from "./screenshots/01-profile-page-dd.png";
+// import twoProfilePage from "./screenshots/02-profile-page.png";
+// import threeWorkToAppend from "./screenshots/03-work-to-append.png";
+import fourDetailsPage from "./screenshots/04-details-page.png";
+import fiveAddIssuePage from "./screenshots/05-add-issue-page.png";
+import sixAddIssueTitle from "./screenshots/06-add-an-issue-title.png";
+import sevenAddIssueDesc from "./screenshots/07-add-a-issue-description.png";
 import addNewIssue from "./add-comic-issue-thumbnail.jpg";
 
 export {
-  // uploadComicBookVideo,
-  // uploadPage,
-  // bookTitleSlug,
-  // bookThumbnailUploaded,
-  // contentRatingsGenres,
-  // issueAssetsAdded,
-  // workCreditsNoUsers,
-  // workCreditsCurrentUser,
-  // workCreditsDifferentUser,
-  // eslint-disable-next-line import/prefer-default-export
+  addNewIssueVideo,
+  oneProfilePageDD,
+  // twoProfilePage,
+  // threeWorkToAppend,
+  fourDetailsPage,
+  fiveAddIssuePage,
+  sixAddIssueTitle,
+  sevenAddIssueDesc,
   addNewIssue,
 };

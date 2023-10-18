@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import MetaTags from "../../../MetaTags";
 import {
-  uploadComicBookVideo,
-  uploadPage,
   bookTitleSlug,
   bookThumbnailUploaded,
   contentRatingsGenres,
@@ -12,6 +10,12 @@ import {
   workCreditsCurrentUser,
   workCreditsDifferentUser,
 } from "../../article-details/01/assets/UploadWorkTutorial";
+import {
+  addNewIssueVideo,
+  oneProfilePageDD,
+  fourDetailsPage,
+  sixAddIssueTitle,
+} from "../../article-details/01/assets/UploadNewIssueTutorial";
 import ArticleHeader from "../../ArticlePage/ArticleHeader";
 import "./upload-new-issue-tutorial.scss";
 
@@ -24,41 +28,44 @@ function UploadNewIssueTutorial({
       <ArticleHeader
         metaData={
           <MetaTags
-            title="How to Publish A Comic Book Online: Step-by-Step Guide"
-            canonical="https://www.bluestonecomics.com/articles/how-to-publish-your-comic-book-online"
+            title="How to Add A New Issue To My Comic Book: Step-by-Step Guide"
+            canonical="https://www.bluestonecomics.com/articles/how-to-add-a-new-issue-to-my-comic-book"
             description="Bluestone Comics allows you to publish your comic books online without having to compromise your artistic vision."
           />
         }
-        headerText="How to Publish A Comic Book Online: Step-by-Step Guide"
-        subheaderText="The &#34;How-To&#34; guide for self-publishing American Comic Books"
+        headerText="How to Add A New Issue To My Comic Book: Step-by-Step Guide"
+        subheaderText="The &#34;How-To&#34; guide for publishing a new issue to your pre-existing Comic Books"
         extraDetails={extraDetails}
       />
       <article className="article-para">
         <figure className="article-figure">
           <video muted controls className="article-video">
-            <source src={uploadComicBookVideo} type="video/mp4" />
+            <source src={addNewIssueVideo} type="video/mp4" />
           </video>
 
           <figcaption className="article-figure-cap">
-            How to Publish A Comic Book Tutorial
+            How to Add a New Issue to Your Comic Book - Tutorial
           </figcaption>
         </figure>
         <p className="article-para">
-          <strong className="normal-bold">Self-publishing</strong> gives you
-          full creative control over your comic book. You have the freedom to
-          create the story, artwork, and design exactly as you envision it.{" "}
+          Welcome Back! Now that you&#39;ve successfully created your comic
+          book, It&#39;s time to{" "}
+          <strong className="normal-bold">learn how to add a new issue!</strong>
         </p>
         <p className="article-para">
-          <strong className="normal-bold">
-            Bluestone Comics allows you to publish your comic books online
-          </strong>{" "}
-          without having to compromise your vision to fit within the constraints
-          of a traditional publisher&#39;s preferences.
+          If you haven&#39;t created your first comic book for others to read,
+          Check out this{" "}
+          <Link
+            to="/articles/how-to-publish-your-comic-book-online"
+            className="standard-link"
+          >
+            tutorial!
+          </Link>
         </p>
 
         <h2 className="article-para">
           <strong className="normal-bold">
-            In order to self-publish your comic book on our site…
+            In order to publish a new issue…
           </strong>
         </h2>
 
@@ -69,24 +76,38 @@ function UploadNewIssueTutorial({
               <Link to="/login" className="standard-link">
                 logged in
               </Link>{" "}
-              or{" "}
-              <Link to="sign-up" className="standard-link">
-                create an account
-              </Link>
-              .
+              to the same account that uploaded the first issue of the comic
+              book.
             </li>
             <li>
               <p className="mb-md">
-                Go to the{" "}
-                <Link to="/upload" className="standard-link">
-                  upload page
-                </Link>{" "}
-                to create a comic book and its first issue.
+                Select the <strong className="normal-bold">profile page</strong>{" "}
+                in the navigation menu.
               </p>
               <figure className="article-figure">
                 <img
-                  src={uploadPage}
-                  alt="upload page"
+                  src={oneProfilePageDD}
+                  alt="profile page dropdown"
+                  className="article-figure-img"
+                  width="100%"
+                  height="auto"
+                />
+              </figure>
+            </li>
+            <li>
+              On the profile page, under the{" "}
+              <strong className="normal-bold">books</strong> section, select the
+              existing work you&#39;d like to add another issue to. This will
+              take you to the comic details page.
+            </li>
+            <li>
+              <p className="mb-md">
+                On the details page, select the &#34;Add Issue&#34; button.
+              </p>{" "}
+              <figure className="article-figure mb-md">
+                <img
+                  src={fourDetailsPage}
+                  alt="comic details page with add issue button"
                   className="article-figure-img"
                   width="100%"
                   height="auto"
@@ -95,51 +116,18 @@ function UploadNewIssueTutorial({
             </li>
             <li>
               <p className="mb-md">
-                Add a book title. The name chosen for the book will also serve
-                as the name of the work in the URL.{" "}
-              </p>
+                On the issue upload page, Add an issue title.
+              </p>{" "}
               <figure className="article-figure mb-md">
                 <img
-                  src={bookTitleSlug}
-                  alt="upload page with book title and URL slug"
+                  src={sixAddIssueTitle}
+                  alt="issue upload page with title"
                   className="article-figure-img"
                   width="100%"
                   height="auto"
                 />
               </figure>
-              <p className="mb-sm">
-                For example, If the chosen book title is &#34;my first
-                comic&#34;. The URL for the comic book would be similar to:{" "}
-              </p>
-              <p>
-                <strong className="example-link">
-                  https://bluestonecomics.com/read/my-first-comic/book/example/issue/1
-                </strong>
-              </p>
             </li>
-            <li>
-              <p className="mb-md">Select a book thumbnail photo.</p>{" "}
-              <figure className="article-figure mb-md">
-                <img
-                  src={bookThumbnailUploaded}
-                  alt="upload page with book thumbnail"
-                  className="article-figure-img"
-                  width="100%"
-                  height="auto"
-                />
-              </figure>
-              <p className="mb-sm">
-                The book thumbnail photo is essentially the book&#39;s cover
-                photo. It is the cover image for the &#34;front of the
-                book&#34;.
-              </p>
-              <p>
-                <span className="note">Note: </span>
-                The thumbnail must have a width of 320 pixels and a height of
-                485 pixels. The maximum file size allowed is 1 Megabyte (MB).
-              </p>
-            </li>
-            <li>Add a book description.</li>
             <li>
               <p className="mb-sm">Update the URL Slug.</p>
               <p className="mb-sm">
