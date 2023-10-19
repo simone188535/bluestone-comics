@@ -25,7 +25,7 @@ const pageOne = [
       alt: "How to Add A New Comic Book Issue",
     },
     extraDetails: {
-      date: "2023-10-14T02:01:08.728Z",
+      date: "2023-10-19T02:55:16.635Z",
       articleType: "Creator",
       minRead: 7,
     },
