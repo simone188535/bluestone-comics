@@ -2,19 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import MetaTags from "../../../MetaTags";
 import {
-  bookTitleSlug,
-  bookThumbnailUploaded,
-  contentRatingsGenres,
-  issueAssetsAdded,
-  workCreditsNoUsers,
-  workCreditsCurrentUser,
-  workCreditsDifferentUser,
-} from "../../article-details/01/assets/UploadWorkTutorial";
-import {
   addNewIssueVideo,
   oneProfilePageDD,
   fourDetailsPage,
   sixAddIssueTitle,
+  nineDragNDropPages,
+  tenWorkNoUser,
+  elevenWorkCredCurrUser,
+  twelveWorkCredOtherUser,
+  fourteenIssueThumbnail,
 } from "../../article-details/01/assets/UploadNewIssueTutorial";
 import ArticleHeader from "../../ArticlePage/ArticleHeader";
 import "./upload-new-issue-tutorial.scss";
@@ -131,6 +127,15 @@ function UploadNewIssueTutorial({
 
             <li>
               <p className="mb-sm">Select an issue thumbnail photo.</p>
+              <figure className="article-figure mb-md">
+                <img
+                  src={fourteenIssueThumbnail}
+                  alt="issue upload page with issue thumbnail added"
+                  className="article-figure-img"
+                  width="100%"
+                  height="auto"
+                />
+              </figure>
               <p className="mb-sm">
                 The issue thumbnail is the cover photo for the issue. If
                 you&#39;d like, you may reuse the same thumbnail as the one used
@@ -144,55 +149,10 @@ function UploadNewIssueTutorial({
             </li>
 
             <li>
-              <p className="mb-sm">Update the URL Slug.</p>
+              <p className="mb-sm">Add an Issue description.</p>
               <p className="mb-sm">
                 <span className="note">Note: </span>If you&#39;d like the URL
                 Slug to be different from the book title. See step 3.
-              </p>
-            </li>
-            <li>
-              <p className="mb-sm">Select the content rating for this book.</p>{" "}
-              <p>
-                Make sure to check the creator guidelines to see if your work
-                meets the safety criteria for all users.
-              </p>
-            </li>
-            <li>
-              <p className="mb-md">
-                Select the genres applicable for the book.
-              </p>
-              <figure className="article-figure">
-                <img
-                  src={contentRatingsGenres}
-                  alt="upload page with genres and content rating"
-                  className="article-figure-img"
-                  width="100%"
-                  height="auto"
-                />
-              </figure>
-            </li>
-          </ol>
-
-          <p className="article-para">
-            <strong className="normal-bold">
-              Steps 9 - 13 are for filling out the details of the first issue.
-              Think of an issue as a &#34;chapter&#34; of a book.
-            </strong>
-          </p>
-
-          <ol className="article-list" start="9">
-            <li>
-              <p className="mb-sm">
-                Add an issue title. (This will have no effect on the &#34;URL
-                Slug&#34;.)
-              </p>
-            </li>
-
-            <li>
-              <p className="mb-sm">Add an Issue description.</p>
-              <p>
-                Add a description of the current issue rather than the
-                description of the entire book.
               </p>
             </li>
 
@@ -202,8 +162,8 @@ function UploadNewIssueTutorial({
               </p>
               <figure className="article-figure mb-md">
                 <img
-                  src={issueAssetsAdded}
-                  alt="upload page with issue pages added"
+                  src={nineDragNDropPages}
+                  alt="issue upload page with issue pages added"
                   className="article-figure-img"
                   width="100%"
                   height="auto"
@@ -238,7 +198,7 @@ function UploadNewIssueTutorial({
               </p>
               <figure className="article-figure mb-md">
                 <img
-                  src={workCreditsNoUsers}
+                  src={tenWorkNoUser}
                   alt="upload page work credits"
                   className="article-figure-img mb-lg"
                   width="100%"
@@ -256,8 +216,8 @@ function UploadNewIssueTutorial({
               </p>
               <figure className="article-figure mb-md">
                 <img
-                  src={workCreditsCurrentUser}
-                  alt="upload page work credits with current user"
+                  src={elevenWorkCredCurrUser}
+                  alt="issue upload page work credits with current user"
                   className="article-figure-img"
                   width="100%"
                   height="auto"
@@ -279,7 +239,7 @@ function UploadNewIssueTutorial({
               </p>
               <figure className="article-figure mb-md">
                 <img
-                  src={workCreditsDifferentUser}
+                  src={twelveWorkCredOtherUser}
                   alt="upload page work credits with other users"
                   className="article-figure-img"
                   width="100%"
@@ -307,16 +267,12 @@ function UploadNewIssueTutorial({
                 provided were large. Try to be patient and avoid the temptation
                 to refresh.
               </p>
-              <p>
-                When the upload is complete, the page will redirect to the
-                details page of the newly published comic book.
-              </p>
             </li>
           </ol>
         </article>
         <p className="article-para">
-          Congratulations! You&#39;ve self-published your first comic book on
-          our site!
+          Congratulations! You&#39;ve added a new issue to your self-published
+          comic book!
         </p>
       </article>
     </>
