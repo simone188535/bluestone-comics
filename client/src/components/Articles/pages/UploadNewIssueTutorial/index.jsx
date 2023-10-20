@@ -137,9 +137,7 @@ function UploadNewIssueTutorial({
                 />
               </figure>
               <p className="mb-sm">
-                The issue thumbnail is the cover photo for the issue. If
-                you&#39;d like, you may reuse the same thumbnail as the one used
-                in the book thumbnail section.
+                The issue thumbnail acts as the cover photo for the issue.
               </p>
               <p>
                 <span className="note">Note: </span>
@@ -150,10 +148,6 @@ function UploadNewIssueTutorial({
 
             <li>
               <p className="mb-sm">Add an Issue description.</p>
-              <p className="mb-sm">
-                <span className="note">Note: </span>If you&#39;d like the URL
-                Slug to be different from the book title. See step 3.
-              </p>
             </li>
 
             <li>
