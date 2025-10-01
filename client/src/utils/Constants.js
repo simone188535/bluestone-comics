@@ -3,7 +3,9 @@ const CONSTANTS = {
   IMAGE_UPLOAD_DIMENSIONS: {
     THUMBNAIL: {
       WIDTH: 320,
-      HEIGHT: 485,
+      HEIGHT: 492,
+      // OLD_HEIGHT is now obsolete, do not delete it though because older thumbnails still need it for validation
+      OLD_HEIGHT: 485,
       MAX_FILE_SIZE: 1048576, // 1MB
       MAX_FILE_SIZE_IN_BYTES: "1MB",
     },

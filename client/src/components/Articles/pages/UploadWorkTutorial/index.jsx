@@ -136,7 +136,7 @@ function UploadWorkTutorial({
               <p>
                 <span className="note">Note: </span>
                 The thumbnail must have a width of 320 pixels and a height of
-                485 pixels. The maximum file size allowed is 1 Megabyte (MB).
+                492 pixels. The maximum file size allowed is 1 Megabyte (MB).
               </p>
             </li>
             <li>Add a book description.</li>
@@ -195,7 +195,7 @@ function UploadWorkTutorial({
               <p>
                 <span className="note">Note: </span>
                 The thumbnail must have a width of 320 pixels and a height of
-                485 pixels. The maximum file size allowed is 1 Megabyte (MB).
+                492 pixels. The maximum file size allowed is 1 Megabyte (MB).
               </p>
             </li>
 

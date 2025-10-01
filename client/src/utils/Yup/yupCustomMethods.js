@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import _ from "lodash";
 import {
   imageWidthAndHeight,
   isFileSizeTooLarge,
@@ -22,7 +23,11 @@ function imgDimensionCheck(width, height, message = null) {
 
       const imgDimensions = await imageWidthAndHeight(value);
 
-      if (imgDimensions.width !== width || imgDimensions.height !== height) {
+      // check to see if the width and height are with-in 20 pixels of margin and error.
+      if (
+        _.inRange((imgDimensions.width, width - 10, width + 10)) ||
+        _.inRange((imgDimensions.height, height - 10, height + 10))
+      ) {
         // eslint-disable-next-line consistent-return
         return createError({
           path,
