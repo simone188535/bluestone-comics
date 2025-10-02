@@ -164,7 +164,7 @@ const EditIssueUpload = () => {
               THUMBNAIL_MAX_FILE_SIZE_IN_BYTES
             ),
         }),
-        issueAssets: Yup.array().required("A Issue Assets are required!"),
+        issueAssets: Yup.array().required("Issue Pages are required!"),
         workCredits: Yup.array()
           .of(
             Yup.object().shape({

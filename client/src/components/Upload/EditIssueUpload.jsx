@@ -346,9 +346,7 @@ const EditIssueUpload = () => {
                 issueDescription: Yup.string()
                   .max(550, "Description must be at most 550 characters!")
                   .required("Issue Description required!"),
-                issueAssets: Yup.array().required(
-                  "A Issue Assets are required!"
-                ),
+                issueAssets: Yup.array().required("Issue Pages are required!"),
                 workCredits: Yup.array()
                   .of(
                     Yup.object().shape({
