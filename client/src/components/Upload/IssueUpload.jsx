@@ -84,7 +84,7 @@ const IssueUpload = ({
         />
       </div>
       <div className="form-item-container">
-        <div className="form-header-text form-header-text-sm-bottom">
+        <div className="form-header-text form-header-text-sm-bottom form-header-text-xxl-top">
           Give <strong>Credits</strong> to yourself and any other existing users
           by selecting the role(s) they fulfilled while helping to create this
           {/* Book/Issue: */}

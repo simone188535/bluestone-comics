@@ -213,7 +213,7 @@ form.bsc-form {
         margin-bottom: 20px;
 
         &-container {
-            margin-bottom: 50px;
+            margin-bottom: 80px;
         }
     }
 
@@ -229,7 +229,11 @@ form.bsc-form {
         line-height: 1.5em;
         
         &-sm-bottom {
-         margin-bottom: 15px;
+          margin-bottom: 15px;
+        }
+
+        &-xxl-top {
+          margin-top: 120px;
         }
     }
 
