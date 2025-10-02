@@ -30,64 +30,75 @@ const IssueUpload = ({
 }) => {
   return (
     <>
-      <Field
-        className="form-input form-item"
-        name="issueTitle"
-        type="text"
-        placeholder="Issue Title"
-        autoComplete="on"
-      />
-      <ErrorMessage
-        className="error-message error-text-color"
-        component="div"
-        name="issueTitle"
-      />
-      <FileInputSingleUpload
-        identifier={issueCoverPhotoData.identifier}
-        triggerText="Select Issue Thumbnail Photo"
-        toBeRemovedField={issueCoverPhotoData.toBeRemovedField}
-        hasPrevUploadedData={issueCoverPhotoData.hasPrevUploadedData}
-      />
-      <ErrorMessage
-        className="error-message error-text-color"
-        component="div"
-        name="issueCoverPhoto"
-      />
-      <div className="form-header-subtext">
-        Thumbnail size must be:{" "}
-        <strong>{`${THUMBNAIL_WIDTH}px x ${THUMBNAIL_HEIGHT}px`}</strong>
+      <div className="form-item-container">
+        <Field
+          className="form-input form-item"
+          name="issueTitle"
+          type="text"
+          placeholder="Issue Title"
+          autoComplete="on"
+        />
+        <ErrorMessage
+          className="error-message error-text-color"
+          component="div"
+          name="issueTitle"
+        />
       </div>
-      <Field
-        className="form-input form-textarea"
-        name="issueDescription"
-        as="textarea"
-        placeholder="Issue Description"
-        autoComplete="on"
-      />
-      <ErrorMessage
-        className="error-message error-text-color"
-        component="div"
-        name="issueDescription"
-      />
-      <FileInputMultipleUpload
-        identifier={multiFileUploadPrevData.identifier}
-        dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${UPLOAD_SIZE_WIDTH}px x ${UPLOAD_SIZE_HEIGHT}px)<div>`}
-        toBeRemovedField={multiFileUploadPrevData.toBeRemovedField}
-        hasPrevUploadedData={multiFileUploadPrevData.hasPrevUploadedData}
-      />
-      <div className="form-header-text">
-        Give <strong>Credits</strong> to yourself and any other existing users
-        by selecting the role(s) they fulfilled while helping to create this
-        Book/Issue:
+      <div className="form-item-container">
+        <FileInputSingleUpload
+          identifier={issueCoverPhotoData.identifier}
+          triggerText="Select Issue Thumbnail Photo"
+          toBeRemovedField={issueCoverPhotoData.toBeRemovedField}
+          hasPrevUploadedData={issueCoverPhotoData.hasPrevUploadedData}
+        />
+        <ErrorMessage
+          className="error-message error-text-color"
+          component="div"
+          name="issueCoverPhoto"
+        />
+        <div className="form-header-subtext">
+          Thumbnail size must be:{" "}
+          <strong>{`${THUMBNAIL_WIDTH}px x ${THUMBNAIL_HEIGHT}px`}</strong>
+        </div>
       </div>
-      <WorkCredits identifier="workCredits" />
-      <div className="form-header-subtext">
-        <strong>
-          *Tip: There is no need to select every available field if you are the
-          only creator. Selecting &ldquo;writer&ldquo; and &ldquo;artist&ldquo;
-          will suffice. It may overcomplicate the search for users trying to
-          view which primary roles were fulfilled later.
-        </strong>
+      <div className="form-item-container">
+        <Field
+          className="form-input form-textarea"
+          name="issueDescription"
+          as="textarea"
+          placeholder="Issue Description"
+          autoComplete="on"
+        />
+        <ErrorMessage
+          className="error-message error-text-color"
+          component="div"
+          name="issueDescription"
+        />
+      </div>
+      <div className="form-item-container">
+        <FileInputMultipleUpload
+          identifier={multiFileUploadPrevData.identifier}
+          dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${UPLOAD_SIZE_WIDTH}px x ${UPLOAD_SIZE_HEIGHT}px)<div>`}
+          toBeRemovedField={multiFileUploadPrevData.toBeRemovedField}
+          hasPrevUploadedData={multiFileUploadPrevData.hasPrevUploadedData}
+        />
+      </div>
+      <div className="form-item-container">
+        <div className="form-header-text form-header-text-sm-bottom">
+          Give <strong>Credits</strong> to yourself and any other existing users
+          by selecting the role(s) they fulfilled while helping to create this
+          Book/Issue:
+        </div>
+
+        <WorkCredits identifier="workCredits" />
+        <div className="form-header-subtext">
+          <strong>
+            *Tip: There is no need to select every available field if you are
+            the only creator. Selecting &ldquo;writer&ldquo; and
+            &ldquo;artist&ldquo; will suffice. It may overcomplicate the search
+            for users trying to view which primary roles were fulfilled later.
+          </strong>
+        </div>
       </div>
     </>
   );
