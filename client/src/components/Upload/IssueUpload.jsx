@@ -87,7 +87,8 @@ const IssueUpload = ({
         <div className="form-header-text form-header-text-sm-bottom">
           Give <strong>Credits</strong> to yourself and any other existing users
           by selecting the role(s) they fulfilled while helping to create this
-          Book/Issue:
+          {/* Book/Issue: */}
+          {` `} Issue:
         </div>
 
         <WorkCredits identifier="workCredits" />
