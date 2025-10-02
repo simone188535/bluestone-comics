@@ -211,17 +211,26 @@ form.bsc-form {
     .form-item {
         height: 50px;
         margin-bottom: 20px;
+
+        &-container {
+            margin-bottom: 50px;
+        }
     }
 
     .form-input {
         border: 1px solid $light-grey;
         display: block;
+
     }
 
     .form-header-text {
         margin: 30px 0;
         font-size: $medium-font;
         line-height: 1.5em;
+        
+        &-sm-bottom {
+         margin-bottom: 15px;
+        }
     }
 
     .form-header-subtext {
