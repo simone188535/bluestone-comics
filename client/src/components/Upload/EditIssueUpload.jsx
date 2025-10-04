@@ -350,7 +350,7 @@ const EditIssueUpload = () => {
                 workCredits: Yup.array()
                   .of(
                     Yup.object().shape({
-                      user: Yup.string().required("A user must be selected"),
+                      user: Yup.string().required("A user must be selected!"),
                       username: Yup.string().required(
                         "A user must have a username!"
                       ),
