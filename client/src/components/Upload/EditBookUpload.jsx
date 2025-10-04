@@ -63,30 +63,32 @@ const EditBookForm = ({
             hasPrevUploadedData: true,
           }}
         />
-        <div className="form-header-text">
-          Select the <strong>status</strong> of this book:
+        <div className="form-item-container">
+          <div className="form-header-text">
+            Select the <strong>status</strong> of this book:
+          </div>
+          <ul className="checkbox-group upload-checkboxes radio-btn-group">
+            {statusOption.map((status) => (
+              <li key={`${status}-radio-item`}>
+                <label htmlFor="status" className="radio-label">
+                  <Field
+                    className="radio-btn"
+                    type="radio"
+                    name="status"
+                    value={status.toLowerCase()}
+                    id={status}
+                  />
+                  {status}
+                </label>
+              </li>
+            ))}
+          </ul>
+          <ErrorMessage
+            className="error-message error-text-color"
+            component="div"
+            name="status"
+          />
         </div>
-        <ul className="checkbox-group upload-checkboxes radio-btn-group">
-          {statusOption.map((status) => (
-            <li key={`${status}-radio-item`}>
-              <label htmlFor="status" className="radio-label">
-                <Field
-                  className="radio-btn"
-                  type="radio"
-                  name="status"
-                  value={status.toLowerCase()}
-                  id={status}
-                />
-                {status}
-              </label>
-            </li>
-          ))}
-        </ul>
-        <ErrorMessage
-          className="error-message error-text-color"
-          component="div"
-          name="status"
-        />
         <SubmissionProgressModal
           modalIsOpen={submissionModalIsOpen}
           toggleModal={toggleModal}
