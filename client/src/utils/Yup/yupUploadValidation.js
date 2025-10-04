@@ -45,7 +45,7 @@ const IssueUploadValidation = {
     .max(50, "Issue Title must be at most 50 characters!")
     .required("Issue Title required!"),
   issueCoverPhoto: Yup.mixed()
-    .required("A Issue Cover Photo is required!")
+    .required("An Issue Cover Photo is required!")
     .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
     .imageSizeCheck(THUMBNAIL_MAX_FILE_SIZE, THUMBNAIL_MAX_FILE_SIZE_IN_BYTES),
   issueDescription: Yup.string()
