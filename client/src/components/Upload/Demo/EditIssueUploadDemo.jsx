@@ -170,7 +170,9 @@ const EditIssueUpload = () => {
             Yup.object().shape({
               user: Yup.string().required("A user must be selected"),
               username: Yup.string().required("A user must have a username"),
-              credits: Yup.array().required("Please select credits"),
+              credits: Yup.array().required(
+                "Please select the applicable role(s) this user fulfilled!"
+              ),
             })
           )
           .required("Must have at least one work credit"),
