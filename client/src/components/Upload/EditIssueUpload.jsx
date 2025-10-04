@@ -352,7 +352,7 @@ const EditIssueUpload = () => {
                     Yup.object().shape({
                       user: Yup.string().required("A user must be selected"),
                       username: Yup.string().required(
-                        "A user must have a username"
+                        "A user must have a username!"
                       ),
                       credits: Yup.array().required(
                         "Please select the applicable role(s) this user fulfilled!"
