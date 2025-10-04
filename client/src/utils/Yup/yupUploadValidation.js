@@ -37,7 +37,7 @@ const BookUploadValidation = {
       return regexForValidURLSlug.test(value);
     })
     .required("URL Slug required!"),
-  genres: Yup.array().required("You must select a genre!"),
+  genres: Yup.array().required("You must select at least one genre!"),
 };
 
 const IssueUploadValidation = {

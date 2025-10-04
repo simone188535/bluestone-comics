@@ -309,7 +309,9 @@ const EditBookUpload = () => {
                 })
                 .required("URL Slug required!"),
               contentRating: Yup.string().required("Content Rating required!"),
-              genres: Yup.array().required("You must select a genre!"),
+              genres: Yup.array().required(
+                "You must select at least one genre!"
+              ),
               status: Yup.string().required("Status required!"),
             })}
             onSubmit={onSubmit}
