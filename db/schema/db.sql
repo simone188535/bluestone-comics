@@ -1,6 +1,19 @@
 CREATE DATABASE "bluestone-local";
 
 
+CREATE TYPE public.user_roles AS ENUM
+    ('user', 'admin', 'moderator', 'creator', 'publisher');
+
+CREATE TYPE public.status_types AS ENUM
+    ('ongoing', 'completed', 'hiatus');
+
+CREATE TYPE public.content_rating_types AS ENUM
+    ('G', 'T', 'M', 'E');
+
+CREATE TYPE public.creator_credits_types AS ENUM
+    ('writer', 'artist', 'editor', 'inker', 'letterer', 'penciller', 'colorist', 'cover artist');
+
+
 CREATE TABLE IF NOT EXISTS public.users
 (
     id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),
@@ -27,12 +40,6 @@ CREATE TABLE IF NOT EXISTS public.users
 );
 
 
-CREATE TYPE public.status_types AS ENUM
-    ('ongoing', 'completed', 'hiatus');
-
-CREATE TYPE public.content_rating_types AS ENUM
-    ('G', 'T', 'M', 'E');
-    
 CREATE TABLE IF NOT EXISTS public.books
 (
     id integer NOT NULL DEFAULT nextval('books_id_seq'::regclass),
@@ -54,6 +61,137 @@ CREATE TABLE IF NOT EXISTS public.books
         ON DELETE CASCADE,
     CONSTRAINT books_title_check CHECK (length(title::text) <= 50),
     CONSTRAINT books_url_slug_check CHECK (length(url_slug::text) <= 100)
-)
+);
 
 
+CREATE TABLE IF NOT EXISTS public.issues
+(
+    id integer NOT NULL DEFAULT nextval('issues_id_seq'::regclass),
+    publisher_id integer,
+    book_id integer,
+    title character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    cover_photo character varying COLLATE pg_catalog."default" NOT NULL DEFAULT 'default.jpg'::character varying,
+    issue_number smallint NOT NULL DEFAULT 1,
+    image_prefix_reference character varying COLLATE pg_catalog."default" NOT NULL,
+    last_updated timestamp with time zone,
+    date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    description character varying(1000) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT issues_pkey PRIMARY KEY (id),
+    CONSTRAINT issues_book_id_fkey FOREIGN KEY (book_id)
+        REFERENCES public.books (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT issues_publisher_id_fkey FOREIGN KEY (publisher_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT issues_title_check CHECK (length(title::text) <= 50)
+);
+
+
+CREATE TABLE IF NOT EXISTS public.issue_assets
+(
+    id integer NOT NULL DEFAULT nextval('issue_assets_id_seq'::regclass),
+    publisher_id integer,
+    book_id integer,
+    issue_id integer,
+    page_number smallint NOT NULL DEFAULT 1,
+    photo_url character varying COLLATE pg_catalog."default" NOT NULL,
+    last_updated timestamp with time zone,
+    date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT issue_assets_pkey PRIMARY KEY (id),
+    CONSTRAINT issue_assets_book_id_fkey FOREIGN KEY (book_id)
+        REFERENCES public.books (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT issue_assets_issue_id_fkey FOREIGN KEY (issue_id)
+        REFERENCES public.issues (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT issue_assets_publisher_id_fkey FOREIGN KEY (publisher_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS public.genres
+(
+    id integer NOT NULL DEFAULT nextval('genres_id_seq'::regclass),
+    book_id integer,
+    genre character varying COLLATE pg_catalog."default" NOT NULL,
+    last_updated timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT genres_pkey PRIMARY KEY (id),
+    CONSTRAINT genres_book_id_genre_key UNIQUE (book_id, genre),
+    CONSTRAINT genres_book_id_fkey FOREIGN KEY (book_id)
+        REFERENCES public.books (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS public.bookmarks
+(
+    id integer NOT NULL DEFAULT nextval('bookmarks_id_seq'::regclass),
+    book_id integer,
+    subscribed_id integer,
+    date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT bookmarks_pkey PRIMARY KEY (id),
+    CONSTRAINT bookmarks_book_id_fkey FOREIGN KEY (book_id)
+        REFERENCES public.books (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT bookmarks_subscribed_id_fkey FOREIGN KEY (subscribed_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS public.subscribers
+(
+    id integer NOT NULL DEFAULT nextval('subscribers_id_seq'::regclass),
+    publisher_id integer,
+    subscriber_id integer,
+    date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT subscribers_pkey PRIMARY KEY (id),
+    CONSTRAINT subscribers_publisher_id_fkey FOREIGN KEY (publisher_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT subscribers_subscriber_id_fkey FOREIGN KEY (subscriber_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS public.work_credits
+(
+    id integer NOT NULL DEFAULT nextval('work_credits_id_seq'::regclass),
+    publisher_id integer,
+    book_id integer,
+    issue_id integer,
+    creator_id integer,
+    creator_credit creator_credits_types NOT NULL,
+    last_updated timestamp with time zone,
+    date_created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT work_credits_pkey PRIMARY KEY (id),
+    CONSTRAINT work_credits_book_id_fkey FOREIGN KEY (book_id)
+        REFERENCES public.books (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT work_credits_creator_id_fkey FOREIGN KEY (creator_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT work_credits_issue_id_fkey FOREIGN KEY (issue_id)
+        REFERENCES public.issues (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT work_credits_publisher_id_fkey FOREIGN KEY (publisher_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
