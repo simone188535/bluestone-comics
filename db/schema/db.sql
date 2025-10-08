@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS public.users
 );
 
 
+CREATE TABLE IF NOT EXISTS public.books
 (
     id integer NOT NULL DEFAULT nextval('books_id_seq'::regclass),
     publisher_id integer,
