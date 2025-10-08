@@ -27,6 +27,12 @@ CREATE TABLE IF NOT EXISTS public.users
 );
 
 
+CREATE TYPE public.status_types AS ENUM
+    ('ongoing', 'completed', 'hiatus');
+
+CREATE TYPE public.content_rating_types AS ENUM
+    ('G', 'T', 'M', 'E');
+    
 CREATE TABLE IF NOT EXISTS public.books
 (
     id integer NOT NULL DEFAULT nextval('books_id_seq'::regclass),
