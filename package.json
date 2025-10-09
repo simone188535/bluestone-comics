@@ -12,6 +12,7 @@
     "server": "nodemon server.js --ignore client",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "init-db": "psql -f ./db/schema/db.sql",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
     "debug": "ndb server.js"
   },
