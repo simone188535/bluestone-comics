@@ -1,4 +1,8 @@
+DROP DATABASE IF EXISTS "bluestone-local";
+
 CREATE DATABASE "bluestone-local";
+
+\c "bluestone-local";
 
 
 CREATE TYPE public.user_roles AS ENUM
@@ -12,6 +16,81 @@ CREATE TYPE public.content_rating_types AS ENUM
 
 CREATE TYPE public.creator_credits_types AS ENUM
     ('writer', 'artist', 'editor', 'inker', 'letterer', 'penciller', 'colorist', 'cover artist');
+
+
+CREATE SEQUENCE IF NOT EXISTS public.users_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+
+CREATE SEQUENCE IF NOT EXISTS public.books_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+    
+CREATE SEQUENCE IF NOT EXISTS public.issues_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+
+CREATE SEQUENCE IF NOT EXISTS public.issue_assets_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+
+CREATE SEQUENCE IF NOT EXISTS public.bookmarks_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+
+CREATE SEQUENCE IF NOT EXISTS public.genres_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+
+CREATE SEQUENCE IF NOT EXISTS public.subscribers_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+
+CREATE SEQUENCE IF NOT EXISTS public.work_credits_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+
+
 
 
 CREATE TABLE IF NOT EXISTS public.users
@@ -195,3 +274,27 @@ CREATE TABLE IF NOT EXISTS public.work_credits
         ON UPDATE NO ACTION
         ON DELETE CASCADE
 );
+
+ALTER SEQUENCE public.users_id_seq
+    OWNED BY public.users.id;
+
+ALTER SEQUENCE public.books_id_seq
+    OWNED BY public.books.id;
+
+ALTER SEQUENCE public.issues_id_seq
+    OWNED BY public.issues.id;
+
+ALTER SEQUENCE public.issue_assets_id_seq
+    OWNED BY public.issue_assets.id;
+
+ALTER SEQUENCE public.bookmarks_id_seq
+    OWNED BY public.bookmarks.id;
+
+ALTER SEQUENCE public.genres_id_seq
+    OWNED BY public.genres.id;
+
+ALTER SEQUENCE public.subscribers_id_seq
+    OWNED BY public.subscribers.id;
+
+ALTER SEQUENCE public.work_credits_id_seq
+    OWNED BY public.work_credits.id;
