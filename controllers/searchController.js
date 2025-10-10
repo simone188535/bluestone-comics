@@ -1,7 +1,7 @@
 // const express = require('express');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
-const pool = require('../db');
+const { pool } = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 const SearchFeatures = require('../utils/SearchFeatures');
 const { withGenresStr } = require('../utils/SearchFeaturesHelpers');

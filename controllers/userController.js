@@ -4,7 +4,7 @@ const AppError = require('../utils/appError');
 const QueryPG = require('../utils/QueryPGFeature');
 const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 const randomUUIDString = require('../utils/randomUUIDString');
-const pool = require('../db');
+const { pool } = require('../db');
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const { id, username, email } = req.query;

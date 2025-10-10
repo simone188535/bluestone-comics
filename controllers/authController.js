@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
-const pool = require('../db');
+const { pool } = require('../db');
 const QueryPG = require('../utils/QueryPGFeature');
 
 const keys = require('../config/keys');

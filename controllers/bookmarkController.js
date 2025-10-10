@@ -1,7 +1,7 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const QueryPG = require('../utils/QueryPGFeature');
-const pool = require('../db');
+const { pool } = require('../db');
 
 exports.getBookmark = catchAsync(async (req, res, next) => {
   const { bookId } = req.params;

@@ -3,7 +3,7 @@ const AppError = require('../utils/appError');
 // const Subscriber = require('../models/subscriberModel');
 const QueryPG = require('../utils/QueryPGFeature');
 const pageOffset = require('../utils/offset');
-const pool = require('../db');
+const { pool } = require('../db');
 
 exports.checkSubscription = (onlyCheckSubscription = false) =>
   catchAsync(async (req, res, next) => {

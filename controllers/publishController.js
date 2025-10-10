@@ -6,7 +6,7 @@ const AmazonSDKS3 = require('../utils/AmazonSDKS3');
 // const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
 const pageOffset = require('../utils/offset');
-const pool = require('../db');
+const { pool } = require('../db');
 
 /*
   This method inserts new work credits into the work_credits table

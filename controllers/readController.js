@@ -6,7 +6,7 @@ const AppError = require('../utils/appError');
 // const filterObj = require('../utils/filterObj');
 const QueryPG = require('../utils/QueryPGFeature');
 // const pageOffset = require('../utils/offset');
-const pool = require('../db');
+const { pool } = require('../db');
 
 const extractUsernameFromUserData = (userData) =>
   userData.map((user) => user.username);
