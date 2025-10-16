@@ -115,12 +115,12 @@ const FileInputMultipleUpload = ({
       IMAGE_UPLOAD_DIMENSIONS.STANDARD_UPLOAD_SIZE;
 
     // validation 1. check width and height of file
-    if (providedFile.width > WIDTH || providedFile.height > HEIGHT) {
-      return {
-        code: "file-dimensions-too-large",
-        message: `This file is too large! The dimensions cannot be larger than the recommended file size: ${WIDTH} pixels x ${HEIGHT} pixels`,
-      };
-    }
+    // if (providedFile.width > WIDTH || providedFile.height > HEIGHT) {
+    //   return {
+    //     code: "file-dimensions-too-large",
+    //     message: `This file is too large! The dimensions cannot be larger than the recommended file size: ${WIDTH} pixels x ${HEIGHT} pixels`,
+    //   };
+    // }
 
     // validation 2. check if file size is too large / above 2MB
     if (isFileSizeTooLarge(providedFile, MAX_FILE_SIZE)) {
