@@ -25,8 +25,8 @@ function imgDimensionCheck(width, height, message = null) {
 
       // check to see if the width and height are with-in 20 pixels of margin and error.
       if (
-        _.inRange((imgDimensions.width, width - 10, width + 10)) ||
-        _.inRange((imgDimensions.height, height - 10, height + 10))
+        !_.inRange((imgDimensions.width, width - 10, width + 10)) ||
+        !_.inRange((imgDimensions.height, height - 10, height + 10))
       ) {
         // eslint-disable-next-line consistent-return
         return createError({
