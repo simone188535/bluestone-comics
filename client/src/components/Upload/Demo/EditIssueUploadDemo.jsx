@@ -157,7 +157,7 @@ const EditIssueUpload = () => {
         bookCoverPhoto: Yup.mixed().when("bookCoverPhotoToBeRemoved", {
           is: (password) => Boolean(password),
           then: Yup.mixed()
-            .required("You need to provide a file")
+            .required("You need to provide a file!")
             .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
             .imageSizeCheck(
               THUMBNAIL_MAX_FILE_SIZE,

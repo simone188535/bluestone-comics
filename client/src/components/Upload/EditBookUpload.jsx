@@ -284,7 +284,7 @@ const EditBookUpload = () => {
               bookCoverPhoto: Yup.mixed().when("bookCoverPhotoToBeRemoved", {
                 is: (val) => Boolean(val),
                 then: Yup.mixed()
-                  .required("You need to provide a file")
+                  .required("You need to provide a file!")
                   .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
                   .imageSizeCheck(
                     THUMBNAIL_MAX_FILE_SIZE,
@@ -292,7 +292,7 @@ const EditBookUpload = () => {
                   ),
               }),
               // bookCoverPhoto: Yup.mixed()
-              //   .required("You need to provide a file")
+              //   .required("You need to provide a file!")
               //   .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
               //   .imageSizeCheck(
               //     THUMBNAIL_MAX_FILE_SIZE,

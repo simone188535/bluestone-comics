@@ -23,7 +23,7 @@ const BookUploadValidation = {
     .max(50, "Book Title must be at most 50 characters!")
     .required("Book Title required!"),
   bookCoverPhoto: Yup.mixed()
-    .required("You need to provide a file")
+    .required("You need to provide a file!")
     .imageDimensionCheck(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
     .imageSizeCheck(THUMBNAIL_MAX_FILE_SIZE, THUMBNAIL_MAX_FILE_SIZE_IN_BYTES),
   bookDescription: Yup.string()
