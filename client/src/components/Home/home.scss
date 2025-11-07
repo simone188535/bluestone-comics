@@ -89,17 +89,17 @@
             }
             }
 
-            &.sect-one .hero-image-container {
-                // background-image: url('../../assets/wolverine.jpeg');
-            }
+            // &.sect-one .hero-image-container {
+            //     // background-image: url('../../assets/wolverine.jpeg');
+            // }
             
-            &.sect-two .hero-image-container {
-                // background-image: url('../../assets/supergirl.jpeg');
-            }
+            // &.sect-two .hero-image-container {
+            //     // background-image: url('../../assets/supergirl.jpeg');
+            // }
         
-            &.sect-three .hero-image-container {
-                // background-image: url('../../assets/starlight.jpeg');
-            }
+            // &.sect-three .hero-image-container {
+            //     // background-image: url('../../assets/starlight.jpeg');
+            // }
         }
     }
 }
@@ -146,33 +146,33 @@
                         }
                     }
 
-                    &.left-slant {
-                        &:after {
-                            display: block;
-                            transform: skewX(-7deg);
-                            // background-color: $disabled-violet-blue;
-                            left: 5%;
-                        }
+                    // &.left-slant {
+                    //     &:after {
+                    //         display: block;
+                    //         transform: skewX(-7deg);
+                    //         // background-color: $disabled-violet-blue;
+                    //         left: 5%;
+                    //     }
 
-                        .desc-content {
-                            // padding-left: 5%;
-                        }
+                    //     .desc-content {
+                    //         // padding-left: 5%;
+                    //     }
 
-                    }
+                    // }
 
-                    &.right-slant {
-                        // order: 2;
-                        &:before {
-                            display: block;
-                            transform: skewX(7deg);
-                            // background-color: $disabled-violet-blue;
-                            right: 5%;
-                        }
-                        .desc-content {
-                            // padding-right: 5%;
-                        }
+                    // &.right-slant {
+                    //     // order: 2;
+                    //     &:before {
+                    //         display: block;
+                    //         transform: skewX(7deg);
+                    //         // background-color: $disabled-violet-blue;
+                    //         right: 5%;
+                    //     }
+                    //     .desc-content {
+                    //         // padding-right: 5%;
+                    //     }
 
-                    }
+                    // }
                 }
 
                 .hero-image-container { 
@@ -207,24 +207,24 @@
                     }
                 }
 
-                &.odd {
-                    .hero-image-container {
-                        order: 2;
-                    }
-                    .desc-content {
-                        left: 10%;
-                    }
-                }
+                // &.odd {
+                //     .hero-image-container {
+                //         order: 2;
+                //     }
+                //     .desc-content {
+                //         left: 10%;
+                //     }
+                // }
 
-                &.even {
-                    .desc.right-slant {
-                        order: 2;
+                // &.even {
+                //     .desc.right-slant {
+                //         order: 2;
 
-                        .desc-content {
-                            right: 15%;
-                        }
-                    }
-                }
+                //         .desc-content {
+                //             right: 15%;
+                //         }
+                //     }
+                // }
                 
                 // &.sect-one {
                 //     .hero-image-container {

@@ -100,7 +100,7 @@ const Home = () => {
   return (
     <>
       <MetaTags
-        title="Bluestone Comics: Make and Read American Indie Comics"
+        title="Bluestone Comics: Make and Read Indie Comics"
         canonical="https://www.bluestonecomics.com"
         description="Bluestone Comics is a celebration of American comic books. Upload your own American style comic books. Read all comic books for free. Bring your comics to life."
       />
