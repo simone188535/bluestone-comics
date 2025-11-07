@@ -1,4 +1,5 @@
 import React from "react";
+import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import MetaTags from "../MetaTags";
 import batmanXLarge from "../../assets/homepage/batman-welcome-XL.jpg";
@@ -65,7 +66,8 @@ const homePageSections = [
     detailsText: (
       <>
         If your work stands out from the rest, It may be featured on the
-        homepage. It may also be <strong>eligible for funding</strong>.
+        homepage.
+        {/* It may also be <strong>eligible for funding</strong>. */}
       </>
     ),
   },
@@ -85,6 +87,14 @@ const homePageSections = [
       "Popular comics may have the chance to receive sponsorship in the future.",
   },
 ];
+
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+};
 
 const Home = () => {
   return (
@@ -133,6 +143,28 @@ const Home = () => {
           )
         )}
       </main>
+      <div>
+        <Slider {...settings}>
+          <div>
+            <h3>1</h3>
+          </div>
+          <div>
+            <h3>2</h3>
+          </div>
+          <div>
+            <h3>3</h3>
+          </div>
+          <div>
+            <h3>4</h3>
+          </div>
+          <div>
+            <h3>5</h3>
+          </div>
+          <div>
+            <h3>6</h3>
+          </div>
+        </Slider>
+      </div>
     </>
   );
 };
