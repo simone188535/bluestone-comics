@@ -105,66 +105,55 @@ const Home = () => {
         description="Bluestone Comics is a celebration of American comic books. Upload your own American style comic books. Read all comic books for free. Bring your comics to life."
       />
       <main className="container-fluid home-page">
-        {homePageSections.map(
-          ({
-            sectionOrder,
-            sectionNum,
-            slantDirection,
-            imgSrc,
-            imgAlt,
-            headerText,
-            detailsText,
-          }) => (
-            <section
-              className={`hero-container sect-${sectionNum} ${sectionOrder}`}
-              key={sectionNum}
-            >
-              <div className="hero-image-container">
-                <picture className="hero-picture">
-                  <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
-                  <source media="(min-width: 992px)" srcSet={imgSrc.large} />
-                  <source media="(min-width: 768px)" srcSet={imgSrc.medium} />
-                  <img
-                    className="hero-image"
-                    src={imgSrc.small}
-                    width="auto"
-                    height="auto"
-                    alt={imgAlt}
-                  />
-                </picture>
-              </div>
-              <article className={`desc ${slantDirection}-slant`}>
-                <section className="desc-content">
-                  {headerText}
-                  <p className="details">{detailsText}</p>
-                </section>
-              </article>
-            </section>
-          )
-        )}
-      </main>
-      <div>
-        <Slider {...settings}>
-          <div>
-            <h3>1</h3>
-          </div>
-          <div>
-            <h3>2</h3>
-          </div>
-          <div>
-            <h3>3</h3>
-          </div>
-          <div>
-            <h3>4</h3>
-          </div>
-          <div>
-            <h3>5</h3>
-          </div>
-          <div>
-            <h3>6</h3>
-          </div>
+        <Slider {...settings} className="home-page-slick-slider">
+          {homePageSections.map(
+            ({
+              sectionOrder,
+              sectionNum,
+              slantDirection,
+              imgSrc,
+              imgAlt,
+              headerText,
+              detailsText,
+            }) => (
+              <section>
+                <div
+                  className={`hero-container sect-${sectionNum} ${sectionOrder}`}
+                  key={sectionNum}
+                >
+                  <div className="hero-image-container">
+                    <picture className="hero-picture">
+                      <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
+                      <source
+                        media="(min-width: 992px)"
+                        srcSet={imgSrc.large}
+                      />
+                      <source
+                        media="(min-width: 768px)"
+                        srcSet={imgSrc.medium}
+                      />
+                      <img
+                        className="hero-image"
+                        src={imgSrc.small}
+                        width="auto"
+                        height="auto"
+                        alt={imgAlt}
+                      />
+                    </picture>
+                  </div>
+                  <article className={`desc ${slantDirection}-slant`}>
+                    <section className="desc-content">
+                      {headerText}
+                      <p className="details">{detailsText}</p>
+                    </section>
+                  </article>
+                </div>
+              </section>
+            )
+          )}
         </Slider>
-      </div>
+      </main>
+      <div />
     </>
   );
 };
