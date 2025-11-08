@@ -140,13 +140,14 @@ const Home = () => {
                         alt={imgAlt}
                       />
                     </picture>
+                    <div className="slider-gradient" />
                   </div>
-                  <article className={`desc ${slantDirection}-slant`}>
+                  {/* <article className={`desc ${slantDirection}-slant`}>
                     <section className="desc-content">
                       {headerText}
                       <p className="details">{detailsText}</p>
                     </section>
-                  </article>
+                  </article> */}
                 </div>
               </section>
             )

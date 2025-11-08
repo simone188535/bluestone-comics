@@ -20,7 +20,7 @@
 
         .hero-container {
             display: flex;
-            // position: relative;
+            position: relative;
             width: 100%;
             flex-wrap: wrap;
 
@@ -50,6 +50,14 @@
                     height: 100vh;
                     max-height: 350px;
                     object-fit: cover;
+                }
+
+                .slider-gradient {
+                    background: linear-gradient(90deg, rgba(0, 0, 0, .65), transparent);
+                    height: 100%;
+                    position: absolute;
+                    width: 100%;
+                    top: 0;
                 }
             }
 
@@ -251,7 +259,7 @@
                 }
 
                 .hero-image-container {
-                    flex: 0 0 55%;
+                    // flex: 0 0 55%;
                 }
 
                 // .desc, &.even .hero-image-container {
