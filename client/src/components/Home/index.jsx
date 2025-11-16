@@ -149,15 +149,15 @@ const Home = () => {
                         alt={imgAlt}
                       />
                       <div className="slider-gradient" />
+                      <article className={`desc ${slantDirection}-slant`}>
+                        <section className="desc-content">
+                          {headerText}
+                          <p className="details">{detailsText}</p>
+                        </section>
+                      </article>
                     </picture>
                     {/* <div className="slider-gradient" /> */}
                   </div>
-                  {/* <article className={`desc ${slantDirection}-slant`}>
-                    <section className="desc-content">
-                      {headerText}
-                      <p className="details">{detailsText}</p>
-                    </section>
-                  </article> */}
                 </div>
                 // </section>
               )
