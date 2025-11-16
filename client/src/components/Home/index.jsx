@@ -1,5 +1,6 @@
 import React from "react";
-import Slider from "react-slick";
+import useEmblaCarousel from "embla-carousel-react";
+// import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import MetaTags from "../MetaTags";
 import batmanXLarge from "../../assets/homepage/batman-welcome-XL.jpg";
@@ -88,15 +89,17 @@ const homePageSections = [
   },
 ];
 
-const settings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-};
+// const settings = {
+//   dots: true,
+//   infinite: true,
+//   speed: 500,
+//   slidesToShow: 1,
+//   slidesToScroll: 1,
+// };
 
 const Home = () => {
+  const [emblaRef] = useEmblaCarousel({ loop: true });
+
   return (
     <>
       <MetaTags
@@ -105,20 +108,23 @@ const Home = () => {
         description="Bluestone Comics is a celebration of American comic books. Upload your own American style comic books. Read all comic books for free. Bring your comics to life."
       />
       <main className="container-fluid home-page">
-        <Slider {...settings} className="home-page-slick-slider">
-          {homePageSections.map(
-            ({
-              sectionOrder,
-              sectionNum,
-              slantDirection,
-              imgSrc,
-              imgAlt,
-              headerText,
-              detailsText,
-            }) => (
-              <section>
+        {/* <Slider {...settings} className="home-page-slick-slider"> */}
+        <section className="slider embla" ref={emblaRef}>
+          <div className="embla__container">
+            {homePageSections.map(
+              ({
+                // sectionOrder,
+                sectionNum,
+                slantDirection,
+                imgSrc,
+                imgAlt,
+                headerText,
+                detailsText,
+              }) => (
+                // <section>
                 <div
-                  className={`hero-container sect-${sectionNum} ${sectionOrder}`}
+                  // className={`hero-container sect-${sectionNum} ${sectionOrder} embla__slide`}
+                  className="embla__slide"
                   key={sectionNum}
                 >
                   <div className="hero-image-container">
@@ -140,7 +146,7 @@ const Home = () => {
                         alt={imgAlt}
                       />
                     </picture>
-                    <div className="slider-gradient" />
+                    {/* <div className="slider-gradient" /> */}
                   </div>
                   {/* <article className={`desc ${slantDirection}-slant`}>
                     <section className="desc-content">
@@ -149,10 +155,12 @@ const Home = () => {
                     </section>
                   </article> */}
                 </div>
-              </section>
-            )
-          )}
-        </Slider>
+                // </section>
+              )
+            )}
+            {/* </Slider> */}
+          </div>
+        </section>
       </main>
       <div />
     </>
