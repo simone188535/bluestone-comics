@@ -1,20 +1,21 @@
 import React from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 // import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import MetaTags from "../MetaTags";
 import batmanXLarge from "../../assets/homepage/batman-welcome-XL.jpg";
-import batmanLarge from "../../assets/homepage/batman-welcome-Large.jpg";
-import batmanMedium from "../../assets/homepage/batman-welcome-Medium.jpg";
-import batmanSmall from "../../assets/homepage/batman-welcome-Small.jpg";
+// import batmanLarge from "../../assets/homepage/batman-welcome-Large.jpg";
+// import batmanMedium from "../../assets/homepage/batman-welcome-Medium.jpg";
+// import batmanSmall from "../../assets/homepage/batman-welcome-Small.jpg";
 import blackPantherXLarge from "../../assets/homepage/black-panther-awards-XL.jpg";
-import blackPantherLarge from "../../assets/homepage/black-panther-awards-Large.jpg";
-import blackPantherMedium from "../../assets/homepage/black-panther-awards-Medium.jpg";
-import blackPantherSmall from "../../assets/homepage/black-panther-awards-Small.jpg";
+// import blackPantherLarge from "../../assets/homepage/black-panther-awards-Large.jpg";
+// import blackPantherMedium from "../../assets/homepage/black-panther-awards-Medium.jpg";
+// import blackPantherSmall from "../../assets/homepage/black-panther-awards-Small.jpg";
 import spidermanXLarge from "../../assets/homepage/spiderman-sponsorship-XL.jpg";
-import spidermanLarge from "../../assets/homepage/spiderman-sponsorship-Large.jpg";
-import spidermanMedium from "../../assets/homepage/spiderman-sponsorship-Medium.jpg";
-import spidermanSmall from "../../assets/homepage/spiderman-sponsorship-Small.jpg";
+// import spidermanLarge from "../../assets/homepage/spiderman-sponsorship-Large.jpg";
+// import spidermanMedium from "../../assets/homepage/spiderman-sponsorship-Medium.jpg";
+// import spidermanSmall from "../../assets/homepage/spiderman-sponsorship-Small.jpg";
 import "./home.scss";
 
 const LinkButton = ({ buttonText, link, btnClass }) => (
@@ -32,9 +33,9 @@ const homePageSections = [
     slantDirection: "left",
     imgSrc: {
       xl: batmanXLarge,
-      large: batmanLarge,
-      medium: batmanMedium,
-      small: batmanSmall,
+      // large: batmanLarge,
+      // medium: batmanMedium,
+      // small: batmanSmall,
     },
     imgAlt: "Welcome to Bluestone Comics",
     headerText: <h1 className="primary-header">Welcome to Bluestone Comics</h1>,
@@ -58,9 +59,9 @@ const homePageSections = [
     slantDirection: "right",
     imgSrc: {
       xl: blackPantherXLarge,
-      large: blackPantherLarge,
-      medium: blackPantherMedium,
-      small: blackPantherSmall,
+      // large: blackPantherLarge,
+      // medium: blackPantherMedium,
+      // small: blackPantherSmall,
     },
     imgAlt: "Bluestone Comics Awards",
     headerText: <h2 className="primary-header">Awards</h2>,
@@ -78,9 +79,9 @@ const homePageSections = [
     slantDirection: "left",
     imgSrc: {
       xl: spidermanXLarge,
-      large: spidermanLarge,
-      medium: spidermanMedium,
-      small: spidermanSmall,
+      // large: spidermanLarge,
+      // medium: spidermanMedium,
+      // small: spidermanSmall,
     },
     imgAlt: "Bluestone Comics Sponsorship",
     headerText: <h2 className="primary-header">Sponsorship</h2>,
@@ -98,7 +99,9 @@ const homePageSections = [
 // };
 
 const Home = () => {
-  const [emblaRef] = useEmblaCarousel({ loop: true });
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ delay: 3000 }),
+  ]);
 
   return (
     <>
@@ -129,7 +132,7 @@ const Home = () => {
                 >
                   <div className="hero-image-container">
                     <picture className="hero-picture">
-                      <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
+                      {/* <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
                       <source
                         media="(min-width: 992px)"
                         srcSet={imgSrc.large}
@@ -137,10 +140,10 @@ const Home = () => {
                       <source
                         media="(min-width: 768px)"
                         srcSet={imgSrc.medium}
-                      />
+                      /> */}
                       <img
                         className="hero-image"
-                        src={imgSrc.small}
+                        src={imgSrc.xl}
                         width="auto"
                         height="auto"
                         alt={imgAlt}
