@@ -148,6 +148,7 @@ const Home = () => {
                         height="auto"
                         alt={imgAlt}
                       />
+                      <div className="slider-gradient" />
                     </picture>
                     {/* <div className="slider-gradient" /> */}
                   </div>
