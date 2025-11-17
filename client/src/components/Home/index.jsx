@@ -26,6 +26,34 @@ const LinkButton = ({ buttonText, link, btnClass }) => (
   </Link>
 );
 
+const newComics = [
+  {
+    link: "https://www.bluestonecomics.com/read/Rewired/book/10/issue/1",
+    img: "https://bluestone-images-prod.s3.amazonaws.com/works/a9e7e61e86e044fd87b59e59ccbe82ef/b43c3103799d4b40b4990b02c2e71caa/d021ea3e1a0343c9b8ce0bb8ebd7c048",
+    title: "Rewired",
+  },
+  {
+    link: "https://www.bluestonecomics.com/read/Crossed-Signals/book/7/issue/1",
+    img: "https://bluestone-images-prod.s3.amazonaws.com/works/d5687027a493471d807217f8291d41eb/3daf95d6f3eb4bac8d2b687b3695aec5/ae0b1f1b55d14342a0a001e35397d338",
+    title: "Crossed Signals",
+  },
+  {
+    link: "https://www.bluestonecomics.com/read/Between-Sand-and-Sea/book/6/issue/1",
+    img: "https://bluestone-images-prod.s3.amazonaws.com/works/610ca9b3b0a7492dbfcb0f0914c79fd3/1ca11c879187450fb25f14055e22c897/03ffa68c797e4f1493472759ddccd4dd",
+    title: "Between Sand & Sea",
+  },
+  {
+    link: "https://www.bluestonecomics.com/read/Maintenance/book/8/issue/1",
+    img: "https://bluestone-images-prod.s3.amazonaws.com/works/48eeef9786e644a5befe9ce1cb607bc1/dec76ec58fc449e5a410cd738b244ab9/ea633ea23b5a40f7b94b5449d6d21c6c",
+    title: "Maintenance",
+  },
+  // {
+  //   link: "https://www.bluestonecomics.com/read/The-Storm/book/5/issue/1",
+  //   img: "https://bluestone-images-prod.s3.amazonaws.com/works/114144d5298541da9d8956e173fa5c71/fde56ff5e11440079b4884ec9e88b166/4e8a5e9ace2a4bca82ca29870132f1e0",
+  //   title: "The Storm",
+  // },
+];
+
 const homePageSections = [
   {
     sectionOrder: "odd",
@@ -149,21 +177,47 @@ const Home = () => {
                         alt={imgAlt}
                       />
                       <div className="slider-gradient" />
-                      <article className={`desc ${slantDirection}-slant`}>
+                      {/* <article className={`desc ${slantDirection}-slant`}>
                         <section className="desc-content">
                           {headerText}
                           <p className="details">{detailsText}</p>
                         </section>
-                      </article>
+                      </article> */}
                     </picture>
                     {/* <div className="slider-gradient" /> */}
                   </div>
+                  {/* <article className={`desc ${slantDirection}-slant`}>
+                    <section className="desc-content">
+                      {headerText}
+                      <p className="details">{detailsText}</p>
+                    </section>
+                  </article> */}
                 </div>
                 // </section>
               )
             )}
             {/* </Slider> */}
           </div>
+        </section>
+        <section className="reader-section">
+          <h2 className="sub-header">NEW COMICS</h2>
+          <ul className="new-item-list">
+            {newComics.map(({ link, title, img }) => (
+              <li className="new-item">
+                <a href={link} className="new-item-link">
+                  <img src={img} alt={title} className="new-item-img" />
+                  <h2 className="new-item-title">{title}</h2>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section className="read-more-section">
+          <Link to="/search" className="link-button">
+            <button type="button" className="bsc-button transparent">
+              Read More
+            </button>
+          </Link>
         </section>
       </main>
       <div />

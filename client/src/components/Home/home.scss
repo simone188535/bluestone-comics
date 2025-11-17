@@ -8,6 +8,7 @@
     .slider {
         &.embla {
         overflow: hidden;
+        margin-bottom: 3rem;
         }
         .embla__container {
             display: flex;
@@ -70,7 +71,7 @@
                 }
 
                 .slider-gradient {
-                    background: linear-gradient(90deg, rgba(0, 0, 0, .40), transparent);
+                    background: linear-gradient(90deg, rgba(0, 0, 0, .47), transparent);
                     position: absolute;
                     width: 100%;
                     top: 0;
@@ -131,6 +132,44 @@
             //     // background-image: url('../../assets/starlight.jpeg');
             // }
         // }
+    }
+
+    .reader-section {
+        width: 100%;
+        margin: 0 auto;
+        max-width: 1200px;
+
+        .sub-header, .new-item-list {
+            margin: 0 3rem;
+        }
+
+        .sub-header {
+            font-size: 1.6rem;
+            color: $kinda-gray-kinda-black;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .new-item {
+            // flex: 1;
+            display: flex;
+            justify-content: center;
+            flex: 0 0 100%;
+
+            &-link {
+            display: block;
+            }
+
+             &-img {
+             width: 200px;
+            }
+
+            &-list {
+             list-style-type: none;
+             display: flex;
+             flex-wrap: wrap;
+            }
+        }
     }
 }
 
@@ -291,6 +330,26 @@
 
             // }
         // }
+
+         .reader-section {
+       
+
+
+
+        .sub-header {
+           
+        }
+
+        .new-item {
+            flex: 1;
+            padding: 10px 15px;
+           
+
+            // &-list {
+            //     flex-wrap: nowrap;
+            // }
+        }
+    }
     }
     
 }
