@@ -27,8 +27,8 @@ const ArticleItems = ({ articleList }) => {
               )}
               <section className="article-body">
                 <section className="content-wrapper">
-                  <Link to={link} className="link">
-                    <h2 className="header">{header}</h2>
+                  <Link to={link} className="article-link">
+                    <h2 className="article-header">{header}</h2>
                     {desc && <section className="desc">{desc}</section>}
                   </Link>
                   <div className="extra-details">

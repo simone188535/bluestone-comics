@@ -341,13 +341,35 @@
         }
 
         .new-item {
+            // flex: 0 0 50%;
+            
             flex: 1;
-            padding: 10px 15px;
+            margin: 0 15px;
            
 
             // &-list {
             //     flex-wrap: nowrap;
             // }
+        }
+    }
+    }
+    
+}
+
+
+@media only screen and (min-width: $large) {
+    .home-page {
+
+         .reader-section {
+       
+
+        .sub-header {
+           
+        }
+
+        .new-item {  
+            flex: 1;
+           
         }
     }
     }

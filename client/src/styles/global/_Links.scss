@@ -23,3 +23,27 @@
         font-weight: $normal;
     }
 }
+
+.article {
+    &-link {
+        color: unset;
+        text-decoration: unset;
+    }
+
+    &-header {
+        font-weight: $normal;
+        font-size: 1.1rem;
+        letter-spacing: .04rem;
+         &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+@media only screen and (min-width: $medium) {
+    .article {
+        &-header {
+            font-size: 1.3rem;
+        }
+    }
+}
