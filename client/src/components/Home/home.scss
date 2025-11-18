@@ -59,6 +59,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: .7;
+
+        &:hover {
+            opacity: 1;
+        }
     }
 
     .embla__button:disabled {
