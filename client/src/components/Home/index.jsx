@@ -204,9 +204,9 @@ const Home = () => {
           <ul className="new-item-list">
             {newComics.map(({ link, title, img }) => (
               <li className="new-item">
-                <a href={link} className="article-link new-item-link">
-                  <img src={img} alt={title} className="new-item-img" />
-                  <h2 className="article-header new-item-title">{title}</h2>
+                <a href={link} className="article-link">
+                  <img src={img} alt={title} className="article-img" />
+                  <h2 className="article-header">{title}</h2>
                 </a>
               </li>
             ))}

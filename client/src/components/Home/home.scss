@@ -156,12 +156,26 @@
             justify-content: center;
             flex: 0 0 100%;
 
-            &-link {
-            display: block;
+            .article-header {
+                text-align: center;
+                max-width: 200px;
+                margin-top: .5rem;
+                margin-bottom: 4rem;
             }
 
-             &-img {
+            .article-link {
+            display: block;
+
+            &:hover {
+                .article-header {
+                    text-decoration: underline;
+                }
+            }
+            }
+
+             .article-img {
              width: 200px;
+             height: 300px;
             }
 
             &-list {
