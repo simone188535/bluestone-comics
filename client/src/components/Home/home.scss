@@ -185,6 +185,19 @@
             }
         }
     }
+
+    .read-more-section {
+        text-align: center;
+        min-height: 150px;
+        display: flex;
+        justify-content: center;
+        margin-top: 2.3rem;
+
+        .link-button .more-btn {
+        font-size: 1.1rem;
+        font-weight: 100;
+        }
+    }
 }
 
 @media only screen and (min-width: $medium) {

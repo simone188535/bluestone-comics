@@ -214,8 +214,11 @@ const Home = () => {
         </section>
         <section className="read-more-section">
           <Link to="/search" className="link-button">
-            <button type="button" className="bsc-button transparent">
-              Read More
+            <button
+              type="button"
+              className="bsc-button primary primary-glow more-btn"
+            >
+              More Comics
             </button>
           </Link>
         </section>
