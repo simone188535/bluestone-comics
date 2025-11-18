@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 // import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import MetaTags from "../MetaTags";
+import { DotButton, useDotButton } from "./Slider/EmblaCarouselDotButtons";
+import {
+  PrevButton,
+  NextButton,
+  usePrevNextButtons,
+} from "./Slider/EmblaCarouselArrowButtons";
 import batmanXLarge from "../../assets/homepage/batman-welcome-XL.jpg";
 // import batmanLarge from "../../assets/homepage/batman-welcome-Large.jpg";
 // import batmanMedium from "../../assets/homepage/batman-welcome-Medium.jpg";
@@ -127,9 +133,19 @@ const homePageSections = [
 // };
 
 const Home = () => {
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ delay: 3000 }),
   ]);
+
+  const { selectedIndex, scrollSnaps, onDotButtonClick } =
+    useDotButton(emblaApi);
+
+  const {
+    prevBtnDisabled,
+    nextBtnDisabled,
+    onPrevButtonClick,
+    onNextButtonClick,
+  } = usePrevNextButtons(emblaApi);
 
   return (
     <>
@@ -140,27 +156,28 @@ const Home = () => {
       />
       <main className="container-fluid home-page">
         {/* <Slider {...settings} className="home-page-slick-slider"> */}
-        <section className="slider embla" ref={emblaRef}>
-          <div className="embla__container">
-            {homePageSections.map(
-              ({
-                // sectionOrder,
-                sectionNum,
-                slantDirection,
-                imgSrc,
-                imgAlt,
-                headerText,
-                detailsText,
-              }) => (
-                // <section>
-                <div
-                  // className={`hero-container sect-${sectionNum} ${sectionOrder} embla__slide`}
-                  className="embla__slide"
-                  key={sectionNum}
-                >
-                  <div className="hero-image-container">
-                    <picture className="hero-picture">
-                      {/* <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
+        <section className="slider embla">
+          <div className="embla__viewport" ref={emblaRef}>
+            <div className="embla__container">
+              {homePageSections.map(
+                ({
+                  // sectionOrder,
+                  sectionNum,
+                  slantDirection,
+                  imgSrc,
+                  imgAlt,
+                  headerText,
+                  detailsText,
+                }) => (
+                  // <section>
+                  <div
+                    // className={`hero-container sect-${sectionNum} ${sectionOrder} embla__slide`}
+                    className="embla__slide"
+                    key={sectionNum}
+                  >
+                    <div className="hero-image-container">
+                      <picture className="hero-picture">
+                        {/* <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
                       <source
                         media="(min-width: 992px)"
                         srcSet={imgSrc.large}
@@ -169,34 +186,46 @@ const Home = () => {
                         media="(min-width: 768px)"
                         srcSet={imgSrc.medium}
                       /> */}
-                      <img
-                        className="hero-image"
-                        src={imgSrc.xl}
-                        width="auto"
-                        height="auto"
-                        alt={imgAlt}
-                      />
-                      <div className="slider-gradient" />
-                      {/* <article className={`desc ${slantDirection}-slant`}>
+                        <img
+                          className="hero-image"
+                          src={imgSrc.xl}
+                          width="auto"
+                          height="auto"
+                          alt={imgAlt}
+                        />
+                        <div className="slider-gradient" />
+                        {/* <article className={`desc ${slantDirection}-slant`}>
                         <section className="desc-content">
                           {headerText}
                           <p className="details">{detailsText}</p>
                         </section>
                       </article> */}
-                    </picture>
-                    {/* <div className="slider-gradient" /> */}
-                  </div>
-                  {/* <article className={`desc ${slantDirection}-slant`}>
+                      </picture>
+                      {/* <div className="slider-gradient" /> */}
+                    </div>
+                    {/* <article className={`desc ${slantDirection}-slant`}>
                     <section className="desc-content">
                       {headerText}
                       <p className="details">{detailsText}</p>
                     </section>
                   </article> */}
-                </div>
-                // </section>
-              )
-            )}
-            {/* </Slider> */}
+                  </div>
+                  // </section>
+                )
+              )}
+              {/* </Slider> */}
+            </div>
+
+            <div className="button-container">
+              <PrevButton
+                onClick={onPrevButtonClick}
+                disabled={prevBtnDisabled}
+              />
+              <NextButton
+                onClick={onNextButtonClick}
+                disabled={nextBtnDisabled}
+              />
+            </div>
           </div>
         </section>
         <section className="reader-section">
