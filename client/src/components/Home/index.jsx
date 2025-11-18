@@ -227,6 +227,17 @@ const Home = () => {
               />
             </div>
           </div>
+          <div className="embla__dots">
+            {scrollSnaps.map((_, index) => (
+              <DotButton
+                key={index}
+                onClick={() => onDotButtonClick(index)}
+                className={"embla__dot".concat(
+                  index === selectedIndex ? " embla__dot--selected" : ""
+                )}
+              />
+            ))}
+          </div>
         </section>
         <section className="reader-section">
           <h2 className="sub-header">NEW COMICS</h2>
