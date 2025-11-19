@@ -63,6 +63,8 @@
 
         &:hover {
             opacity: 1;
+            // color: $violet-blue;
+            box-shadow: inset 0 0 0 0.2rem $violet-blue;
         }
     }
 
@@ -180,7 +182,9 @@
                 }
 
                 .slider-gradient {
-                    background: linear-gradient(90deg, rgba(0, 0, 0, .47), transparent);
+                    // KEEP
+                    // background: linear-gradient(90deg, rgba(0, 0, 0, .47), transparent);
+                    // background: radial-gradient(circle at left, rgba(0, 0, 0, 0.47) 0%, transparent 40%);
                     position: absolute;
                     width: 100%;
                     top: 0;
@@ -205,19 +209,28 @@
                 // order: 2;
                 position: absolute;
                 letter-spacing: 1.1px;
-                background: radial-gradient(black, transparent);
+                // KEEP
+                // background: radial-gradient(black, transparent);
+                // background: linear-gradient(90deg, rgba(0, 0, 0, .47), transparent);
+                // background: linear-gradient(360deg, rgba(0, 0, 0, .47), transparent);
+                background: radial-gradient(circle at top, rgba(0, 0, 0, 0.47) 0%, transparent 90%);
+
                 top: 0;
                 left: 0; 
                 right: 0; 
                 bottom: 0;
                 margin-inline: auto; 
-                width: fit-content;
+                // width: fit-content;
+                width: 100%;
+                height: 100%;
 
                 .desc-content {
                     padding: 20px 0;
                     display: flex;
                     flex-direction: column;
                     flex-basis: 55%;
+                    width: 100%;
+                    max-width: 600px;
                 
 
                 .primary-header {
@@ -225,7 +238,9 @@
                     text-align: center;
                     font-size: 3rem;
                     margin-bottom: 0.8rem;
-                    color: $violet-blue;
+                    // color: $violet-blue;
+                    // color: #e8efff;
+                    color: lightblue;
                 }
 
                 .details {
@@ -235,6 +250,11 @@
                     line-height: 1.5;
                     text-align: center;
                     color: $pure-white;
+
+                    .read-btn {
+                        font-size: 1rem;
+                        font-weight: $normal;
+                    }
                 }
 
                 .link-button {

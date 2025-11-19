@@ -79,11 +79,16 @@ const homePageSections = [
           Bluestone Comics is a celebration of american comics books. Our goal
           is to promote their creation and culture.
         </span>
-        <LinkButton
+        {/* <LinkButton
           buttonText="Upload Your Work"
           link="/articles/how-to-publish-your-comic-book-online"
           btnClass="upload-btn transparent-black"
-        />
+        /> */}
+        <Link to="/search" className="link-button">
+          <button type="button" className="bsc-button primary read-btn">
+            Read Comics
+          </button>
+        </Link>
       </>
     ),
   },
