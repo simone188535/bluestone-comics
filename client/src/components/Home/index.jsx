@@ -24,13 +24,13 @@ import spidermanXLarge from "../../assets/homepage/spiderman-sponsorship-XL.jpg"
 // import spidermanSmall from "../../assets/homepage/spiderman-sponsorship-Small.jpg";
 import "./home.scss";
 
-const LinkButton = ({ buttonText, link, btnClass }) => (
-  <Link to={link} className="link-button">
-    <button type="button" className={`bsc-button transparent ${btnClass}`}>
-      {buttonText}
-    </button>
-  </Link>
-);
+// const LinkButton = ({ buttonText, link, btnClass }) => (
+//   <Link to={link} className="link-button">
+//     <button type="button" className={`bsc-button transparent ${btnClass}`}>
+//       {buttonText}
+//     </button>
+//   </Link>
+// );
 
 const newComics = [
   {
@@ -65,25 +65,19 @@ const homePageSections = [
     sectionOrder: "odd",
     sectionNum: "one",
     slantDirection: "left",
-    imgSrc: {
-      xl: batmanXLarge,
-      // large: batmanLarge,
-      // medium: batmanMedium,
-      // small: batmanSmall,
-    },
+    imgSrc: batmanXLarge,
     imgAlt: "Welcome to Bluestone Comics",
-    headerText: <h1 className="primary-header">Welcome to Bluestone Comics</h1>,
+    headerText: (
+      <h1 className="primary-header">
+        Welcome to <br /> Bluestone Comics
+      </h1>
+    ),
     detailsText: (
       <>
         <span>
-          Bluestone Comics is a celebration of american comics books. Our goal
-          is to promote their creation and culture.
+          Bluestone Comics is a celebration of american indie comics books. Our
+          goal is to promote their creation and culture.
         </span>
-        {/* <LinkButton
-          buttonText="Upload Your Work"
-          link="/articles/how-to-publish-your-comic-book-online"
-          btnClass="upload-btn transparent-black"
-        /> */}
         <Link to="/search" className="link-button">
           <button type="button" className="bsc-button primary read-btn">
             Read Comics
@@ -96,12 +90,7 @@ const homePageSections = [
     sectionOrder: "even",
     sectionNum: "two",
     slantDirection: "right",
-    imgSrc: {
-      xl: blackPantherXLarge,
-      // large: blackPantherLarge,
-      // medium: blackPantherMedium,
-      // small: blackPantherSmall,
-    },
+    imgSrc: blackPantherXLarge,
     imgAlt: "Bluestone Comics Awards",
     headerText: <h2 className="primary-header">Awards</h2>,
     detailsText: (
@@ -116,12 +105,7 @@ const homePageSections = [
     sectionOrder: "odd",
     sectionNum: "three",
     slantDirection: "left",
-    imgSrc: {
-      xl: spidermanXLarge,
-      // large: spidermanLarge,
-      // medium: spidermanMedium,
-      // small: spidermanSmall,
-    },
+    imgSrc: spidermanXLarge,
     imgAlt: "Bluestone Comics Sponsorship",
     headerText: <h2 className="primary-header">Sponsorship</h2>,
     detailsText:
@@ -182,53 +166,25 @@ const Home = () => {
                   >
                     <div className="hero-image-container">
                       <picture className="hero-picture">
-                        {/* <source media="(min-width: 1200px)" srcSet={imgSrc.xl} />
-                      <source
-                        media="(min-width: 992px)"
-                        srcSet={imgSrc.large}
-                      />
-                      <source
-                        media="(min-width: 768px)"
-                        srcSet={imgSrc.medium}
-                      /> */}
                         <img
                           className="hero-image"
-                          src={imgSrc.xl}
+                          src={imgSrc}
                           width="auto"
                           height="auto"
                           alt={imgAlt}
                         />
                         <div className="slider-gradient" />
-                        {/* <section className="slider-wrapper"> */}
-                        {/* <article className={`desc ${slantDirection}-slant`}>
-                          <section className="desc-content">
-                            {headerText}
-                            <p className="details">{detailsText}</p>
-                          </section>
-                        </article> */}
-                        {/* </section> */}
                       </picture>
-                      {/* <div className="slider-wrapper"> */}
                       <article className={`desc ${slantDirection}-slant`}>
                         <section className="desc-content">
                           {headerText}
                           <p className="details">{detailsText}</p>
                         </section>
                       </article>
-                      {/* </div> */}
-                      {/* <div className="slider-gradient" /> */}
                     </div>
-                    {/* <article className={`desc ${slantDirection}-slant`}>
-                      <section className="desc-content">
-                        {headerText}
-                        <p className="details">{detailsText}</p>
-                      </section>
-                    </article> */}
                   </div>
-                  // </section>
                 )
               )}
-              {/* </Slider> */}
             </div>
 
             <div className="button-container">
