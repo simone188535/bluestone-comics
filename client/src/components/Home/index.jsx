@@ -134,7 +134,7 @@ const homePageSections = [
 
 const Home = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ delay: 3000 }),
+    Autoplay({ delay: 4500 }),
   ]);
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
@@ -194,21 +194,31 @@ const Home = () => {
                           alt={imgAlt}
                         />
                         <div className="slider-gradient" />
+                        {/* <section className="slider-wrapper"> */}
                         {/* <article className={`desc ${slantDirection}-slant`}>
+                          <section className="desc-content">
+                            {headerText}
+                            <p className="details">{detailsText}</p>
+                          </section>
+                        </article> */}
+                        {/* </section> */}
+                      </picture>
+                      {/* <div className="slider-wrapper"> */}
+                      <article className={`desc ${slantDirection}-slant`}>
                         <section className="desc-content">
                           {headerText}
                           <p className="details">{detailsText}</p>
                         </section>
-                      </article> */}
-                      </picture>
+                      </article>
+                      {/* </div> */}
                       {/* <div className="slider-gradient" /> */}
                     </div>
                     {/* <article className={`desc ${slantDirection}-slant`}>
-                    <section className="desc-content">
-                      {headerText}
-                      <p className="details">{detailsText}</p>
-                    </section>
-                  </article> */}
+                      <section className="desc-content">
+                        {headerText}
+                        <p className="details">{detailsText}</p>
+                      </section>
+                    </article> */}
                   </div>
                   // </section>
                 )
