@@ -49,7 +49,7 @@ const CONSTANTS = {
     "Western",
     "Zombies",
   ],
-  NUM_OF_ITEMS_PER_SEARCH_PAGE: 20,
+  NUM_OF_ITEMS_PER_SEARCH_PAGE: 10,
 };
 
 export default CONSTANTS;
