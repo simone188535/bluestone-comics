@@ -32,7 +32,7 @@ exports.searchBooks = catchAsync(async (req, res, next) => {
     `${withGenresStr}`
   );
 
-  const searchBook = searchBookFilter.sort('books').paginate(20);
+  const searchBook = searchBookFilter.sort('books').paginate(10);
 
   const books = await new QueryPG(pool).find(
     `users.id AS user_id,
@@ -84,7 +84,7 @@ exports.searchIssues = catchAsync(async (req, res) => {
     `${withGenresStr}`
   );
 
-  const searchIssue = searchIssueFilter.sort('issues').paginate(20);
+  const searchIssue = searchIssueFilter.sort('issues').paginate(10);
 
   const issues = await new QueryPG(pool).find(
     `users.id AS user_id,
@@ -140,7 +140,7 @@ exports.searchUsers = catchAsync(async (req, res) => {
     false
   );
 
-  const searchUsers = searchUsersFilter.sort('users').paginate(20);
+  const searchUsers = searchUsersFilter.sort('users').paginate(10);
 
   const users = await new QueryPG(pool).find(
     'id, username, user_photo, date_created, (SELECT COUNT(*) FROM subscribers WHERE subscribers.publisher_id = users.id)::integer AS total_subscribers',
