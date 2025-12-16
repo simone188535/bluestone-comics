@@ -12,6 +12,7 @@ const {
     STANDARD_UPLOAD_SIZE: {
       WIDTH: UPLOAD_SIZE_WIDTH,
       HEIGHT: UPLOAD_SIZE_HEIGHT,
+      MAX_FILE_SIZE_IN_BYTES,
     },
   },
 } = CONSTANTS;
@@ -78,7 +79,7 @@ const IssueUpload = ({
       <div className="form-item-container">
         <FileInputMultipleUpload
           identifier={multiFileUploadPrevData.identifier}
-          dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended file size: ${UPLOAD_SIZE_WIDTH}px x ${UPLOAD_SIZE_HEIGHT}px)<div>`}
+          dropzoneInnerText={`<div class="form-header-text"> Drag 'n' drop <strong>Issue Pages</strong> here, or click to select files.<br/>(Recommended image size: ${UPLOAD_SIZE_WIDTH}px x ${UPLOAD_SIZE_HEIGHT}px. <br/> Image must not be larger than ${MAX_FILE_SIZE_IN_BYTES}!)<div>`}
           toBeRemovedField={multiFileUploadPrevData.toBeRemovedField}
           hasPrevUploadedData={multiFileUploadPrevData.hasPrevUploadedData}
         />
