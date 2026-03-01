@@ -4,3 +4,5 @@ config.env
 config/dev.js
 config/local.js
 package-lock.json
+/pem/*
+!/pem/.gitkeep
