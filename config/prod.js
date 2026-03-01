@@ -9,5 +9,6 @@ module.exports = {
   PG_URI: process.env.PG_URI,
   EMAIL_AUTH_USER: process.env.EMAIL_AUTH_USER,
   EMAIL_AUTH_PASSWORD: process.env.EMAIL_AUTH_PASSWORD,
-  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
+  PG_CA_CERT: process.env.PG_CA_CERT
 };
