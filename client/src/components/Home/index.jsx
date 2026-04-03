@@ -44,8 +44,8 @@ const newComics = [
     title: "Crossed Signals",
   },
   {
-    link: "https://www.bluestonecomics.com/read/Between-Sand-and-Sea/book/6/issue/1",
-    img: "https://bluestone-images-prod.s3.amazonaws.com/works/610ca9b3b0a7492dbfcb0f0914c79fd3/1ca11c879187450fb25f14055e22c897/03ffa68c797e4f1493472759ddccd4dd",
+    link: "https://www.bluestonecomics.com/read/Between-Sand-and-Sea/book/30/issue/1",
+    img: "https://bluestone-images-prod.s3.us-east-2.amazonaws.com/works/27966279387f4bb8b297816d83c245e1/c1fdc764ac5e44c29cb946b44f3f419c/7b7122b30f0d4c76af51bd70b094deb9",
     title: "Between Sand & Sea",
   },
   {
